@@ -1,0 +1,7 @@
+name: Vi6
+version: 1.0
+authors: [XxGoldenbluexX,Hyez]
+description: Voleur Industriel 6: un mode de jeu (presque) unique crée et soutenu par une grande communautée de 4 personnes.
+main: fr.nekotine.vi6.Vi6Main
+api-version: 1.16
+depend: [ProtocolLib,XGlow]
