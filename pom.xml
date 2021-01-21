@@ -21,12 +21,17 @@
 		<id>destroystokyo-repo</id>
 		<url>https://papermc.io/repo/repository/maven-public/</url>
 	</repository>
+	<!-- Repository for CommandAPI -->
+	<repository>
+        <id>commandapi</id>
+        <url>https://raw.githubusercontent.com/JorelAli/CommandAPI/mvn-repo/</url>
+    </repository>
   </repositories>
   <dependencies>
 	<dependency>
 		<groupId>com.github.Xezard</groupId>
 		<artifactId>XGlow</artifactId>
-		<version>{latest_version}</version>
+		<version>1.0.5</version>
 		<scope>provided</scope>
 	</dependency>
 	<dependency>
