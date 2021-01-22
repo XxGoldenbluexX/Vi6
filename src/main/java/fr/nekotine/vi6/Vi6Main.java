@@ -7,8 +7,16 @@ import org.bukkit.plugin.java.JavaPlugin;
 import dev.jorel.commandapi.CommandAPI;
 import fr.nekotine.vi6.commands.Vi6commandMaker;
 
-public class Vi6Main extends JavaPlugin {
+/**
+ * Main class of the minecraft plugin
+ * 
+ * @author XxGoldenbluexX
+ * @author Hyez
+ *
+ */
 
+public class Vi6Main extends JavaPlugin {
+	
 	private PluginManager pmanager;
 	
 	@Override
