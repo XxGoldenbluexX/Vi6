@@ -29,6 +29,7 @@ public class PlayerGame implements Listener{
 	//id de cette partie
 	
 	private ArrayList<Object> artefactStolen = new ArrayList<>();
+	
 	public PlayerGame(UUID uuid) {
 		this.uuid=uuid;
 	}
