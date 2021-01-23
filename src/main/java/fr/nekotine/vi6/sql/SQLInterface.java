@@ -17,7 +17,7 @@ public class SQLInterface {
 	 * @param pStats Stats of the player in this game.
 	 * @return return whether yes if stats was succefully added, else false.
 	 */
-	public boolean addPlayerGameStats(int gameId, PlayerGameStats pStats) {
+	public boolean addPlayerGameStats(int gameId, PlayerGame pStats) {
 		return false;
 	}
 	
