@@ -55,7 +55,9 @@ public class Game {
 	public boolean removePlayer(Player p) {
 		if (playerList.keySet().contains(p)) {
 			playerList.remove(p);
+			guards.get(p).destroy();
 			guards.remove(p);
+			thiefs.get(p).destroy();
 			thiefs.remove(p);
 			for (Player pl : playerList.keySet()) {
 				pl.sendMessage(String.format(DisplayTexts.getMessage("game.leave"), p.getName()));

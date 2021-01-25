@@ -9,7 +9,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import dev.jorel.commandapi.CommandAPI;
 import fr.nekotine.vi6.commands.Vi6commandMaker;
-import fr.nekotine.vi6.yml.DisplayTexts;
 
 /**
  * Main class of the minecraft plugin
