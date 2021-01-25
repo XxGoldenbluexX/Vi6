@@ -35,6 +35,9 @@ public class Vi6Main extends JavaPlugin {
 		CommandAPI.onEnable(this);
 		pmanager=Bukkit.getPluginManager();
 		Vi6commandMaker.makevi6().register();
+		if(!getDataFolder().exists()) {
+			getDataFolder().mkdir();
+		}
 	}
 	
 	

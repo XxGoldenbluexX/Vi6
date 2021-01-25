@@ -32,4 +32,5 @@ public class PlayerGame implements Listener{
 	public PlayerGame(UUID uuid) {
 		this.uuid=uuid;
 	}
+	
 }
