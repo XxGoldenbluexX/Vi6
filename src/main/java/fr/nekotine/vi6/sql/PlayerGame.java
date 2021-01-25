@@ -1,13 +1,13 @@
 package fr.nekotine.vi6.sql;
 
-import java.util.ArrayList;
+import java.sql.Time;
+import java.util.HashMap;
 import java.util.UUID;
 
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
+import fr.nekotine.vi6.Artefact;
 import fr.nekotine.vi6.enums.Team;
-import fr.nekotine.vi6.events.PlayerStealEvent;
 
 /**
  * Made from Game, this class is used to move information to the SQLInterface
@@ -27,14 +27,9 @@ public class PlayerGame implements Listener{
 	
 	//id partie globale
 	//id de cette partie
-	
-	private ArrayList<Object> artefactStolen = new ArrayList<>();
-	
+	private HashMap<Artefact, Time> artefactStolen = new HashMap<>();
+	private HashMap<Object, Time> objectUsed = new HashMap<>();
 	public PlayerGame(UUID uuid) {
 		this.uuid=uuid;
-	}
-	@EventHandler
-	public void playerSteal(PlayerStealEvent e) {
-		
 	}
 }
