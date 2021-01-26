@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.sql.Time;
 import java.util.UUID;
 
+import fr.nekotine.vi6.Artefact;
 import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.enums.GameType;
 import fr.nekotine.vi6.enums.Team;
@@ -52,13 +53,13 @@ public class SQLInterface {
 			e.printStackTrace();
 		}
 	}
-	public int addPartie(Date date, Time duration, int money, GameType type, String mapName) {
+	public int addPartie(Date date, Time duree, int argent, GameType type, String nomCarte) {
 		try {
 			Statement sttmt = c.createStatement();
 			ResultSet rs = sttmt.executeQuery( "SELECT NVL(MAX(Id_Partie),-1) FROM Partie;" );
 			int idPartie = rs.getInt("Id_Partie")+1;
 			String sql = "INSERT INTO Partie (Id_Partie,Date_Partie,Duree,Argent,Type,Nom_Carte) "+ 
-							"VALUES ("+idPartie+","+date+","+duration+","+money+","+type.toString()+","+mapName+")";
+							"VALUES ("+idPartie+","+date+","+duree+","+argent+","+type.toString()+","+nomCarte+")";
 			sttmt.executeUpdate(sql);
 			sttmt.close();
 			c.commit();
@@ -68,8 +69,73 @@ public class SQLInterface {
 			return -1;
 		}
 	}
-	public int addPartieJoueur(int gameId, UUID playerUUID, Team team, String entrance, String exit, String killRoom, int killerPlayerGameId) {
-		return 0;
+	public int addPartieJoueur(int idPartie, UUID playerUUID, Team team, String entree, String sortie, String salleMort, int idPartieTueur) {
+		try {
+			Statement sttmt = c.createStatement();
+			ResultSet rs = sttmt.executeQuery( "SELECT NVL(MAX(Id_PartieJoueur),-1) FROM PartieJoueur;" );
+			int idPartieJoueur = rs.getInt("Id_PartieJoueur")+1;
+			String sql = "INSERT INTO PartieJoueur (Id_PartieJoueur,Id_PartieTueur,Nom_Salle,Id_Partie,UUID_Joueur,Nom_Equipe,Nom_Entree,Nom_Sortie) "+ 
+							"VALUES ("+idPartieJoueur+","+idPartieTueur+","+salleMort+","+idPartie+","+playerUUID.toString()+","+team.toString()+","+entree+","+sortie+")";
+			sttmt.executeUpdate(sql);
+			sttmt.close();
+			c.commit();
+			return idPartieJoueur;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return -1;
+		}
 	}
-	
+	public void addStealEntry(Artefact artefact, int idPartieJoueur, Time temps) {
+		try {
+			Statement sttmt = c.createStatement();
+			String sql = "INSERT INTO Vole (Nom_Artefact,Id_PartieJoueur,Temps) "+ 
+							"VALUES ("+artefact.getName()+","+idPartieJoueur+","+temps+")";
+			sttmt.executeUpdate(sql);
+			sttmt.close();
+			c.commit();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	public void addUtiliseEntry(int idPartieJoueur, String objetName, Time temps) {
+		try {
+			Statement sttmt = c.createStatement();
+			String sql = "INSERT INTO Utilise (Id_PartieJoueur,Nom_Objet,Temps) "+ 
+							"VALUES ("+idPartieJoueur+","+objetName+","+temps+")";
+			sttmt.executeUpdate(sql);
+			sttmt.close();
+			c.commit();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	public void updatePartie(int idPartie, Time duree) {
+		Statement sttmt;
+		try {
+			sttmt = c.createStatement();
+			String sql = "UPDATE Partie SET Duree = "+duree+
+							" WHERE Id_Partie="+idPartie;
+			sttmt.executeUpdate(sql);
+			sttmt.close();
+			c.commit();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	public void updatePartieJoueur(int idPartieJoueur, String entree, String sortie, String salleMort, int idPartieTueur) {
+		Statement sttmt;
+		try {
+			sttmt = c.createStatement();
+			String sql = "UPDATE PartieJoueur SET Nom_Entree = "+entree+
+							" , Nom_Sortie = "+sortie+
+							" , Nom_Salle = "+salleMort+
+							" , Id_PartieTueur = "+idPartieTueur+
+							" WHERE Id_PartieJoueur="+idPartieJoueur;
+			sttmt.executeUpdate(sql);
+			sttmt.close();
+			c.commit();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 }

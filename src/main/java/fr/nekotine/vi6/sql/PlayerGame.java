@@ -4,10 +4,13 @@ import java.sql.Time;
 import java.util.HashMap;
 import java.util.UUID;
 
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
 import fr.nekotine.vi6.Artefact;
 import fr.nekotine.vi6.enums.Team;
+import fr.nekotine.vi6.events.GameEndEvent;
 
 /**
  * Made from Game, this class is used to move information to the SQLInterface
@@ -37,5 +40,8 @@ public class PlayerGame implements Listener{
 		this.team = team;
 		//créer table Partie Joueur
 	}
-	
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onGameEnd(GameEndEvent e) {
+		//modifier table idPartieJoueur avec entree,sortie,...
+	}
 }
