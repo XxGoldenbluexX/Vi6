@@ -3,14 +3,18 @@ package fr.nekotine.vi6;
 import java.util.HashMap;
 
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 
 import fr.nekotine.vi6.enums.GameState;
 import fr.nekotine.vi6.enums.Team;
+import fr.nekotine.vi6.events.GameStartEvent;
 import fr.nekotine.vi6.wrappers.GuardWrapper;
 import fr.nekotine.vi6.wrappers.ThiefWrapper;
 import fr.nekotine.vi6.yml.DisplayTexts;
 
-public class Game {
+public class Game implements Listener{
 	
 	private final String name;
 	private boolean isRanked=true;
@@ -77,6 +81,11 @@ public class Game {
 
 	public HashMap<Player,ThiefWrapper> getThiefsMap() {
 		return thiefs;
+	}
+	
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onGameStart(GameStartEvent e) {
+		//crée table Partie + créer instances PlayerGame pour chaque joueurs
 	}
 	
 }

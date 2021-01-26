@@ -18,19 +18,24 @@ import fr.nekotine.vi6.enums.Team;
  */
 
 public class PlayerGame implements Listener{
-	private UUID uuid;
-	private Team team;
+	private int idPartieJoueur;
+	private final int idPartieGlobale;
+	private final UUID uuid;
+	private final Team team;
+	
 	private String entree;
 	private String sortie;
 	private UUID uuidTueur;
 	private String salleTueur;
 	
-	//id partie globale
-	//id de cette partie
 	private HashMap<Artefact, Time> artefactStolen = new HashMap<>();
 	private HashMap<Object, Time> objectUsed = new HashMap<>();
-	public PlayerGame(UUID uuid) {
+	
+	public PlayerGame(UUID uuid, int idPartieGlobale, Team team) {
 		this.uuid=uuid;
+		this.idPartieGlobale=idPartieGlobale;
+		this.team = team;
+		//créer table Partie Joueur
 	}
 	
 }
