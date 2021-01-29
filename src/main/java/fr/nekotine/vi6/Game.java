@@ -23,6 +23,8 @@ public class Game implements Listener{
 	private final HashMap<Player,GuardWrapper> guards = new HashMap<Player,GuardWrapper>(4);
 	private final HashMap<Player,ThiefWrapper> thiefs = new HashMap<Player,ThiefWrapper>(4);
 	
+	private String mapName;
+	private int money;
 	public Game(String name) {
 		this.name=name;
 	}

@@ -6,41 +6,28 @@ import java.sql.Time;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import fr.nekotine.vi6.enums.GameType;
+import fr.nekotine.vi6.Game;
 
 public class GameEndEvent extends Event{
-	private final String mapName;
-	private final GameType type;
+	private final Game game;
 	private final Time duration;
-	private final int money;
 	private final Date date;
-	public GameEndEvent(GameType type, int money, String mapName, Time duration, Date date) {
-		this.mapName = mapName;
-		this.type = type;
-		this.duration = duration;
-		this.money = money;
-		this.date = date;
-		
+	public GameEndEvent(Game game, Time duration, Date date) {
+		this.game=game;
+		this.duration=duration;
+		this.date=date;
 	}
-	public String getMapName() {
-		return mapName;
-	}
-	@Override
-	public HandlerList getHandlers() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	public GameType getType() {
-		return type;
+	public Game getGame() {
+		return game;
 	}
 	public Time getDuration() {
 		return duration;
 	}
-	public int getMoney() {
-		return money;
-	}
 	public Date getDate() {
 		return date;
 	}
-
+	@Override
+	public HandlerList getHandlers() {
+		return null;
+	}
 }

@@ -5,10 +5,11 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 
 import fr.nekotine.vi6.Artefact;
+import fr.nekotine.vi6.Objet;
 import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.events.GameEndEvent;
 
@@ -21,27 +22,37 @@ import fr.nekotine.vi6.events.GameEndEvent;
  */
 
 public class PlayerGame implements Listener{
-	private int idPartieJoueur;
-	private final int idPartieGlobale;
-	private final UUID uuid;
+	private final SQLInterface sql;
+	
+	private final int idPartie;
+	private final UUID playerUUID;
 	private final Team team;
 	
 	private String entree;
 	private String sortie;
-	private UUID uuidTueur;
-	private String salleTueur;
+	private int idPartieTueur;
+	private String salleMort;
 	
 	private HashMap<Artefact, Time> artefactStolen = new HashMap<>();
-	private HashMap<Object, Time> objectUsed = new HashMap<>();
+	private HashMap<Objet, Time> objectUsed = new HashMap<>();
 	
-	public PlayerGame(UUID uuid, int idPartieGlobale, Team team) {
-		this.uuid=uuid;
-		this.idPartieGlobale=idPartieGlobale;
+	public PlayerGame(SQLInterface sql, UUID playerUUID, int idPartie, Team team) {
+		this.sql=sql;
+		this.playerUUID=playerUUID;
+		this.idPartie=idPartie;
 		this.team = team;
-		//créer table Partie Joueur
 	}
-	@EventHandler(priority = EventPriority.LOWEST)
+	@EventHandler
 	public void onGameEnd(GameEndEvent e) {
-		//modifier table idPartieJoueur avec entree,sortie,...
+		if(e.getGame().getPlayerList().keySet().contains(playerUUID)) {
+			int idPartieJoueur = sql.addPartieJoueur(idPartie, playerUUID, team, entree, sortie, salleMort, idPartieTueur);
+			for(Artefact artefact : artefactStolen.keySet()) {
+				sql.addStealEntry(artefact.getName(), idPartieJoueur, artefactStolen.get(artefact));
+			}
+			for(Objet objet : objectUsed.keySet()) {
+				sql.addStealEntry(objet.getName(), idPartieJoueur, objectUsed.get(objet));
+			}
+			HandlerList.unregisterAll(this);
+		}
 	}
 }
