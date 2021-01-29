@@ -1,2 +1,2 @@
-game:
-	playerjoin: %s a rejoin cette partie de vi6.
+game.join: %s a rejoin cette partie de vi6.
+game.leave: %s a quitté cette partie de vi6.

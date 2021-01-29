@@ -15,6 +15,7 @@ import fr.nekotine.vi6.commands.Vi6commandMaker;
  * 
  * @author XxGoldenbluexX
  * @author Hyez
+ * 
  *
  */
 
@@ -72,6 +73,10 @@ public class Vi6Main extends JavaPlugin {
 
 	public void setGameList(List<Game> gameList) {
 		this.gameList = gameList;
+	}
+
+	public PluginManager getPmanager() {
+		return pmanager;
 	}
 	
 }
