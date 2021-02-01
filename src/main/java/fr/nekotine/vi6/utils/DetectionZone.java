@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bukkit.Location;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
@@ -22,6 +24,7 @@ public class DetectionZone implements ConfigurationSerializable,Listener {
 	private final double y2;
 	private final double z2;
 	private final ArrayList<Player> playersInside = new ArrayList<Player>();
+	private final ArrayList<ZoneDetectionListener> listeners = new ArrayList<ZoneDetectionListener>();
 	
 	public DetectionZone(Vi6Main mainref,double x1, double y1, double z1, double x2, double y2, double z2) {
 		this.x1=Math.min(x1,x2);
@@ -31,6 +34,16 @@ public class DetectionZone implements ConfigurationSerializable,Listener {
 		this.y2=Math.max(y1,y2);
 		this.z2=Math.max(z1,z2);
 		mainref.getPmanager().registerEvents(this, mainref);
+	}
+	
+	public void addListener(ZoneDetectionListener l) {
+		if (!listeners.contains(l)) {
+			listeners.add(l);
+		}
+	}
+	
+	public void removeListener(ZoneDetectionListener l) {
+		listeners.remove(l);
 	}
 	
 	@Override
@@ -45,7 +58,25 @@ public class DetectionZone implements ConfigurationSerializable,Listener {
 	
 	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent evt) {
-		
+		Player p = evt.getPlayer();
+		if (isLocInside(evt.getTo()) && !playersInside.contains(p)) {
+			playersInside.add(p);
+			for (ZoneDetectionListener l : listeners) {
+				if (l.playerEnterZone(p)) {
+					evt.setCancelled(true);
+					return;
+				};
+			}
+		}
+		if (!isLocInside(evt.getTo()) && playersInside.contains(p)) {
+			playersInside.remove(p);
+			for (ZoneDetectionListener l : listeners) {
+				if (l.playerLeaveZone(p)) {
+					evt.setCancelled(true);
+					return;
+				};
+			}
+		}
 	}
 
 	public double getZ2() {
@@ -72,8 +103,23 @@ public class DetectionZone implements ConfigurationSerializable,Listener {
 		return x1;
 	}
 	
-	public boolean isInside(double x, double y, double z) {
+	public boolean isPosInside(double x, double y, double z) {
 		return ( (x>=x1 && x<=x2) && (y>=y1 && y<=y2) && (z>=z1 && z<=z2) );
+	}
+	
+	public boolean isLocInside(Location loc) {
+		return isPosInside(loc.getX(),loc.getY(),loc.getZ());
+	}
+	
+	public void destroy() {
+		HandlerList.unregisterAll(this);
+		for (Player p : playersInside) {
+			for (ZoneDetectionListener l : listeners) {
+				l.playerLeaveZone(p);
+			}
+		}
+		listeners.clear();
+		playersInside.clear();
 	}
 	
 }

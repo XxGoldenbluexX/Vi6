@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 
 public interface ZoneDetectionListener {
 	
-	public void playerEnterZone(Player player);
-	public void playerLeaveZone(Player player);
+	public boolean playerEnterZone(Player player);
+	public boolean playerLeaveZone(Player player);
 	
 }
