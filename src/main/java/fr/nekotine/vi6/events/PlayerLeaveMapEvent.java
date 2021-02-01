@@ -4,11 +4,15 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 public class PlayerLeaveMapEvent extends Event{
-
+	private static final HandlerList handlers = new HandlerList();
+	public static HandlerList getHandlerList() {
+	    return handlers;
+	}
 	@Override
 	public HandlerList getHandlers() {
-		// TODO Auto-generated method stub
-		return null;
+		return handlers;
 	}
-
+	public PlayerLeaveMapEvent() {
+		
+	}
 }

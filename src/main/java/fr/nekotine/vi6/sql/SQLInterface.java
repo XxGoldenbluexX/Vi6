@@ -56,7 +56,7 @@ public class SQLInterface {
 				sql = "CREATE TABLE Vole("
 						+ "Nom_Artefact VARCHAR(50),"
 						+ "Id_PartieJoueur INT,"
-						+ "Temps TIME NOT NULL,"
+						+ "Temps TIME,"
 						+ "PRIMARY KEY(Nom_Artefact, Id_PartieJoueur, Temps),"
 						+ "FOREIGN KEY(Id_PartieJoueur) REFERENCES PartieJoueur(Id_PartieJoueur));";
 				sttmt.executeUpdate(sql);
@@ -64,7 +64,7 @@ public class SQLInterface {
 				sql = "CREATE TABLE Utilise("
 						+ "Nom_Objet VARCHAR(50),"
 						+ "Id_PartieJoueur INT,"
-						+ "Temps TIME NOT NULL,"
+						+ "Temps TIME,"
 						+ "PRIMARY KEY(Nom_Objet, Id_PartieJoueur, Temps),"
 						+ "FOREIGN KEY(Id_PartieJoueur) REFERENCES PartieJoueur(Id_PartieJoueur));";
 				sttmt.executeUpdate(sql);
