@@ -1,5 +1,8 @@
 package fr.nekotine.vi6;
 
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 
 import org.bukkit.entity.Player;
@@ -10,11 +13,14 @@ import org.bukkit.event.Listener;
 import fr.nekotine.vi6.enums.GameState;
 import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.events.GameStartEvent;
+import fr.nekotine.vi6.sql.PlayerGame;
+import fr.nekotine.vi6.sql.SQLInterface;
 import fr.nekotine.vi6.wrappers.GuardWrapper;
 import fr.nekotine.vi6.wrappers.ThiefWrapper;
 import fr.nekotine.vi6.yml.DisplayTexts;
 
 public class Game implements Listener{
+	private final Vi6Main main;
 	
 	private final String name;
 	private boolean isRanked=true;
@@ -25,7 +31,8 @@ public class Game implements Listener{
 	
 	private String mapName;
 	private int money;
-	public Game(String name) {
+	public Game(Vi6Main main, String name) {
+		this.main=main;
 		this.name=name;
 	}
 
@@ -84,10 +91,15 @@ public class Game implements Listener{
 	public HashMap<Player,ThiefWrapper> getThiefsMap() {
 		return thiefs;
 	}
-	
-	@EventHandler(priority = EventPriority.LOWEST)
-	public void onGameStart(GameStartEvent e) {
-		//crée table Partie + créer instances PlayerGame pour chaque joueurs
+	//je met ça là, tu y mettra à la fin au moment où on commence la game
+	public void gameStart() {
+		SQLInterface sql = new SQLInterface(main.getDataFolder().getAbsolutePath());
+		int idPartie = sql.addPartie(Date.valueOf(LocalDate.now()), null, money, isRanked, mapName);
+		for(Player guard : guards.keySet()) {
+			new PlayerGame(name, sql, guard.getUniqueId(), idPartie, Team.GARDE);
+		}
+		for(Player thief : thiefs.keySet()) {
+			new PlayerGame(name, sql, thief.getUniqueId(), idPartie, Team.VOLEUR);
+		}
 	}
-	
 }

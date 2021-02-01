@@ -10,8 +10,6 @@ import java.sql.Statement;
 import java.sql.Time;
 import java.util.UUID;
 
-import fr.nekotine.vi6.Vi6Main;
-import fr.nekotine.vi6.enums.GameType;
 import fr.nekotine.vi6.enums.Team;
 
 /**
@@ -23,8 +21,9 @@ import fr.nekotine.vi6.enums.Team;
  */
 
 public class SQLInterface {
-	private Connection c;
-	public SQLInterface(Vi6Main main) {
+	private String dataFolderURL;
+	public SQLInterface(String dataFolderURL) {
+		this.dataFolderURL=dataFolderURL;
 		try {
 			Class.forName("org.sqlite.JDBC");
 		} catch (ClassNotFoundException e1) {
@@ -32,8 +31,8 @@ public class SQLInterface {
 			return;
 		}
 		try {
-			if(!new File(main.getDataFolder(), "Vi6Database.db").exists()) {
-				c = DriverManager.getConnection("jdbc:sqlite:"+main.getDataFolder().getAbsolutePath()+"/Vi6Database.db");
+			if(!new File(dataFolderURL, "Vi6Database.db").exists()) {
+				Connection c = DriverManager.getConnection("jdbc:sqlite:"+dataFolderURL+"/Vi6Database.db");
 				//création toutes les tables
 				Statement sttmt = c.createStatement();
 				String sql;
@@ -42,7 +41,7 @@ public class SQLInterface {
 						+ "Date_Partie DATE NOT NULL,"
 						+ "Duree TIME,"
 						+ "Argent INT NOT NULL,"
-						+ "Type VARCHAR(50) NOT NULL,"
+						+ "IsRanked BOOLEAN NOT NULL,"
 						+ "Nom_Carte VARCHAR(50) NOT NULL,"
 						+ "PRIMARY KEY(Id_Partie));";
 				sttmt.executeUpdate(sql);
@@ -50,7 +49,7 @@ public class SQLInterface {
 				sql = "CREATE TABLE PartieJoueur("
 						+ "Id_PartieJoueur INT AUTO_INCREMENT,"
 						+ "Id_PartieTueur INT,"
-						+ "Nom_Salle VARCHAR(50),"
+						+ "Nom_Salle_Mort VARCHAR(50),"
 						+ "Id_Partie INT NOT NULL,"
 						+ "UUID_Joueur CHAR(36) NOT NULL,"
 						+ "Nom_Equipe VARCHAR(50) NOT NULL,"
@@ -77,25 +76,25 @@ public class SQLInterface {
 				sttmt.executeUpdate(sql);
 				sttmt.close();
 				c.commit();
-			}else {
-				c = DriverManager.getConnection("jdbc:sqlite:"+main.getDataFolder().getAbsolutePath()+"/Vi6Database.db");
+				c.close();
 			}
-			c.setAutoCommit(false);
 		} catch (SQLException e) {
 			System.out.println("Vi6Message: <ERROR WHILE TRYING TO LOAD SQL>");
 			e.printStackTrace();
 			return;
 		}
 	}
-	public int addPartie(Date date, Time duree, int argent, GameType type, String nomCarte) {
+	public int addPartie(Date date, Time duree, int argent, boolean isRanked, String nomCarte) {
 		try {
-			String sql = "INSERT INTO Partie (Id_Partie,Date_Partie,Duree,Argent,Type,Nom_Carte) "+
+			Connection c = DriverManager.getConnection("jdbc:sqlite:"+dataFolderURL+"/Vi6Database.db");
+			String sql = "INSERT INTO Partie (Id_Partie,Date_Partie,Duree,Argent,IsRanked,Nom_Carte) "+
 							"OUTPUT Id_Partie "+
-							"VALUES ("+date+","+duree+","+argent+","+type.toString()+","+nomCarte+");";
+							"VALUES ("+date+","+duree+","+argent+","+isRanked+","+nomCarte+");";
 			Statement sttmt = c.createStatement();
 			ResultSet rs = sttmt.executeQuery(sql);
 			sttmt.close();
 			c.commit();
+			c.close();
 			return rs.getInt("Id_Partie");
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -104,13 +103,15 @@ public class SQLInterface {
 	}
 	public int addPartieJoueur(int idPartie, UUID playerUUID, Team team, String entree, String sortie, String salleMort, int idPartieTueur) {
 		try {
-			String sql = "INSERT INTO PartieJoueur (Id_PartieJoueur,Id_PartieTueur,Nom_Salle,Id_Partie,UUID_Joueur,Nom_Equipe,Nom_Entree,Nom_Sortie)"+
+			Connection c = DriverManager.getConnection("jdbc:sqlite:"+dataFolderURL+"/Vi6Database.db");
+			String sql = "INSERT INTO PartieJoueur (Id_PartieJoueur,Id_PartieTueur,Nom_Salle_Mort,Id_Partie,UUID_Joueur,Nom_Equipe,Nom_Entree,Nom_Sortie)"+
 							"OUTPUT Id_Partie "+
 							"VALUES ("+idPartieTueur+","+salleMort+","+idPartie+","+playerUUID.toString()+","+team.toString()+","+entree+","+sortie+");";
 			Statement sttmt = c.createStatement();
 			ResultSet rs = sttmt.executeQuery(sql);
 			sttmt.close();
 			c.commit();
+			c.close();
 			return rs.getInt("Id_PartieJoueur");
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -119,36 +120,42 @@ public class SQLInterface {
 	}
 	public void addStealEntry(String artefact, int idPartieJoueur, Time temps) {
 		try {
+			Connection c = DriverManager.getConnection("jdbc:sqlite:"+dataFolderURL+"/Vi6Database.db");
 			String sql = "INSERT INTO Vole (Nom_Artefact,Id_PartieJoueur,Temps) "+ 
 							"VALUES ("+artefact+","+idPartieJoueur+","+temps+");";
 			Statement sttmt = c.createStatement();
 			sttmt.executeUpdate(sql);
 			sttmt.close();
 			c.commit();
+			c.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 	public void addUtiliseEntry(int idPartieJoueur, String objetName, Time temps) {
 		try {
+			Connection c = DriverManager.getConnection("jdbc:sqlite:"+dataFolderURL+"/Vi6Database.db");
 			String sql = "INSERT INTO Utilise (Id_PartieJoueur,Nom_Objet,Temps) "+ 
 							"VALUES ("+idPartieJoueur+","+objetName+","+temps+");";
 			Statement sttmt = c.createStatement();
 			sttmt.executeUpdate(sql);
 			sttmt.close();
 			c.commit();
+			c.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 	public void updatePartie(int idPartie, Time duree) {
 		try {
+			Connection c = DriverManager.getConnection("jdbc:sqlite:"+dataFolderURL+"/Vi6Database.db");
 			String sql = "UPDATE Partie SET Duree = "+duree+
 							" WHERE Id_Partie="+idPartie+";";
 			Statement sttmt = c.createStatement();
 			sttmt.executeUpdate(sql);
 			sttmt.close();
 			c.commit();
+			c.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
