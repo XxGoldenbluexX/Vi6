@@ -64,12 +64,11 @@ public class SQLInterface {
 				sql = "CREATE TABLE Utilise("
 						+ "Nom_Objet VARCHAR(50),"
 						+ "Id_PartieJoueur INT,"
-						+ "Temps TIME,"
+						+ "Temps TIME NOT NULL,"
 						+ "PRIMARY KEY(Nom_Objet, Id_PartieJoueur, Temps),"
 						+ "FOREIGN KEY(Id_PartieJoueur) REFERENCES PartieJoueur(Id_PartieJoueur));";
 				sttmt.executeUpdate(sql);
 				sttmt.close();
-				c.commit();
 				c.close();
 			}
 		} catch (SQLException e) {
@@ -86,7 +85,6 @@ public class SQLInterface {
 			Statement sttmt = c.createStatement();
 			ResultSet rs = sttmt.executeQuery(sql);
 			sttmt.close();
-			c.commit();
 			c.close();
 			return rs.getInt("Id_Partie");
 		} catch (SQLException e) {
@@ -103,7 +101,6 @@ public class SQLInterface {
 			Statement sttmt = c.createStatement();
 			ResultSet rs = sttmt.executeQuery(sql);
 			sttmt.close();
-			c.commit();
 			c.close();
 			return rs.getInt("Id_PartieJoueur");
 		} catch (SQLException e) {
@@ -119,7 +116,6 @@ public class SQLInterface {
 			Statement sttmt = c.createStatement();
 			sttmt.executeUpdate(sql);
 			sttmt.close();
-			c.commit();
 			c.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -133,7 +129,6 @@ public class SQLInterface {
 			Statement sttmt = c.createStatement();
 			sttmt.executeUpdate(sql);
 			sttmt.close();
-			c.commit();
 			c.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -147,7 +142,6 @@ public class SQLInterface {
 			Statement sttmt = c.createStatement();
 			sttmt.executeUpdate(sql);
 			sttmt.close();
-			c.commit();
 			c.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -163,7 +157,7 @@ public class SQLInterface {
 			Statement sttmt = c.createStatement();
 			sttmt.executeUpdate(sql);
 			sttmt.close();
-			c.commit();
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

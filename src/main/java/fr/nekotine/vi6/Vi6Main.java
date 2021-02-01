@@ -7,8 +7,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import dev.jorel.commandapi.CommandAPI;
-import fr.nekotine.vi6.commands.Vi6commandMaker;
 import fr.nekotine.vi6.sql.SQLInterface;
 
 /**
@@ -28,15 +26,15 @@ public class Vi6Main extends JavaPlugin {
 	@Override
 	public void onLoad() {
 		super.onLoad();
-		CommandAPI.onLoad(false);
+		//CommandAPI.onLoad(false);
 	}
 	
 	@Override
 	public void onEnable() {
 		super.onEnable();
-		CommandAPI.onEnable(this);
+		//CommandAPI.onEnable(this);
 		pmanager=Bukkit.getPluginManager();
-		Vi6commandMaker.makevi6().register();
+		//Vi6commandMaker.makevi6().register();
 		if(!getDataFolder().exists()) {
 			getDataFolder().mkdir();
 		}
