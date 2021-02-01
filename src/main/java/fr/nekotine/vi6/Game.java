@@ -95,7 +95,7 @@ public class Game implements Listener{
 	public HashMap<Player,ThiefWrapper> getThiefsMap() {
 		return thiefs;
 	}
-	//je met ça là, tu y mettra à la fin au moment où on commence la game
+	//je met ça là, tu y mettra à la fin au moment où on commence la game!
 	public void gameStart() {
 		idPartie = SQLInterface.addPartie(Date.valueOf(LocalDate.now()), null, money, isRanked, mapName);
 		for(Player guard : guards.keySet()) {
