@@ -9,6 +9,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import dev.jorel.commandapi.CommandAPI;
 import fr.nekotine.vi6.commands.Vi6commandMaker;
+import fr.nekotine.vi6.sql.SQLInterface;
 
 /**
  * Main class of the minecraft plugin
@@ -39,6 +40,7 @@ public class Vi6Main extends JavaPlugin {
 		if(!getDataFolder().exists()) {
 			getDataFolder().mkdir();
 		}
+		SQLInterface.load(getDataFolder().getAbsolutePath());
 	}
 	
 	
@@ -56,7 +58,7 @@ public class Vi6Main extends JavaPlugin {
 	
 	public boolean createGame(String name) {
 		if (gameExist(name)) return false;
-		gameList.add(new Game(name));
+		gameList.add(new Game(this,name));
 		return true;
 	}
 	

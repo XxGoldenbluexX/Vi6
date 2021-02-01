@@ -1,18 +1,19 @@
 package fr.nekotine.vi6;
 
 import java.sql.Date;
+import java.sql.Time;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.HashMap;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
 import fr.nekotine.vi6.enums.GameState;
 import fr.nekotine.vi6.enums.Team;
-import fr.nekotine.vi6.events.GameStartEvent;
 import fr.nekotine.vi6.sql.PlayerGame;
 import fr.nekotine.vi6.sql.SQLInterface;
 import fr.nekotine.vi6.wrappers.GuardWrapper;
@@ -21,6 +22,8 @@ import fr.nekotine.vi6.yml.DisplayTexts;
 
 public class Game implements Listener{
 	private final Vi6Main main;
+	private int idPartie;
+	private final String startTime = LocalTime.now().toString();
 	
 	private final String name;
 	private boolean isRanked=true;
@@ -34,6 +37,7 @@ public class Game implements Listener{
 	public Game(Vi6Main main, String name) {
 		this.main=main;
 		this.name=name;
+		Bukkit.getPluginManager().registerEvents(this, main);
 	}
 
 	public boolean isRanked() {
@@ -93,13 +97,20 @@ public class Game implements Listener{
 	}
 	//je met ça là, tu y mettra à la fin au moment où on commence la game
 	public void gameStart() {
-		SQLInterface sql = new SQLInterface(main.getDataFolder().getAbsolutePath());
-		int idPartie = sql.addPartie(Date.valueOf(LocalDate.now()), null, money, isRanked, mapName);
+		idPartie = SQLInterface.addPartie(Date.valueOf(LocalDate.now()), null, money, isRanked, mapName);
 		for(Player guard : guards.keySet()) {
-			new PlayerGame(name, sql, guard.getUniqueId(), idPartie, Team.GARDE);
+			Bukkit.getPluginManager().registerEvents(new PlayerGame(name, guard.getUniqueId(), idPartie, Team.GARDE), main);
 		}
 		for(Player thief : thiefs.keySet()) {
-			new PlayerGame(name, sql, thief.getUniqueId(), idPartie, Team.VOLEUR);
+			Bukkit.getPluginManager().registerEvents(new PlayerGame(name, thief.getUniqueId(), idPartie, Team.VOLEUR), main);
+		}
+	}
+	public void gameEnd() {
+		try {
+			SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+			SQLInterface.updatePartie(idPartie, new Time(format.parse(LocalTime.now().toString()).getTime() - format.parse(startTime).getTime()));
+		} catch (ParseException e) {
+			e.printStackTrace();
 		}
 	}
 }
