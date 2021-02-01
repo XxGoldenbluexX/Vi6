@@ -8,7 +8,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-public class Mape implements ConfigurationSerializable {
+public class Carte implements ConfigurationSerializable {
 
 	@Override
 	public Map<String, Object> serialize() {
@@ -16,8 +16,8 @@ public class Mape implements ConfigurationSerializable {
 		return map;
 	}
 	
-	public static Mape deserialize(Map<String, Object> args) {
-		return new Mape();
+	public static Carte deserialize(Map<String, Object> args) {
+		return new Carte();
 	}
 
 }

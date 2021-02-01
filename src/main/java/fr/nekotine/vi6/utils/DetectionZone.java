@@ -1,15 +1,17 @@
 package fr.nekotine.vi6.utils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 import fr.nekotine.vi6.Vi6Main;
-import fr.nekotine.vi6.map.Mape;
+import fr.nekotine.vi6.map.Carte;
 
 public class DetectionZone implements ConfigurationSerializable,Listener {
 
@@ -19,6 +21,7 @@ public class DetectionZone implements ConfigurationSerializable,Listener {
 	private final double x2;
 	private final double y2;
 	private final double z2;
+	private final ArrayList<Player> playersInside = new ArrayList<Player>();
 	
 	public DetectionZone(Vi6Main mainref,double x1, double y1, double z1, double x2, double y2, double z2) {
 		this.x1=Math.min(x1,x2);
@@ -28,7 +31,6 @@ public class DetectionZone implements ConfigurationSerializable,Listener {
 		this.y2=Math.max(y1,y2);
 		this.z2=Math.max(z1,z2);
 		mainref.getPmanager().registerEvents(this, mainref);
-		//TODO
 	}
 	
 	@Override
@@ -37,8 +39,8 @@ public class DetectionZone implements ConfigurationSerializable,Listener {
 		return map;
 	}
 	
-	public static Mape deserialize(Map<String, Object> args) {
-		return new Mape();
+	public static Carte deserialize(Map<String, Object> args) {
+		return new Carte();
 	}
 	
 	@EventHandler
