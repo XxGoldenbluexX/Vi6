@@ -15,6 +15,8 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import fr.nekotine.vi6.Vi6Main;
 
 public class DetectionZone implements ConfigurationSerializable,Listener {
+	
+	private static final String yamlPrefix = "DetectionZone_";
 
 	private final double x1;
 	private final double y1;
@@ -135,6 +137,10 @@ public class DetectionZone implements ConfigurationSerializable,Listener {
 		listeners.clear();
 		playersInside.clear();
 		enabled=false;
+	}
+
+	public static String getYamlprefix() {
+		return yamlPrefix;
 	}
 	
 }
