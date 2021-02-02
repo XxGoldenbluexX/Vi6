@@ -4,9 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerMoveEvent;
 
 public class Carte implements ConfigurationSerializable {
 
@@ -19,5 +16,5 @@ public class Carte implements ConfigurationSerializable {
 	public static Carte deserialize(Map<String, Object> args) {
 		return new Carte();
 	}
-
+	
 }
