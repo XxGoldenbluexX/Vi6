@@ -13,7 +13,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 import fr.nekotine.vi6.Vi6Main;
-import fr.nekotine.vi6.map.Carte;
 
 public class DetectionZone implements ConfigurationSerializable,Listener {
 
@@ -25,15 +24,23 @@ public class DetectionZone implements ConfigurationSerializable,Listener {
 	private final double z2;
 	private final ArrayList<Player> playersInside = new ArrayList<Player>();
 	private final ArrayList<ZoneDetectionListener> listeners = new ArrayList<ZoneDetectionListener>();
+	private boolean enabled=false;
 	
-	public DetectionZone(Vi6Main mainref,double x1, double y1, double z1, double x2, double y2, double z2) {
+	public DetectionZone(double x1, double y1, double z1, double x2, double y2, double z2) {
 		this.x1=Math.min(x1,x2);
-		this.y1=Math.max(y1,y2);
-		this.z1=Math.max(z1,z2);
+		this.y1=Math.min(y1,y2);
+		this.z1=Math.min(z1,z2);
 		this.x2=Math.max(x1,x2);
 		this.y2=Math.max(y1,y2);
 		this.z2=Math.max(z1,z2);
+	}
+	
+	public void enable(Vi6Main mainref) {
+		if (enabled) return;
 		mainref.getPmanager().registerEvents(this, mainref);
+		playersInside.clear();
+		listeners.clear();
+		enabled=true;
 	}
 	
 	public void addListener(ZoneDetectionListener l) {
@@ -49,11 +56,18 @@ public class DetectionZone implements ConfigurationSerializable,Listener {
 	@Override
 	public Map<String, Object> serialize() {
 		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("x1",x1);
+		map.put("y1",y1);
+		map.put("z1",z1);
+		map.put("x2",x2);
+		map.put("y2",y2);
+		map.put("z2",z2);
 		return map;
 	}
 	
-	public static Carte deserialize(Map<String, Object> args) {
-		return new Carte();
+	public static DetectionZone deserialize(Map<String, Object> args) {
+		return new DetectionZone((double)args.get("x1"),(double)args.get("y1"),(double)args.get("z1"),
+				(double)args.get("x2"),(double)args.get("y2"),(double)args.get("z2"));
 	}
 	
 	@EventHandler
@@ -120,6 +134,7 @@ public class DetectionZone implements ConfigurationSerializable,Listener {
 		}
 		listeners.clear();
 		playersInside.clear();
+		enabled=false;
 	}
 	
 }
