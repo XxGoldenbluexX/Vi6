@@ -21,7 +21,7 @@ import fr.nekotine.vi6.enums.Team;
  */
 
 public class SQLInterface {
-	public static String dataFolderURL;
+	private static String dataFolderURL;
 	public static void load(String url) {
 		dataFolderURL=url;
 		try {

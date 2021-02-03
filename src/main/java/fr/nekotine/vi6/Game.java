@@ -95,6 +95,19 @@ public class Game implements Listener{
 	public HashMap<Player,ThiefWrapper> getThiefsMap() {
 		return thiefs;
 	}
+	
+	public ThiefWrapper getThiefWrapper(Player p) {
+		return thiefs.get(p);
+	}
+	
+	public GuardWrapper getGuardWrapper(Player p) {
+		return guards.get(p);
+	}
+	
+	public Team getPlayerTeam(Player p) {
+		return playerList.get(p);
+	}
+	
 	//je met ça là, tu y mettra à la fin au moment où on commence la game!
 	public void gameStart() {
 		idPartie = SQLInterface.addPartie(Date.valueOf(LocalDate.now()), null, money, isRanked, mapName);
