@@ -32,6 +32,7 @@ public class Entree implements ConfigurationSerializable,ZoneDetectionListener{
 	@Override
 	public Map<String, Object> serialize() {
 		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("name", displayName);
 		map.put("nb_zones", zones.length);
 		for (int i=0;i<zones.length;i++) {
 			map.put(DetectionZone.getYamlprefix()+i,zones[i]);
@@ -62,7 +63,15 @@ public class Entree implements ConfigurationSerializable,ZoneDetectionListener{
 	}
 
 	public void setZones(DetectionZone[] zones) {
+		if (this.zones!=null) {
+			for (DetectionZone zone : zones) {
+				zone.removeListener(this);
+			}
+		}
 		this.zones = zones;
+		for (DetectionZone zone : zones) {
+			zone.addListener(this);
+		}
 	}
 	
 	public Location getTpLoc() {
