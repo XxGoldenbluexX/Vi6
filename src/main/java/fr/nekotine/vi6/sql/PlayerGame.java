@@ -8,8 +8,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 
-import fr.nekotine.vi6.Artefact;
-import fr.nekotine.vi6.Objet;
 import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.events.GameEndEvent;
 
@@ -32,8 +30,8 @@ public class PlayerGame implements Listener{
 	private int idPartieTueur;
 	private String salleMort;
 	
-	private HashMap<Artefact, Time> artefactStolen = new HashMap<>();
-	private HashMap<Objet, Time> objectUsed = new HashMap<>();
+	private HashMap<String, Time> artefactStolen = new HashMap<>();
+	private HashMap<String, Time> objectUsed = new HashMap<>();
 	
 	public PlayerGame(String gameName, UUID playerUUID, int idPartie, Team team) {
 		this.gameName=gameName;
@@ -45,11 +43,11 @@ public class PlayerGame implements Listener{
 	public void onGameEnd(GameEndEvent e) {
 		if(e.getGame().getName()==gameName) {
 			int idPartieJoueur = SQLInterface.addPartieJoueur(idPartie, playerUUID, team, entree, sortie, salleMort, idPartieTueur);
-			for(Artefact artefact : artefactStolen.keySet()) {
-				SQLInterface.addStealEntry(artefact.getName(), idPartieJoueur, artefactStolen.get(artefact));
+			for(String artefactName : artefactStolen.keySet()) {
+				SQLInterface.addStealEntry(artefactName, idPartieJoueur, artefactStolen.get(artefactName));
 			}
-			for(Objet objet : objectUsed.keySet()) {
-				SQLInterface.addStealEntry(objet.getName(), idPartieJoueur, objectUsed.get(objet));
+			for(String objetName : objectUsed.keySet()) {
+				SQLInterface.addStealEntry(objetName, idPartieJoueur, objectUsed.get(objetName));
 			}
 			HandlerList.unregisterAll(this);
 		}

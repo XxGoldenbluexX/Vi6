@@ -1,13 +1,11 @@
 package fr.nekotine.vi6.events;
 
-import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import fr.nekotine.vi6.Game;
 
-public class PlayerLeaveMapEvent extends Event{
-	private final Player player;
+public class GameTickEvent extends Event{
 	private final Game game;
 	private static final HandlerList handlers = new HandlerList();
 	public static HandlerList getHandlerList() {
@@ -15,15 +13,11 @@ public class PlayerLeaveMapEvent extends Event{
 	}
 	@Override
 	public HandlerList getHandlers() {
-		return handlers;
+		return null;
 	}
-	public PlayerLeaveMapEvent(Player player, Game game) {
-		this.player = player;
+	public GameTickEvent(Game game) {
 		this.game = game;
 		
-	}
-	public Player getPlayer() {
-		return player;
 	}
 	public Game getGame() {
 		return game;
