@@ -1,13 +1,15 @@
 package fr.nekotine.vi6.objet;
 
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
 
 import fr.nekotine.vi6.Game;
 
-public class ObjetRandom extends Objet{
-	public ObjetRandom(ItemStack itemStack, Game game) {
-		super(itemStack, game);
+public class Lantern extends Objet{
+	public Lantern(ObjetsList objet, Player player, Game game) {
+		super(objet, new ItemStack(Material.LANTERN), game);
 	}
 	@Override
 	public void gameStart() {
@@ -36,11 +38,6 @@ public class ObjetRandom extends Objet{
 	}
 	@Override
 	public void action(Action action) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void buy() {
 		// TODO Auto-generated method stub
 		
 	}

@@ -3,7 +3,6 @@ package fr.nekotine.vi6;
 import java.sql.Date;
 import java.sql.Time;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashMap;
@@ -120,8 +119,7 @@ public class Game implements Listener{
 	}
 	public void gameEnd() {
 		try {
-			SimpleDateFormat format = new SimpleDateFormat("HH:mm");
-			SQLInterface.updatePartie(idPartie, new Time(format.parse(LocalTime.now().toString()).getTime() - format.parse(startTime).getTime()));
+			SQLInterface.updatePartie(idPartie, new Time(SQLInterface.getTimeFormat().parse(LocalTime.now().toString()).getTime() - SQLInterface.getTimeFormat().parse(startTime).getTime()));
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}

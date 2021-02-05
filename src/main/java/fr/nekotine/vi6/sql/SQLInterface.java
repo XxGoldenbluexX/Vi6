@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Time;
+import java.text.SimpleDateFormat;
 import java.util.UUID;
 
 import fr.nekotine.vi6.enums.Team;
@@ -22,6 +23,7 @@ import fr.nekotine.vi6.enums.Team;
 
 public class SQLInterface {
 	private static String dataFolderURL;
+	private static SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
 	public static void load(String url) {
 		dataFolderURL=url;
 		try {
@@ -75,6 +77,9 @@ public class SQLInterface {
 			System.out.println("Vi6Message: <ERROR WHILE TRYING TO LOAD SQL>");
 			e.printStackTrace();
 		}
+	}
+	public static SimpleDateFormat getTimeFormat() {
+		return dateFormat;
 	}
 	public static int addPartie(Date date, Time duree, int argent, boolean isRanked, String nomCarte) {
 		try {

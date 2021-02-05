@@ -1,6 +1,8 @@
 package fr.nekotine.vi6.sql;
 
 import java.sql.Time;
+import java.text.ParseException;
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -10,6 +12,8 @@ import org.bukkit.event.Listener;
 
 import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.events.GameEndEvent;
+import fr.nekotine.vi6.events.PlayerStealEvent;
+import fr.nekotine.vi6.events.PlayerUseObjectEvent;
 
 /**
  * Made from Game, this class is used to move information to the SQLInterface
@@ -32,7 +36,7 @@ public class PlayerGame implements Listener{
 	
 	private HashMap<String, Time> artefactStolen = new HashMap<>();
 	private HashMap<String, Time> objectUsed = new HashMap<>();
-	
+
 	public PlayerGame(String gameName, UUID playerUUID, int idPartie, Team team) {
 		this.gameName=gameName;
 		this.playerUUID=playerUUID;
@@ -50,6 +54,26 @@ public class PlayerGame implements Listener{
 				SQLInterface.addStealEntry(objetName, idPartieJoueur, objectUsed.get(objetName));
 			}
 			HandlerList.unregisterAll(this);
+		}
+	}
+	@EventHandler
+	public void playerUseObjet(PlayerUseObjectEvent e) {
+		if(e.getPlayer().getUniqueId()==playerUUID) {
+			try {
+				objectUsed.put(e.getObjet().name(), new Time(SQLInterface.getTimeFormat().parse(LocalTime.now().toString()).getTime()));
+			} catch (ParseException e1) {
+				e1.printStackTrace();
+			}
+		}
+	}
+	@EventHandler
+	public void playerStealArtefact(PlayerStealEvent e) {
+		if(e.getPlayer().getUniqueId()==playerUUID) {
+			try {
+				artefactStolen.put(e.getArtefact().getName(), new Time(SQLInterface.getTimeFormat().parse(LocalTime.now().toString()).getTime()));
+			} catch (ParseException e1) {
+				e1.printStackTrace();
+			}
 		}
 	}
 }
