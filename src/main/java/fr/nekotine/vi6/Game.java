@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -22,17 +23,18 @@ import fr.nekotine.vi6.yml.DisplayTexts;
 public class Game implements Listener{
 	private final Vi6Main main;
 	private int idPartie;
-	private final String startTime = LocalTime.now().toString();
+	private String startTime;
 	
 	private final String name;
 	private boolean isRanked=true;
 	private GameState state = GameState.Waiting;
-	private final HashMap<Player,Team> playerList = new HashMap<Player,Team>(10);
-	private final HashMap<Player,GuardWrapper> guards = new HashMap<Player,GuardWrapper>(4);
-	private final HashMap<Player,ThiefWrapper> thiefs = new HashMap<Player,ThiefWrapper>(4);
+	private final HashMap<Player,Team> playerList = new HashMap<Player,Team>();
+	private final HashMap<Player,GuardWrapper> guards = new HashMap<Player,GuardWrapper>();
+	private final HashMap<Player,ThiefWrapper> thiefs = new HashMap<Player,ThiefWrapper>();
 	
 	private String mapName;
 	private int money;
+	
 	public Game(Vi6Main main, String name) {
 		this.main=main;
 		this.name=name;
@@ -110,13 +112,12 @@ public class Game implements Listener{
 	//je met ça là, tu y mettra à la fin au moment où on commence la game!
 	public void gameStart() {
 		idPartie = SQLInterface.addPartie(Date.valueOf(LocalDate.now()), null, money, isRanked, mapName);
-		for(Player guard : guards.keySet()) {
-			Bukkit.getPluginManager().registerEvents(new PlayerGame(name, guard.getUniqueId(), idPartie, Team.GARDE), main);
+		for(Entry<Player, Team> playerAndTeam : playerList.entrySet()) {
+			Bukkit.getPluginManager().registerEvents(new PlayerGame(name, playerAndTeam.getKey().getUniqueId(), idPartie, playerAndTeam.getValue()), main);
 		}
-		for(Player thief : thiefs.keySet()) {
-			Bukkit.getPluginManager().registerEvents(new PlayerGame(name, thief.getUniqueId(), idPartie, Team.VOLEUR), main);
-		}
+		startTime = LocalTime.now().toString();
 	}
+	
 	public void gameEnd() {
 		try {
 			SQLInterface.updatePartie(idPartie, new Time(SQLInterface.getTimeFormat().parse(LocalTime.now().toString()).getTime() - SQLInterface.getTimeFormat().parse(startTime).getTime()));

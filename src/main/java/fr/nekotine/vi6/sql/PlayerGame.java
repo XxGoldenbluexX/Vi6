@@ -13,7 +13,7 @@ import org.bukkit.event.Listener;
 import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.events.GameEndEvent;
 import fr.nekotine.vi6.events.PlayerStealEvent;
-import fr.nekotine.vi6.events.PlayerUseObjectEvent;
+import fr.nekotine.vi6.events.PlayerUseObjetEvent;
 
 /**
  * Made from Game, this class is used to move information to the SQLInterface
@@ -57,7 +57,7 @@ public class PlayerGame implements Listener{
 		}
 	}
 	@EventHandler
-	public void playerUseObjet(PlayerUseObjectEvent e) {
+	public void playerUseObjet(PlayerUseObjetEvent e) {
 		if(e.getPlayer().getUniqueId()==playerUUID) {
 			try {
 				objectUsed.put(e.getObjet().name(), new Time(SQLInterface.getTimeFormat().parse(LocalTime.now().toString()).getTime()));

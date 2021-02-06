@@ -8,8 +8,18 @@ import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.enums.Team;
 
 public enum ObjetsSkins {
-	Lantern(ObjetsList.LANTERN, SkinType.DEFAULT, Team.VOLEUR, ChatColor.RED+"Lanterne",Material.LANTERN,new String[]{"Ceci est la rune Lanterne (skin de base de la Lanterne)"}),
-	BlueLantern(Lantern.getObjet(), SkinType.SKIN, Lantern.getTeam(), ChatColor.BLUE+"LanterneBleue",Material.SOUL_LANTERN,new String[]{"Ceci est le skin LanterneBleue"});
+	Lantern(ObjetsList.LANTERN,
+			SkinType.DEFAULT,
+			Team.VOLEUR,
+			ChatColor.RED+"Lanterne",
+			Material.LANTERN,
+			new String[]{"Ceci est la rune Lanterne (skin de base de la Lanterne)"}),
+	BlueLantern(Lantern.getObjet(),
+			SkinType.SKIN,
+			Lantern.getTeam(),
+			ChatColor.BLUE+"LanterneBleue",
+			Material.SOUL_LANTERN,
+			new String[]{"Ceci est le skin LanterneBleue"});
 	
 	////////////////////////////////
 	private final ObjetsList objet;

@@ -6,7 +6,7 @@ import org.bukkit.event.HandlerList;
 
 import fr.nekotine.vi6.objet.ObjetsList;
 
-public class PlayerUseObjectEvent extends Event{
+public class PlayerUseObjetEvent extends Event{
 	private final Player player;
 	private final ObjetsList objet;
 	private static final HandlerList handlers = new HandlerList();
@@ -17,7 +17,7 @@ public class PlayerUseObjectEvent extends Event{
 	public HandlerList getHandlers() {
 		return handlers;
 	}
-	public PlayerUseObjectEvent(Player player, ObjetsList objet) {
+	public PlayerUseObjetEvent(Player player, ObjetsList objet) {
 		this.player = player;
 		this.objet = objet;
 		
