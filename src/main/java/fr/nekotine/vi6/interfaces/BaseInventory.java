@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -63,6 +64,13 @@ public abstract class BaseInventory implements Listener{
 		if(e.getPlayer().equals(player)&&e.getGame().equals(game)) {
 			player.closeInventory();
 			HandlerList.unregisterAll(this);
+		}
+	}
+	@EventHandler
+	public void onInventoryClick(InventoryClickEvent e) {
+		if(e.getClickedInventory().equals(inventory)) {
+			e.setCancelled(true);
+			itemClicked(e.getCurrentItem().getType());
 		}
 	}
 }

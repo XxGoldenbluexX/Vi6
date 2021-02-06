@@ -50,7 +50,8 @@ public class GameMoneyAnvil implements Listener{
 	}
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent e) {
-		if(e.getWhoClicked().equals(player)) {
+		if(e.getClickedInventory().equals(anvilInv)) {
+			e.setCancelled(true);
 			if(e.getCurrentItem().equals(anvilInv.getResult())) {
 				try {
 					int money = Integer.valueOf(anvilInv.getResult().getItemMeta().getDisplayName());
