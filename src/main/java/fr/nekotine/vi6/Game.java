@@ -17,7 +17,7 @@ import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.sql.PlayerGame;
 import fr.nekotine.vi6.sql.SQLInterface;
 import fr.nekotine.vi6.wrappers.GuardWrapper;
-import fr.nekotine.vi6.wrappers.ThiefWrapper;
+import fr.nekotine.vi6.wrappers.PlayerWrapper;
 import fr.nekotine.vi6.yml.DisplayTexts;
 
 public class Game implements Listener{
@@ -28,9 +28,7 @@ public class Game implements Listener{
 	private final String name;
 	private boolean isRanked=true;
 	private GameState state = GameState.Waiting;
-	private final HashMap<Player,Team> playerList = new HashMap<Player,Team>();
-	private final HashMap<Player,GuardWrapper> guards = new HashMap<Player,GuardWrapper>();
-	private final HashMap<Player,ThiefWrapper> thiefs = new HashMap<Player,ThiefWrapper>();
+	private final HashMap<Player,PlayerWrapper> playerList = new HashMap<Player,PlayerWrapper>();
 	
 	private String mapName;
 	private int money;
@@ -59,9 +57,7 @@ public class Game implements Listener{
 	
 	public boolean addPlayer(Player p) {
 		if (!playerList.keySet().contains(p)) {
-			playerList.put(p, Team.GARDE);
-			guards.put(p, new GuardWrapper());
-			thiefs.put(p, new ThiefWrapper());
+			playerList.put(p, new PlayerWrapper(p));
 			for (Player pl : playerList.keySet()) {
 				pl.sendMessage(String.format(DisplayTexts.getMessage("game.join"), p.getName()));
 			}
@@ -73,10 +69,6 @@ public class Game implements Listener{
 	public boolean removePlayer(Player p) {
 		if (playerList.keySet().contains(p)) {
 			playerList.remove(p);
-			guards.get(p).destroy();
-			guards.remove(p);
-			thiefs.get(p).destroy();
-			thiefs.remove(p);
 			for (Player pl : playerList.keySet()) {
 				pl.sendMessage(String.format(DisplayTexts.getMessage("game.leave"), p.getName()));
 			}
@@ -85,35 +77,21 @@ public class Game implements Listener{
 		return false;
 	}
 
-	public HashMap<Player, Team> getPlayerList() {
+	public HashMap<Player, PlayerWrapper> getPlayerList() {
 		return playerList;
-	}
-
-	public HashMap<Player,GuardWrapper> getGuardsMap() {
-		return guards;
-	}
-
-	public HashMap<Player,ThiefWrapper> getThiefsMap() {
-		return thiefs;
-	}
-	
-	public ThiefWrapper getThiefWrapper(Player p) {
-		return thiefs.get(p);
-	}
-	
-	public GuardWrapper getGuardWrapper(Player p) {
-		return guards.get(p);
 	}
 	
 	public Team getPlayerTeam(Player p) {
-		return playerList.get(p);
+		PlayerWrapper w = playerList.get(p);
+		if (w!=null) return w.getTeam();
+		return null;
 	}
 	
 	//je met ça là, tu y mettra à la fin au moment où on commence la game!
 	public void gameStart() {
 		idPartie = SQLInterface.addPartie(Date.valueOf(LocalDate.now()), null, money, isRanked, mapName);
-		for(Entry<Player, Team> playerAndTeam : playerList.entrySet()) {
-			Bukkit.getPluginManager().registerEvents(new PlayerGame(name, playerAndTeam.getKey().getUniqueId(), idPartie, playerAndTeam.getValue()), main);
+		for(Entry<Player, PlayerWrapper> playerAndTeam : playerList.entrySet()) {
+			Bukkit.getPluginManager().registerEvents(new PlayerGame(name, playerAndTeam.getKey().getUniqueId(), idPartie, playerAndTeam.getValue().getTeam()), main);
 		}
 		startTime = LocalTime.now().toString();
 	}
