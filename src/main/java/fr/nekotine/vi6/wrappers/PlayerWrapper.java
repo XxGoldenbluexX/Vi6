@@ -12,6 +12,7 @@ import fr.nekotine.vi6.statuseffects.StatusEffect;
 public class PlayerWrapper {
 	
 	private Team team = Team.GARDE;
+	private boolean isReady=false;
 	private PlayerState state=PlayerState.WAITING;
 	private String currentSalle;
 	private final Player player;
@@ -32,6 +33,14 @@ public class PlayerWrapper {
 	public Player getPlayer() {
 		return player;
 	};
+	
+	public boolean isReady() {
+		return isReady;
+	}
+	
+	public void setReady(boolean ready) {
+		isReady=ready;
+	}
 	
 	public void removeStatusEffect(StatusEffect eff) {
 		statusEffects.remove(eff);

@@ -14,9 +14,9 @@ import org.bukkit.event.Listener;
 
 import fr.nekotine.vi6.enums.GameState;
 import fr.nekotine.vi6.enums.Team;
+import fr.nekotine.vi6.events.GameEndEvent;
 import fr.nekotine.vi6.sql.PlayerGame;
 import fr.nekotine.vi6.sql.SQLInterface;
-import fr.nekotine.vi6.wrappers.GuardWrapper;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 import fr.nekotine.vi6.yml.DisplayTexts;
 
@@ -89,7 +89,6 @@ public class Game implements Listener{
 	
 	//je met ça là, tu y mettra à la fin au moment où on commence la game!
 	public void gameStart() {
-		idPartie = SQLInterface.addPartie(Date.valueOf(LocalDate.now()), null, money, isRanked, mapName);
 		for(Entry<Player, PlayerWrapper> playerAndTeam : playerList.entrySet()) {
 			Bukkit.getPluginManager().registerEvents(new PlayerGame(name, playerAndTeam.getKey().getUniqueId(), idPartie, playerAndTeam.getValue().getTeam()), main);
 		}
@@ -98,7 +97,8 @@ public class Game implements Listener{
 	
 	public void gameEnd() {
 		try {
-			SQLInterface.updatePartie(idPartie, new Time(SQLInterface.getTimeFormat().parse(LocalTime.now().toString()).getTime() - SQLInterface.getTimeFormat().parse(startTime).getTime()));
+			idPartie = SQLInterface.addPartie(Date.valueOf(LocalDate.now()), new Time(SQLInterface.getTimeFormat().parse(LocalTime.now().toString()).getTime() - SQLInterface.getTimeFormat().parse(startTime).getTime()), money, isRanked, mapName);
+			Bukkit.getPluginManager().callEvent(new GameEndEvent(this, idPartie));
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}

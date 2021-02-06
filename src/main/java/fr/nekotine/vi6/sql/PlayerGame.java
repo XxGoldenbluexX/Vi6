@@ -25,7 +25,6 @@ import fr.nekotine.vi6.events.PlayerUseObjetEvent;
 
 public class PlayerGame implements Listener{
 	private final String gameName;
-	private final int idPartie;
 	private final UUID playerUUID;
 	private final Team team;
 	
@@ -40,13 +39,12 @@ public class PlayerGame implements Listener{
 	public PlayerGame(String gameName, UUID playerUUID, int idPartie, Team team) {
 		this.gameName=gameName;
 		this.playerUUID=playerUUID;
-		this.idPartie=idPartie;
 		this.team = team;
 	}
 	@EventHandler
 	public void onGameEnd(GameEndEvent e) {
 		if(e.getGame().getName()==gameName) {
-			int idPartieJoueur = SQLInterface.addPartieJoueur(idPartie, playerUUID, team, entree, sortie, salleMort, idPartieTueur);
+			int idPartieJoueur = SQLInterface.addPartieJoueur(e.getIdPartie(), playerUUID, team, entree, sortie, salleMort, idPartieTueur);
 			for(String artefactName : artefactStolen.keySet()) {
 				SQLInterface.addStealEntry(artefactName, idPartieJoueur, artefactStolen.get(artefactName));
 			}
