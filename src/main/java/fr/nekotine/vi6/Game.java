@@ -55,6 +55,22 @@ public class Game implements Listener{
 		return state;
 	}
 	
+	public int getMoney() {
+		return money;
+	}
+	
+	public void setMoney(int money) {
+		this.money=money;
+	}
+	
+	public String getMapName() {
+		return mapName;
+	}
+	
+	public void setMapName(String mapName) {
+		this.mapName=mapName;
+	}
+	
 	public boolean addPlayer(Player p) {
 		if (!playerList.keySet().contains(p)) {
 			playerList.put(p, new PlayerWrapper(p));
