@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.bukkit.entity.Player;
 
+import fr.nekotine.vi6.enums.PlayerState;
 import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.statuseffects.Effects;
 import fr.nekotine.vi6.statuseffects.StatusEffect;
@@ -11,6 +12,8 @@ import fr.nekotine.vi6.statuseffects.StatusEffect;
 public class PlayerWrapper {
 	
 	private Team team = Team.GARDE;
+	private PlayerState state=PlayerState.WAITING;
+	private String currentSalle;
 	private final Player player;
 	private final ArrayList<StatusEffect> statusEffects = new ArrayList<StatusEffect>();
 	
@@ -47,6 +50,22 @@ public class PlayerWrapper {
 			if (e.getEffect()==effect) return true;
 		}
 		return false;
+	}
+
+	public String getCurrentSalle() {
+		return currentSalle;
+	}
+
+	public void setCurrentSalle(String currentSalle) {
+		this.currentSalle = currentSalle;
+	}
+
+	public PlayerState getState() {
+		return state;
+	}
+
+	public void setState(PlayerState state) {
+		this.state = state;
 	}
 	
 }
