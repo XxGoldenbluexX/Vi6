@@ -47,7 +47,8 @@ public class GameSettingsInventory extends BaseInventory{
 			inventory.setItem(11, createItemStack(Material.EMERALD,1,ChatColor.GREEN+"Classée",""));
 			return;
 		case GOLD_INGOT:
-			//modifier la thune
+			new GameMoneyAnvil(main, game, player, wrapper);
+			HandlerList.unregisterAll(this);
 			return;
 		case PAPER:
 			//modifier la map
