@@ -3,7 +3,6 @@ package fr.nekotine.vi6.map;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bukkit.Location;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
 
@@ -63,12 +62,12 @@ public class Sortie implements ConfigurationSerializable,ZoneDetectionListener {
 	}
 
 	@Override
-	public boolean playerEnterZone(Player player) {
+	public boolean playerEnterZone(Player player,DetectionZone zone) {
 		return false;
 	}
 
 	@Override
-	public boolean playerLeaveZone(Player player) {
+	public boolean playerLeaveZone(Player player,DetectionZone zone) {
 		return false;
 	}
 

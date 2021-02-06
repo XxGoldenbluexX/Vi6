@@ -89,12 +89,12 @@ public class Entree implements ConfigurationSerializable,ZoneDetectionListener{
 	}
 
 	@Override
-	public boolean playerEnterZone(Player player) {
+	public boolean playerEnterZone(Player player,DetectionZone zone) {
 		return false;
 	}
 
 	@Override
-	public boolean playerLeaveZone(Player player) {
+	public boolean playerLeaveZone(Player player,DetectionZone zone) {
 		return false;
 	}
 
