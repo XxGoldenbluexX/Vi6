@@ -37,6 +37,10 @@ public class Passage implements ConfigurationSerializable, ZoneDetectionListener
 	@Override
 	public Map<String, Object> serialize() {
 		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("salleA", salleA);
+		map.put("salleB", salleB);
+		map.put("zoneA", zoneA);
+		map.put("zoneB", zoneB);
 		return map;
 	}
 	

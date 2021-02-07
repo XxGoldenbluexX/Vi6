@@ -131,7 +131,7 @@ public class DetectionZone implements ConfigurationSerializable,Listener {
 		HandlerList.unregisterAll(this);
 		for (Player p : playersInside) {
 			for (ZoneDetectionListener l : listeners) {
-				l.playerLeaveZone(p);
+				l.playerLeaveZone(p,this);
 			}
 		}
 		listeners.clear();
