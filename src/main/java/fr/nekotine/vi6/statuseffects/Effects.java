@@ -7,7 +7,8 @@ public enum Effects {
 	Sondé,
 	Insondable,
 	Glow,
-	InGlowable;
+	InGlowable,
+	Fantomatique;
 	
 	public static Effects getCounter(Effects e) {
 		switch(e) {
@@ -17,8 +18,8 @@ public enum Effects {
 			return Insondable;
 		case Glow:
 			return InGlowable;
+		default: return null;
 		}
-		return null;
 	}
 	
 	public static boolean isCounterable(Effects e) {
