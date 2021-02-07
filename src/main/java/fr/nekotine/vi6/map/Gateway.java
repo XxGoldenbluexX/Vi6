@@ -1,5 +1,8 @@
 package fr.nekotine.vi6.map;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -54,6 +57,23 @@ public class Gateway extends Passage {
 			}
 		}
 		return true;
+	}
+	
+	@Override
+	public Map<String, Object> serialize() {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("salleA", getSalleA());
+		map.put("salleB", getSalleB());
+		map.put("zoneA", getZoneA());
+		map.put("zoneB", getZoneB());
+		map.put("corner1", corner1);
+		map.put("corner2", corner2);
+		return map;
+	}
+	
+	public static Gateway deserialize(Map<String, Object> args) {
+		return new Gateway((String)args.get("salleA"),(String)args.get("salleB"),
+				(DetectionZone)args.get("zoneA"),(DetectionZone)args.get("zoneB"),(Location)args.get("corner1"),(Location)args.get("corner2"));
 	}
 
 	public boolean isClosed() {
