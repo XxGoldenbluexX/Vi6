@@ -2,12 +2,15 @@ package fr.nekotine.vi6;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import fr.nekotine.vi6.sql.SQLInterface;
+import fr.nekotine.vi6.wrappers.PlayerWrapper;
 
 /**
  * Main class of the minecraft plugin
@@ -77,6 +80,21 @@ public class Vi6Main extends JavaPlugin {
 
 	public PluginManager getPmanager() {
 		return pmanager;
+	}
+	
+	/**
+	 * Used to find PlayerWrapper for a Player
+	 * @nullable
+	 * @param p Player to find
+	 * @return PlayerWrapper for the player, null if the player is not in a game
+	 */
+	public PlayerWrapper getPlayerWrapper(Player p) {
+		for (Game g : gameList) {
+			Map<Player,PlayerWrapper> map = g.getPlayerList();
+			if (map.containsKey(p)) return map.get(p);
+			getPlayerWrapper(p);
+		}
+		return null;
 	}
 	
 }
