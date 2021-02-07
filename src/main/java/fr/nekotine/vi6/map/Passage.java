@@ -29,7 +29,7 @@ public class Passage implements ConfigurationSerializable, ZoneDetectionListener
 	@Override
 	public boolean playerEnterZone(Player player,DetectionZone zone,Vi6Main mainref) {
 		PlayerWrapper w = mainref.getPlayerWrapper(player);
-		if (w!=null && (w.getState()==PlayerState.INSIDE || w.getState()==PlayerState.INSIDE)) {
+		if (w!=null && (w.getState()==PlayerState.WAITING || w.getState()==PlayerState.INSIDE)) {
 			if (zone.equals(zoneA)) w.setCurrentSalle(salleA);
 			if (zone.equals(zoneB)) w.setCurrentSalle(salleB);
 		}
