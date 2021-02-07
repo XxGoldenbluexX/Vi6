@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -93,8 +94,12 @@ public class Game implements Listener{
 		return false;
 	}
 
-	public HashMap<Player, PlayerWrapper> getPlayerList() {
+	public HashMap<Player, PlayerWrapper> getPlayerMap() {
 		return playerList;
+	}
+	
+	public Set<Player> getPlayerList(){
+		return playerList.keySet();
 	}
 	
 	public Team getPlayerTeam(Player p) {

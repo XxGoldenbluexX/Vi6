@@ -90,7 +90,7 @@ public class Vi6Main extends JavaPlugin {
 	 */
 	public PlayerWrapper getPlayerWrapper(Player p) {
 		for (Game g : gameList) {
-			Map<Player,PlayerWrapper> map = g.getPlayerList();
+			Map<Player,PlayerWrapper> map = g.getPlayerMap();
 			if (map.containsKey(p)) return map.get(p);
 			getPlayerWrapper(p);
 		}

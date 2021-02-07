@@ -1,6 +1,8 @@
 package fr.nekotine.vi6.objet;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -40,7 +42,13 @@ public abstract class Objet implements Listener{
 	}
 	@EventHandler
 	public void onGameEnd(GameEndEvent e) {
-		if(e.getGame().equals(game)) gameEnd();
+		if(e.getGame().equals(game)) {
+			gameEnd();
+			for(Player player : game.getPlayerList()) {
+				player.getInventory().removeItem(itemStack);
+			}
+			HandlerList.unregisterAll(this);
+		}
 	}
 	@EventHandler
 	public void onGameTick(GameTickEvent e) {
@@ -48,11 +56,19 @@ public abstract class Objet implements Listener{
 	}
 	@EventHandler
 	public void onPlayerLeaveMap(PlayerLeaveMapEvent e) {
-		if(e.getGame().equals(game)&&e.getPlayer().getInventory().contains(itemStack)) leaveMap();
+		if(e.getGame().equals(game)&&e.getPlayer().getInventory().contains(itemStack)) {
+			leaveMap();
+			e.getPlayer().getInventory().removeItem(itemStack);
+			HandlerList.unregisterAll(this);
+		}
 	}
 	@EventHandler
 	public void onPlayerDeath(PlayerDeathEvent e) {
-		if(e.getEntity().getInventory().contains(itemStack)) death();
+		if(e.getEntity().getInventory().contains(itemStack)) {
+			death();
+			e.getEntity().getInventory().removeItem(itemStack);
+			HandlerList.unregisterAll(this);
+		}
 	}
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent e) {
@@ -60,6 +76,10 @@ public abstract class Objet implements Listener{
 	}
 	@EventHandler
 	public void playerSellObjet(PlayerSellObjetEvent e) {
-		if(e.getObjet().equals(objet)) sell();
+		if(e.getObjet().equals(objet)) {
+			sell();
+			e.getPlayer().getInventory().removeItem(itemStack);
+			HandlerList.unregisterAll(this);
+		}
 	}
 }
