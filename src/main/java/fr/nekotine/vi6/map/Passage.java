@@ -7,8 +7,10 @@ import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
 
 import fr.nekotine.vi6.Vi6Main;
+import fr.nekotine.vi6.enums.PlayerState;
 import fr.nekotine.vi6.utils.DetectionZone;
 import fr.nekotine.vi6.utils.ZoneDetectionListener;
+import fr.nekotine.vi6.wrappers.PlayerWrapper;
 
 public class Passage implements ConfigurationSerializable, ZoneDetectionListener {
 
@@ -25,12 +27,17 @@ public class Passage implements ConfigurationSerializable, ZoneDetectionListener
 	}
 	
 	@Override
-	public boolean playerEnterZone(Player player,DetectionZone zone) {
+	public boolean playerEnterZone(Player player,DetectionZone zone,Vi6Main mainref) {
+		PlayerWrapper w = mainref.getPlayerWrapper(player);
+		if (w!=null && (w.getState()==PlayerState.INSIDE || w.getState()==PlayerState.INSIDE)) {
+			if (zone.equals(zoneA)) w.setCurrentSalle(salleA);
+			if (zone.equals(zoneB)) w.setCurrentSalle(salleB);
+		}
 		return false;
 	}
 
 	@Override
-	public boolean playerLeaveZone(Player player,DetectionZone zone) {
+	public boolean playerLeaveZone(Player player,DetectionZone zone,Vi6Main mainref) {
 		return false;
 	}
 

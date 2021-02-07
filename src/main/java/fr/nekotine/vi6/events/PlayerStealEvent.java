@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import fr.nekotine.vi6.Artefact;
+import fr.nekotine.vi6.map.Artefact;
 
 public class PlayerStealEvent extends Event{
 	private final Artefact artefact;

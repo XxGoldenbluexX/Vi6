@@ -89,12 +89,12 @@ public class Entree implements ConfigurationSerializable,ZoneDetectionListener{
 	}
 
 	@Override
-	public boolean playerEnterZone(Player player,DetectionZone zone) {
+	public boolean playerEnterZone(Player player,DetectionZone zone,Vi6Main mainref) {
 		return false;
 	}
 
 	@Override
-	public boolean playerLeaveZone(Player player,DetectionZone zone) {
+	public boolean playerLeaveZone(Player player,DetectionZone zone,Vi6Main mainref) {
 		return false;
 	}
 

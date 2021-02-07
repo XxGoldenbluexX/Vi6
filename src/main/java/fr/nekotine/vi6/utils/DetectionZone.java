@@ -27,6 +27,7 @@ public class DetectionZone implements ConfigurationSerializable,Listener {
 	private final ArrayList<Player> playersInside = new ArrayList<Player>();
 	private final ArrayList<ZoneDetectionListener> listeners = new ArrayList<ZoneDetectionListener>();
 	private boolean enabled=false;
+	private Vi6Main mainref;
 	
 	public DetectionZone(double x1, double y1, double z1, double x2, double y2, double z2) {
 		this.x1=Math.min(x1,x2);
@@ -40,6 +41,7 @@ public class DetectionZone implements ConfigurationSerializable,Listener {
 	public void enable(Vi6Main mainref) {
 		if (enabled) return;
 		mainref.getPmanager().registerEvents(this, mainref);
+		setMainref(mainref);
 		playersInside.clear();
 		listeners.clear();
 		enabled=true;
@@ -78,7 +80,7 @@ public class DetectionZone implements ConfigurationSerializable,Listener {
 		if (isLocInside(evt.getTo()) && !playersInside.contains(p)) {
 			playersInside.add(p);
 			for (ZoneDetectionListener l : listeners) {
-				if (l.playerEnterZone(p,this)) {
+				if (l.playerEnterZone(p,this,mainref)) {
 					evt.setCancelled(true);
 					return;
 				};
@@ -87,7 +89,7 @@ public class DetectionZone implements ConfigurationSerializable,Listener {
 		if (!isLocInside(evt.getTo()) && playersInside.contains(p)) {
 			playersInside.remove(p);
 			for (ZoneDetectionListener l : listeners) {
-				if (l.playerLeaveZone(p,this)) {
+				if (l.playerLeaveZone(p,this,mainref)) {
 					evt.setCancelled(true);
 					return;
 				};
@@ -131,7 +133,7 @@ public class DetectionZone implements ConfigurationSerializable,Listener {
 		HandlerList.unregisterAll(this);
 		for (Player p : playersInside) {
 			for (ZoneDetectionListener l : listeners) {
-				l.playerLeaveZone(p,this);
+				l.playerLeaveZone(p,this,mainref);
 			}
 		}
 		listeners.clear();
@@ -141,6 +143,14 @@ public class DetectionZone implements ConfigurationSerializable,Listener {
 
 	public static String getYamlprefix() {
 		return yamlPrefix;
+	}
+
+	public Vi6Main getMainref() {
+		return mainref;
+	}
+
+	public void setMainref(Vi6Main mainref) {
+		this.mainref = mainref;
 	}
 	
 }
