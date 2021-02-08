@@ -20,19 +20,19 @@ import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.events.GameStartEvent;
 import fr.nekotine.vi6.events.PlayerLeaveGameEvent;
 
-public abstract class BaseInventory implements Listener{
-	protected Inventory inventory;
+public abstract class BasePersonalInventory implements Listener{
+	public Inventory inventory;
 	protected final Game game;
 	protected final Vi6Main main;
 	protected final Player player;
-	public BaseInventory(Inventory inventory, Game game, Vi6Main main, Player player) {
-		this.inventory=inventory;
+	
+	public BasePersonalInventory(Game game, Vi6Main main, Player player) {
 		this.game = game;
 		this.main = main;
 		this.player = player;
 		Bukkit.getPluginManager().registerEvents(this, main);
 	}
-	public abstract void itemClicked(Material m);
+	public abstract void itemClicked(ItemStack itm);
 	
 	protected ItemStack createItemStack(Material mat, int quantity, String name, String... lore) {
 		ItemStack item = new ItemStack(mat,quantity);
@@ -70,7 +70,7 @@ public abstract class BaseInventory implements Listener{
 	public void onInventoryClick(InventoryClickEvent e) {
 		if(e.getClickedInventory().equals(inventory)) {
 			e.setCancelled(true);
-			itemClicked(e.getCurrentItem().getType());
+			itemClicked(e.getCurrentItem());
 		}
 	}
 }

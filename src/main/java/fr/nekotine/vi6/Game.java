@@ -16,6 +16,8 @@ import org.bukkit.event.Listener;
 import fr.nekotine.vi6.enums.GameState;
 import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.events.GameEndEvent;
+import fr.nekotine.vi6.interfaces.GameMoneyAnvil;
+import fr.nekotine.vi6.interfaces.GameSettingsInventory;
 import fr.nekotine.vi6.sql.PlayerGame;
 import fr.nekotine.vi6.sql.SQLInterface;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
@@ -34,16 +36,29 @@ public class Game implements Listener{
 	private String mapName;
 	private int money;
 	
+	private GameMoneyAnvil moneyInterface;
+	private GameSettingsInventory settingsInterface;
+	
 	public Game(Vi6Main main, String name) {
 		this.main=main;
 		this.name=name;
+		settingsInterface = new GameSettingsInventory(main, this);
+		moneyInterface = new GameMoneyAnvil(main, this);
 		Bukkit.getPluginManager().registerEvents(this, main);
 	}
-
+	
 	public boolean isRanked() {
 		return isRanked;
 	}
-
+	
+	public void openSettings(Player player) {
+		player.openInventory(settingsInterface.inventory);
+	}
+	
+	public void openMoney(Player player) {
+		player.openInventory(moneyInterface.inventory);
+	}
+	
 	public void setRanked(boolean isRanked) {
 		this.isRanked = isRanked;
 	}
@@ -114,6 +129,10 @@ public class Game implements Listener{
 			Bukkit.getPluginManager().registerEvents(new PlayerGame(name, playerAndTeam.getKey().getUniqueId(), idPartie, playerAndTeam.getValue().getTeam()), main);
 		}
 		startTime = LocalTime.now().toString();
+	}
+	
+	public PlayerWrapper getWrapper(Player p) {
+		return playerList.get(p);
 	}
 	
 	public void gameEnd() {

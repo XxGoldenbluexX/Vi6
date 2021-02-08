@@ -5,7 +5,7 @@ import org.bukkit.event.HandlerList;
 
 import fr.nekotine.vi6.Game;
 
-public class GameMoneyChangeEvent extends Event{
+public class GameIsRankedChangeEvent extends Event{
 	private final Game game;
 	private static final HandlerList handlers = new HandlerList();
 	public static HandlerList getHandlerList() {
@@ -13,11 +13,11 @@ public class GameMoneyChangeEvent extends Event{
 	}
 	@Override
 	public HandlerList getHandlers() {
-		// TODO Auto-generated method stub
-		return null;
+		return handlers;
 	}
-	public GameMoneyChangeEvent(Game game) {
+	public GameIsRankedChangeEvent(Game game) {
 		this.game = game;
+		
 	}
 	public Game getGame() {
 		return game;
