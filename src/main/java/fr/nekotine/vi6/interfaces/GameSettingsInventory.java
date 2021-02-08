@@ -50,7 +50,7 @@ public class GameSettingsInventory extends BaseSharedInventory{
 			game.openMoney(player);
 			return;
 		case PAPER:
-			//modifier la map
+			game.openMapSelection(player);
 			return;
 		default:
 			return;

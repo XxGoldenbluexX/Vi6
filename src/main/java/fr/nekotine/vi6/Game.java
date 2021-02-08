@@ -18,6 +18,7 @@ import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.events.GameEndEvent;
 import fr.nekotine.vi6.interfaces.GameMoneyAnvil;
 import fr.nekotine.vi6.interfaces.GameSettingsInventory;
+import fr.nekotine.vi6.interfaces.MapSelectionInventory;
 import fr.nekotine.vi6.sql.PlayerGame;
 import fr.nekotine.vi6.sql.SQLInterface;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
@@ -37,12 +38,14 @@ public class Game implements Listener{
 	private int money;
 	
 	private GameMoneyAnvil moneyInterface;
+	private MapSelectionInventory mapInterface;
 	private GameSettingsInventory settingsInterface;
 	
 	public Game(Vi6Main main, String name) {
 		this.main=main;
 		this.name=name;
 		settingsInterface = new GameSettingsInventory(main, this);
+		mapInterface = new MapSelectionInventory(main, this);
 		moneyInterface = new GameMoneyAnvil(main, this);
 		Bukkit.getPluginManager().registerEvents(this, main);
 	}
@@ -57,6 +60,10 @@ public class Game implements Listener{
 	
 	public void openMoney(Player player) {
 		player.openInventory(moneyInterface.inventory);
+	}
+	
+	public void openMapSelection(Player player) {
+		player.openInventory(mapInterface.inventory);
 	}
 	
 	public void setRanked(boolean isRanked) {
