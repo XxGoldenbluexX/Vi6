@@ -15,7 +15,7 @@ public class PreparationInventory extends BasePersonalInventory{
 	public PreparationInventory(Vi6Main main, Player player, Game game) {
 		super(game, main, player);
 		
-		inventory = Bukkit.createInventory(player, 9*3, "PLACEHOLDER");
+		inventory = Bukkit.createInventory(player, 9*3, game.getName());
 		if(game.getWrapper(player).getTeam()==Team.GARDE) {
 			for(byte index=1;index<=26;index++) {
 				inventory.setItem(index, createItemStack(Material.BLUE_STAINED_GLASS_PANE, 1," ", ""));
