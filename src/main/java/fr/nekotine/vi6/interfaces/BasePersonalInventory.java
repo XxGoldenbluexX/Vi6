@@ -40,7 +40,9 @@ public abstract class BasePersonalInventory implements Listener{
 		meta.setDisplayName(name);
 		List<String> loreList = new ArrayList<>(); 
 		for(String line : lore) {
-			loreList.add(line);
+			if(line!="") {
+				loreList.add(line);
+			}
 		}
 		meta.setLore(loreList);
 		item.setItemMeta(meta);
@@ -68,9 +70,11 @@ public abstract class BasePersonalInventory implements Listener{
 	}
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent e) {
-		if(e.getClickedInventory().equals(inventory)) {
-			e.setCancelled(true);
-			itemClicked(e.getCurrentItem());
+		if(e.getInventory().equals(inventory)) {
+			if(e.getCurrentItem()!=null) {
+				e.setCancelled(true);
+				itemClicked(e.getCurrentItem());
+			}
 		}
 	}
 }

@@ -19,6 +19,7 @@ import fr.nekotine.vi6.events.GameEndEvent;
 import fr.nekotine.vi6.interfaces.GameMoneyAnvil;
 import fr.nekotine.vi6.interfaces.GameSettingsInventory;
 import fr.nekotine.vi6.interfaces.MapSelectionInventory;
+import fr.nekotine.vi6.interfaces.OpenPreparationItem;
 import fr.nekotine.vi6.sql.PlayerGame;
 import fr.nekotine.vi6.sql.SQLInterface;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
@@ -46,7 +47,7 @@ public class Game implements Listener{
 		this.name=name;
 		settingsInterface = new GameSettingsInventory(main, this);
 		mapInterface = new MapSelectionInventory(main, this);
-		moneyInterface = new GameMoneyAnvil(main, this);
+		//moneyInterface = new GameMoneyAnvil(main, this);
 		Bukkit.getPluginManager().registerEvents(this, main);
 	}
 	
@@ -56,6 +57,10 @@ public class Game implements Listener{
 	
 	public void openSettings(Player player) {
 		player.openInventory(settingsInterface.inventory);
+	}
+	
+	public GameSettingsInventory getSettingsInterface() {
+		return settingsInterface;
 	}
 	
 	public void openMoney(Player player) {
@@ -100,6 +105,7 @@ public class Game implements Listener{
 			for (Player pl : playerList.keySet()) {
 				pl.sendMessage(String.format(DisplayTexts.getMessage("game.join"), p.getName()));
 			}
+			Bukkit.getPluginManager().registerEvents(new OpenPreparationItem(main, this, p), main);
 			return true;
 		}
 		return false;

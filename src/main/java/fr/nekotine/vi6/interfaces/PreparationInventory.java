@@ -18,12 +18,12 @@ public class PreparationInventory extends BasePersonalInventory{
 		inventory = Bukkit.createInventory(player, 9*3, "PLACEHOLDER");
 		if(game.getWrapper(player).getTeam()==Team.GARDE) {
 			for(byte index=1;index<=26;index++) {
-				inventory.setItem(index, createItemStack(Material.BLUE_STAINED_GLASS_PANE, 1,"", ""));
+				inventory.setItem(index, createItemStack(Material.BLUE_STAINED_GLASS_PANE, 1," ", ""));
 			}
 			inventory.setItem(16, createItemStack(Material.BLUE_BANNER, 1, ChatColor.BLUE+"Garde", ""));
 		}else {
 			for(byte index=1;index<=26;index++) {
-				inventory.setItem(index, createItemStack(Material.RED_STAINED_GLASS_PANE, 1, "", ""));
+				inventory.setItem(index, createItemStack(Material.RED_STAINED_GLASS_PANE, 1, " ", ""));
 			}
 			inventory.setItem(16, createItemStack(Material.RED_BANNER, 1, ChatColor.RED+"Voleur", ""));
 		}
@@ -57,9 +57,21 @@ public class PreparationInventory extends BasePersonalInventory{
 		case BLUE_BANNER:
 			game.getWrapper(player).changeTeam(Team.VOLEUR);
 			inventory.setItem(16, createItemStack(Material.RED_BANNER, 1, ChatColor.RED+"Voleur", ""));
+			for(byte index=1;index<=26;index++) {
+				if(index==10||index==13||index==16) {
+					continue;
+				}
+				inventory.setItem(index, createItemStack(Material.RED_STAINED_GLASS_PANE, 1, " ", ""));
+			}
 			return;
 		case RED_BANNER:
 			game.getWrapper(player).changeTeam(Team.GARDE);
+			for(byte index=1;index<=26;index++) {
+				if(index==10||index==13||index==16) {
+					continue;
+				}
+				inventory.setItem(index, createItemStack(Material.BLUE_STAINED_GLASS_PANE, 1," ", ""));
+			}
 			inventory.setItem(16, createItemStack(Material.BLUE_BANNER, 1, ChatColor.BLUE+"Garde", ""));
 			return;
 		default:
