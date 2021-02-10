@@ -16,6 +16,9 @@ import org.bukkit.event.Listener;
 import fr.nekotine.vi6.enums.GameState;
 import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.events.GameEndEvent;
+import fr.nekotine.vi6.events.IsRankedChangeEvent;
+import fr.nekotine.vi6.events.MapChangeEvent;
+import fr.nekotine.vi6.events.MoneyChangedEvent;
 import fr.nekotine.vi6.interfaces.GameMoneyAnvil;
 import fr.nekotine.vi6.interfaces.GameSettingsInventory;
 import fr.nekotine.vi6.interfaces.MapSelectionInventory;
@@ -38,7 +41,6 @@ public class Game implements Listener{
 	private String mapName;
 	private int money;
 	
-	private GameMoneyAnvil moneyInterface;
 	private MapSelectionInventory mapInterface;
 	private GameSettingsInventory settingsInterface;
 	
@@ -47,7 +49,6 @@ public class Game implements Listener{
 		this.name=name;
 		settingsInterface = new GameSettingsInventory(main, this);
 		mapInterface = new MapSelectionInventory(main, this);
-		moneyInterface = new GameMoneyAnvil(this);
 		Bukkit.getPluginManager().registerEvents(this, main);
 	}
 	
@@ -64,8 +65,7 @@ public class Game implements Listener{
 	}
 	
 	public void openMoney(Player player) {
-		moneyInterface.openGUI(player);
-		//player.openInventory(moneyInterface.inventory);
+		new GameMoneyAnvil(main,this, player);
 	}
 	
 	public void openMapSelection(Player player) {
@@ -74,6 +74,7 @@ public class Game implements Listener{
 	
 	public void setRanked(boolean isRanked) {
 		this.isRanked = isRanked;
+		Bukkit.getPluginManager().callEvent(new IsRankedChangeEvent(this,isRanked));
 	}
 
 	public String getName() {
@@ -90,6 +91,7 @@ public class Game implements Listener{
 	
 	public void setMoney(int money) {
 		this.money=money;
+		Bukkit.getPluginManager().callEvent(new MoneyChangedEvent(this,money));
 	}
 	
 	public String getMapName() {
@@ -98,6 +100,7 @@ public class Game implements Listener{
 	
 	public void setMapName(String mapName) {
 		this.mapName=mapName;
+		Bukkit.getPluginManager().callEvent(new MapChangeEvent(mapName, this));
 	}
 	
 	public boolean addPlayer(Player p) {

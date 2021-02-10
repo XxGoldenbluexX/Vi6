@@ -5,7 +5,9 @@ import org.bukkit.event.HandlerList;
 
 import fr.nekotine.vi6.Game;
 
-public class GameMapChangeEvent extends Event{
+public class IsRankedChangeEvent extends Event{
+	private final Game game;
+	private final boolean isRanked;
 	private static final HandlerList handlers = new HandlerList();
 	public static HandlerList getHandlerList() {
 	    return handlers;
@@ -14,17 +16,15 @@ public class GameMapChangeEvent extends Event{
 	public HandlerList getHandlers() {
 		return handlers;
 	}
-	private final Game game;
-	private final String mapName;
-	public GameMapChangeEvent(String mapName, Game game) {
+	public IsRankedChangeEvent(Game game, boolean isRanked) {
 		this.game = game;
-		this.mapName = mapName;
+		this.isRanked = isRanked;
 		
 	}
 	public Game getGame() {
 		return game;
 	}
-	public String getMapName() {
-		return mapName;
+	public boolean isRanked() {
+		return isRanked;
 	}
 }

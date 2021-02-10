@@ -27,10 +27,10 @@ public class PreparationInventory extends BasePersonalInventory{
 			}
 			inventory.setItem(16, createItemStack(Material.RED_BANNER, 1, ChatColor.RED+"Voleur", ""));
 		}
-		inventory.setItem(0, createItemStack(Material.ANVIL, 1, ChatColor.GRAY+"Paramètres", ""));
-		inventory.setItem(10, createItemStack(Material.SUNFLOWER, 1, ChatColor.GOLD+"Lançer", ""));
+		inventory.setItem(0, createItemStack(Material.ANVIL, 1, ChatColor.GRAY+"ParamÃ¨tres", ""));
+		inventory.setItem(10, createItemStack(Material.SUNFLOWER, 1, ChatColor.GOLD+"Lancer", ""));
 		if(game.getWrapper(player).isReady()) {
-			inventory.setItem(13, createItemStack(Material.EMERALD_BLOCK, 1, ChatColor.GREEN+"Prêt", ""));
+			inventory.setItem(13, createItemStack(Material.EMERALD_BLOCK, 1, ChatColor.GREEN+"PrÃªt", ""));
 		}else{
 			inventory.setItem(13, createItemStack(Material.REDSTONE_BLOCK, 1, ChatColor.RED+"En Attente", ""));
 		}
@@ -52,7 +52,7 @@ public class PreparationInventory extends BasePersonalInventory{
 			return;
 		case REDSTONE_BLOCK:
 			game.getWrapper(player).setReady(true);
-			inventory.setItem(13, createItemStack(Material.EMERALD_BLOCK, 1, ChatColor.GREEN+"Prêt", ""));
+			inventory.setItem(13, createItemStack(Material.EMERALD_BLOCK, 1, ChatColor.GREEN+"PrÃªt", ""));
 			return;
 		case BLUE_BANNER:
 			game.getWrapper(player).changeTeam(Team.VOLEUR);

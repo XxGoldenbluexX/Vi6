@@ -9,23 +9,23 @@ import org.bukkit.inventory.ItemStack;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
-import fr.nekotine.vi6.events.GameIsRankedChangeEvent;
-import fr.nekotine.vi6.events.GameMapChangeEvent;
+import fr.nekotine.vi6.events.MapChangeEvent;
+import fr.nekotine.vi6.events.MoneyChangedEvent;
 
 public class GameSettingsInventory extends BaseSharedInventory{
 	public GameSettingsInventory(Vi6Main main, Game game) {
 		super(game, main);
 		
-		inventory = Bukkit.createInventory(null, 9*3, "Paramètres");
+		inventory = Bukkit.createInventory(null, 9*3, "ParamÃ¨tres");
 		for(byte index=1;index<=26;index++) {
-			inventory.setItem(index, createItemStack(Material.BLACK_STAINED_GLASS_PANE,1,"",""));
+			inventory.setItem(index, createItemStack(Material.BLACK_STAINED_GLASS_PANE,1," ",""));
 		}
 		inventory.setItem(0, createItemStack(Material.BARRIER,1,ChatColor.RED+"Retour",""));
 		if(game.isRanked()) {
-			inventory.setItem(11, createItemStack(Material.EMERALD,1,ChatColor.GREEN+"Classée",""));
-			inventory.setItem(13, createItemStack(Material.IRON_INGOT,1,ChatColor.RED+"Bloqué",ChatColor.LIGHT_PURPLE+""+ChatColor.UNDERLINE+game.getMoney()));
+			inventory.setItem(11, createItemStack(Material.EMERALD,1,ChatColor.GREEN+"ClassÃ©e",""));
+			inventory.setItem(13, createItemStack(Material.IRON_INGOT,1,ChatColor.RED+"BloquÃ©",ChatColor.LIGHT_PURPLE+""+ChatColor.UNDERLINE+game.getMoney()));
 		}else {
-			inventory.setItem(11, createItemStack(Material.REDSTONE,1,ChatColor.RED+"Non-Classée",""));
+			inventory.setItem(11, createItemStack(Material.REDSTONE,1,ChatColor.RED+"Non-ClassÃ©e",""));
 			inventory.setItem(13, createItemStack(Material.GOLD_INGOT,1,ChatColor.GOLD+"Argent",ChatColor.LIGHT_PURPLE+""+ChatColor.UNDERLINE+game.getMoney()));
 		}
 		inventory.setItem(15, createItemStack(Material.PAPER,1,ChatColor.WHITE+"Carte",ChatColor.LIGHT_PURPLE+""+ChatColor.UNDERLINE+game.getMapName()));
@@ -38,15 +38,13 @@ public class GameSettingsInventory extends BaseSharedInventory{
 			return;
 		case EMERALD:
 			game.setRanked(false);
-			Bukkit.getPluginManager().callEvent(new GameIsRankedChangeEvent(game));
-			inventory.setItem(11, createItemStack(Material.REDSTONE,1,ChatColor.RED+"Non-Classée",""));
+			inventory.setItem(11, createItemStack(Material.REDSTONE,1,ChatColor.RED+"Non-ClassÃ©e",""));
 			inventory.setItem(13, createItemStack(Material.GOLD_INGOT,1,ChatColor.GOLD+"Argent",ChatColor.LIGHT_PURPLE+""+ChatColor.UNDERLINE+game.getMoney()));
 			return;
 		case REDSTONE:
 			game.setRanked(true);
-			Bukkit.getPluginManager().callEvent(new GameIsRankedChangeEvent(game));
-			inventory.setItem(11, createItemStack(Material.EMERALD,1,ChatColor.GREEN+"Classée",""));
-			inventory.setItem(13, createItemStack(Material.IRON_INGOT,1,ChatColor.RED+"Bloqué",ChatColor.LIGHT_PURPLE+""+ChatColor.UNDERLINE+game.getMoney()));
+			inventory.setItem(11, createItemStack(Material.EMERALD,1,ChatColor.GREEN+"ClassÃ©e",""));
+			inventory.setItem(13, createItemStack(Material.IRON_INGOT,1,ChatColor.RED+"BloquÃ©",ChatColor.LIGHT_PURPLE+""+ChatColor.UNDERLINE+game.getMoney()));
 			return;
 		case GOLD_INGOT:
 			game.openMoney(player);
@@ -59,7 +57,12 @@ public class GameSettingsInventory extends BaseSharedInventory{
 		}
 	}
 	@EventHandler
-	public void mapChange(GameMapChangeEvent e) {
+	public void mapChange(MapChangeEvent e) {
 		inventory.setItem(15, createItemStack(Material.PAPER,1,ChatColor.WHITE+"Carte",ChatColor.LIGHT_PURPLE+""+ChatColor.UNDERLINE+e.getMapName()));
+	}
+	@EventHandler
+	public void moneyChange(MoneyChangedEvent e) {
+		inventory.setItem(13, createItemStack(Material.GOLD_INGOT,1,ChatColor.GOLD+"Argent",ChatColor.LIGHT_PURPLE+""+ChatColor.UNDERLINE+game.getMoney()));
+		
 	}
 }

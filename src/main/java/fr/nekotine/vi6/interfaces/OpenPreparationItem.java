@@ -30,7 +30,7 @@ public class OpenPreparationItem implements Listener{
 	}
 	@EventHandler
 	public void onDrop(PlayerDropItemEvent e) {
-		if(e.getItemDrop().getItemStack().equals(itm)) {
+		if(e.getPlayer().equals(player) && e.getItemDrop().getItemStack().equals(itm)) {
 			e.setCancelled(true);
 			new PreparationInventory(main, player, game);
 		}
