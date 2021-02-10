@@ -29,7 +29,7 @@ public enum ObjetsSkins {
 	private final Material material;
 	private final String[] lore;
 	////////////////////////////////
-	ObjetsSkins(ObjetsList objet, SkinType skinType, Team team, /* ParamËtres itemStack du shop ->*/String objetName, Material material, String[] lore /*, autres parametres spÈcifiques ‡ certaines runes*/) {
+	ObjetsSkins(ObjetsList objet, SkinType skinType, Team team, /* ParamÔøΩtres itemStack du shop ->*/String objetName, Material material, String[] lore /*, autres parametres sp√©cifiques √† certaines runes*/) {
 		this.objet = objet;
 		this.skinType = skinType;
 		this.objetName=objetName;

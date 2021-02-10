@@ -13,6 +13,7 @@ import dev.jorel.commandapi.CommandAPI;
 import fr.nekotine.vi6.commands.Vi6commandMaker;
 import fr.nekotine.vi6.sql.SQLInterface;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
+import fr.nekotine.vi6.yml.YamlWorker;
 
 /**
  * Main class of the minecraft plugin
@@ -43,7 +44,8 @@ public class Vi6Main extends JavaPlugin {
 		if(!getDataFolder().exists()) {
 			getDataFolder().mkdir();
 		}
-		SQLInterface.load(getDataFolder().getAbsolutePath());
+		SQLInterface.load(this);
+		YamlWorker.load(this);
 	}
 	
 	

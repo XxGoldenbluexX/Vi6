@@ -5,7 +5,14 @@ import java.io.File;
 import fr.nekotine.vi6.Vi6Main;
 
 public class YamlWorker {
-	public static String[] getMapNameList(Vi6Main main) {
-		return new File(main.getDataFolder(), "Maps").list();
+	private static File mapFile;
+	public static void load(Vi6Main ref) {
+		mapFile = new File(ref.getDataFolder(), "Maps");
+		if(!mapFile.exists()) {
+			mapFile.mkdir();
+		}
+	}
+	public static String[] getMapNameList() {
+		return mapFile.list();
 	}
 }

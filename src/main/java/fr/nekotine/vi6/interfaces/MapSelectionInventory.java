@@ -26,7 +26,7 @@ public class MapSelectionInventory extends BaseSharedInventory{
 		inventory.setItem(19, createItemStack(Material.BLACK_STAINED_GLASS_PANE,1," ",""));
 		inventory.setItem(0, createItemStack(Material.BARRIER,1,ChatColor.RED+"Retour",""));
 		byte index=1;
-		for(String map : YamlWorker.getMapNameList(main)) {
+		for(String map : YamlWorker.getMapNameList()) {
 			index++;
 			if(index%9==0) {
 				index+=2;

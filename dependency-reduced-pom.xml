@@ -4,7 +4,7 @@
   <groupId>Nekotine</groupId>
   <artifactId>Vi6</artifactId>
   <name>Vi6</name>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>1</version>
   <description>Voleur Industriel 6</description>
   <build>
     <sourceDirectory>src/main/java</sourceDirectory>
@@ -17,6 +17,7 @@
         </includes>
       </resource>
     </resources>
+    <finalName>Vi6</finalName>
     <plugins>
       <plugin>
         <artifactId>maven-shade-plugin</artifactId>
@@ -29,6 +30,9 @@
             </goals>
           </execution>
         </executions>
+        <configuration>
+          <outputDirectory>I:\Minecraft Servers\Paper 1.16.5\plugins/shaded</outputDirectory>
+        </configuration>
       </plugin>
     </plugins>
   </build>
