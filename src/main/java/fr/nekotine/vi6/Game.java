@@ -47,7 +47,7 @@ public class Game implements Listener{
 		this.name=name;
 		settingsInterface = new GameSettingsInventory(main, this);
 		mapInterface = new MapSelectionInventory(main, this);
-		//moneyInterface = new GameMoneyAnvil(main, this);
+		moneyInterface = new GameMoneyAnvil(this);
 		Bukkit.getPluginManager().registerEvents(this, main);
 	}
 	
@@ -64,7 +64,8 @@ public class Game implements Listener{
 	}
 	
 	public void openMoney(Player player) {
-		player.openInventory(moneyInterface.inventory);
+		moneyInterface.openGUI(player);
+		//player.openInventory(moneyInterface.inventory);
 	}
 	
 	public void openMapSelection(Player player) {
@@ -136,7 +137,7 @@ public class Game implements Listener{
 		return null;
 	}
 	
-	//je met ça là, tu y mettra à la fin au moment où on commence la game!
+	//je met ï¿½a lï¿½, tu y mettra ï¿½ la fin au moment oï¿½ on commence la game!
 	public void gameStart() {
 		for(Entry<Player, PlayerWrapper> playerAndTeam : playerList.entrySet()) {
 			Bukkit.getPluginManager().registerEvents(new PlayerGame(name, playerAndTeam.getKey().getUniqueId(), idPartie, playerAndTeam.getValue().getTeam()), main);
