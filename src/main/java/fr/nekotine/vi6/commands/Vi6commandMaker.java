@@ -21,11 +21,9 @@ public class Vi6commandMaker {
 		
 	}
 	private static CommandExecutor mainhelp = (sender,args)->{
-		sender.sendMessage(Vi6Main.getGameList().toString());
 	};
 
 	private static CommandExecutor gamehelp = (sender,args)->{
-		sender.sendMessage("");
 	};
 	
 	public static CommandAPICommand makevi6(Vi6Main main) {
@@ -53,7 +51,6 @@ public class Vi6commandMaker {
 				.withArguments(new StringArgument("gameName"))
 				.executes((sender,args)->{
 					main.createGame((String)args[0]);
-					sender.sendMessage(Vi6Main.getGameList().toString());
 				});
 	}
 	

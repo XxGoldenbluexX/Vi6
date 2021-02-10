@@ -39,7 +39,6 @@ public class Vi6Main extends JavaPlugin {
 		super.onEnable();
 		CommandAPI.onEnable(this);
 		pmanager=Bukkit.getPluginManager();
-		createGame("test");
 		Vi6commandMaker.makevi6(this).register();
 		if(!getDataFolder().exists()) {
 			getDataFolder().mkdir();
