@@ -107,7 +107,7 @@ public class Game implements Listener{
 		if (!playerList.keySet().contains(p)) {
 			playerList.put(p, new PlayerWrapper(p));
 			for (Player pl : playerList.keySet()) {
-				pl.sendMessage(String.format(DisplayTexts.getMessage("game.join"), p.getName()));
+				pl.sendMessage(String.format(DisplayTexts.getMessage("game*join"), p.getName()));
 			}
 			Bukkit.getPluginManager().registerEvents(new OpenPreparationItem(main, this, p), main);
 			return true;
@@ -119,7 +119,7 @@ public class Game implements Listener{
 		if (playerList.keySet().contains(p)) {
 			playerList.remove(p);
 			for (Player pl : playerList.keySet()) {
-				pl.sendMessage(String.format(DisplayTexts.getMessage("game.leave"), p.getName()));
+				pl.sendMessage(String.format(DisplayTexts.getMessage("game*leave"), p.getName()));
 			}
 			return true;
 		}

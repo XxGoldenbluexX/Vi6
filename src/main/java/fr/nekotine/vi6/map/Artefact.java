@@ -1,6 +1,5 @@
 package fr.nekotine.vi6.map;
 
-<<<<<<< HEAD
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
