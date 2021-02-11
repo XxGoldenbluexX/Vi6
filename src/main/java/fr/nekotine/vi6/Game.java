@@ -76,11 +76,16 @@ public class Game implements Listener{
 	
 	public void showCaptureMessage(Artefact a,PlayerWrapper p) {
 		for (PlayerWrapper w : playerList.values()) {
+			String message="";
 			if (w.getTeam()==Team.GARDE) {
-				w.getPlayer().sendTitle(ChatColor.translateAlternateColorCodes('§',DisplayTexts.getMessage("game*artefact*steal*guard")),"", 5, 20, 20);
+				message = ChatColor.translateAlternateColorCodes('§',DisplayTexts.getMessage("game*artefact*steal*guard"));
+				w.getPlayer().sendTitle(message,"", 5, 20, 20);
+				w.getPlayer().sendMessage(message);
 			}else {
-				w.getPlayer().sendTitle(MessageFormater.formatWithColorCodes('&',DisplayTexts.getMessage("game*artefact*steal*voleur"),
-						new MessageFormater("&v",a.getName()),new MessageFormater("&p",p.getPlayer().getName())),"", 5, 20, 20);
+				message = MessageFormater.formatWithColorCodes('&',DisplayTexts.getMessage("game*artefact*steal*thief"),
+						new MessageFormater("&v",a.getName()),new MessageFormater("&p",p.getPlayer().getName()));
+				w.getPlayer().sendTitle(message,"", 5, 20, 20);
+				w.getPlayer().sendMessage(message);
 			}
 		}
 	}
