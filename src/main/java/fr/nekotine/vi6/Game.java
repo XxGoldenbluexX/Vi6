@@ -135,6 +135,7 @@ public class Game implements Listener{
 			for (Player pl : playerList.keySet()) {
 				pl.sendMessage(ChatColor.translateAlternateColorCodes('§',String.format(DisplayTexts.getMessage("game*join"), p.getName())));
 			}
+			p.getInventory().clear();
 			Bukkit.getPluginManager().callEvent(new PlayerJoinGameEvent(this, p));
 			return true;
 		}
