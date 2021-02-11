@@ -10,6 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -40,13 +41,14 @@ public abstract class BaseInventoryItem implements Listener{
 					||e.getAction()==Action.RIGHT_CLICK_AIR
 					||e.getAction()==Action.RIGHT_CLICK_BLOCK) {
 				e.setCancelled(true);
-				playerInteract(e.getPlayer());
+				if(e.getPlayer().getOpenInventory().getType()==InventoryType.CRAFTING||e.getPlayer().getOpenInventory().getType()==InventoryType.CREATIVE) {
+					playerInteract(e.getPlayer());
+				}
 			}
 		}
 	}
 	@EventHandler
 	public void inventoryClick(InventoryClickEvent e) {
-		System.out.println(e.getRawSlot());
 		if(item.equals(e.getCurrentItem())) {
 			e.setCancelled(true);
 			playerInteract((Player)e.getWhoClicked());

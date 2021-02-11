@@ -16,7 +16,7 @@ public class PlayerSellObjetEvent extends Event{
 	@Override
 	public HandlerList getHandlers() {
 		// TODO Auto-generated method stub
-		return null;
+		return handlers;
 	}
 	public PlayerSellObjetEvent(Player player, ObjetsList objet) {
 		this.player = player;

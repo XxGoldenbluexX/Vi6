@@ -13,8 +13,7 @@ public class PlayerLeaveGameEvent extends Event{
 	}
 	@Override
 	public HandlerList getHandlers() {
-		// TODO Auto-generated method stub
-		return null;
+		return handlers;
 	}
 	private final Game game;
 	private final Player player;

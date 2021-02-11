@@ -4,7 +4,7 @@ public enum Effects {
 	
 	Invisible,
 	Decouvert,
-	Sondé,
+	SondÃ©,
 	Insondable,
 	Glow,
 	InGlowable,
@@ -14,7 +14,7 @@ public enum Effects {
 		switch(e) {
 		case Invisible:
 			return Decouvert;
-		case Sondé:
+		case SondÃ©:
 			return Insondable;
 		case Glow:
 			return InGlowable;
