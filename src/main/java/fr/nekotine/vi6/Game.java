@@ -29,6 +29,7 @@ import fr.nekotine.vi6.interfaces.items.OpenWaitingItem;
 import fr.nekotine.vi6.map.Artefact;
 import fr.nekotine.vi6.sql.PlayerGame;
 import fr.nekotine.vi6.sql.SQLInterface;
+import fr.nekotine.vi6.utils.MessageFormater;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 import fr.nekotine.vi6.yml.DisplayTexts;
 
@@ -78,7 +79,8 @@ public class Game implements Listener{
 			if (w.getTeam()==Team.GARDE) {
 				w.getPlayer().sendTitle(ChatColor.translateAlternateColorCodes('§',DisplayTexts.getMessage("game*artefact*steal*guard")),"", 5, 20, 20);
 			}else {
-				w.getPlayer().sendTitle(ChatColor.translateAlternateColorCodes('§',String.format(DisplayTexts.getMessage("game*artefact*steal*guard"),)),"", 5, 20, 20);
+				w.getPlayer().sendTitle(MessageFormater.formatWithColorCodes('&',DisplayTexts.getMessage("game*artefact*steal*voleur"),
+						new MessageFormater("&v",a.getName()),new MessageFormater("&p",p.getPlayer().getName())),"", 5, 20, 20);
 			}
 		}
 	}
@@ -133,7 +135,7 @@ public class Game implements Listener{
 		if (!playerList.keySet().contains(p)) {
 			playerList.put(p, new PlayerWrapper(p));
 			for (Player pl : playerList.keySet()) {
-				pl.sendMessage(ChatColor.translateAlternateColorCodes('§',String.format(DisplayTexts.getMessage("game*join"), p.getName())));
+				pl.sendMessage(MessageFormater.formatWithColorCodes('&',DisplayTexts.getMessage("game*join"),new MessageFormater("&p",p.getName())));
 			}
 			p.getInventory().clear();
 			Bukkit.getPluginManager().callEvent(new PlayerJoinGameEvent(this, p));
