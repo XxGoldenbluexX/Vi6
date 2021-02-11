@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
@@ -75,7 +76,9 @@ public class Game implements Listener{
 	public void showCaptureMessage(Artefact a,PlayerWrapper p) {
 		for (PlayerWrapper w : playerList.values()) {
 			if (w.getTeam()==Team.GARDE) {
-				w.getPlayer().sendTitle(DisplayTexts.getMessage(""), subtitle, fadeIn, stay, fadeOut);
+				w.getPlayer().sendTitle(ChatColor.translateAlternateColorCodes('§',DisplayTexts.getMessage("game*artefact*steal*guard")),"", 5, 20, 20);
+			}else {
+				w.getPlayer().sendTitle(ChatColor.translateAlternateColorCodes('§',String.format(DisplayTexts.getMessage("game*artefact*steal*guard"),)),"", 5, 20, 20);
 			}
 		}
 	}
@@ -130,7 +133,7 @@ public class Game implements Listener{
 		if (!playerList.keySet().contains(p)) {
 			playerList.put(p, new PlayerWrapper(p));
 			for (Player pl : playerList.keySet()) {
-				pl.sendMessage(String.format(DisplayTexts.getMessage("game*join"), p.getName()));
+				pl.sendMessage(ChatColor.translateAlternateColorCodes('§',String.format(DisplayTexts.getMessage("game*join"), p.getName())));
 			}
 			Bukkit.getPluginManager().callEvent(new PlayerJoinGameEvent(this, p));
 			return true;

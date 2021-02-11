@@ -1,2 +1,3 @@
 game*join: "%s a rejoin cette partie de vi6."
 game*leave: "%s a quittÃ© cette partie de vi6."
+game*artefact*steal*guard: "Un artéfact a été volé"
