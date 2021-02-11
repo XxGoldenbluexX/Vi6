@@ -140,6 +140,10 @@ public class DetectionZone implements ConfigurationSerializable,Listener {
 		playersInside.clear();
 		enabled=false;
 	}
+	
+	public ArrayList<Player> getPlayerInsideList() {
+		return playersInside;
+	}
 
 	public static String getYamlprefix() {
 		return yamlPrefix;

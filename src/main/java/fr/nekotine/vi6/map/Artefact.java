@@ -1,11 +1,15 @@
 package fr.nekotine.vi6.map;
 
+import java.util.ArrayList;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
+import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.enums.PlayerState;
+import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.events.GameTickEvent;
 import fr.nekotine.vi6.utils.DetectionZone;
 import fr.nekotine.vi6.utils.ZoneDetectionListener;
@@ -13,13 +17,24 @@ import fr.nekotine.vi6.wrappers.PlayerWrapper;
 
 public class Artefact implements ZoneDetectionListener,Listener{
 	
+	public enum CaptureState{
+		STEALABLE,//l'objet peut etre volé
+		CARRIED,//l'objet est porté par un voleur
+		STEALED//un voleur c'est enfuit avec cet objet
+	}
+	
 	private String name;
 	private DetectionZone zone;
 	private int nbVoleurInside = 0;
 	private int nbGuardInside = 0;
+	private int captureLevel = 0;
+	private int maxCaptureLevel=200;
+	private CaptureState status=CaptureState.STEALABLE;
+	private Vi6Main mainref;
 	
 	public Artefact(String name,DetectionZone zone) {
-		
+		this.name=name;
+		this.zone=zone;
 	}
 	
 	public String getName() {
@@ -32,6 +47,8 @@ public class Artefact implements ZoneDetectionListener,Listener{
 	
 	public void enable(Vi6Main mainref) {
 		zone.enable(mainref);
+		maxCaptureLevel=mainref.getConfig().getInt("captureTime",200);
+		this.mainref = mainref;
 	}
 
 	@Override
@@ -75,7 +92,32 @@ public class Artefact implements ZoneDetectionListener,Listener{
 	}
 	
 	@EventHandler
-	public void onGameTick(GameTickEvent e) {
-		e.getGame()
+	public void tick(GameTickEvent e) {
+		if (nbVoleurInside>0) {
+			captureLevel+=nbGuardInside>0?0:nbVoleurInside;
+			if (captureLevel>=maxCaptureLevel) {
+				capture(zone.getPlayerInsideList());
+			}
+		}else {
+			captureLevel-=captureLevel>0?1:0;
+		}
+	}
+	
+	public void capture(ArrayList<Player> list) {
+		for (Player p : list) {
+			PlayerWrapper w = mainref.getPlayerWrapper(p);
+			if (w!=null && w.getTeam()==Team.VOLEUR && w.getState()==PlayerState.INSIDE) {
+				w.getStealedArtefactList().add(this);
+			}
+			
+		}
+	}
+
+	public CaptureState getStatus() {
+		return status;
+	}
+
+	public void setStatus(CaptureState status) {
+		this.status = status;
 	}
 }

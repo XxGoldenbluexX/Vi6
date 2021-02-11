@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 
 import fr.nekotine.vi6.enums.PlayerState;
 import fr.nekotine.vi6.enums.Team;
+import fr.nekotine.vi6.map.Artefact;
 import fr.nekotine.vi6.statuseffects.Effects;
 import fr.nekotine.vi6.statuseffects.StatusEffect;
 
@@ -17,6 +18,7 @@ public class PlayerWrapper {
 	private String currentSalle;
 	private final Player player;
 	private final ArrayList<StatusEffect> statusEffects = new ArrayList<StatusEffect>();
+	private final ArrayList<Artefact> stealedObjects = new ArrayList<>();
 	
 	public PlayerWrapper(Player player) {
 		this.player = player;
@@ -75,6 +77,10 @@ public class PlayerWrapper {
 
 	public void setState(PlayerState state) {
 		this.state = state;
+	}
+
+	public ArrayList<Artefact> getStealedArtefactList() {
+		return stealedObjects;
 	}
 	
 }
