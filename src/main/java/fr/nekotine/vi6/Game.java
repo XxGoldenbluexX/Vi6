@@ -25,6 +25,7 @@ import fr.nekotine.vi6.interfaces.inventories.GameMoneyAnvil;
 import fr.nekotine.vi6.interfaces.inventories.GameSettingsInventory;
 import fr.nekotine.vi6.interfaces.inventories.MapSelectionInventory;
 import fr.nekotine.vi6.interfaces.items.OpenWaitingItem;
+import fr.nekotine.vi6.map.Artefact;
 import fr.nekotine.vi6.sql.PlayerGame;
 import fr.nekotine.vi6.sql.SQLInterface;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
@@ -71,6 +72,14 @@ public class Game implements Listener{
 		new GameMoneyAnvil(main,this, player);
 	}
 	
+	public void showCaptureMessage(Artefact a,PlayerWrapper p) {
+		for (PlayerWrapper w : playerList.values()) {
+			if (w.getTeam()==Team.GARDE) {
+				w.getPlayer().sendTitle(DisplayTexts.getMessage(""), subtitle, fadeIn, stay, fadeOut);
+			}
+		}
+	}
+	
 	public void openMapSelection(Player player) {
 		player.openInventory(mapInterface.inventory);
 	}
@@ -110,10 +119,11 @@ public class Game implements Listener{
 		for(PlayerWrapper wrapper : playerList.values()) {
 			if(!wrapper.isReady()) return false;
 		}
+		for(PlayerWrapper w : playerList.values()) {
+			w.clearStatusEffects();
+			w.getStealedArtefactList().clear();
+		}
 		return true;
-		//test de la map
-		//chargement de la mape
-		
 	}
 	
 	public boolean addPlayer(Player p) {

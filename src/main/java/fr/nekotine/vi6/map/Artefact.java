@@ -10,7 +10,6 @@ import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.enums.PlayerState;
 import fr.nekotine.vi6.enums.Team;
-import fr.nekotine.vi6.events.GameTickEvent;
 import fr.nekotine.vi6.utils.DetectionZone;
 import fr.nekotine.vi6.utils.ZoneDetectionListener;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
@@ -92,25 +91,26 @@ public class Artefact implements ZoneDetectionListener,Listener{
 	}
 	
 	@EventHandler
-	public void tick(GameTickEvent e) {
+	public void tick(Game g) {
 		if (nbVoleurInside>0) {
 			captureLevel+=nbGuardInside>0?0:nbVoleurInside;
 			if (captureLevel>=maxCaptureLevel) {
-				capture(zone.getPlayerInsideList());
+				g.showCaptureMessage(this,capture(zone.getPlayerInsideList()));
 			}
 		}else {
 			captureLevel-=captureLevel>0?1:0;
 		}
 	}
 	
-	public void capture(ArrayList<Player> list) {
+	public PlayerWrapper capture(ArrayList<Player> list) {
 		for (Player p : list) {
 			PlayerWrapper w = mainref.getPlayerWrapper(p);
 			if (w!=null && w.getTeam()==Team.VOLEUR && w.getState()==PlayerState.INSIDE) {
 				w.getStealedArtefactList().add(this);
+				return w;
 			}
-			
 		}
+		return null;
 	}
 
 	public CaptureState getStatus() {

@@ -1,6 +1,7 @@
 package fr.nekotine.vi6.wrappers;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.bukkit.entity.Player;
 
@@ -81,6 +82,23 @@ public class PlayerWrapper {
 
 	public ArrayList<Artefact> getStealedArtefactList() {
 		return stealedObjects;
+	}
+	
+	public void clearStatusEffect(Effects e) {
+		Iterator<StatusEffect> ite = statusEffects.iterator();
+		while (ite.hasNext()) {
+			StatusEffect ef = ite.next();
+			if (ef.getEffect()==e) {
+				ef.remove();
+			}
+		}
+	}
+
+	public void clearStatusEffects() {
+		Iterator<StatusEffect> ite = statusEffects.iterator();
+		while (ite.hasNext()) {
+			ite.next().remove();
+		}
 	}
 	
 }

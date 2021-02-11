@@ -38,6 +38,7 @@ public class Vi6Main extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		super.onEnable();
+		saveDefaultConfig();
 		CommandAPI.onEnable(this);
 		pmanager=Bukkit.getPluginManager();
 		Vi6commandMaker.makevi6(this).register();
