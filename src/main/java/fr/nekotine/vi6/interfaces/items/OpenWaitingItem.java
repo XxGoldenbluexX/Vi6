@@ -1,5 +1,6 @@
 package fr.nekotine.vi6.interfaces.items;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,7 +19,7 @@ public class OpenWaitingItem extends BaseInventoryItem implements Listener{
 	public OpenWaitingItem(Vi6Main main, Game game) {
 		super(main);
 		this.game=game;
-		item=createItemStack(Material.ANVIL, 1, "Partie", "");
+		item=createItemStack(Material.BEACON, 1, ChatColor.GOLD+game.getName(), "");
 	}
 	@EventHandler
 	public void onGameStart(GameStartEvent e) {

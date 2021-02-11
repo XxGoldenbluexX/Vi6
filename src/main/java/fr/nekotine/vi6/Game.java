@@ -132,6 +132,7 @@ public class Game implements Listener{
 			for (Player pl : playerList.keySet()) {
 				pl.sendMessage(String.format(DisplayTexts.getMessage("game*join"), p.getName()));
 			}
+			p.getInventory().clear();
 			Bukkit.getPluginManager().callEvent(new PlayerJoinGameEvent(this, p));
 			return true;
 		}
