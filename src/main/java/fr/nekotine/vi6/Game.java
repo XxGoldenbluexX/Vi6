@@ -112,7 +112,7 @@ public class Game implements Listener{
 		}
 		return true;
 		//test de la map
-		//chargement de la map
+		//chargement de la mape
 		
 	}
 	
