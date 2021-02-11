@@ -1,4 +1,4 @@
-package fr.nekotine.vi6.interfaces;
+package fr.nekotine.vi6.interfaces.inventories;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,7 @@ public class MapSelectionInventory extends BaseSharedInventory{
 	private static Enchantment enchant = Enchantment.DURABILITY;
 	public MapSelectionInventory(Vi6Main main,Game game) {
 		super(game, main);
-		inventory = Bukkit.createInventory(null, 9*3);
+		inventory = Bukkit.createInventory(null, 9*3, "Carte");
 		inventory.setItem(1, createItemStack(Material.BLACK_STAINED_GLASS_PANE,1," ",""));
 		inventory.setItem(9, createItemStack(Material.BLACK_STAINED_GLASS_PANE,1," ",""));
 		inventory.setItem(10, createItemStack(Material.BLACK_STAINED_GLASS_PANE,1," ",""));

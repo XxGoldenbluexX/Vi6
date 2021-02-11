@@ -6,22 +6,20 @@ import org.bukkit.event.HandlerList;
 
 import fr.nekotine.vi6.Game;
 
-public class PlayerLeaveGameEvent extends Event{
+public class PlayerJoinGameEvent extends Event{
+	private final Player player;
+	private final Game game;
+	public PlayerJoinGameEvent(Game game,Player player) {
+		this.player = player;
+		this.game = game;
+	}
 	private static final HandlerList handlers = new HandlerList();
 	public static HandlerList getHandlerList() {
 	    return handlers;
 	}
 	@Override
 	public HandlerList getHandlers() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	private final Game game;
-	private final Player player;
-	public PlayerLeaveGameEvent(Game game, Player player) {
-		this.game = game;
-		this.player = player;
-		
+		return handlers;
 	}
 	public Game getGame() {
 		return game;

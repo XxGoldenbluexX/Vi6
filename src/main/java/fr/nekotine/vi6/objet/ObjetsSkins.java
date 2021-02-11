@@ -1,5 +1,8 @@
 package fr.nekotine.vi6.objet;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -64,5 +67,14 @@ public enum ObjetsSkins {
 		default:
 			return null;
 		}
+	}
+	public static List<ObjetsSkins> getDefaultSkins(){
+		List<ObjetsSkins> objets = new ArrayList<>();
+		for(ObjetsSkins obj : values()) {
+			if(obj.skinType==SkinType.DEFAULT) {
+				objets.add(obj);
+			}
+		}
+		return objets;
 	}
 }

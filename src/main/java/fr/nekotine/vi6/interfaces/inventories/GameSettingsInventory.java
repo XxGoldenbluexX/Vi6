@@ -1,4 +1,4 @@
-package fr.nekotine.vi6.interfaces;
+package fr.nekotine.vi6.interfaces.inventories;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -34,7 +34,7 @@ public class GameSettingsInventory extends BaseSharedInventory{
 	public void itemClicked(Player player, ItemStack itm) {
 		switch(itm.getType()) {
 		case BARRIER:
-			new PreparationInventory(main, player, game);
+			new WaitingInventory(main, player, game);
 			return;
 		case EMERALD:
 			game.setRanked(false);

@@ -1,4 +1,4 @@
-package fr.nekotine.vi6.interfaces;
+package fr.nekotine.vi6.interfaces.inventories;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -11,8 +11,8 @@ import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.enums.Team;
 
-public class PreparationInventory extends BasePersonalInventory{
-	public PreparationInventory(Vi6Main main, Player player, Game game) {
+public class WaitingInventory extends BasePersonalInventory{
+	public WaitingInventory(Vi6Main main, Player player, Game game) {
 		super(game, main, player);
 		
 		inventory = Bukkit.createInventory(player, 9*3, game.getName());

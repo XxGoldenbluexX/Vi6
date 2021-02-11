@@ -19,10 +19,12 @@ import fr.nekotine.vi6.events.GameEndEvent;
 import fr.nekotine.vi6.events.IsRankedChangeEvent;
 import fr.nekotine.vi6.events.MapChangeEvent;
 import fr.nekotine.vi6.events.MoneyChangedEvent;
-import fr.nekotine.vi6.interfaces.GameMoneyAnvil;
-import fr.nekotine.vi6.interfaces.GameSettingsInventory;
-import fr.nekotine.vi6.interfaces.MapSelectionInventory;
-import fr.nekotine.vi6.interfaces.OpenPreparationItem;
+import fr.nekotine.vi6.events.PlayerJoinGameEvent;
+import fr.nekotine.vi6.events.PlayerLeaveGameEvent;
+import fr.nekotine.vi6.interfaces.inventories.GameMoneyAnvil;
+import fr.nekotine.vi6.interfaces.inventories.GameSettingsInventory;
+import fr.nekotine.vi6.interfaces.inventories.MapSelectionInventory;
+import fr.nekotine.vi6.interfaces.items.OpenWaitingItem;
 import fr.nekotine.vi6.sql.PlayerGame;
 import fr.nekotine.vi6.sql.SQLInterface;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
@@ -47,6 +49,7 @@ public class Game implements Listener{
 	public Game(Vi6Main main, String name) {
 		this.main=main;
 		this.name=name;
+		new OpenWaitingItem(main, this);
 		settingsInterface = new GameSettingsInventory(main, this);
 		mapInterface = new MapSelectionInventory(main, this);
 		Bukkit.getPluginManager().registerEvents(this, main);
@@ -103,13 +106,23 @@ public class Game implements Listener{
 		Bukkit.getPluginManager().callEvent(new MapChangeEvent(mapName, this));
 	}
 	
+	public boolean startGame() {
+		for(PlayerWrapper wrapper : playerList.values()) {
+			if(!wrapper.isReady()) return false;
+		}
+		return true;
+		//test de la map
+		//chargement de la map
+		
+	}
+	
 	public boolean addPlayer(Player p) {
 		if (!playerList.keySet().contains(p)) {
 			playerList.put(p, new PlayerWrapper(p));
 			for (Player pl : playerList.keySet()) {
 				pl.sendMessage(String.format(DisplayTexts.getMessage("game.join"), p.getName()));
 			}
-			Bukkit.getPluginManager().registerEvents(new OpenPreparationItem(main, this, p), main);
+			Bukkit.getPluginManager().callEvent(new PlayerJoinGameEvent(this, p));
 			return true;
 		}
 		return false;
@@ -121,6 +134,7 @@ public class Game implements Listener{
 			for (Player pl : playerList.keySet()) {
 				pl.sendMessage(String.format(DisplayTexts.getMessage("game.leave"), p.getName()));
 			}
+			Bukkit.getPluginManager().callEvent(new PlayerLeaveGameEvent(this, p));
 			return true;
 		}
 		return false;

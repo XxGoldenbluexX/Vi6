@@ -42,7 +42,8 @@ public class Vi6commandMaker {
 	private static CommandAPICommand game(Vi6Main main) {
 		return new CommandAPICommand("game")
 				.withSubcommand(gameCreate(main))
-				.withSubcommand(gameJoin(main))
+				.withSubcommand(gameJoin())
+				.withSubcommand(gameLeave())
 				.executes(gamehelp);
 	}
 	
@@ -54,11 +55,19 @@ public class Vi6commandMaker {
 				});
 	}
 	
-	private static CommandAPICommand gameJoin(Vi6Main main) {
+	private static CommandAPICommand gameJoin() {
 		return new CommandAPICommand("join")
 				.withArguments(gameArgument("liste"))
 				.executes((sender,args)->{
 					((Game)args[0]).addPlayer((Player)sender);
+				});
+	}
+	
+	private static CommandAPICommand gameLeave() {
+		return new CommandAPICommand("leave")
+				.withArguments(gameArgument("liste"))
+				.executes((sender,args)->{
+					((Game)args[0]).removePlayer((Player)sender);
 				});
 	}
 }

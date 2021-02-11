@@ -1,4 +1,4 @@
-package fr.nekotine.vi6.interfaces;
+package fr.nekotine.vi6.interfaces.inventories;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
