@@ -11,6 +11,7 @@ import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.UUID;
 
+import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.enums.Team;
 
 /**
@@ -24,12 +25,12 @@ import fr.nekotine.vi6.enums.Team;
 public class SQLInterface {
 	private static String dataFolderURL;
 	private static SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
-	public static void load(String url) {
-		dataFolderURL=url;
+	public static void load(Vi6Main main) {
+		dataFolderURL=main.getDataFolder().getAbsolutePath();
 		try {
 			if(!new File(dataFolderURL, "Vi6Database.db").exists()) {
 				Connection c = DriverManager.getConnection("jdbc:sqlite:"+dataFolderURL+"/Vi6Database.db");
-				//création toutes les tables
+				//crÃ©ation toutes les tables
 				Statement sttmt = c.createStatement();
 				String sql;
 				sql = "CREATE TABLE Partie("

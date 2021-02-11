@@ -16,6 +16,13 @@ import org.bukkit.event.Listener;
 import fr.nekotine.vi6.enums.GameState;
 import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.events.GameEndEvent;
+import fr.nekotine.vi6.events.IsRankedChangeEvent;
+import fr.nekotine.vi6.events.MapChangeEvent;
+import fr.nekotine.vi6.events.MoneyChangedEvent;
+import fr.nekotine.vi6.interfaces.GameMoneyAnvil;
+import fr.nekotine.vi6.interfaces.GameSettingsInventory;
+import fr.nekotine.vi6.interfaces.MapSelectionInventory;
+import fr.nekotine.vi6.interfaces.OpenPreparationItem;
 import fr.nekotine.vi6.sql.PlayerGame;
 import fr.nekotine.vi6.sql.SQLInterface;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
@@ -34,18 +41,40 @@ public class Game implements Listener{
 	private String mapName;
 	private int money;
 	
+	private MapSelectionInventory mapInterface;
+	private GameSettingsInventory settingsInterface;
+	
 	public Game(Vi6Main main, String name) {
 		this.main=main;
 		this.name=name;
+		settingsInterface = new GameSettingsInventory(main, this);
+		mapInterface = new MapSelectionInventory(main, this);
 		Bukkit.getPluginManager().registerEvents(this, main);
 	}
-
+	
 	public boolean isRanked() {
 		return isRanked;
 	}
-
+	
+	public void openSettings(Player player) {
+		player.openInventory(settingsInterface.inventory);
+	}
+	
+	public GameSettingsInventory getSettingsInterface() {
+		return settingsInterface;
+	}
+	
+	public void openMoney(Player player) {
+		new GameMoneyAnvil(main,this, player);
+	}
+	
+	public void openMapSelection(Player player) {
+		player.openInventory(mapInterface.inventory);
+	}
+	
 	public void setRanked(boolean isRanked) {
 		this.isRanked = isRanked;
+		Bukkit.getPluginManager().callEvent(new IsRankedChangeEvent(this,isRanked));
 	}
 
 	public String getName() {
@@ -62,6 +91,7 @@ public class Game implements Listener{
 	
 	public void setMoney(int money) {
 		this.money=money;
+		Bukkit.getPluginManager().callEvent(new MoneyChangedEvent(this,money));
 	}
 	
 	public String getMapName() {
@@ -70,6 +100,7 @@ public class Game implements Listener{
 	
 	public void setMapName(String mapName) {
 		this.mapName=mapName;
+		Bukkit.getPluginManager().callEvent(new MapChangeEvent(mapName, this));
 	}
 	
 	public boolean addPlayer(Player p) {
@@ -78,6 +109,7 @@ public class Game implements Listener{
 			for (Player pl : playerList.keySet()) {
 				pl.sendMessage(String.format(DisplayTexts.getMessage("game.join"), p.getName()));
 			}
+			Bukkit.getPluginManager().registerEvents(new OpenPreparationItem(main, this, p), main);
 			return true;
 		}
 		return false;
@@ -108,12 +140,16 @@ public class Game implements Listener{
 		return null;
 	}
 	
-	//je met ça là, tu y mettra à la fin au moment où on commence la game!
+	//je met ï¿½a lï¿½, tu y mettra ï¿½ la fin au moment oï¿½ on commence la game!
 	public void gameStart() {
 		for(Entry<Player, PlayerWrapper> playerAndTeam : playerList.entrySet()) {
 			Bukkit.getPluginManager().registerEvents(new PlayerGame(name, playerAndTeam.getKey().getUniqueId(), idPartie, playerAndTeam.getValue().getTeam()), main);
 		}
 		startTime = LocalTime.now().toString();
+	}
+	
+	public PlayerWrapper getWrapper(Player p) {
+		return playerList.get(p);
 	}
 	
 	public void gameEnd() {

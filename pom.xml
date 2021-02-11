@@ -2,9 +2,40 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>Nekotine</groupId>
   <artifactId>Vi6</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>1</version>
   <name>Vi6</name>
   <description>Voleur Industriel 6</description>
+  <build>
+        <resources>
+            <resource>
+                <directory>${basedir}/src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>*</include>
+                </includes>
+            </resource>
+        </resources>
+        <sourceDirectory>src/main/java</sourceDirectory>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <configuration>
+                	<outputFile>I:\Minecraft Servers\Paper 1.16.5\plugins\${project.artifactId}.jar</outputFile>
+                </configuration>
+                <version>2.4.3</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                
+            </plugin>
+        </plugins>
+    </build>
   <repositories>
   	<!-- Repository for Xglow -->
   	<repository>
@@ -26,6 +57,10 @@
         <id>commandapi</id>
         <url>https://raw.githubusercontent.com/JorelAli/CommandAPI/mvn-repo/</url>
     </repository>
+    <repository>
+	    <id>codemc-snapshots</id>
+	    <url>https://repo.codemc.io/repository/maven-snapshots/</url>
+</repository>
   </repositories>
   <dependencies>
 	<dependency>
@@ -47,39 +82,19 @@
 		<scope>provided</scope>
 	</dependency>
 	<dependency>
+	    <groupId>net.wesjd</groupId>
+	    <artifactId>anvilgui</artifactId>
+	    <version>1.4.0-SNAPSHOT</version>
+	</dependency>
+	<dependency>
         <groupId>dev.jorel</groupId>
         <artifactId>commandapi-shade</artifactId>
-        <version>5.6</version>
+        <version>5.8</version>
     </dependency>
   </dependencies>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>14</maven.compiler.source>
+    <maven.compiler.target>14</maven.compiler.target>
   </properties>
-  <!--
-  <build>
-    <plugins>
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-shade-plugin</artifactId>
-            <version>3.2.4</version>
-            <executions>
-                <execution>
-                    <id>shade</id>
-                    <phase>package</phase>
-                    <goals>
-                        <goal>shade</goal>
-                    </goals>
-                </execution>
-            </executions>
-            <configuration>
-                <relocations>
-                    <relocation>
-                        <pattern>dev.jorel.commandapi-shade</pattern>
-                    </relocation>
-                </relocations>
-            </configuration>
-        </plugin>
-    </plugins>
-  </build>
-  -->
 </project>
