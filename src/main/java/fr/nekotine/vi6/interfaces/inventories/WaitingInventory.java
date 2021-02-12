@@ -45,7 +45,7 @@ public class WaitingInventory extends BasePersonalInventory{
 			HandlerList.unregisterAll(this);
 			return;
 		case SUNFLOWER:
-			//start game
+			game.startGame();
 			return;
 		case EMERALD_BLOCK:
 			game.getWrapper(player).setReady(false);

@@ -18,6 +18,7 @@ import org.bukkit.event.Listener;
 import fr.nekotine.vi6.enums.GameState;
 import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.events.GameEndEvent;
+import fr.nekotine.vi6.events.GameStartEvent;
 import fr.nekotine.vi6.events.IsRankedChangeEvent;
 import fr.nekotine.vi6.events.MapChangeEvent;
 import fr.nekotine.vi6.events.MoneyChangedEvent;
@@ -26,6 +27,7 @@ import fr.nekotine.vi6.events.PlayerLeaveGameEvent;
 import fr.nekotine.vi6.interfaces.inventories.GameMoneyAnvil;
 import fr.nekotine.vi6.interfaces.inventories.GameSettingsInventory;
 import fr.nekotine.vi6.interfaces.inventories.MapSelectionInventory;
+import fr.nekotine.vi6.interfaces.items.OpenPreparationItem;
 import fr.nekotine.vi6.interfaces.items.OpenWaitingItem;
 import fr.nekotine.vi6.map.Artefact;
 import fr.nekotine.vi6.map.Carte;
@@ -157,6 +159,12 @@ public class Game implements Listener{
 			w.clearStatusEffects();
 			w.getStealedArtefactList().clear();
 		}
+		for(Entry<Player, PlayerWrapper> playerAndTeam : playerList.entrySet()) {
+			Bukkit.getPluginManager().registerEvents(new PlayerGame(name, playerAndTeam.getKey().getUniqueId(), idPartie, playerAndTeam.getValue().getTeam()), main);
+		}
+		startTime = LocalTime.now().toString();
+		new OpenPreparationItem(main, this);
+		Bukkit.getPluginManager().callEvent(new GameStartEvent(this));
 		return true;
 	}
 	
@@ -204,14 +212,6 @@ public class Game implements Listener{
 		PlayerWrapper w = playerList.get(p);
 		if (w!=null) return w.getTeam();
 		return null;
-	}
-	
-	//je met ca l�, tu y mettra � la fin au moment o� on commence la game!
-	public void gameStart() {
-		for(Entry<Player, PlayerWrapper> playerAndTeam : playerList.entrySet()) {
-			Bukkit.getPluginManager().registerEvents(new PlayerGame(name, playerAndTeam.getKey().getUniqueId(), idPartie, playerAndTeam.getValue().getTeam()), main);
-		}
-		startTime = LocalTime.now().toString();
 	}
 	
 	public PlayerWrapper getWrapper(Player p) {

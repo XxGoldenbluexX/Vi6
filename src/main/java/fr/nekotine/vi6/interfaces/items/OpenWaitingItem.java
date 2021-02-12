@@ -18,9 +18,8 @@ import fr.nekotine.vi6.utils.Utils;
 public class OpenWaitingItem extends BaseInventoryItem implements Listener{
 	private final Game game;
 	public OpenWaitingItem(Vi6Main main, Game game) {
-		super(main);
+		super(main, Utils.createItemStack(Material.BEACON, 1, ChatColor.GOLD+game.getName(), ChatColor.LIGHT_PURPLE+"Intéragir pour ouvrir la partie"));
 		this.game=game;
-		item=Utils.createItemStack(Material.BEACON, 1, ChatColor.GOLD+game.getName(), "");
 	}
 	@EventHandler
 	public void onGameStart(GameStartEvent e) {

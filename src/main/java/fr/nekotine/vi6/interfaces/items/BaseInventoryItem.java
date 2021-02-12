@@ -14,10 +14,11 @@ import org.bukkit.inventory.ItemStack;
 import fr.nekotine.vi6.Vi6Main;
 
 public abstract class BaseInventoryItem implements Listener{
-	protected ItemStack item;
+	protected final ItemStack item;
 	protected final Vi6Main main;
-	public BaseInventoryItem(Vi6Main main) {
+	public BaseInventoryItem(Vi6Main main, ItemStack item) {
 		this.main=main;
+		this.item=item;
 		Bukkit.getPluginManager().registerEvents(this, main);
 	}
 	public abstract void playerInteract(Player player);

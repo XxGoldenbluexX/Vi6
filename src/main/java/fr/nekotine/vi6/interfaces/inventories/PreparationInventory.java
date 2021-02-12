@@ -14,7 +14,7 @@ import fr.nekotine.vi6.utils.Utils;
 
 public class PreparationInventory extends BasePersonalInventory{
 
-	public PreparationInventory(Game game, Vi6Main main, Player player) {
+	public PreparationInventory(Vi6Main main, Game game, Player player) {
 		super(game, main, player);
 		inventory = Bukkit.createInventory(player, 9*6, "Préparation");
 		for(byte index=1;index<=1+9*5;index+=9) {
