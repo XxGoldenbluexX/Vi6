@@ -89,8 +89,8 @@ public class Game implements Listener{
 				w.getPlayer().sendTitle(message,"", 5, 20, 20);
 				w.getPlayer().sendMessage(message);
 			}else {
-				message = MessageFormater.formatWithColorCodes('�',DisplayTexts.getMessage("game*artefact*steal*thief"),
-						new MessageFormater("�v",a.getDisplayName()),new MessageFormater("�p",p.getPlayer().getName()));
+				message = MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game*artefact*steal*thief"),
+						new MessageFormater("§v",a.getDisplayName()),new MessageFormater("§p",p.getPlayer().getName()));
 				w.getPlayer().sendTitle(message,"", 5, 20, 20);
 				w.getPlayer().sendMessage(message);
 			}
@@ -179,7 +179,7 @@ public class Game implements Listener{
 		if (!playerList.keySet().contains(p)) {
 			playerList.put(p, new PlayerWrapper(p));
 			for (Player pl : playerList.keySet()) {
-				pl.sendMessage(MessageFormater.formatWithColorCodes('�',DisplayTexts.getMessage("game*join"),new MessageFormater("�p",p.getName())));
+				pl.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game*join"),new MessageFormater("§p",p.getName())));
 			}
 			p.getInventory().clear();
 			Bukkit.getPluginManager().callEvent(new PlayerJoinGameEvent(this, p));
