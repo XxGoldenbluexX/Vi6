@@ -33,7 +33,7 @@ public class WaitingInventory extends BasePersonalInventory{
 		if(game.getWrapper(player).isReady()) {
 			inventory.setItem(13, Utils.createItemStack(Material.EMERALD_BLOCK, 1, ChatColor.GREEN+"Prêt", ""));
 		}else{
-			inventory.setItem(13, Utils.createItemStack(Material.REDSTONE_BLOCK, 1, ChatColor.RED+"En Attente", ""));
+			inventory.setItem(13, Utils.createItemStack(Material.REDSTONE_BLOCK, 1, ChatColor.RED+"En attente", ""));
 		}
 		player.openInventory(inventory);
 	}

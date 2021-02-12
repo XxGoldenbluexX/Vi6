@@ -3,12 +3,14 @@ package fr.nekotine.vi6.interfaces.inventories;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
+import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.utils.Utils;
 
@@ -17,13 +19,32 @@ public class PreparationInventory extends BasePersonalInventory{
 	public PreparationInventory(Vi6Main main, Game game, Player player) {
 		super(game, main, player);
 		inventory = Bukkit.createInventory(player, 9*6, "Préparation");
-		for(byte index=1;index<=1+9*5;index+=9) {
-			inventory.setItem(index, Utils.createItemStack(Material.BLACK_STAINED_GLASS_PANE,1," ",""));
+		if(game.getWrapper(player).getTeam()==Team.GARDE) {
+			for(byte index=1;index<=1+9*5;index+=9) {
+				inventory.setItem(index, Utils.createItemStack(Material.BLUE_STAINED_GLASS_PANE,1," ",""));
+			}
+			inventory.setItem(18, Utils.createItemStack(Material.BLUE_STAINED_GLASS_PANE,1," ",""));
+			inventory.setItem(27, Utils.createItemStack(Material.BLUE_STAINED_GLASS_PANE,1," ",""));
+		}else {
+			for(byte index=1;index<=1+9*5;index+=9) {
+				inventory.setItem(index, Utils.createItemStack(Material.RED_STAINED_GLASS_PANE,1," ",""));
+			}
+			inventory.setItem(18, Utils.createItemStack(Material.RED_STAINED_GLASS_PANE,1," ",""));
+			inventory.setItem(27, Utils.createItemStack(Material.RED_STAINED_GLASS_PANE,1," ",""));
 		}
 		for(byte index=2;index<=8;index++) {
 			inventory.setItem(index, Utils.createItemStack(Material.BLACK_STAINED_GLASS_PANE,1," ",""));
 			inventory.setItem(index+45, Utils.createItemStack(Material.BLACK_STAINED_GLASS_PANE,1," ",""));
 		}
+		if(game.getWrapper(player).isReady()) {
+			inventory.setItem(0, Utils.createItemStack(Material.EMERALD_BLOCK,1,ChatColor.GREEN+"Prêt",""));
+		}else {
+			inventory.setItem(0, Utils.createItemStack(Material.REDSTONE_BLOCK,1,ChatColor.RED+"En attente",""));
+		}
+		inventory.setItem(9, Utils.createItemStack(Material.COMPOSTER,1,ChatColor.DARK_RED+"Tout vendre",""));
+		inventory.setItem(36, Utils.createItemStack(Material.DIAMOND_CHESTPLATE,1,ChatColor.GOLD+"Apparences",""));
+		inventory.setItem(45, Utils.createItemStack(Material.GOLD_INGOT,1,ChatColor.GOLD+"Argent: "+game.getWrapper(player).getMoney(),""));
+		
 		showObjetPage(1);
 	}
 	public void showObjetPage(int page) {
@@ -40,6 +61,12 @@ public class PreparationInventory extends BasePersonalInventory{
 					index+=2;
 				}
 			}
+		}
+		if(page>1) {
+			inventory.setItem(47, Utils.createItemStack(Material.PAPER,1,ChatColor.RED+"Page précédente",""));
+		}
+		if(objets.size()>24*(page)) {
+			inventory.setItem(53, Utils.createItemStack(Material.PAPER,1,ChatColor.GREEN+"Page suivante",""));
 		}
 	}
 	@Override
