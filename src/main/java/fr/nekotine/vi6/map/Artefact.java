@@ -25,9 +25,9 @@ public class Artefact implements ConfigurationSerializable,ZoneDetectionListener
 		STEALED//un voleur c'est enfuit avec cet objet
 	}
 	
-	private final String name;
-	private final String displayName;
-	private final DetectionZone zone;
+	private String name;
+	private String displayName;
+	private DetectionZone zone;
 	private int nbVoleurInside = 0;
 	private int nbGuardInside = 0;
 	private int captureLevel = 0;
@@ -151,5 +151,21 @@ public class Artefact implements ConfigurationSerializable,ZoneDetectionListener
 
 	public String getDisplayName() {
 		return displayName;
+	}
+	
+	public DetectionZone getZone() {
+		return zone;
+	}
+
+	public void setZone(DetectionZone zone) {
+		this.zone = zone;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
 	}
 }
