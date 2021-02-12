@@ -155,11 +155,11 @@ public class Game implements Listener{
 		map.enable(main);
 		map.start();
 		state=GameState.Preparation;
-		for(PlayerWrapper w : playerList.values()) {
-			w.clearStatusEffects();
-			w.getStealedArtefactList().clear();
-		}
 		for(Entry<Player, PlayerWrapper> playerAndTeam : playerList.entrySet()) {
+			playerAndTeam.getValue().setReady(false);
+			playerAndTeam.getValue().setMoney(money);
+			playerAndTeam.getValue().clearStatusEffects();
+			playerAndTeam.getValue().getStealedArtefactList().clear();
 			Bukkit.getPluginManager().registerEvents(new PlayerGame(name, playerAndTeam.getKey().getUniqueId(), idPartie, playerAndTeam.getValue().getTeam()), main);
 		}
 		startTime = LocalTime.now().toString();

@@ -13,8 +13,8 @@ import org.bukkit.inventory.ItemStack;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
+import fr.nekotine.vi6.map.Carte;
 import fr.nekotine.vi6.utils.Utils;
-import fr.nekotine.vi6.yml.YamlWorker;
 
 public class MapSelectionInventory extends BaseSharedInventory{
 	private static Enchantment enchant = Enchantment.DURABILITY;
@@ -27,7 +27,7 @@ public class MapSelectionInventory extends BaseSharedInventory{
 		inventory.setItem(19, Utils.createItemStack(Material.BLACK_STAINED_GLASS_PANE,1," ",""));
 		inventory.setItem(0, Utils.createItemStack(Material.BARRIER,1,ChatColor.RED+"Retour",""));
 		byte index=1;
-		for(String map : YamlWorker.getMapNameList()) {
+		for(String map : Carte.getMapList()) {
 			index++;
 			if(index%9==0) {
 				index+=2;

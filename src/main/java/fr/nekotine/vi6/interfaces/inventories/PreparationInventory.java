@@ -44,8 +44,8 @@ public class PreparationInventory extends BasePersonalInventory{
 		inventory.setItem(9, Utils.createItemStack(Material.COMPOSTER,1,ChatColor.DARK_RED+"Tout vendre",""));
 		inventory.setItem(36, Utils.createItemStack(Material.DIAMOND_CHESTPLATE,1,ChatColor.GOLD+"Apparences",""));
 		inventory.setItem(45, Utils.createItemStack(Material.GOLD_INGOT,1,ChatColor.GOLD+"Argent: "+game.getWrapper(player).getMoney(),""));
-		
 		showObjetPage(1);
+		player.openInventory(inventory);
 	}
 	public void showObjetPage(int page) {
 		List<ObjetsSkins> objets = ObjetsSkins.getDefaultSkins();
