@@ -3,3 +3,4 @@ game*leave: "§s a quitté cette partie de vi6."
 game*artefact*steal*guard: "§3Un artéfact a été volé"
 #§v = artefact's name §p = stealer's name
 game*artefact*steal*thief: "§p a volé §v"
+map*list: "Voici la liste des cartes présentes dans le fichier "Maps":"

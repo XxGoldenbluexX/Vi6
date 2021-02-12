@@ -9,6 +9,8 @@ import dev.jorel.commandapi.arguments.StringArgument;
 import dev.jorel.commandapi.executors.CommandExecutor;
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
+import fr.nekotine.vi6.map.Carte;
+import fr.nekotine.vi6.yml.DisplayTexts;
 
 public class Vi6commandMaker {
 	
@@ -87,6 +89,15 @@ public class Vi6commandMaker {
 	private static CommandAPICommand map(Vi6Main main) {
 		return new CommandAPICommand("map")
 				.withSubcommand(makeHelp(mapHelp))
+				.withSubcommand(mapList())
 				.executes(mapHelp);
+	}
+	
+	private static CommandAPICommand mapList() {
+		return new CommandAPICommand("map")
+				.executes((sender,args)->{
+					sender.sendMessage(DisplayTexts.getMessage("map*list"));
+					sender.sendMessage(Carte.getMapList().toArray(String[]::new));
+				});
 	}
 }
