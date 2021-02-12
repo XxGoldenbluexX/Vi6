@@ -13,6 +13,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
 import fr.nekotine.vi6.Game;
+import fr.nekotine.vi6.Vi6Main;
 
 public class Carte implements ConfigurationSerializable {
 
@@ -28,6 +29,13 @@ public class Carte implements ConfigurationSerializable {
 
 	public Carte(String name) {
 		this.name=name;
+	}
+	
+	public void enable(Vi6Main main) {
+		for (Entree e : entrees) {e.enable(main);}
+		for (Sortie s : sorties) {s.enable(main);}
+		for (Passage p : passages) {p.enable(main);}
+		for (Artefact a : artefacts) {a.enable(main);}
 	}
 	
 	public void start() {
@@ -151,6 +159,20 @@ public class Carte implements ConfigurationSerializable {
 			return (Carte)config.get("map");
 		}
 		return null;
+	}
+	
+	public static void save(Carte map) {
+		if (mapFolder==null || !mapFolder.exists()) return;
+		String name = map.getName();
+		File f = new File(mapFolder,name+".yml");
+		try {
+			f.createNewFile();
+			YamlConfiguration config = YamlConfiguration.loadConfiguration(f);
+			config.set("map", map);
+			config.save(f);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public static ArrayList<String> getMapList() {

@@ -25,8 +25,8 @@ public class Artefact implements ConfigurationSerializable,ZoneDetectionListener
 		STEALED//un voleur c'est enfuit avec cet objet
 	}
 	
-	private String name;
-	private DetectionZone zone;
+	private final String name;
+	private final DetectionZone zone;
 	private int nbVoleurInside = 0;
 	private int nbGuardInside = 0;
 	private int captureLevel = 0;
@@ -61,11 +61,13 @@ public class Artefact implements ConfigurationSerializable,ZoneDetectionListener
 	@Override
 	public Map<String, Object> serialize() {
 		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("name", name);
+		map.put("zone", zone);
 		return map;
 	}
 	
 	public static Artefact deserialize(Map<String, Object> args) {
-		return new Artefact(name, zone);
+		return new Artefact((String)args.get("name"),(DetectionZone)args.get("zone"));
 	}
 
 	@Override

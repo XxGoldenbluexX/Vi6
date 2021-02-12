@@ -12,6 +12,7 @@ import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 
 import fr.nekotine.vi6.enums.GameState;
@@ -129,6 +130,7 @@ public class Game implements Listener{
 	
 	public void destroy() {
 		if (map!=null) {map.unload();map=null;}
+		HandlerList.unregisterAll(this);
 	}
 	
 	public boolean startGame() {//START-----------------------
@@ -139,6 +141,7 @@ public class Game implements Listener{
 		map = Carte.load(mapName);
 		if (map==null) return false;
 		map.setGame(this);
+		map.enable(main);
 		map.start();
 		state=GameState.Preparation;
 		for(PlayerWrapper w : playerList.values()) {
@@ -147,6 +150,8 @@ public class Game implements Listener{
 		}
 		return true;
 	}
+	
+	
 	
 	public boolean endGame() {
 		state=GameState.Waiting;
