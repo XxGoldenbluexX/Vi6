@@ -1,7 +1,10 @@
 package fr.nekotine.vi6.map;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
 
 import fr.nekotine.vi6.Game;
@@ -12,7 +15,9 @@ import fr.nekotine.vi6.utils.DetectionZone;
 import fr.nekotine.vi6.utils.ZoneDetectionListener;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 
-public class Artefact implements ZoneDetectionListener{
+public class Artefact implements ConfigurationSerializable,ZoneDetectionListener{
+	
+	private static final String yamlPrefix = "Artefact_";
 	
 	public enum CaptureState{
 		STEALABLE,//l'objet peut etre volé
@@ -38,6 +43,11 @@ public class Artefact implements ZoneDetectionListener{
 		return name;
 	}
 	
+	public void reset() {
+		status=CaptureState.STEALABLE;
+		captureLevel=0;
+	}
+	
 	public void destroy() {
 		zone.destroy();
 	}
@@ -46,6 +56,16 @@ public class Artefact implements ZoneDetectionListener{
 		zone.enable(mainref);
 		maxCaptureLevel=mainref.getConfig().getInt("captureTime",200);
 		this.mainref = mainref;
+	}
+	
+	@Override
+	public Map<String, Object> serialize() {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		return map;
+	}
+	
+	public static Artefact deserialize(Map<String, Object> args) {
+		return new Artefact(name, zone);
 	}
 
 	@Override
@@ -89,6 +109,7 @@ public class Artefact implements ZoneDetectionListener{
 	}
 	
 	public void tick(Game g) {
+		if (status!=CaptureState.STEALABLE) return;
 		if (nbVoleurInside>0) {
 			captureLevel+=nbGuardInside>0?0:nbVoleurInside;
 			if (captureLevel>=maxCaptureLevel) {
@@ -104,6 +125,7 @@ public class Artefact implements ZoneDetectionListener{
 			PlayerWrapper w = mainref.getPlayerWrapper(p);
 			if (w!=null && w.getTeam()==Team.VOLEUR && w.getState()==PlayerState.INSIDE) {
 				w.getStealedArtefactList().add(this);
+				status=CaptureState.CARRIED;
 				return w;
 			}
 		}
@@ -116,5 +138,9 @@ public class Artefact implements ZoneDetectionListener{
 
 	public void setStatus(CaptureState status) {
 		this.status = status;
+	}
+	
+	public static final String getYamlPrefix() {
+		return yamlPrefix;
 	}
 }

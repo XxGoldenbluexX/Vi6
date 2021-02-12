@@ -14,6 +14,8 @@ import fr.nekotine.vi6.wrappers.PlayerWrapper;
 
 public class Passage implements ConfigurationSerializable, ZoneDetectionListener {
 
+	private static final String yamlPrefix = "Passage_";
+	
 	private String salleA="";
 	private String salleB="";
 	private DetectionZone zoneA;
@@ -103,6 +105,10 @@ public class Passage implements ConfigurationSerializable, ZoneDetectionListener
 	public void enable(Vi6Main mainref) {
 		zoneA.enable(mainref);
 		zoneB.enable(mainref);
+	}
+	
+	public static final String getYamlPrefix() {
+		return yamlPrefix;
 	}
 
 }

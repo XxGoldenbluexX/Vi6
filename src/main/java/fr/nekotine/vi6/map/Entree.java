@@ -13,6 +13,8 @@ import fr.nekotine.vi6.utils.ZoneDetectionListener;
 
 public class Entree implements ConfigurationSerializable,ZoneDetectionListener{
 
+	private static final String yamlPrefix = "Entree_";
+	
 	private String displayName;
 	private DetectionZone[] zones;
 	private Location tpLoc;
@@ -96,6 +98,10 @@ public class Entree implements ConfigurationSerializable,ZoneDetectionListener{
 	@Override
 	public boolean playerLeaveZone(Player player,DetectionZone zone,Vi6Main mainref) {
 		return false;
+	}
+	
+	public static final String getYamlPrefix() {
+		return yamlPrefix;
 	}
 
 }

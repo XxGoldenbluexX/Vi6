@@ -128,14 +128,15 @@ public class Game implements Listener{
 	}
 	
 	public void destroy() {
-		if (map!=null) map.unload();
+		if (map!=null) {map.unload();map=null;}
 	}
 	
 	public boolean startGame() {//START-----------------------
 		for(PlayerWrapper wrapper : playerList.values()) {
 			if(!wrapper.isReady()) return false;
 		}
-		Carte map = Carte.load(mapName);
+		if (map!=null) {map.unload();map=null;}
+		map = Carte.load(mapName);
 		if (map==null) return false;
 		map.setGame(this);
 		map.start();

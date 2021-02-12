@@ -12,6 +12,8 @@ import fr.nekotine.vi6.utils.ZoneDetectionListener;
 
 public class Sortie implements ConfigurationSerializable,ZoneDetectionListener {
 	
+	private static final String yamlPrefix = "Sortie_";
+	
 	private String displayName;
 	private DetectionZone zone;
 	
@@ -69,6 +71,10 @@ public class Sortie implements ConfigurationSerializable,ZoneDetectionListener {
 	@Override
 	public boolean playerLeaveZone(Player player,DetectionZone zone,Vi6Main mainref) {
 		return false;
+	}
+	
+	public static final String getYamlPrefix() {
+		return yamlPrefix;
 	}
 
 }
