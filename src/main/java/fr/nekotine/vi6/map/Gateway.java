@@ -6,9 +6,11 @@ import java.util.Map;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.configuration.serialization.SerializableAs;
 
 import fr.nekotine.vi6.utils.DetectionZone;
 
+@SerializableAs("Gateway")
 public class Gateway extends Passage {
 	
 	private Location corner1;
