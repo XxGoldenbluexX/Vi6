@@ -90,6 +90,7 @@ public class Vi6commandMaker {
 		return new CommandAPICommand("map")
 				.withSubcommand(makeHelp(mapHelp))
 				.withSubcommand(mapList())
+				.withSubcommand(mapCreate())
 				.executes(mapHelp);
 	}
 	
