@@ -13,13 +13,14 @@ import fr.nekotine.vi6.events.GameStartEvent;
 import fr.nekotine.vi6.events.PlayerJoinGameEvent;
 import fr.nekotine.vi6.events.PlayerLeaveGameEvent;
 import fr.nekotine.vi6.interfaces.inventories.WaitingInventory;
+import fr.nekotine.vi6.utils.Utils;
 
 public class OpenWaitingItem extends BaseInventoryItem implements Listener{
 	private final Game game;
 	public OpenWaitingItem(Vi6Main main, Game game) {
 		super(main);
 		this.game=game;
-		item=createItemStack(Material.BEACON, 1, ChatColor.GOLD+game.getName(), "");
+		item=Utils.createItemStack(Material.BEACON, 1, ChatColor.GOLD+game.getName(), "");
 	}
 	@EventHandler
 	public void onGameStart(GameStartEvent e) {
@@ -44,6 +45,10 @@ public class OpenWaitingItem extends BaseInventoryItem implements Listener{
 	}
 	@Override
 	public void playerInteract(Player player) {
-		new WaitingInventory(main, player, game);
+		if(game.getPlayerList().contains(player)) {
+			new WaitingInventory(main, player, game);
+		}else {
+			player.getInventory().remove(item);
+		}
 	}
 }
