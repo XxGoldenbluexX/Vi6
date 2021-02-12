@@ -27,7 +27,7 @@ public abstract class BasePersonalInventory implements Listener{
 		this.player = player;
 		Bukkit.getPluginManager().registerEvents(this, main);
 	}
-	public abstract void itemClicked(ItemStack itm);
+	public abstract void itemClicked(ItemStack itm, int slot);
 	@EventHandler
 	public void onGameStart(GameStartEvent e) {
 		if(e.getGame().equals(game)) {
@@ -53,7 +53,7 @@ public abstract class BasePersonalInventory implements Listener{
 		if(inventory.equals(e.getClickedInventory())) {
 			if(e.getCurrentItem()!=null) {
 				e.setCancelled(true);
-				itemClicked(e.getCurrentItem());
+				itemClicked(e.getCurrentItem(),e.getRawSlot());
 			}
 		}
 	}

@@ -70,7 +70,49 @@ public class PreparationInventory extends BasePersonalInventory{
 		}
 	}
 	@Override
-	public void itemClicked(ItemStack itm) {
+	public void itemClicked(ItemStack itm, int slot) {
+		switch(itm.getType()) {
+		case REDSTONE_BLOCK:
+			if(slot==0) {
+				//ready
+			}else {
+				//rune
+			}
+		case EMERALD_BLOCK:
+			if(slot==0) {
+				//unready
+			}else {
+				//rune
+			}
+		case COMPOSTER:
+			if(slot==9) {
+				//vendre
+			}else {
+				//rune
+			}
+		case DIAMOND_CHESTPLATE:
+			if(slot==36) {
+				//unready
+			}else {
+				//rune
+			}
+		case GOLD_INGOT:
+			if(slot==45) {
+				//rien
+			}else {
+				//rune
+			}
+		case PAPER:
+			if(slot==47) {
+				//page precendente
+			}else if(slot==53) {
+				//page suivante
+			}else {
+				//rune
+			}
+		default:
+			return;
+		}
 		// TODO Auto-generated method stub
 		
 	}
