@@ -1,5 +1,5 @@
-game*join: "%s a rejoin cette partie de vi6."
-game*leave: "%s a quitté cette partie de vi6."
+game*join: "§s a rejoin cette partie de vi6."
+game*leave: "§s a quitté cette partie de vi6."
 game*artefact*steal*guard: "Un artéfact a été volé"
-#&v = artefact's name &p = stealer's name
-game*artefact*steal*thief: "Un artéfact a été volé"
+#§v = artefact's name §p = stealer's name
+game*artefact*steal*thief: "§p a volé §v"
