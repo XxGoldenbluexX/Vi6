@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.entity.Player;
 
 import fr.nekotine.vi6.Game;
@@ -15,13 +16,14 @@ import fr.nekotine.vi6.utils.DetectionZone;
 import fr.nekotine.vi6.utils.ZoneDetectionListener;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 
+@SerializableAs("Artefact")
 public class Artefact implements ConfigurationSerializable,ZoneDetectionListener{
 	
 	private static final String yamlPrefix = "Artefact_";
 	
 	public enum CaptureState{
-		STEALABLE,//l'objet peut etre volé
-		CARRIED,//l'objet est porté par un voleur
+		STEALABLE,//l'objet peut etre volï¿½
+		CARRIED,//l'objet est portï¿½ par un voleur
 		STEALED//un voleur c'est enfuit avec cet objet
 	}
 	

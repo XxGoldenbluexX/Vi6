@@ -11,10 +11,12 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.configuration.serialization.SerializableAs;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
 
+@SerializableAs("Carte")
 public class Carte implements ConfigurationSerializable {
 
 	private static File mapFolder;

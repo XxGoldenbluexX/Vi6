@@ -5,12 +5,14 @@ import java.util.Map;
 
 import org.bukkit.Location;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.entity.Player;
 
 import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.utils.DetectionZone;
 import fr.nekotine.vi6.utils.ZoneDetectionListener;
 
+@SerializableAs("Entree")
 public class Entree implements ConfigurationSerializable,ZoneDetectionListener{
 
 	private static final String yamlPrefix = "Entree_";

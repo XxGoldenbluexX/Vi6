@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.entity.Player;
 
 import fr.nekotine.vi6.Vi6Main;
@@ -12,6 +13,7 @@ import fr.nekotine.vi6.utils.DetectionZone;
 import fr.nekotine.vi6.utils.ZoneDetectionListener;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 
+@SerializableAs("Passage")
 public class Passage implements ConfigurationSerializable, ZoneDetectionListener {
 
 	private static final String yamlPrefix = "Passage_";

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.bukkit.Location;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
@@ -15,6 +16,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import fr.nekotine.vi6.Vi6Main;
 
+@SerializableAs("DetectionZone")
 public class DetectionZone implements ConfigurationSerializable,Listener {
 	
 	private static final String yamlPrefix = "DetectionZone_";
