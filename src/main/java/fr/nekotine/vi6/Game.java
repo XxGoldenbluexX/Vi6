@@ -27,6 +27,7 @@ import fr.nekotine.vi6.interfaces.inventories.GameSettingsInventory;
 import fr.nekotine.vi6.interfaces.inventories.MapSelectionInventory;
 import fr.nekotine.vi6.interfaces.items.OpenWaitingItem;
 import fr.nekotine.vi6.map.Artefact;
+import fr.nekotine.vi6.map.Carte;
 import fr.nekotine.vi6.sql.PlayerGame;
 import fr.nekotine.vi6.sql.SQLInterface;
 import fr.nekotine.vi6.utils.MessageFormater;
@@ -44,6 +45,7 @@ public class Game implements Listener{
 	private final HashMap<Player,PlayerWrapper> playerList = new HashMap<Player,PlayerWrapper>();
 	
 	private String mapName;
+	private Carte map;
 	private int money;
 	
 	private MapSelectionInventory mapInterface;
@@ -82,8 +84,8 @@ public class Game implements Listener{
 				w.getPlayer().sendTitle(message,"", 5, 20, 20);
 				w.getPlayer().sendMessage(message);
 			}else {
-				message = MessageFormater.formatWithColorCodes('&',DisplayTexts.getMessage("game*artefact*steal*thief"),
-						new MessageFormater("&v",a.getName()),new MessageFormater("&p",p.getPlayer().getName()));
+				message = MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game*artefact*steal*thief"),
+						new MessageFormater("§v",a.getName()),new MessageFormater("§p",p.getPlayer().getName()));
 				w.getPlayer().sendTitle(message,"", 5, 20, 20);
 				w.getPlayer().sendMessage(message);
 			}
@@ -125,10 +127,19 @@ public class Game implements Listener{
 		Bukkit.getPluginManager().callEvent(new MapChangeEvent(mapName, this));
 	}
 	
-	public boolean startGame() {
+	public void destroy() {
+		if (map!=null) map.unload();
+	}
+	
+	public boolean startGame() {//START-----------------------
 		for(PlayerWrapper wrapper : playerList.values()) {
 			if(!wrapper.isReady()) return false;
 		}
+		Carte map = Carte.load(mapName);
+		if (map==null) return false;
+		map.setGame(this);
+		map.start();
+		state=GameState.Preparation;
 		for(PlayerWrapper w : playerList.values()) {
 			w.clearStatusEffects();
 			w.getStealedArtefactList().clear();
@@ -136,11 +147,16 @@ public class Game implements Listener{
 		return true;
 	}
 	
+	public boolean endGame() {
+		state=GameState.Waiting;
+		return false;
+	}
+	
 	public boolean addPlayer(Player p) {
 		if (!playerList.keySet().contains(p)) {
 			playerList.put(p, new PlayerWrapper(p));
 			for (Player pl : playerList.keySet()) {
-				pl.sendMessage(MessageFormater.formatWithColorCodes('&',DisplayTexts.getMessage("game*join"),new MessageFormater("&p",p.getName())));
+				pl.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game*join"),new MessageFormater("§p",p.getName())));
 			}
 			p.getInventory().clear();
 			Bukkit.getPluginManager().callEvent(new PlayerJoinGameEvent(this, p));

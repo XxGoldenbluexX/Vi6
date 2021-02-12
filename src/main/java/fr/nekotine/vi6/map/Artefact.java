@@ -3,8 +3,6 @@ package fr.nekotine.vi6.map;
 import java.util.ArrayList;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
@@ -14,7 +12,7 @@ import fr.nekotine.vi6.utils.DetectionZone;
 import fr.nekotine.vi6.utils.ZoneDetectionListener;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 
-public class Artefact implements ZoneDetectionListener,Listener{
+public class Artefact implements ZoneDetectionListener{
 	
 	public enum CaptureState{
 		STEALABLE,//l'objet peut etre volé
@@ -90,7 +88,6 @@ public class Artefact implements ZoneDetectionListener,Listener{
 		return false;
 	}
 	
-	@EventHandler
 	public void tick(Game g) {
 		if (nbVoleurInside>0) {
 			captureLevel+=nbGuardInside>0?0:nbVoleurInside;

@@ -11,6 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import fr.nekotine.vi6.Vi6Main;
 
@@ -95,6 +96,11 @@ public class DetectionZone implements ConfigurationSerializable,Listener {
 				};
 			}
 		}
+	}
+	
+	@EventHandler
+	public void onPlayerDisconnect(PlayerQuitEvent e) {
+		playersInside.remove(e.getPlayer());
 	}
 
 	public double getZ2() {

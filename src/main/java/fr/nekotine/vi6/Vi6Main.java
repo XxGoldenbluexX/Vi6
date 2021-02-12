@@ -1,5 +1,6 @@
 package fr.nekotine.vi6;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import dev.jorel.commandapi.CommandAPI;
 import fr.nekotine.vi6.commands.Vi6commandMaker;
+import fr.nekotine.vi6.map.Carte;
 import fr.nekotine.vi6.sql.SQLInterface;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 import fr.nekotine.vi6.yml.YamlWorker;
@@ -42,9 +44,14 @@ public class Vi6Main extends JavaPlugin {
 		CommandAPI.onEnable(this);
 		pmanager=Bukkit.getPluginManager();
 		Vi6commandMaker.makevi6(this).register();
-		if(!getDataFolder().exists()) {
+		if (getDataFolder().exists()) {
 			getDataFolder().mkdir();
 		}
+		File mapf = new File(getDataFolder(),"Maps");
+		if (!mapf.exists()){
+				mapf.mkdir();
+		}
+		Carte.setMapFolder(mapf);
 		SQLInterface.load(this);
 		YamlWorker.load(this);
 	}
