@@ -96,8 +96,25 @@ public class Vi6commandMaker {
 	private static CommandAPICommand mapList() {
 		return new CommandAPICommand("list")
 				.executes((sender,args)->{
-					sender.sendMessage(DisplayTexts.getMessage("map*list"));
+					sender.sendMessage(DisplayTexts.getMessage("map_list"));
 					sender.sendMessage(Carte.getMapList().toArray(String[]::new));
+				});
+	}
+	
+	public static CommandAPICommand mapCreate() {
+		return new CommandAPICommand("create")
+				.withPermission("vi6.map.create")
+				.withArguments(new StringArgument("mapName"))
+				.executes((sender,args)->{
+					String name = (String) args[0];
+					if (Carte.getMapList().contains(name)) {
+						sender.sendMessage(DisplayTexts.getMessage("map_create_exist"));
+					}else {
+						Carte map = new Carte(name);
+						Carte.save(map);
+						map.unload();
+						sender.sendMessage(DisplayTexts.getMessage("map_create_success"));
+					}
 				});
 	}
 }

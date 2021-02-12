@@ -16,7 +16,10 @@ public class DisplayTexts {
 	public static final DisplayTexts instance = new DisplayTexts();
 	
 	public boolean load(Vi6Main main) {
-		main.saveResource("messages.yml", false);
+		File msg = new File(main.getDataFolder(),"messages.yml");
+		if (!msg.exists()) {
+			main.saveResource("messages.yml", false);
+		}
 		File f = new File(main.getDataFolder(),"messages.yml");
 		if (f.exists()) {
 			YamlConfiguration config = YamlConfiguration.loadConfiguration(f);
