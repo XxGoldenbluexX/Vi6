@@ -13,7 +13,7 @@ import fr.nekotine.vi6.Vi6Main;
 public class DisplayTexts {
 	
 	private final HashMap<String,String> messages = new HashMap<String,String>();
-	private static final DisplayTexts instance = new DisplayTexts();
+	public static final DisplayTexts instance = new DisplayTexts();
 	
 	public boolean load(Vi6Main main) {
 		main.saveResource("messages.yml", false);
@@ -23,6 +23,7 @@ public class DisplayTexts {
 			Iterator<String> ite = config.getKeys(false).iterator();
 			while (ite.hasNext()) {
 				String key = ite.next();
+				Bukkit.getLogger().info("Key:"+key);
 				String value = config.getString(key);
 				if (value!=null) {
 					messages.put(key,ChatColor.translateAlternateColorCodes('&',value));
@@ -41,7 +42,7 @@ public class DisplayTexts {
 	}
 	
 	private String getMsg(String name) {
-		return messages.getOrDefault(name, "");
+		return messages.getOrDefault(name, "noSuchText");
 	}
 
 }

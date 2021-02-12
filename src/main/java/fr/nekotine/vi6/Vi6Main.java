@@ -22,6 +22,7 @@ import fr.nekotine.vi6.map.Sortie;
 import fr.nekotine.vi6.sql.SQLInterface;
 import fr.nekotine.vi6.utils.DetectionZone;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
+import fr.nekotine.vi6.yml.DisplayTexts;
 import fr.nekotine.vi6.yml.YamlWorker;
 
 /**
@@ -70,6 +71,7 @@ public class Vi6Main extends JavaPlugin {
 		Carte.setMapFolder(mapf);
 		SQLInterface.load(this);
 		YamlWorker.load(this);
+		DisplayTexts.instance.load(this);
 	}
 	
 	
