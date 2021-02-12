@@ -6,14 +6,21 @@ import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import dev.jorel.commandapi.CommandAPI;
 import fr.nekotine.vi6.commands.Vi6commandMaker;
+import fr.nekotine.vi6.map.Artefact;
 import fr.nekotine.vi6.map.Carte;
+import fr.nekotine.vi6.map.Entree;
+import fr.nekotine.vi6.map.Gateway;
+import fr.nekotine.vi6.map.Passage;
+import fr.nekotine.vi6.map.Sortie;
 import fr.nekotine.vi6.sql.SQLInterface;
+import fr.nekotine.vi6.utils.DetectionZone;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 import fr.nekotine.vi6.yml.YamlWorker;
 
@@ -40,14 +47,23 @@ public class Vi6Main extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		super.onEnable();
-		saveDefaultConfig();
-		CommandAPI.onEnable(this);
-		pmanager=Bukkit.getPluginManager();
-		Vi6commandMaker.makevi6(this).register();
-		if (getDataFolder().exists()) {
+		//Register Serializables
+		ConfigurationSerialization.registerClass(Entree.class, "Entree");
+		ConfigurationSerialization.registerClass(Sortie.class, "Sortie");
+		ConfigurationSerialization.registerClass(Passage.class, "Passage");
+		ConfigurationSerialization.registerClass(Gateway.class, "Gateway");
+		ConfigurationSerialization.registerClass(Artefact.class, "Artefact");
+		ConfigurationSerialization.registerClass(Carte.class, "Carte");
+		ConfigurationSerialization.registerClass(DetectionZone.class, "DetectionZone");
+		pmanager=Bukkit.getPluginManager();//getting pmanager reference
+		CommandAPI.onEnable(this);//enable CommandAPI
+		Vi6commandMaker.makevi6(this).register();//registering commands
+		//File creation
+		saveDefaultConfig();//making config.yml
+		if (getDataFolder().exists()) {//making dataFolder
 			getDataFolder().mkdir();
 		}
-		File mapf = new File(getDataFolder(),"Maps");
+		File mapf = new File(getDataFolder(),"Maps");//making map Folder
 		if (!mapf.exists()){
 				mapf.mkdir();
 		}

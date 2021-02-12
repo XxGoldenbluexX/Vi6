@@ -20,31 +20,42 @@ public class Vi6commandMaker {
 			});
 		
 	}
-	private static CommandExecutor mainhelp = (sender,args)->{
+	private static CommandExecutor mainHelp = (sender,args)->{
 	};
 
-	private static CommandExecutor gamehelp = (sender,args)->{
+	private static CommandExecutor gameHelp = (sender,args)->{
 	};
 	
+	private static CommandExecutor mapHelp = (sender,args)->{
+	};
+	
+	//----------------------MAIN-------------------------\/
+	
 	public static CommandAPICommand makevi6(Vi6Main main) {
-		return new CommandAPICommand("vi6").withPermission("vi6.main")
-				.withSubcommand(makehelp())
+		return new CommandAPICommand("vi6")
+				.withPermission("vi6.main")
+				.withSubcommand(makeHelp(mainHelp))
 				.withSubcommand(game(main))
-				.executes(mainhelp);
+				.withSubcommand(map(main))
+				.executes(mainHelp);
+	}
+
+	//----------------------HELP-------------------------\/
+	
+	private static CommandAPICommand makeHelp(CommandExecutor helpLambda) {
+		return new CommandAPICommand("help")
+				.executes(helpLambda);
 	}
 	
-	private static CommandAPICommand makehelp() {
-		return new CommandAPICommand("help")
-				.withPermission("vi6.help")
-				.executes(mainhelp);
-	}
+	//----------------------GAME-------------------------\/
 	
 	private static CommandAPICommand game(Vi6Main main) {
 		return new CommandAPICommand("game")
+				.withSubcommand(makeHelp(gameHelp))
 				.withSubcommand(gameCreate(main))
 				.withSubcommand(gameJoin())
 				.withSubcommand(gameLeave())
-				.executes(gamehelp);
+				.executes(gameHelp);
 	}
 	
 	private static CommandAPICommand gameCreate(Vi6Main main) {
@@ -69,5 +80,13 @@ public class Vi6commandMaker {
 				.executes((sender,args)->{
 					((Game)args[0]).removePlayer((Player)sender);
 				});
+	}
+	
+	//----------------------MAP-------------------------\/
+	
+	private static CommandAPICommand map(Vi6Main main) {
+		return new CommandAPICommand("map")
+				.withSubcommand(makeHelp(mapHelp))
+				.executes(mapHelp);
 	}
 }
