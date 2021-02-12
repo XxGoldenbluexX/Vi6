@@ -94,7 +94,7 @@ public class Vi6commandMaker {
 	}
 	
 	private static CommandAPICommand mapList() {
-		return new CommandAPICommand("map")
+		return new CommandAPICommand("list")
 				.executes((sender,args)->{
 					sender.sendMessage(DisplayTexts.getMessage("map*list"));
 					sender.sendMessage(Carte.getMapList().toArray(String[]::new));
