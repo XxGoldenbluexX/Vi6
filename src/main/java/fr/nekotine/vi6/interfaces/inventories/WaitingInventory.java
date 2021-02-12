@@ -38,7 +38,7 @@ public class WaitingInventory extends BasePersonalInventory{
 		player.openInventory(inventory);
 	}
 	@Override
-	public void itemClicked(ItemStack itm) {
+	public void itemClicked(ItemStack itm, int slot) {
 		switch(itm.getType()) {
 		case ANVIL:
 			game.openSettings(player);
