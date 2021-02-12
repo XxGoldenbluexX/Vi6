@@ -144,7 +144,7 @@ public class Game implements Listener{
 		HandlerList.unregisterAll(this);
 	}
 	
-	public boolean startGame() {//START----------------------
+	public boolean startGame() {//START---------------------
 		for(PlayerWrapper wrapper : playerList.values()) {
 			if(!wrapper.isReady()) return false;
 		}
