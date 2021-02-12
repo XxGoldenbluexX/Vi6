@@ -81,12 +81,12 @@ public class Game implements Listener{
 		for (PlayerWrapper w : playerList.values()) {
 			String message="";
 			if (w.getTeam()==Team.GARDE) {
-				message = ChatColor.translateAlternateColorCodes('§',DisplayTexts.getMessage("game*artefact*steal*guard"));
+				message = ChatColor.translateAlternateColorCodes('ï¿½',DisplayTexts.getMessage("game*artefact*steal*guard"));
 				w.getPlayer().sendTitle(message,"", 5, 20, 20);
 				w.getPlayer().sendMessage(message);
 			}else {
-				message = MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game*artefact*steal*thief"),
-						new MessageFormater("§v",a.getDisplayName()),new MessageFormater("§p",p.getPlayer().getName()));
+				message = MessageFormater.formatWithColorCodes('ï¿½',DisplayTexts.getMessage("game*artefact*steal*thief"),
+						new MessageFormater("ï¿½v",a.getDisplayName()),new MessageFormater("ï¿½p",p.getPlayer().getName()));
 				w.getPlayer().sendTitle(message,"", 5, 20, 20);
 				w.getPlayer().sendMessage(message);
 			}
@@ -162,7 +162,7 @@ public class Game implements Listener{
 		if (!playerList.keySet().contains(p)) {
 			playerList.put(p, new PlayerWrapper(p));
 			for (Player pl : playerList.keySet()) {
-				pl.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game*join"),new MessageFormater("§p",p.getName())));
+				pl.sendMessage(MessageFormater.formatWithColorCodes('ï¿½',DisplayTexts.getMessage("game*join"),new MessageFormater("ï¿½p",p.getName())));
 			}
 			p.getInventory().clear();
 			Bukkit.getPluginManager().callEvent(new PlayerJoinGameEvent(this, p));
@@ -197,7 +197,7 @@ public class Game implements Listener{
 		return null;
 	}
 	
-	//je met ï¿½a lï¿½, tu y mettra ï¿½ la fin au moment oï¿½ on commence la game!
+	//je met ca lï¿½, tu y mettra ï¿½ la fin au moment oï¿½ on commence la game!
 	public void gameStart() {
 		for(Entry<Player, PlayerWrapper> playerAndTeam : playerList.entrySet()) {
 			Bukkit.getPluginManager().registerEvents(new PlayerGame(name, playerAndTeam.getKey().getUniqueId(), idPartie, playerAndTeam.getValue().getTeam()), main);
