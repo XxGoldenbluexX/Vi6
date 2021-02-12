@@ -22,6 +22,11 @@
                 <artifactId>maven-shade-plugin</artifactId>
                 <configuration>
                 	<outputFile>I:\Minecraft Servers\Paper 1.16.5\plugins\${project.artifactId}.jar</outputFile>
+                	<artifactSet>
+                                <includes>
+                                   <include>net.wesjd:anvilgui</include>
+                                </includes>
+                            </artifactSet>
                 </configuration>
                 <version>2.4.3</version>
                 <executions>
