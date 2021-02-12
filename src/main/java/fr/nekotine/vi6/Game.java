@@ -36,6 +36,8 @@ import fr.nekotine.vi6.wrappers.PlayerWrapper;
 import fr.nekotine.vi6.yml.DisplayTexts;
 
 public class Game implements Listener{
+	private static final int DEFAULT_RANKED_MONEY = 1000;
+	
 	private final Vi6Main main;
 	private int idPartie;
 	private String startTime;
@@ -47,7 +49,7 @@ public class Game implements Listener{
 	
 	private String mapName;
 	private Carte map;
-	private int money;
+	private int money=DEFAULT_RANKED_MONEY;
 	
 	private MapSelectionInventory mapInterface;
 	private GameSettingsInventory settingsInterface;
@@ -99,6 +101,9 @@ public class Game implements Listener{
 	
 	public void setRanked(boolean isRanked) {
 		this.isRanked = isRanked;
+		if(isRanked) {
+			setMoney(DEFAULT_RANKED_MONEY);
+		}
 		Bukkit.getPluginManager().callEvent(new IsRankedChangeEvent(this,isRanked));
 	}
 
@@ -112,6 +117,10 @@ public class Game implements Listener{
 	
 	public int getMoney() {
 		return money;
+	}
+	
+	public static int getDefaultRankedMoney() {
+		return DEFAULT_RANKED_MONEY;
 	}
 	
 	public void setMoney(int money) {

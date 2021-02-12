@@ -63,6 +63,5 @@ public class GameSettingsInventory extends BaseSharedInventory{
 	@EventHandler
 	public void moneyChange(MoneyChangedEvent e) {
 		inventory.setItem(13, createItemStack(Material.GOLD_INGOT,1,ChatColor.GOLD+"Argent",ChatColor.LIGHT_PURPLE+""+ChatColor.UNDERLINE+game.getMoney()));
-		
 	}
 }
