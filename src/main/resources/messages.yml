@@ -1,6 +1,6 @@
-game*join: "§s a rejoin cette partie de vi6."
-game*leave: "§s a quitté cette partie de vi6."
-game*artefact*steal*guard: "§3Un artéfact a été volé"
-#§v = artefact's name §p = stealer's name
-game*artefact*steal*thief: "§p a volé §v"
-map*list: "Voici la liste des cartes présentes dans le fichier "Maps":"
+game*join: "Â§p a rejoin cette partie de vi6."
+game*leave: "Â§p a quittÃ© cette partie de vi6."
+game*artefact*steal*guard: "Â§3Un artÃ©fact a Ã©tÃ© volÃ©"
+#Â§v = artefact's name Â§p = stealer's name
+game*artefact*steal*thief: "Â§p a volÃ© Â§v"
+map*list: "Voici la liste des cartes prÃ©sentes dans le fichier "Maps":"
