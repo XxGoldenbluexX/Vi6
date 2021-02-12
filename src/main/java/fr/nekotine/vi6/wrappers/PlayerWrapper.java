@@ -17,6 +17,7 @@ public class PlayerWrapper {
 	private boolean isReady=false;
 	private PlayerState state=PlayerState.WAITING;
 	private String currentSalle;
+	private int money;
 	private final Player player;
 	private final ArrayList<StatusEffect> statusEffects = new ArrayList<StatusEffect>();
 	private final ArrayList<Artefact> stealedObjects = new ArrayList<>();
@@ -28,7 +29,15 @@ public class PlayerWrapper {
 	public Team getTeam() {
 		return team;
 	}
-
+	
+	public void setMoney(int money) {
+		this.money=money;
+	}
+	
+	public int getMoney() {
+		return money;
+	}
+	
 	public void changeTeam(Team team) {
 		this.team = team;
 	}
