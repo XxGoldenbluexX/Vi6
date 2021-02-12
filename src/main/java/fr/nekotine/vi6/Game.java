@@ -85,7 +85,7 @@ public class Game implements Listener{
 		for (PlayerWrapper w : playerList.values()) {
 			String message="";
 			if (w.getTeam()==Team.GARDE) {
-				message = ChatColor.translateAlternateColorCodes('�',DisplayTexts.getMessage("game*artefact*steal*guard"));
+				message = ChatColor.translateAlternateColorCodes('§',DisplayTexts.getMessage("game*artefact*steal*guard"));
 				w.getPlayer().sendTitle(message,"", 5, 20, 20);
 				w.getPlayer().sendMessage(message);
 			}else {
