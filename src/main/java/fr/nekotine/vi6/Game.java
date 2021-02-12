@@ -86,7 +86,7 @@ public class Game implements Listener{
 				w.getPlayer().sendMessage(message);
 			}else {
 				message = MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game*artefact*steal*thief"),
-						new MessageFormater("§v",a.getName()),new MessageFormater("§p",p.getPlayer().getName()));
+						new MessageFormater("§v",a.getDisplayName()),new MessageFormater("§p",p.getPlayer().getName()));
 				w.getPlayer().sendTitle(message,"", 5, 20, 20);
 				w.getPlayer().sendMessage(message);
 			}

@@ -26,6 +26,7 @@ public class Artefact implements ConfigurationSerializable,ZoneDetectionListener
 	}
 	
 	private final String name;
+	private final String displayName;
 	private final DetectionZone zone;
 	private int nbVoleurInside = 0;
 	private int nbGuardInside = 0;
@@ -34,8 +35,9 @@ public class Artefact implements ConfigurationSerializable,ZoneDetectionListener
 	private CaptureState status=CaptureState.STEALABLE;
 	private Vi6Main mainref;
 	
-	public Artefact(String name,DetectionZone zone) {
+	public Artefact(String name,String displayName,DetectionZone zone) {
 		this.name=name;
+		this.displayName = displayName;
 		this.zone=zone;
 	}
 	
@@ -62,12 +64,13 @@ public class Artefact implements ConfigurationSerializable,ZoneDetectionListener
 	public Map<String, Object> serialize() {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("name", name);
+		map.put("displayName", displayName);
 		map.put("zone", zone);
 		return map;
 	}
 	
 	public static Artefact deserialize(Map<String, Object> args) {
-		return new Artefact((String)args.get("name"),(DetectionZone)args.get("zone"));
+		return new Artefact((String)args.get("name"),(String)args.get("displayName"),(DetectionZone)args.get("zone"));
 	}
 
 	@Override
@@ -144,5 +147,9 @@ public class Artefact implements ConfigurationSerializable,ZoneDetectionListener
 	
 	public static final String getYamlPrefix() {
 		return yamlPrefix;
+	}
+
+	public String getDisplayName() {
+		return displayName;
 	}
 }
