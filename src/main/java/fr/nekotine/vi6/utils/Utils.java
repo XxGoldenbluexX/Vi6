@@ -26,10 +26,10 @@ public class Utils {
 		item.setItemMeta(meta);
 		return item;
 	}
-	public static ItemStack createItemStack(Vi6Main main, Material mat, int quantity, String name, ObjetsSkins objet, String... lore) {
-		ItemStack item = new ItemStack(mat,quantity);
+	public static ItemStack createItemStack(Vi6Main main, ObjetsSkins objet, int quantity, String... lore) {
+		ItemStack item = new ItemStack(objet.getMaterial(),quantity);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(name);
+		meta.setDisplayName(objet.getName());
 		List<String> loreList = new ArrayList<>(); 
 		for(String line : lore) {
 			if(line!="") {

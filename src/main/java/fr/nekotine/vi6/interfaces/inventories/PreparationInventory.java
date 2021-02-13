@@ -1,5 +1,6 @@
 package fr.nekotine.vi6.interfaces.inventories;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -54,7 +55,12 @@ public class PreparationInventory extends BasePersonalInventory{
 		if(28*(page-1)<objets.size()){
 			byte index=11;
 			for(ObjetsSkins obj : objets.subList(28*(page-1), objets.size())) {
-				inventory.setItem(index, Utils.createItemStack(main, obj.getMaterial(),1,obj.getName(), obj, obj.getLore()));
+				List<String> lore = new ArrayList<>();
+				for(String l : obj.getLore()) {
+					lore.add(l);
+				}
+				lore.add(ChatColor.GOLD+"Coût: "+obj.getObjet().getCost());
+				inventory.setItem(index, Utils.createItemStack(main, obj, 1, lore.toArray(String[]::new)));
 				index++;
 				if(index==45) {
 					break;
@@ -139,7 +145,11 @@ public class PreparationInventory extends BasePersonalInventory{
 	}
 	public void createObjet(ObjetsSkins objetsSkin) {
 		if(objetsSkin!=null) {
-			ObjetsSkins.createObjet(objetsSkin, player, game);
+			if(game.getWrapper(player).getMoney()>=objetsSkin.getObjet().getCost()) {
+				game.getWrapper(player).setMoney(game.getWrapper(player).getMoney()-objetsSkin.getObjet().getCost());
+				inventory.setItem(45, Utils.createItemStack(Material.GOLD_INGOT,1,ChatColor.GOLD+"Argent: "+game.getWrapper(player).getMoney(),""));
+				ObjetsSkins.createObjet(objetsSkin, player, game);
+			}
 		}
 	}
 }
