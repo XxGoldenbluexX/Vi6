@@ -52,7 +52,7 @@ public class MapSelectionInventory extends BaseSharedInventory{
 		switch(itm.getType()) {
 		case BARRIER:
 			game.openSettings(player);
-			return;
+			break;
 		case PAPER:
 			for(ItemStack item : inventory.getStorageContents()) {
 				if(item.getType()==Material.PAPER&&item.getItemMeta().getDisplayName()==game.getMapName()) {
@@ -66,9 +66,9 @@ public class MapSelectionInventory extends BaseSharedInventory{
 			List<String> lore = new ArrayList<>();
 			lore.add(ChatColor.LIGHT_PURPLE+""+ChatColor.UNDERLINE+itm.getItemMeta().getDisplayName());
 			inventory.getItem(18).setLore(lore);
-			return;
+			break;
 		default:
-			return;
+			break;
 		}
 	}
 

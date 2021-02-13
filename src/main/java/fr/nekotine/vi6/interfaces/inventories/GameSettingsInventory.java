@@ -36,25 +36,25 @@ public class GameSettingsInventory extends BaseSharedInventory{
 		switch(itm.getType()) {
 		case BARRIER:
 			new WaitingInventory(main, player, game);
-			return;
+			break;
 		case EMERALD:
 			game.setRanked(false);
 			inventory.setItem(11, Utils.createItemStack(Material.REDSTONE,1,ChatColor.RED+"Non-Classée",""));
 			inventory.setItem(13, Utils.createItemStack(Material.GOLD_INGOT,1,ChatColor.GOLD+"Argent",ChatColor.LIGHT_PURPLE+""+ChatColor.UNDERLINE+game.getMoney()));
-			return;
+			break;
 		case REDSTONE:
 			game.setRanked(true);
 			inventory.setItem(11, Utils.createItemStack(Material.EMERALD,1,ChatColor.GREEN+"Classée",""));
 			inventory.setItem(13, Utils.createItemStack(Material.IRON_INGOT,1,ChatColor.RED+"Bloqué",ChatColor.LIGHT_PURPLE+""+ChatColor.UNDERLINE+game.getMoney()));
-			return;
+			break;
 		case GOLD_INGOT:
 			game.openMoney(player);
 			return;
 		case PAPER:
 			game.openMapSelection(player);
-			return;
+			break;
 		default:
-			return;
+			break;
 		}
 	}
 	@EventHandler

@@ -5,6 +5,7 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -12,9 +13,11 @@ import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.objet.ObjetsSkins;
+import fr.nekotine.vi6.utils.ObjetsSkinsTagType;
 import fr.nekotine.vi6.utils.Utils;
 
 public class PreparationInventory extends BasePersonalInventory{
+	private int page;
 	public PreparationInventory(Vi6Main main, Game game, Player player) {
 		super(game, main, player);
 		inventory = Bukkit.createInventory(player, 9*6, "Préparation");
@@ -47,11 +50,11 @@ public class PreparationInventory extends BasePersonalInventory{
 		player.openInventory(inventory);
 	}
 	public void showObjetPage(int page) {
-		List<ObjetsSkins> objets = ObjetsSkins.getDefaultSkins();
-		if(24*(page-1)<objets.size()){
+		List<ObjetsSkins> objets = ObjetsSkins.getDefaultSkins(game.getWrapper(player).getTeam());
+		if(28*(page-1)<objets.size()){
 			byte index=11;
-			for(ObjetsSkins obj : objets.subList(24*(page-1), objets.size()-1)) {
-				inventory.setItem(index, Utils.createItemStack(obj.getMaterial(),1,obj.getName(),obj.getLore()));
+			for(ObjetsSkins obj : objets.subList(28*(page-1), objets.size())) {
+				inventory.setItem(index, Utils.createItemStack(main, obj.getMaterial(),1,obj.getName(), obj, obj.getLore()));
 				index++;
 				if(index==45) {
 					break;
@@ -60,60 +63,83 @@ public class PreparationInventory extends BasePersonalInventory{
 					index+=2;
 				}
 			}
+			for(index+=0;index<45;index++) {
+				if(index%9==0) {
+					index+=2;
+				}
+				inventory.setItem(index, new ItemStack(Material.AIR));
+			}
+			
 		}
 		if(page>1) {
 			inventory.setItem(47, Utils.createItemStack(Material.PAPER,1,ChatColor.RED+"Page précédente",""));
+		}else {
+			inventory.setItem(47, Utils.createItemStack(Material.BLACK_STAINED_GLASS_PANE,1," ",""));
 		}
-		if(objets.size()>24*(page)) {
+		if(objets.size()>28*(page)) {
 			inventory.setItem(53, Utils.createItemStack(Material.PAPER,1,ChatColor.GREEN+"Page suivante",""));
+		}else {
+			inventory.setItem(53, Utils.createItemStack(Material.BLACK_STAINED_GLASS_PANE,1," ",""));
 		}
+		this.page=page;
 	}
 	@Override
 	public void itemClicked(ItemStack itm, int slot) {
 		switch(itm.getType()) {
 		case REDSTONE_BLOCK:
 			if(slot==0) {
-				//ready
+				game.getWrapper(player).setReady(true);
+				inventory.setItem(0, Utils.createItemStack(Material.EMERALD_BLOCK,1,ChatColor.GREEN+"Prêt",""));
 			}else {
-				//rune
+				createObjet(itm.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(main, "ObjetsSkins"), new ObjetsSkinsTagType()));
 			}
+			break;
 		case EMERALD_BLOCK:
 			if(slot==0) {
-				//unready
+				game.getWrapper(player).setReady(false);
+				inventory.setItem(0, Utils.createItemStack(Material.REDSTONE_BLOCK,1,ChatColor.RED+"En attente",""));
 			}else {
-				//rune
+				createObjet(itm.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(main, "ObjetsSkins"), new ObjetsSkinsTagType()));
 			}
+			break;
 		case COMPOSTER:
 			if(slot==9) {
 				//vendre
 			}else {
-				//rune
+				createObjet(itm.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(main, "ObjetsSkins"), new ObjetsSkinsTagType()));
 			}
+			break;
 		case DIAMOND_CHESTPLATE:
 			if(slot==36) {
-				//unready
+				//skins
 			}else {
-				//rune
+				createObjet(itm.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(main, "ObjetsSkins"), new ObjetsSkinsTagType()));
 			}
+			break;
 		case GOLD_INGOT:
-			if(slot==45) {
-				//rien
-			}else {
-				//rune
+			if(slot!=45) {
+				createObjet(itm.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(main, "ObjetsSkins"), new ObjetsSkinsTagType()));
 			}
+			break;
 		case PAPER:
 			if(slot==47) {
-				//page precendente
+				showObjetPage(page-1);
 			}else if(slot==53) {
-				//page suivante
+				showObjetPage(page+1);
 			}else {
-				//rune
+				createObjet(itm.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(main, "ObjetsSkins"), new ObjetsSkinsTagType()));
 			}
+			break;
 		default:
-			return;
+			createObjet(itm.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(main, "ObjetsSkins"), new ObjetsSkinsTagType()));
+			break;
 		}
 		// TODO Auto-generated method stub
 		
 	}
-
+	public void createObjet(ObjetsSkins objetsSkin) {
+		if(objetsSkin!=null) {
+			ObjetsSkins.createObjet(objetsSkin, player, game);
+		}
+	}
 }

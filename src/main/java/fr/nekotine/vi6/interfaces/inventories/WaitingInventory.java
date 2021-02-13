@@ -43,18 +43,18 @@ public class WaitingInventory extends BasePersonalInventory{
 		case ANVIL:
 			game.openSettings(player);
 			HandlerList.unregisterAll(this);
-			return;
+			break;
 		case SUNFLOWER:
 			game.startGame();
-			return;
+			break;
 		case EMERALD_BLOCK:
 			game.getWrapper(player).setReady(false);
 			inventory.setItem(13, Utils.createItemStack(Material.REDSTONE_BLOCK, 1, ChatColor.RED+"En Attente", ""));
-			return;
+			break;
 		case REDSTONE_BLOCK:
 			game.getWrapper(player).setReady(true);
 			inventory.setItem(13, Utils.createItemStack(Material.EMERALD_BLOCK, 1, ChatColor.GREEN+"Prêt", ""));
-			return;
+			break;
 		case BLUE_BANNER:
 			game.getWrapper(player).changeTeam(Team.VOLEUR);
 			inventory.setItem(16, Utils.createItemStack(Material.RED_BANNER, 1, ChatColor.RED+"Voleur", ""));
@@ -64,7 +64,7 @@ public class WaitingInventory extends BasePersonalInventory{
 				}
 				inventory.setItem(index, Utils.createItemStack(Material.RED_STAINED_GLASS_PANE, 1, " ", ""));
 			}
-			return;
+			break;
 		case RED_BANNER:
 			game.getWrapper(player).changeTeam(Team.GARDE);
 			for(byte index=1;index<=26;index++) {
@@ -74,9 +74,9 @@ public class WaitingInventory extends BasePersonalInventory{
 				inventory.setItem(index, Utils.createItemStack(Material.BLUE_STAINED_GLASS_PANE, 1," ", ""));
 			}
 			inventory.setItem(16, Utils.createItemStack(Material.BLUE_BANNER, 1, ChatColor.BLUE+"Garde", ""));
-			return;
+			break;
 		default:
-			return;
+			break;
 		}
 	}
 }

@@ -156,6 +156,7 @@ public class Game implements Listener{
 		map.start();
 		state=GameState.Preparation;
 		for(Entry<Player, PlayerWrapper> playerAndTeam : playerList.entrySet()) {
+			playerAndTeam.getKey().getInventory().clear();
 			playerAndTeam.getValue().setReady(false);
 			playerAndTeam.getValue().setMoney(money);
 			playerAndTeam.getValue().clearStatusEffects();
