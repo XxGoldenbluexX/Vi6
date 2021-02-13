@@ -1,5 +1,6 @@
 package fr.nekotine.vi6.commands;
 
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import dev.jorel.commandapi.CommandAPICommand;
@@ -97,7 +98,7 @@ public class Vi6commandMaker {
 	private static CommandAPICommand mapList() {
 		return new CommandAPICommand("list")
 				.executes((sender,args)->{
-					sender.sendMessage(DisplayTexts.getMessage("map_list"));
+					sender.sendMessage(ChatColor.translateAlternateColorCodes('§',DisplayTexts.getMessage("map_list")));
 					sender.sendMessage(Carte.getMapList().toArray(String[]::new));
 				});
 	}
@@ -109,12 +110,12 @@ public class Vi6commandMaker {
 				.executes((sender,args)->{
 					String name = (String) args[0];
 					if (Carte.getMapList().contains(name)) {
-						sender.sendMessage(DisplayTexts.getMessage("map_create_exist"));
+						sender.sendMessage(ChatColor.translateAlternateColorCodes('§',DisplayTexts.getMessage("map_create_exist")));
 					}else {
 						Carte map = new Carte(name);
 						Carte.save(map);
 						map.unload();
-						sender.sendMessage(DisplayTexts.getMessage("map_create_success"));
+						sender.sendMessage(ChatColor.translateAlternateColorCodes('§',DisplayTexts.getMessage("map_create_success")));
 					}
 				});
 	}
