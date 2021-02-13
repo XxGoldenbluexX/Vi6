@@ -1,6 +1,5 @@
 package fr.nekotine.vi6.commands;
 
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import dev.jorel.commandapi.CommandAPICommand;
@@ -11,6 +10,7 @@ import dev.jorel.commandapi.executors.CommandExecutor;
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.map.Carte;
+import fr.nekotine.vi6.utils.MessageFormater;
 import fr.nekotine.vi6.yml.DisplayTexts;
 
 public class Vi6commandMaker {
@@ -98,7 +98,7 @@ public class Vi6commandMaker {
 	private static CommandAPICommand mapList() {
 		return new CommandAPICommand("list")
 				.executes((sender,args)->{
-					sender.sendMessage(ChatColor.translateAlternateColorCodes('§',DisplayTexts.getMessage("map_list")));
+					sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_list")));
 					sender.sendMessage(Carte.getMapList().toArray(String[]::new));
 				});
 	}
@@ -110,12 +110,27 @@ public class Vi6commandMaker {
 				.executes((sender,args)->{
 					String name = (String) args[0];
 					if (Carte.getMapList().contains(name)) {
-						sender.sendMessage(ChatColor.translateAlternateColorCodes('§',DisplayTexts.getMessage("map_create_exist")));
+						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_create_exist"),new MessageFormater("§p", name)));
 					}else {
 						Carte map = new Carte(name);
 						Carte.save(map);
 						map.unload();
-						sender.sendMessage(ChatColor.translateAlternateColorCodes('§',DisplayTexts.getMessage("map_create_success")));
+						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_create_success"),new MessageFormater("§p", name)));
+					}
+				});
+	}
+	
+	public static CommandAPICommand mapRemove() {
+		return new CommandAPICommand("remove")
+				.withPermission("vi6.map.remove")
+				.withArguments(new StringArgument("mapName").overrideSuggestions((sender)->{return Carte.getMapList().toArray(String[]::new);}))
+				.executes((sender,args)->{
+					String name = (String) args[0];
+					if (Carte.getMapList().contains(name)) {
+						Carte.remove(name);
+						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_remove_success"),new MessageFormater("§p", name)));
+					}else {
+						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_remove_absent"),new MessageFormater("§p", name)));
 					}
 				});
 	}

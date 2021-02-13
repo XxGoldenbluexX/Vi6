@@ -191,5 +191,12 @@ public class Carte implements ConfigurationSerializable {
 	public String getName() {
 		return name;
 	}
+
+	public static void remove(String mapName) {
+		File f = new File(mapFolder,mapName+".yml");
+		if (f.exists()) {
+			f.delete();
+		}
+	}
 	
 }
