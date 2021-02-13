@@ -16,24 +16,27 @@ public class Sortie implements ConfigurationSerializable,ZoneDetectionListener {
 	
 	private static final String yamlPrefix = "Sortie_";
 	
+	private String name;
 	private String displayName;
 	private DetectionZone zone;
 	
-	public Sortie(String name, DetectionZone z) {
-		setDisplayName(name);
+	public Sortie(String name,String displayName, DetectionZone z) {
+		this.displayName=name;
+		this.displayName=displayName;
 		setZone(z);
 	}
 
 	@Override
 	public Map<String, Object> serialize() {
 		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("name", name);
+		map.put("displayName", displayName);
 		map.put("zone", zone);
-		map.put("name", displayName);
 		return map;
 	}
 	
 	public static Sortie deserialize(Map<String, Object> args) {
-		return new Sortie((String)args.get("name"),(DetectionZone)args.get("zone"));
+		return new Sortie((String)args.get("name"),(String)args.get("displayName"),(DetectionZone)args.get("zone"));
 	}
 
 	public String getDisplayName() {
@@ -77,6 +80,14 @@ public class Sortie implements ConfigurationSerializable,ZoneDetectionListener {
 	
 	public static final String getYamlPrefix() {
 		return yamlPrefix;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }

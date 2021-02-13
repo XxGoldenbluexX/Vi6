@@ -18,12 +18,14 @@ public class Passage implements ConfigurationSerializable, ZoneDetectionListener
 
 	private static final String yamlPrefix = "Passage_";
 	
+	private String name;
 	private String salleA="";
 	private String salleB="";
 	private DetectionZone zoneA;
 	private DetectionZone zoneB;
 	
-	public Passage(String salleA,String salleB, DetectionZone zoneA, DetectionZone zoneB) {
+	public Passage(String name,String salleA,String salleB, DetectionZone zoneA, DetectionZone zoneB) {
+		this.name=name;
 		this.salleA=salleA;
 		this.salleB=salleB;
 		setZoneA(zoneA);
@@ -48,6 +50,7 @@ public class Passage implements ConfigurationSerializable, ZoneDetectionListener
 	@Override
 	public Map<String, Object> serialize() {
 		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("name",name);
 		map.put("salleA", salleA);
 		map.put("salleB", salleB);
 		map.put("zoneA", zoneA);
@@ -56,7 +59,7 @@ public class Passage implements ConfigurationSerializable, ZoneDetectionListener
 	}
 	
 	public static Passage deserialize(Map<String, Object> args) {
-		return new Passage((String)args.get("salleA"),(String)args.get("salleB"),(DetectionZone)args.get("zoneA"),(DetectionZone)args.get("zoneB"));
+		return new Passage((String)args.get("name"),(String)args.get("salleA"),(String)args.get("salleB"),(DetectionZone)args.get("zoneA"),(DetectionZone)args.get("zoneB"));
 	}
 
 	public String getSalleA() {
@@ -111,6 +114,14 @@ public class Passage implements ConfigurationSerializable, ZoneDetectionListener
 	
 	public static final String getYamlPrefix() {
 		return yamlPrefix;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }

@@ -17,8 +17,8 @@ public class Gateway extends Passage {
 	private Location corner2;
 	private boolean closed=false;
 
-	public Gateway(String salleA, String salleB, DetectionZone zoneA, DetectionZone zoneB,Location loc1,Location loc2) {
-		super(salleA, salleB, zoneA, zoneB);
+	public Gateway(String name,String salleA, String salleB, DetectionZone zoneA, DetectionZone zoneB,Location loc1,Location loc2) {
+		super(name,salleA, salleB, zoneA, zoneB);
 		corner1=loc1;
 		corner2=loc2;
 	}
@@ -64,6 +64,7 @@ public class Gateway extends Passage {
 	@Override
 	public Map<String, Object> serialize() {
 		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("name",getName());
 		map.put("salleA", getSalleA());
 		map.put("salleB", getSalleB());
 		map.put("zoneA", getZoneA());
@@ -74,7 +75,7 @@ public class Gateway extends Passage {
 	}
 	
 	public static Gateway deserialize(Map<String, Object> args) {
-		return new Gateway((String)args.get("salleA"),(String)args.get("salleB"),
+		return new Gateway((String)args.get("name"),(String)args.get("salleA"),(String)args.get("salleB"),
 				(DetectionZone)args.get("zoneA"),(DetectionZone)args.get("zoneB"),(Location)args.get("corner1"),(Location)args.get("corner2"));
 	}
 

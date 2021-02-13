@@ -17,12 +17,14 @@ public class Entree implements ConfigurationSerializable,ZoneDetectionListener{
 
 	private static final String yamlPrefix = "Entree_";
 	
+	private String name;
 	private String displayName;
 	private DetectionZone[] zones;
 	private Location tpLoc;
 	
-	public Entree(String name, DetectionZone[] zone, Location loc) {
-		displayName=name;
+	public Entree(String name,String displayName, DetectionZone[] zone, Location loc) {
+		this.name=name;
+		this.displayName=displayName;
 		setZones(zone);
 		tpLoc=loc;
 	}
@@ -36,7 +38,8 @@ public class Entree implements ConfigurationSerializable,ZoneDetectionListener{
 	@Override
 	public Map<String, Object> serialize() {
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("name", displayName);
+		map.put("name",name);
+		map.put("displayName", displayName);
 		map.put("nb_zones", zones.length);
 		for (int i=0;i<zones.length;i++) {
 			map.put(DetectionZone.getYamlprefix()+i,zones[i]);
@@ -51,7 +54,7 @@ public class Entree implements ConfigurationSerializable,ZoneDetectionListener{
 		for (int i=0;i<size;i++) {
 			zone[i]=(DetectionZone)args.get(DetectionZone.getYamlprefix()+i);
 		}
-		return new Entree((String)args.get("name"),zone,(Location)args.get("tp_location"));
+		return new Entree((String)args.get("name"),(String)args.get("displayName"),zone,(Location)args.get("tp_location"));
 	}
 
 	public String getDisplayName() {
@@ -104,6 +107,14 @@ public class Entree implements ConfigurationSerializable,ZoneDetectionListener{
 	
 	public static final String getYamlPrefix() {
 		return yamlPrefix;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }
