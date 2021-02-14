@@ -190,7 +190,7 @@ public class Vi6commandMaker {
 	public static CommandAPICommand artefact(Argument mapArgument) {
 		return new CommandAPICommand("artefact")
 				.withPermission("vi6.map.edit")
-				.withSubcommand(makeHelp(mapHelp));
+				.withSubcommand(artefactAdd(mapArgument));
 	}
 	
 	public static CommandAPICommand artefactAdd(Argument mapArgument) {
