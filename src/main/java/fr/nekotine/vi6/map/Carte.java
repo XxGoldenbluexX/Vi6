@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
@@ -22,15 +23,19 @@ public class Carte implements ConfigurationSerializable {
 	private static File mapFolder;
 	
 	private Game game;
-	private final String name;
+	private Location guardSpawn;
+	private Location minimapSpawn;
+	private String name;
 	private final ArrayList<Entree> entrees = new ArrayList<>();
 	private final ArrayList<Sortie> sorties = new ArrayList<>();
 	private final ArrayList<Passage> passages = new ArrayList<>();
 	private final ArrayList<Gateway> gateways = new ArrayList<>();
 	private final ArrayList<Artefact> artefacts = new ArrayList<>();
 
-	public Carte(String name) {
+	public Carte(String name,Location guardSpawn, Location minimapSpawn) {
 		this.name=name;
+		this.guardSpawn=guardSpawn;
+		this.minimapSpawn=minimapSpawn;
 	}
 	
 	public void enable(Vi6Main main) {
@@ -84,6 +89,8 @@ public class Carte implements ConfigurationSerializable {
 	@Override
 	public Map<String, Object> serialize() {
 		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("guardSpawn", guardSpawn);
+		map.put("minimapSpawn", minimapSpawn);
 		map.put("nbEntrees", entrees.size());
 		map.put("nbSorties", sorties.size());
 		map.put("nbPassages", passages.size());
@@ -104,7 +111,7 @@ public class Carte implements ConfigurationSerializable {
 	}
 	
 	public static Carte deserialize(Map<String, Object> args) {
-		Carte map = new Carte((String)args.get("name"));
+		Carte map = new Carte((String)args.get("name"),(Location)args.get("guardSpawn"),(Location)args.get("guardSpawn"));
 		int nb = 0;
 		//ADDING ENTREES
 		nb=(int)args.get("nbEntrees");
@@ -209,6 +216,22 @@ public class Carte implements ConfigurationSerializable {
 		}
 		map.unload();
 		return false;
+	}
+
+	public Location getGuardSpawn() {
+		return guardSpawn;
+	}
+
+	public void setGuardSpawn(Location guardSpawn) {
+		this.guardSpawn = guardSpawn;
+	}
+
+	public Location getMinimapSpawn() {
+		return minimapSpawn;
+	}
+
+	public void setMinimapSpawn(Location minimapSpawn) {
+		this.minimapSpawn = minimapSpawn;
 	}
 	
 }

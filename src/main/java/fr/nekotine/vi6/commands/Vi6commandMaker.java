@@ -1,5 +1,6 @@
 package fr.nekotine.vi6.commands;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import dev.jorel.commandapi.CommandAPICommand;
@@ -36,7 +37,7 @@ public class Vi6commandMaker {
 			}else {
 				return g;
 			}
-		}).overrideSuggestions(sender -> {return Vi6Main.getGameList().toArray(String[]::new);});
+		}).overrideSuggestions((sender) -> {return Vi6Main.getGameList().stream().map(Game::getName).toArray(String[]::new);});
 		Argument mapArgument = new CustomArgument<Carte>("game",(input)-> {
 			Carte map = Carte.load(input);
 			if (map==null) {
@@ -44,7 +45,7 @@ public class Vi6commandMaker {
 			}else {
 				return map;
 			}
-		}).overrideSuggestions(sender -> {return Vi6Main.getGameList().toArray(String[]::new);});
+		}).overrideSuggestions(sender -> {return Carte.getMapList().toArray(String[]::new);});
 		return new CommandAPICommand("vi6")
 				.withPermission("vi6.main")
 				.withSubcommand(makeHelp(mainHelp))
@@ -103,7 +104,6 @@ public class Vi6commandMaker {
 				.withSubcommand(mapList())
 				.withSubcommand(mapCreate())
 				.withSubcommand(mapRemove(mapArgument))
-				.withSubcommand(mapEdit(mapArgument))
 				.executes(mapHelp);
 	}
 	
@@ -119,15 +119,15 @@ public class Vi6commandMaker {
 		return new CommandAPICommand("create")
 				.withPermission("vi6.map.create")
 				.withArguments(new StringArgument("mapName"))
-				.executes((sender,args)->{
+				.executesPlayer((player,args)->{
 					String name = (String) args[0];
 					if (Carte.getMapList().contains(name)) {
-						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_create_exist"),new MessageFormater("§p", name)));
+						player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_create_exist"),new MessageFormater("§p", name)));
 					}else {
-						Carte map = new Carte(name);
+						Carte map = new Carte(name,new Location(player.getWorld(),0,0,0),new Location(player.getWorld(),0,0,0));
 						Carte.save(map);
 						map.unload();
-						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_create_success"),new MessageFormater("§p", name)));
+						player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_create_success"),new MessageFormater("§p", name)));
 					}
 				});
 	}
@@ -143,16 +143,6 @@ public class Vi6commandMaker {
 					}else {
 						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_remove_absent"),new MessageFormater("§p", map.getName())));
 					}
-				});
-	}
-	
-	public static CommandAPICommand mapEdit(Argument mapArgument) {
-		return new CommandAPICommand("edit")
-				.withPermission("vi6.map.edit")
-				.withArguments(mapArgument)
-				.executes((sender,args)->{
-					Carte map = (Carte)args[0];
-					map.unload();
 				});
 	}
 }
