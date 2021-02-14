@@ -33,7 +33,7 @@ public class Vi6commandMaker {
 		Argument gameArgument = new CustomArgument<Game>("game",(input)-> {
 			Game g = Vi6Main.getGame(input);
 			if (g==null) {
-				throw new CustomArgumentException(new MessageBuilder("No game with this name:").appendArgInput().appendHere());
+				throw new CustomArgumentException(new MessageBuilder("No game with this name: ").appendArgInput().appendHere());
 			}else {
 				return g;
 			}
@@ -41,7 +41,7 @@ public class Vi6commandMaker {
 		Argument mapArgument = new CustomArgument<Carte>("game",(input)-> {
 			Carte map = Carte.load(input);
 			if (map==null) {
-				throw new CustomArgumentException(new MessageBuilder("No map with this name:").appendArgInput().appendHere());
+				throw new CustomArgumentException(new MessageBuilder("No map with this name: ").appendArgInput().appendHere());
 			}else {
 				return map;
 			}
@@ -114,6 +114,7 @@ public class Vi6commandMaker {
 				.withSubcommand(mapCreate())
 				.withSubcommand(mapRemove(mapArgument))
 				.withSubcommand(mapGuardSpawn(mapArgument))
+				.withSubcommand(mapMinimapSpawn(mapArgument))
 				.executes(mapHelp);
 	}
 	
@@ -168,6 +169,19 @@ public class Vi6commandMaker {
 					Carte.save(map);
 					map.unload();
 					player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_guardSpawn_success"),new MessageFormater("§p", map.getName())));
+				});
+	}
+	
+	public static CommandAPICommand mapMinimapSpawn(Argument mapArgument) {
+		return new CommandAPICommand("minimapSpawn")
+				.withPermission("vi6.map.edit")
+				.withArguments(mapArgument)
+				.executesPlayer((player,args)->{
+					Carte map = (Carte)args[0];
+					map.setMinimapSpawn(player.getLocation());
+					Carte.save(map);
+					map.unload();
+					player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_minimapSpawn_success"),new MessageFormater("§p", map.getName())));
 				});
 	}
 }
