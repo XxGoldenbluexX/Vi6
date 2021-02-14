@@ -7,7 +7,6 @@ import java.util.Iterator;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.configuration.serialization.SerializableAs;
 
 import fr.nekotine.vi6.Vi6Main;
 
@@ -30,7 +29,7 @@ public class DisplayTexts {
 				Bukkit.getLogger().info("Key:"+key);
 				String value = config.getString(key);
 				if (value!=null) {
-					messages.put(key,ChatColor.translateAlternateColorCodes('&',value));
+					messages.put(key,ChatColor.translateAlternateColorCodes('§',value));
 				}else {
 					Bukkit.getLogger().info("Null value for \""+key+"\" in messages.yml");
 				}
