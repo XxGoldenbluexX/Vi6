@@ -159,7 +159,7 @@ public class PreparationInventory extends BasePersonalInventory{
 		if(objetSkin!=null) {
 			int count=0;
 			for(ItemStack itemstack : player.getInventory().getContents()) {
-				if(item!=null) {
+				if(itemstack!=null) {
 					Objet obj = game.getObjet(itemstack);
 					if(obj!=null) {
 						if(obj.objet==objetSkin.getObjet()) {
@@ -181,7 +181,6 @@ public class PreparationInventory extends BasePersonalInventory{
 	@EventHandler
 	public void inventoryClick(InventoryClickEvent e) {
 		if(player.getInventory().equals(e.getClickedInventory())) {
-			System.out.println(e.getAction());
 			if(e.getAction()==InventoryAction.PICKUP_HALF) {
 				if(e.getCurrentItem()!=null) {
 					Objet obj = game.getObjet(e.getCurrentItem());

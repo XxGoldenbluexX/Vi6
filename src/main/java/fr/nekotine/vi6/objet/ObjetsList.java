@@ -3,7 +3,7 @@ package fr.nekotine.vi6.objet;
 import fr.nekotine.vi6.enums.Team;
 
 public enum ObjetsList {
-	LANTERN(Team.VOLEUR, 0, 1000);
+	LANTERN(Team.VOLEUR, 2, 1000);
 	private final Team team;
 	private final int limit;
 	private final int cost;
