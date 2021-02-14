@@ -91,6 +91,12 @@ public class Vi6Main extends JavaPlugin {
 		return true;
 	}
 	
+	public boolean removeGame(Game game) {
+		if (!gameList.contains(game)) return false;
+		gameList.remove(game);
+		return true;
+	}
+	
 	public boolean gameExist(String name) {
 		for (Game g : gameList) {
 			if (g.getName().equals(name)) return true;

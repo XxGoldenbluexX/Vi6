@@ -140,6 +140,7 @@ public class Game implements Listener{
 	}
 	
 	public void destroy() {
+		endGame();
 		if (map!=null) {map.unload();map=null;}
 		HandlerList.unregisterAll(this);
 	}
@@ -172,6 +173,7 @@ public class Game implements Listener{
 	
 	
 	public boolean endGame() {
+		if (state==GameState.Waiting) return false;
 		state=GameState.Waiting;
 		return false;
 	}

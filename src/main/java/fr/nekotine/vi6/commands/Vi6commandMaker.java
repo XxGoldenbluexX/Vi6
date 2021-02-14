@@ -8,7 +8,6 @@ import dev.jorel.commandapi.arguments.Argument;
 import dev.jorel.commandapi.arguments.CustomArgument;
 import dev.jorel.commandapi.arguments.CustomArgument.CustomArgumentException;
 import dev.jorel.commandapi.arguments.CustomArgument.MessageBuilder;
-import dev.jorel.commandapi.arguments.LocationArgument;
 import dev.jorel.commandapi.arguments.StringArgument;
 import dev.jorel.commandapi.executors.CommandExecutor;
 import fr.nekotine.vi6.Game;
@@ -70,6 +69,7 @@ public class Vi6commandMaker {
 				.withSubcommand(gameCreate(main))
 				.withSubcommand(gameJoin(gameArgument))
 				.withSubcommand(gameLeave(gameArgument))
+				.withSubcommand(gameRemove(main,gameArgument))
 				.executes(gameHelp);
 	}
 	
@@ -78,6 +78,14 @@ public class Vi6commandMaker {
 				.withArguments(new StringArgument("gameName"))
 				.executes((sender,args)->{
 					main.createGame((String)args[0]);
+				});
+	}
+	
+	private static CommandAPICommand gameRemove(Vi6Main main,Argument gameArgument) {
+		return new CommandAPICommand("remove")
+				.withArguments(gameArgument)
+				.executes((sender,args)->{
+					main.removeGame((Game)args[0]);
 				});
 	}
 	
