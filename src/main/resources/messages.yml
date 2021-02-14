@@ -4,13 +4,17 @@ game_artefact*steal*guard: '§3Un artéfact a été volé'
 #§v = artefact's name §p = stealer's name
 game_artefact*steal*thief: '§p a volé §v'
 map_list: 'Voici la liste des cartes présentes dans le fichier \"Maps\":'
-#§v = nom de la carte
+#§v = map's name
 map_create_exist: '§eUne carte du nom de §v existe déja.'
-#§v = nom de la carte
+#§v = map's name
 map_create_success: '§aLa carte §v a bien été créee.'
-#§v = nom de la carte
+#§v = map's name
 map_remove_absent: '§eAucune carte du nom de §v.'
-#§v = nom de la carte
+#§v = map's name
 map_remove_success: '§aLa carte §v a bien été retirée.'
-#§v = nom de la carte
+#§v = map's name
 map_guardSpawn_success: '§aLe point de spawn das gardes a bien été changé pour la carte §v.'
+#§v = map's name §p = artefact's name
+map_artefact_add_exist: '§cUn artefact du nom de §p existe déja dans la carte §v.'
+#§v = map's name §p = artefact's name
+map_artefact_add_success: '§aL'artefact §p a bien été ajouté a la carte §v.'

@@ -12,7 +12,9 @@ import dev.jorel.commandapi.arguments.StringArgument;
 import dev.jorel.commandapi.executors.CommandExecutor;
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
+import fr.nekotine.vi6.map.Artefact;
 import fr.nekotine.vi6.map.Carte;
+import fr.nekotine.vi6.utils.DetectionZone;
 import fr.nekotine.vi6.utils.MessageFormater;
 import fr.nekotine.vi6.yml.DisplayTexts;
 
@@ -133,12 +135,12 @@ public class Vi6commandMaker {
 				.executesPlayer((player,args)->{
 					String name = (String) args[0];
 					if (Carte.getMapList().contains(name)) {
-						player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_create_exist"),new MessageFormater("§p", name)));
+						player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_create_exist"),new MessageFormater("§v", name)));
 					}else {
 						Carte map = new Carte(name,new Location(player.getWorld(),0,0,0),new Location(player.getWorld(),0,0,0));
 						Carte.save(map);
 						map.unload();
-						player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_create_success"),new MessageFormater("§p", name)));
+						player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_create_success"),new MessageFormater("§v", name)));
 					}
 				});
 	}
@@ -150,9 +152,9 @@ public class Vi6commandMaker {
 				.executes((sender,args)->{
 					Carte map = (Carte)args[0];
 					if (Carte.remove(map)) {
-						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_remove_success"),new MessageFormater("§p", map.getName())));
+						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_remove_success"),new MessageFormater("§v", map.getName())));
 					}else {
-						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_remove_absent"),new MessageFormater("§p", map.getName())));
+						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_remove_absent"),new MessageFormater("§v", map.getName())));
 					}
 				});
 	}
@@ -168,7 +170,7 @@ public class Vi6commandMaker {
 					map.setGuardSpawn(player.getLocation());
 					Carte.save(map);
 					map.unload();
-					player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_guardSpawn_success"),new MessageFormater("§p", map.getName())));
+					player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_guardSpawn_success"),new MessageFormater("§v", map.getName())));
 				});
 	}
 	
@@ -181,7 +183,30 @@ public class Vi6commandMaker {
 					map.setMinimapSpawn(player.getLocation());
 					Carte.save(map);
 					map.unload();
-					player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_minimapSpawn_success"),new MessageFormater("§p", map.getName())));
+					player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_minimapSpawn_success"),new MessageFormater("§v", map.getName())));
+				});
+	}
+	
+	public static CommandAPICommand artefact(Argument mapArgument) {
+		return new CommandAPICommand("artefact")
+				.withPermission("vi6.map.edit")
+				.withSubcommand(makeHelp(mapHelp));
+	}
+	
+	public static CommandAPICommand artefactAdd(Argument mapArgument) {
+		return new CommandAPICommand("add")
+				.withArguments(mapArgument,new StringArgument("name"))
+				.executes((player,args)->{
+					Carte map = (Carte)args[0];
+					String name = (String)args[1];
+					if (map.getArtefact(name)!=null){
+						player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_artefact_add_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", name)));
+					}else {
+						map.getArtefactList().add(new Artefact(name, name, new DetectionZone(0,0,0,0,0,0)));
+						Carte.save(map);
+						map.unload();
+						player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_artefact_add_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", name)));
+					}
 				});
 	}
 }

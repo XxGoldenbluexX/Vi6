@@ -84,6 +84,13 @@ public class Carte implements ConfigurationSerializable {
 	public void setGame(Game game) {
 		this.game = game;
 	}
+	
+	public Artefact getArtefact(String name) {
+		for (Artefact a : artefacts) {
+			if (a.getName().equals(name)) return a;
+		}
+		return null;
+	}
 
 	//STATIC------------------
 	@Override
