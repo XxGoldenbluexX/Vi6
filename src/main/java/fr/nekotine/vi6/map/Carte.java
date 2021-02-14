@@ -148,6 +148,7 @@ public class Carte implements ConfigurationSerializable {
 	}
 	
 	public static Carte load(String mapName) {
+		if (mapFolder==null || !mapFolder.exists()) return null;
 		File f = new File(mapFolder,mapName+".yml");
 		if (f.exists()) {
 			YamlConfiguration config = new YamlConfiguration();
@@ -178,8 +179,9 @@ public class Carte implements ConfigurationSerializable {
 	}
 	
 	public static ArrayList<String> getMapList() {
-		String[] list = mapFolder.list();
 		ArrayList<String> finalList=new ArrayList<String>();
+		if (mapFolder==null || !mapFolder.exists()) return finalList;
+		String[] list = mapFolder.list();
 		for (String s : list) {
 			if (s.contains(".yml")) {
 				finalList.add(s.replace(".yml", ""));
@@ -192,11 +194,21 @@ public class Carte implements ConfigurationSerializable {
 		return name;
 	}
 
-	public static void remove(String mapName) {
+	public static boolean remove(String mapName) {
 		File f = new File(mapFolder,mapName+".yml");
 		if (f.exists()) {
-			f.delete();
+			return f.delete();
 		}
+		return false;
+	}
+	
+	public static boolean remove(Carte map) {
+		File f = new File(mapFolder,map.getName()+".yml");
+		if (f.exists()) {
+			return f.delete();
+		}
+		map.unload();
+		return false;
 	}
 	
 }

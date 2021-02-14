@@ -56,8 +56,6 @@ public class Vi6Main extends JavaPlugin {
 		ConfigurationSerialization.registerClass(Carte.class, "Carte");
 		ConfigurationSerialization.registerClass(DetectionZone.class, "DetectionZone");
 		pmanager=Bukkit.getPluginManager();//getting pmanager reference
-		CommandAPI.onEnable(this);//enable CommandAPI
-		Vi6commandMaker.makevi6(this).register();//registering commands
 		//File creation
 		saveDefaultConfig();//making config.yml
 		if (getDataFolder().exists()) {//making dataFolder
@@ -70,6 +68,8 @@ public class Vi6Main extends JavaPlugin {
 		Carte.setMapFolder(mapf);
 		SQLInterface.load(this);
 		DisplayTexts.instance.load(this);
+		CommandAPI.onEnable(this);//enable CommandAPI
+		Vi6commandMaker.makevi6(this).register();//registering commands
 	}
 	
 	

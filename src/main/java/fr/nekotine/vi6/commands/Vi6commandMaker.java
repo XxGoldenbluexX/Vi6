@@ -5,6 +5,8 @@ import org.bukkit.entity.Player;
 import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.arguments.Argument;
 import dev.jorel.commandapi.arguments.CustomArgument;
+import dev.jorel.commandapi.arguments.CustomArgument.CustomArgumentException;
+import dev.jorel.commandapi.arguments.CustomArgument.MessageBuilder;
 import dev.jorel.commandapi.arguments.StringArgument;
 import dev.jorel.commandapi.executors.CommandExecutor;
 import fr.nekotine.vi6.Game;
@@ -14,15 +16,7 @@ import fr.nekotine.vi6.utils.MessageFormater;
 import fr.nekotine.vi6.yml.DisplayTexts;
 
 public class Vi6commandMaker {
-	
-	private static Argument gameArgument(String nodeName) {
-		return new CustomArgument<Game>(nodeName, (input) -> {
-			return Vi6Main.getGame(input);
-		}).overrideSuggestions(sender -> {
-			return Vi6Main.getGameList().stream().map(Game::getName).toArray(String[]::new);
-			});
 		
-	}
 	private static CommandExecutor mainHelp = (sender,args)->{
 	};
 
@@ -35,11 +29,27 @@ public class Vi6commandMaker {
 	//----------------------MAIN-------------------------\/
 	
 	public static CommandAPICommand makevi6(Vi6Main main) {
+		Argument gameArgument = new CustomArgument<Game>("game",(input)-> {
+			Game g = Vi6Main.getGame(input);
+			if (g==null) {
+				throw new CustomArgumentException(new MessageBuilder("No game with this name:").appendArgInput().appendHere());
+			}else {
+				return g;
+			}
+		}).overrideSuggestions(sender -> {return Vi6Main.getGameList().toArray(String[]::new);});
+		Argument mapArgument = new CustomArgument<Carte>("game",(input)-> {
+			Carte map = Carte.load(input);
+			if (map==null) {
+				throw new CustomArgumentException(new MessageBuilder("No map with this name:").appendArgInput().appendHere());
+			}else {
+				return map;
+			}
+		}).overrideSuggestions(sender -> {return Vi6Main.getGameList().toArray(String[]::new);});
 		return new CommandAPICommand("vi6")
 				.withPermission("vi6.main")
 				.withSubcommand(makeHelp(mainHelp))
-				.withSubcommand(game(main))
-				.withSubcommand(map(main))
+				.withSubcommand(game(main,gameArgument))
+				.withSubcommand(map(main,mapArgument))
 				.executes(mainHelp);
 	}
 
@@ -52,12 +62,12 @@ public class Vi6commandMaker {
 	
 	//----------------------GAME-------------------------\/
 	
-	private static CommandAPICommand game(Vi6Main main) {
+	private static CommandAPICommand game(Vi6Main main, Argument gameArgument) {
 		return new CommandAPICommand("game")
 				.withSubcommand(makeHelp(gameHelp))
 				.withSubcommand(gameCreate(main))
-				.withSubcommand(gameJoin())
-				.withSubcommand(gameLeave())
+				.withSubcommand(gameJoin(gameArgument))
+				.withSubcommand(gameLeave(gameArgument))
 				.executes(gameHelp);
 	}
 	
@@ -69,17 +79,17 @@ public class Vi6commandMaker {
 				});
 	}
 	
-	private static CommandAPICommand gameJoin() {
+	private static CommandAPICommand gameJoin(Argument gameArgument) {
 		return new CommandAPICommand("join")
-				.withArguments(gameArgument("liste"))
+				.withArguments(gameArgument)
 				.executes((sender,args)->{
 					((Game)args[0]).addPlayer((Player)sender);
 				});
 	}
 	
-	private static CommandAPICommand gameLeave() {
+	private static CommandAPICommand gameLeave(Argument gameArgument) {
 		return new CommandAPICommand("leave")
-				.withArguments(gameArgument("liste"))
+				.withArguments(gameArgument)
 				.executes((sender,args)->{
 					((Game)args[0]).removePlayer((Player)sender);
 				});
@@ -87,11 +97,13 @@ public class Vi6commandMaker {
 	
 	//----------------------MAP-------------------------\/
 	
-	private static CommandAPICommand map(Vi6Main main) {
+	private static CommandAPICommand map(Vi6Main main, Argument mapArgument) {
 		return new CommandAPICommand("map")
 				.withSubcommand(makeHelp(mapHelp))
 				.withSubcommand(mapList())
 				.withSubcommand(mapCreate())
+				.withSubcommand(mapRemove(mapArgument))
+				.withSubcommand(mapEdit(mapArgument))
 				.executes(mapHelp);
 	}
 	
@@ -120,18 +132,27 @@ public class Vi6commandMaker {
 				});
 	}
 	
-	public static CommandAPICommand mapRemove() {
+	public static CommandAPICommand mapRemove(Argument mapArgument) {
 		return new CommandAPICommand("remove")
 				.withPermission("vi6.map.remove")
-				.withArguments(new StringArgument("mapName").overrideSuggestions((sender)->{return Carte.getMapList().toArray(String[]::new);}))
+				.withArguments(mapArgument)
 				.executes((sender,args)->{
-					String name = (String) args[0];
-					if (Carte.getMapList().contains(name)) {
-						Carte.remove(name);
-						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_remove_success"),new MessageFormater("§p", name)));
+					Carte map = (Carte)args[0];
+					if (Carte.remove(map)) {
+						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_remove_success"),new MessageFormater("§p", map.getName())));
 					}else {
-						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_remove_absent"),new MessageFormater("§p", name)));
+						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_remove_absent"),new MessageFormater("§p", map.getName())));
 					}
+				});
+	}
+	
+	public static CommandAPICommand mapEdit(Argument mapArgument) {
+		return new CommandAPICommand("edit")
+				.withPermission("vi6.map.edit")
+				.withArguments(mapArgument)
+				.executes((sender,args)->{
+					Carte map = (Carte)args[0];
+					map.unload();
 				});
 	}
 }
