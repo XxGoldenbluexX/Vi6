@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -36,7 +35,7 @@ public class Utils {
 				loreList.add(line);
 			}
 		}
-		meta.getPersistentDataContainer().set(new NamespacedKey(main, "ObjetsSkins"), new ObjetsSkinsTagType(), objet);
+		meta.getPersistentDataContainer().set(ObjetsSkinsTagType.getNamespacedKey(main), new ObjetsSkinsTagType(), objet);
 		meta.setLore(loreList);
 		item.setItemMeta(meta);
 		return item;

@@ -5,6 +5,7 @@ import java.sql.Time;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -14,6 +15,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
 
 import fr.nekotine.vi6.enums.GameState;
 import fr.nekotine.vi6.enums.Team;
@@ -31,6 +33,7 @@ import fr.nekotine.vi6.interfaces.items.OpenPreparationItem;
 import fr.nekotine.vi6.interfaces.items.OpenWaitingItem;
 import fr.nekotine.vi6.map.Artefact;
 import fr.nekotine.vi6.map.Carte;
+import fr.nekotine.vi6.objet.Objet;
 import fr.nekotine.vi6.sql.PlayerGame;
 import fr.nekotine.vi6.sql.SQLInterface;
 import fr.nekotine.vi6.utils.MessageFormater;
@@ -56,6 +59,8 @@ public class Game implements Listener{
 	private MapSelectionInventory mapInterface;
 	private GameSettingsInventory settingsInterface;
 	
+	private int nbtCompteur=0;
+	private final ArrayList<Objet> objetsList = new ArrayList<>();
 	public Game(Vi6Main main, String name) {
 		this.main=main;
 		this.name=name;
@@ -67,6 +72,28 @@ public class Game implements Listener{
 	
 	public boolean isRanked() {
 		return isRanked;
+	}
+	
+	public int getNBT() {
+		nbtCompteur++;
+		return nbtCompteur;
+	}
+	
+	public void addObjet(Objet obj) {
+		objetsList.add(obj);
+	}
+	
+	public void removeObjet(Objet obj) {
+		objetsList.remove(obj);
+	}
+	
+	public Objet getObjet(ItemStack item) {
+		for(Objet obj : objetsList) {
+			if(item.equals(obj.itemStack)) {
+				return obj;
+			}
+		}
+		return null;
 	}
 	
 	public void openSettings(Player player) {

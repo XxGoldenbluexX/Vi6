@@ -3,11 +3,13 @@ package fr.nekotine.vi6.objet;
 import fr.nekotine.vi6.enums.Team;
 
 public enum ObjetsList {
-	LANTERN(Team.VOLEUR, 1000);
+	LANTERN(Team.VOLEUR, 0, 1000);
 	private final Team team;
+	private final int limit;
 	private final int cost;
-	ObjetsList(Team team, int cost){
+	ObjetsList(Team team,  int limit, int cost){
 		this.team=team;
+		this.limit = limit;
 		this.cost=cost;
 	}
 	public Team getTeam() {
@@ -15,5 +17,8 @@ public enum ObjetsList {
 	}
 	public int getCost() {
 		return cost;
+	}
+	public int getLimit() {
+		return limit;
 	}
 }

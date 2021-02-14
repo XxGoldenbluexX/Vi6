@@ -6,10 +6,11 @@ import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
 
 import fr.nekotine.vi6.Game;
+import fr.nekotine.vi6.Vi6Main;
 
 public class Lantern extends Objet{
-	public Lantern(ObjetsList objet, Player player, Game game) {
-		super(objet, new ItemStack(Material.LANTERN), game);
+	public Lantern(Vi6Main main, ObjetsList objet, Player player, Game game) {
+		super(main, objet, new ItemStack(Material.LANTERN), game);
 		player.getInventory().addItem(itemStack);
 	}
 	@Override

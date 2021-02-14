@@ -6,13 +6,16 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.enums.Team;
+import fr.nekotine.vi6.objet.Objet;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.utils.ObjetsSkinsTagType;
 import fr.nekotine.vi6.utils.Utils;
@@ -97,7 +100,7 @@ public class PreparationInventory extends BasePersonalInventory{
 				game.getWrapper(player).setReady(true);
 				inventory.setItem(0, Utils.createItemStack(Material.EMERALD_BLOCK,1,ChatColor.GREEN+"Prêt",""));
 			}else {
-				createObjet(itm.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(main, "ObjetsSkins"), new ObjetsSkinsTagType()));
+				createObjet(itm);
 			}
 			break;
 		case EMERALD_BLOCK:
@@ -105,26 +108,35 @@ public class PreparationInventory extends BasePersonalInventory{
 				game.getWrapper(player).setReady(false);
 				inventory.setItem(0, Utils.createItemStack(Material.REDSTONE_BLOCK,1,ChatColor.RED+"En attente",""));
 			}else {
-				createObjet(itm.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(main, "ObjetsSkins"), new ObjetsSkinsTagType()));
+				createObjet(itm);
 			}
 			break;
 		case COMPOSTER:
 			if(slot==9) {
-				//vendre
+				for(ItemStack item : player.getInventory().getContents()) {
+					if(item!=null) {
+						Objet obj = game.getObjet(item);
+						if(obj!=null) {
+							obj.vendre(player);
+							game.getWrapper(player).setMoney(game.getWrapper(player).getMoney()+obj.objet.getCost());
+							inventory.setItem(45, Utils.createItemStack(Material.GOLD_INGOT,1,ChatColor.GOLD+"Argent: "+game.getWrapper(player).getMoney(),""));
+						}
+					}
+				}
 			}else {
-				createObjet(itm.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(main, "ObjetsSkins"), new ObjetsSkinsTagType()));
+				createObjet(itm);
 			}
 			break;
 		case DIAMOND_CHESTPLATE:
 			if(slot==36) {
 				//skins
 			}else {
-				createObjet(itm.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(main, "ObjetsSkins"), new ObjetsSkinsTagType()));
+				createObjet(itm);
 			}
 			break;
 		case GOLD_INGOT:
 			if(slot!=45) {
-				createObjet(itm.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(main, "ObjetsSkins"), new ObjetsSkinsTagType()));
+				createObjet(itm);
 			}
 			break;
 		case PAPER:
@@ -133,22 +145,52 @@ public class PreparationInventory extends BasePersonalInventory{
 			}else if(slot==53) {
 				showObjetPage(page+1);
 			}else {
-				createObjet(itm.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(main, "ObjetsSkins"), new ObjetsSkinsTagType()));
+				createObjet(itm);
 			}
 			break;
 		default:
-			createObjet(itm.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(main, "ObjetsSkins"), new ObjetsSkinsTagType()));
+			createObjet(itm);
 			break;
 		}
-		// TODO Auto-generated method stub
 		
 	}
-	public void createObjet(ObjetsSkins objetsSkin) {
-		if(objetsSkin!=null) {
-			if(game.getWrapper(player).getMoney()>=objetsSkin.getObjet().getCost()) {
-				game.getWrapper(player).setMoney(game.getWrapper(player).getMoney()-objetsSkin.getObjet().getCost());
+	public void createObjet(ItemStack item) {
+		ObjetsSkins objetSkin = item.getItemMeta().getPersistentDataContainer().get(ObjetsSkinsTagType.getNamespacedKey(main), new ObjetsSkinsTagType());
+		if(objetSkin!=null) {
+			int count=0;
+			for(ItemStack itemstack : player.getInventory().getContents()) {
+				if(item!=null) {
+					Objet obj = game.getObjet(itemstack);
+					if(obj!=null) {
+						if(obj.objet==objetSkin.getObjet()) {
+							count++;
+							if(count==objetSkin.getObjet().getLimit()) {
+								return;
+							}
+						}
+					}
+				}
+			}
+			if(game.getWrapper(player).getMoney()>=objetSkin.getObjet().getCost()) {
+				game.getWrapper(player).setMoney(game.getWrapper(player).getMoney()-objetSkin.getObjet().getCost());
 				inventory.setItem(45, Utils.createItemStack(Material.GOLD_INGOT,1,ChatColor.GOLD+"Argent: "+game.getWrapper(player).getMoney(),""));
-				ObjetsSkins.createObjet(objetsSkin, player, game);
+				game.addObjet(ObjetsSkins.createObjet(main,objetSkin, player, game));
+			}
+		}
+	}
+	@EventHandler
+	public void inventoryClick(InventoryClickEvent e) {
+		if(player.getInventory().equals(e.getClickedInventory())) {
+			System.out.println(e.getAction());
+			if(e.getAction()==InventoryAction.PICKUP_HALF) {
+				if(e.getCurrentItem()!=null) {
+					Objet obj = game.getObjet(e.getCurrentItem());
+					if(obj!=null) {
+						obj.vendre(player);
+						game.getWrapper(player).setMoney(game.getWrapper(player).getMoney()+obj.objet.getCost());
+						inventory.setItem(45, Utils.createItemStack(Material.GOLD_INGOT,1,ChatColor.GOLD+"Argent: "+game.getWrapper(player).getMoney(),""));
+					}
+				}
 			}
 		}
 	}

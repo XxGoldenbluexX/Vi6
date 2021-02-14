@@ -8,6 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import fr.nekotine.vi6.Game;
+import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.enums.Team;
 
 public enum ObjetsSkins {
@@ -203,10 +204,10 @@ public enum ObjetsSkins {
 	public String[] getLore() {
 		return lore;
 	}
-	public static Objet createObjet(ObjetsSkins skin, Player player, Game game) {
+	public static Objet createObjet(Vi6Main main, ObjetsSkins skin, Player player, Game game) {
 		switch(skin.getObjet()) {
 		case LANTERN:
-			return new Lantern(skin.getObjet(), player, game);
+			return new Lantern(main, skin.getObjet(), player, game);
 		default:
 			return null;
 		}

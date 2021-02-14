@@ -1,5 +1,6 @@
 package fr.nekotine.vi6.objet;
 
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
@@ -8,24 +9,31 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 
 import fr.nekotine.vi6.Game;
+import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.events.GameEndEvent;
 import fr.nekotine.vi6.events.GameStartEvent;
 import fr.nekotine.vi6.events.GameTickEvent;
 import fr.nekotine.vi6.events.PlayerLeaveMapEvent;
-import fr.nekotine.vi6.events.PlayerSellObjetEvent;
 
 public abstract class Objet implements Listener{
 	
-	protected final ObjetsList objet;
+	public final ObjetsList objet;
 	protected final Game game;
-	protected final ItemStack itemStack;
+	public final ItemStack itemStack;
 	
-	public Objet(ObjetsList objet, ItemStack itemStack, Game game) {
+	public Objet(Vi6Main main, ObjetsList objet, ItemStack itemStack, Game game) {
 		this.objet = objet;
 		this.game = game;
 		this.itemStack = itemStack;
+		ItemMeta meta = itemStack.getItemMeta();
+		meta.getPersistentDataContainer().set(new NamespacedKey(main, "ObjetNBT"), PersistentDataType.INTEGER, game.getNBT());
+		itemStack.setItemMeta(meta);
+		System.out.println("creating objet "+objet.toString()+" with nbt : "+
+		itemStack.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(main, "ObjetNBT"), PersistentDataType.INTEGER));
 	}
 	
 	public abstract void gameStart();
@@ -33,8 +41,8 @@ public abstract class Objet implements Listener{
 	public abstract void tick();
 	public abstract void leaveMap();
 	public abstract void death();
-	public abstract void action(Action action);
 	public abstract void sell();
+	public abstract void action(Action action);
 	
 	@EventHandler
 	public void onGameStart(GameStartEvent e) {
@@ -74,12 +82,10 @@ public abstract class Objet implements Listener{
 	public void onPlayerInteract(PlayerInteractEvent e) {
 		if(e.getItem().equals(itemStack)) action(e.getAction());
 	}
-	@EventHandler
-	public void playerSellObjet(PlayerSellObjetEvent e) {
-		if(e.getObjet().equals(objet)) {
-			sell();
-			e.getPlayer().getInventory().removeItem(itemStack);
-			HandlerList.unregisterAll(this);
-		}
+	public void vendre(Player player) {
+		sell();
+		player.getInventory().removeItem(itemStack);
+		game.removeObjet(this);
+		HandlerList.unregisterAll(this);
 	}
 }

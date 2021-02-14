@@ -1,12 +1,17 @@
 package fr.nekotine.vi6.utils;
 
+import org.bukkit.NamespacedKey;
 import org.bukkit.persistence.PersistentDataAdapterContext;
 import org.bukkit.persistence.PersistentDataType;
 
+import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 
 public class ObjetsSkinsTagType implements PersistentDataType<String, ObjetsSkins>{
-
+	public static String namespacedKey = "ObjetSkin";
+	public static NamespacedKey getNamespacedKey(Vi6Main main) {
+		return new NamespacedKey(main, namespacedKey);
+	}
 	@Override
 	public Class<String> getPrimitiveType() {
 		return String.class;
