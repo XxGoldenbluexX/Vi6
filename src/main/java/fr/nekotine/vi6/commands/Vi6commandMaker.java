@@ -8,6 +8,7 @@ import dev.jorel.commandapi.arguments.Argument;
 import dev.jorel.commandapi.arguments.CustomArgument;
 import dev.jorel.commandapi.arguments.CustomArgument.CustomArgumentException;
 import dev.jorel.commandapi.arguments.CustomArgument.MessageBuilder;
+import dev.jorel.commandapi.arguments.LocationArgument;
 import dev.jorel.commandapi.arguments.StringArgument;
 import dev.jorel.commandapi.executors.CommandExecutor;
 import fr.nekotine.vi6.Game;
@@ -104,6 +105,7 @@ public class Vi6commandMaker {
 				.withSubcommand(mapList())
 				.withSubcommand(mapCreate())
 				.withSubcommand(mapRemove(mapArgument))
+				.withSubcommand(mapGuardSpawn(mapArgument))
 				.executes(mapHelp);
 	}
 	
@@ -143,6 +145,21 @@ public class Vi6commandMaker {
 					}else {
 						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_remove_absent"),new MessageFormater("§p", map.getName())));
 					}
+				});
+	}
+	
+	//-------MAP_EDITION--------\/
+	
+	public static CommandAPICommand mapGuardSpawn(Argument mapArgument) {
+		return new CommandAPICommand("guardSpawn")
+				.withPermission("vi6.map.edit")
+				.withArguments(mapArgument)
+				.executesPlayer((player,args)->{
+					Carte map = (Carte)args[0];
+					map.setGuardSpawn(player.getLocation());
+					Carte.save(map);
+					map.unload();
+					player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_guardSpawn_success"),new MessageFormater("§p", map.getName())));
 				});
 	}
 }
