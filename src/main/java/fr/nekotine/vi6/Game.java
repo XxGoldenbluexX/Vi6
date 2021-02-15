@@ -266,12 +266,13 @@ public class Game implements Listener{
 	}
 	
 	public boolean addPlayer(Player p) {
-		if (!playerList.keySet().contains(p)) {
+		if (state==GameState.Waiting && !playerList.keySet().contains(p)) {
 			playerList.put(p, new PlayerWrapper(p));
 			for (Player pl : playerList.keySet()) {
 				pl.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_join"),new MessageFormater("§p",p.getName())));
 			}
 			p.getInventory().clear();
+			p.setScoreboard(scoreboard);
 			Bukkit.getPluginManager().callEvent(new PlayerJoinGameEvent(this, p));
 			return true;
 		}
@@ -280,11 +281,13 @@ public class Game implements Listener{
 	
 	public boolean removePlayer(Player p) {
 		if (playerList.keySet().contains(p)) {
+			endGame();
 			playerList.remove(p);
 			for (Player pl : playerList.keySet()) {
 				pl.sendMessage(String.format(DisplayTexts.getMessage("game_leave"), p.getName()));
 			}
 			p.getInventory().clear();
+			p.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
 			Bukkit.getPluginManager().callEvent(new PlayerLeaveGameEvent(this, p));
 			return true;
 		}
