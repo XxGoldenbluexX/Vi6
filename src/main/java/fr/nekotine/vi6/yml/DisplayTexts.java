@@ -26,7 +26,6 @@ public class DisplayTexts {
 			Iterator<String> ite = config.getKeys(false).iterator();
 			while (ite.hasNext()) {
 				String key = ite.next();
-				Bukkit.getLogger().info("Key:"+key);
 				String value = config.getString(key);
 				if (value!=null) {
 					messages.put(key,ChatColor.translateAlternateColorCodes('§',value));
