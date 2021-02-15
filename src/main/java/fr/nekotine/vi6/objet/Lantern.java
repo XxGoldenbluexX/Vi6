@@ -48,4 +48,9 @@ public class Lantern extends Objet{
 		// TODO Auto-generated method stub
 		
 	}
+	@Override
+	public void drop() {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -1,5 +1,6 @@
 package fr.nekotine.vi6.objet;
 
+import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -7,6 +8,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -31,11 +33,10 @@ public abstract class Objet implements Listener{
 		this.objet = objet;
 		this.game = game;
 		this.itemStack = itemStack;
-		ItemMeta meta = itemStack.getItemMeta();
+		ItemMeta meta = this.itemStack.getItemMeta();
 		meta.getPersistentDataContainer().set(new NamespacedKey(main, game.getName()+"ObjetNBT"), PersistentDataType.INTEGER, game.getNBT());
-		itemStack.setItemMeta(meta);
-		System.out.println("creating objet "+objet.toString()+" with nbt : "+
-		itemStack.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(main, game.getName()+"ObjetNBT"), PersistentDataType.INTEGER));
+		this.itemStack.setItemMeta(meta);
+		Bukkit.getPluginManager().registerEvents(this, main);
 	}
 	
 	public abstract void gameStart();
@@ -45,6 +46,7 @@ public abstract class Objet implements Listener{
 	public abstract void death();
 	public abstract void sell();
 	public abstract void action(Action action);
+	public abstract void drop();
 	
 	@EventHandler
 	public void onGameStart(GameStartEvent e) {
@@ -82,13 +84,26 @@ public abstract class Objet implements Listener{
 	}
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent e) {
-		if(e.getItem().equals(itemStack)) {
+		if(itemStack.equals(e.getItem())) {
 			if(game.getPlayerTeam(e.getPlayer())==Team.VOLEUR){
 				if(game.getState()==GameState.Ingame) {
 					action(e.getAction());
 				}
 			}else {
 				action(e.getAction());
+			}
+		}
+	}
+	@EventHandler
+	public void onPlayerDrop(PlayerDropItemEvent e) {
+		if(itemStack.equals(e.getItemDrop().getItemStack())) {
+			e.setCancelled(true);
+			if(game.getPlayerTeam(e.getPlayer())==Team.VOLEUR){
+				if(game.getState()==GameState.Ingame) {
+					drop();
+				}
+			}else {
+				drop();
 			}
 		}
 	}
