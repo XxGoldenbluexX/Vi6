@@ -48,6 +48,7 @@ public class Vi6commandMaker {
 				return map;
 			}
 		}).overrideSuggestions(sender -> {return Carte.getMapList().toArray(String[]::new);});
+		//tiens return ((Carte)args[]).getArtefactList().stream().map(Artefact::getName).toArray(String[]::new);});
 		return new CommandAPICommand("vi6")
 				.withPermission("vi6.main")
 				.withSubcommand(makeHelp(mainHelp))
@@ -117,6 +118,7 @@ public class Vi6commandMaker {
 				.withSubcommand(mapRemove(mapArgument))
 				.withSubcommand(mapGuardSpawn(mapArgument))
 				.withSubcommand(mapMinimapSpawn(mapArgument))
+				.withSubcommand(artefact(mapArgument))
 				.executes(mapHelp);
 	}
 	
@@ -187,6 +189,8 @@ public class Vi6commandMaker {
 				});
 	}
 	
+	//----ARTEFACT-----\/
+	
 	public static CommandAPICommand artefact(Argument mapArgument) {
 		return new CommandAPICommand("artefact")
 				.withPermission("vi6.map.edit")
@@ -212,7 +216,7 @@ public class Vi6commandMaker {
 	}
 	
 	public static CommandAPICommand artefactRemove(Argument mapArgument) {
-		return new CommandAPICommand("add")
+		return new CommandAPICommand("remove")
 				.withArguments(mapArgument,new StringArgument("name"))
 				.executes((player,args)->{
 					Carte map = (Carte)args[0];
