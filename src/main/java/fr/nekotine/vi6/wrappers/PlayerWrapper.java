@@ -15,8 +15,8 @@ import fr.nekotine.vi6.statuseffects.StatusEffect;
 
 public class PlayerWrapper {
 	
-	private static final String READY_PREFIX="☑";
-	private static final String NOT_READY_PREFIX="☐";
+	private static final String READY_PREFIX="☑ ";
+	private static final String NOT_READY_PREFIX="☐ ";
 	
 	private String currentScoreboardName="";
 	private Team team = Team.GARDE;
@@ -30,6 +30,7 @@ public class PlayerWrapper {
 	
 	public PlayerWrapper(Player player) {
 		this.player = player;
+		updateScoreboard();
 	}
 
 	public Team getTeam() {

@@ -84,7 +84,7 @@ public class Game implements Listener{
 		mapInterface = new MapSelectionInventory(main, this);
 		nbtCompteur.add(0);
 		Bukkit.getPluginManager().registerEvents(this, main);
-		scoreboardSidebar = scoreboard.registerNewObjective("sidebar", "dummy", "{\"text\":"+name+",\"color\":\"gold\"}");
+		scoreboardSidebar = scoreboard.registerNewObjective("sidebar", "dummy", ChatColor.GOLD+name);
 		scoreboardSidebar.setDisplaySlot(DisplaySlot.SIDEBAR);
 		
 	}
