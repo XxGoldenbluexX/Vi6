@@ -17,8 +17,8 @@ map_guardSpawn_success: '§aLe point de spawn das gardes a bien été changé po
 #§v = map's name §p = artefact's name
 map_artefact_add_exist: '§cUn artefact du nom de §p existe déja dans la carte §v.'
 #§v = map's name §p = artefact's name
-map_artefact_add_success: '§aL'artefact §p a bien été ajouté a la carte §v.'
+map_artefact_add_success: '§aL\'artefact §p a bien été ajouté a la carte §v.'
 #§v = map's name §p = artefact's name
 map_artefact_remove_exist: '§cAucun artefact du nom de §p existe dans la carte §v.'
 #§v = map's name §p = artefact's name
-map_artefact_remove_success: '§aL'artefact §p a bien été retiré de la carte §v.'
+map_artefact_remove_success: '§aL\'artefact §p a bien été retiré de la carte §v.'
