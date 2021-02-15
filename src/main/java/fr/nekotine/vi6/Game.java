@@ -23,6 +23,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Scoreboard;
 
 import fr.nekotine.vi6.enums.GameState;
 import fr.nekotine.vi6.enums.Team;
@@ -55,7 +58,8 @@ public class Game implements Listener{
 	private final Vi6Main main;
 	private int idPartie;
 	private String startTime;
-	
+	private final Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
+	private final Objective scoreboardSidebar;
 	private final String name;
 	private boolean isRanked=true;
 	private GameState state = GameState.Waiting;
@@ -80,6 +84,9 @@ public class Game implements Listener{
 		mapInterface = new MapSelectionInventory(main, this);
 		nbtCompteur.add(0);
 		Bukkit.getPluginManager().registerEvents(this, main);
+		scoreboardSidebar = scoreboard.registerNewObjective("sidebar", "dummy", "{\"text\":"+name+",\"color\":\"gold\"}");
+		scoreboardSidebar.setDisplaySlot(DisplaySlot.SIDEBAR);
+		
 	}
 	
 	public boolean isRanked() {
