@@ -5,6 +5,7 @@ import java.util.Iterator;
 
 import org.bukkit.entity.Player;
 
+import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.enums.PlayerState;
 import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.map.Artefact;
@@ -13,6 +14,7 @@ import fr.nekotine.vi6.statuseffects.StatusEffect;
 
 public class PlayerWrapper {
 	
+	private Game gameref;
 	private Team team = Team.GARDE;
 	private boolean isReady=false;
 	private PlayerState state=PlayerState.WAITING;
@@ -22,8 +24,9 @@ public class PlayerWrapper {
 	private final ArrayList<StatusEffect> statusEffects = new ArrayList<StatusEffect>();
 	private final ArrayList<Artefact> stealedObjects = new ArrayList<>();
 	
-	public PlayerWrapper(Player player) {
+	public PlayerWrapper(Player player,Game game) {
 		this.player = player;
+		gameref=game;
 	}
 
 	public Team getTeam() {
