@@ -201,7 +201,7 @@ public class Vi6commandMaker {
 				.withPermission("vi6.map.edit")
 				.withSubcommand(artefactAdd(mapArgument))
 				.withSubcommand(artefactRename(mapArgument,artefactList))
-				.withSubcommand(artefactDisplayRename(mapArgument,artefactList))
+				.withSubcommand(artefactDisplayname(mapArgument,artefactList))
 				.withSubcommand(artefactSetZone(mapArgument,artefactList))
 				.withSubcommand(artefactRemove(mapArgument,artefactList));
 	}
@@ -250,15 +250,15 @@ public class Vi6commandMaker {
 						a.setName((String)args[2]);
 						Carte.save(map);
 						map.unload();
-						// message artefact rename
+						player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_artefact_rename_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", a.getName())));
 					}else {
-						// message artefact n'existe pas
+						player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_artefact_rename_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", (String)args[1])));
 					}
 				});
 	}
 	
-	public static CommandAPICommand artefactDisplayRename(Argument mapArgument, Argument artefactList) {
-		return new CommandAPICommand("displayRename")
+	public static CommandAPICommand artefactDisplayname(Argument mapArgument, Argument artefactList) {
+		return new CommandAPICommand("displayname")
 				.withArguments(mapArgument,artefactList, new GreedyStringArgument("newDisplayName"))
 				.executes((player,args)->{
 					Carte map = (Carte)args[0];
@@ -267,9 +267,9 @@ public class Vi6commandMaker {
 						a.setDisplayName((String)args[2]);
 						Carte.save(map);
 						map.unload();
-						// message artefact diplayReName
+						player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_artefact_displayname_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", a.getName())));
 					}else {
-						// message artefact n'existe pas
+						player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_artefact_displayname_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", (String)args[1])));
 					}
 				});
 	}
@@ -286,9 +286,9 @@ public class Vi6commandMaker {
 						a.setZone(new DetectionZone(loc1.getBlockX(), loc1.getBlockY(), loc1.getBlockZ(), loc2.getBlockX(), loc2.getBlockY(), loc2.getBlockZ()));
 						Carte.save(map);
 						map.unload();
-						//message artefact zone set
+						player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_artefact_zone_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", a.getName())));
 					}else {
-						// message artefact n'existe pas
+						player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_artefact_zone_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", (String)args[1])));
 					}
 				});
 	}

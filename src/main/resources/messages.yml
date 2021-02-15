@@ -1,24 +1,36 @@
-game_join: '§p a rejoint cette partie de vi6.'
-game_leave: '§p a quitté cette partie de vi6.'
-game_artefact*steal*guard: '§3Un artéfact a été volé'
+game_join: "§p a rejoint cette partie de vi6."
+game_leave: "§p a quitté cette partie de vi6."
+game_artefact*steal*guard: "§3Un artéfact a été volé"
 #§v = artefact's name §p = stealer's name
-game_artefact*steal*thief: '§p a volé §v'
-map_list: 'Voici la liste des cartes présentes dans le fichier \"Maps\":'
+game_artefact*steal*thief: "§p a volé §v"
+map_list: "Voici la liste des cartes présentes dans le fichier \"Maps\":"
 #§v = map's name
-map_create_exist: '§eUne carte du nom de §v existe déja.'
+map_create_exist: "§eUne carte du nom de §v existe déja."
 #§v = map's name
-map_create_success: '§aLa carte §v a bien été créee.'
+map_create_success: "§aLa carte §v a bien été créee."
 #§v = map's name
-map_remove_absent: '§eAucune carte du nom de §v.'
+map_remove_absent: "§eAucune carte du nom de §v."
 #§v = map's name
-map_remove_success: '§aLa carte §v a bien été retirée.'
+map_remove_success: "§aLa carte §v a bien été retirée."
 #§v = map's name
-map_guardSpawn_success: '§aLe point de spawn das gardes a bien été changé pour la carte §v.'
+map_guardSpawn_success: "§aLe point de spawn das gardes a bien été changé pour la carte §v."
 #§v = map's name §p = artefact's name
-map_artefact_add_exist: '§cUn artefact du nom de §p existe déja dans la carte §v.'
+map_artefact_add_exist: "§cUn artefact du nom de §p existe déja dans la carte §v."
 #§v = map's name §p = artefact's name
-map_artefact_add_success: '§aL"artefact §p a bien été ajouté a la carte §v.'
+map_artefact_add_success: "§aL'artefact §p a bien été ajouté a la carte §v."
 #§v = map's name §p = artefact's name
-map_artefact_remove_exist: '§cAucun artefact du nom de §p existe dans la carte §v.'
+map_artefact_remove_exist: "§cAucun artefact du nom de §p existe dans la carte §v."
 #§v = map's name §p = artefact's name
-map_artefact_remove_success: '§aL"artefact §p a bien été retiré de la carte §v.'
+map_artefact_remove_success: "§aL'artefact §p a bien été retiré de la carte §v."
+#§v = map's name §p = artefact's name
+map_artefact_rename_success: "§aL'artefact §p de la carte §v a bien été renomé."
+#§v = map's name §p = artefact's name
+map_artefact_rename_exist: "§cAucun artefact du nom de §p existe dans la carte §v."
+#§v = map's name §p = artefact's name
+map_artefact_displayname_success: "§aL'artefact §p de la carte §v a bien été renomé."
+#§v = map's name §p = artefact's name
+map_artefact_displayname_exist: "§cAucun artefact du nom de §p existe dans la carte §v."
+#§v = map's name §p = artefact's name
+map_artefact_zone_success: "§aLa zone de l'artefact §p de la carte §v a bien été définit."
+#§v = map's name §p = artefact's name
+map_artefact_zone_exist: "§cAucun artefact du nom de §p existe dans la carte §v."
