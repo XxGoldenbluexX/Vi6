@@ -32,7 +32,7 @@ public class Vi6commandMaker {
 	//----------------------MAIN-------------------------\/
 	
 	public static CommandAPICommand makevi6(Vi6Main main) {
-		Argument gameArgument = new CustomArgument<Game>("game",(input)-> {
+		Argument gameArgument = new CustomArgument<Game>("gameList",(input)-> {
 			Game g = Vi6Main.getGame(input);
 			if (g==null) {
 				throw new CustomArgumentException(new MessageBuilder("No game with this name: ").appendArgInput().appendHere());
@@ -40,7 +40,7 @@ public class Vi6commandMaker {
 				return g;
 			}
 		}).overrideSuggestions((sender) -> {return Vi6Main.getGameList().stream().map(Game::getName).toArray(String[]::new);});
-		Argument mapArgument = new CustomArgument<Carte>("game",(input)-> {
+		Argument mapArgument = new CustomArgument<Carte>("carteList",(input)-> {
 			Carte map = Carte.load(input);
 			if (map==null) {
 				throw new CustomArgumentException(new MessageBuilder("No map with this name: ").appendArgInput().appendHere());
