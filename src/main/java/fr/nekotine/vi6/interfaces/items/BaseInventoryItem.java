@@ -24,7 +24,7 @@ public abstract class BaseInventoryItem implements Listener{
 	public abstract void playerInteract(Player player);
 	@EventHandler
 	public void onPlayerDrop(PlayerDropItemEvent e) {
-		if(e.getItemDrop().getItemStack().equals(item)) {
+		if(item.equals(e.getItemDrop().getItemStack())) {
 			e.setCancelled(true);
 			playerInteract(e.getPlayer());
 		}

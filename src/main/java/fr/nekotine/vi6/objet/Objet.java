@@ -19,7 +19,6 @@ import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.enums.GameState;
 import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.events.GameEndEvent;
-import fr.nekotine.vi6.events.GameStartEvent;
 import fr.nekotine.vi6.events.GameTickEvent;
 import fr.nekotine.vi6.events.PlayerLeaveMapEvent;
 
@@ -39,7 +38,6 @@ public abstract class Objet implements Listener{
 		Bukkit.getPluginManager().registerEvents(this, main);
 	}
 	
-	public abstract void gameStart();
 	public abstract void gameEnd();
 	public abstract void tick();
 	public abstract void leaveMap();
@@ -47,11 +45,7 @@ public abstract class Objet implements Listener{
 	public abstract void sell();
 	public abstract void action(Action action);
 	public abstract void drop();
-	
-	@EventHandler
-	public void onGameStart(GameStartEvent e) {
-		if(e.getGame().equals(game)) gameStart();
-	}
+
 	@EventHandler
 	public void onGameEnd(GameEndEvent e) {
 		if(e.getGame().equals(game)) {

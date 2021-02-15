@@ -233,6 +233,7 @@ public class Game implements Listener{
 			for (Player pl : playerList.keySet()) {
 				pl.sendMessage(String.format(DisplayTexts.getMessage("game_leave"), p.getName()));
 			}
+			p.getInventory().clear();
 			Bukkit.getPluginManager().callEvent(new PlayerLeaveGameEvent(this, p));
 			return true;
 		}

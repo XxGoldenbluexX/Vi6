@@ -14,11 +14,6 @@ public class Lantern extends Objet{
 		player.getInventory().addItem(itemStack);
 	}
 	@Override
-	public void gameStart() {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
 	public void gameEnd() {
 		// TODO Auto-generated method stub
 		
