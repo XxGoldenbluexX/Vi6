@@ -96,6 +96,7 @@ public class Carte implements ConfigurationSerializable {
 	@Override
 	public Map<String, Object> serialize() {
 		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("name", name);
 		map.put("guardSpawn", guardSpawn);
 		map.put("minimapSpawn", minimapSpawn);
 		map.put("nbEntrees", entrees.size());
@@ -118,7 +119,7 @@ public class Carte implements ConfigurationSerializable {
 	}
 	
 	public static Carte deserialize(Map<String, Object> args) {
-		Carte map = new Carte((String)args.get("name"),(Location)args.get("guardSpawn"),(Location)args.get("guardSpawn"));
+		Carte map = new Carte((String)args.get("name"),(Location)args.get("guardSpawn"),(Location)args.get("minimapSpawn"));
 		int nb = 0;
 		//ADDING ENTREES
 		nb=(int)args.get("nbEntrees");
