@@ -7,12 +7,16 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
+import fr.nekotine.vi6.events.GameEnterPreparationPhaseEvent;
 import fr.nekotine.vi6.map.Carte;
 import fr.nekotine.vi6.utils.Utils;
 
@@ -71,5 +75,11 @@ public class MapSelectionInventory extends BaseSharedInventory{
 			break;
 		}
 	}
-
+	@EventHandler
+	public void onGameStart(GameEnterPreparationPhaseEvent e) {
+		if(e.getGame().equals(game)) {
+			inventory.getViewers().forEach(HumanEntity::closeInventory);
+			HandlerList.unregisterAll(this);
+		}
+	}
 }

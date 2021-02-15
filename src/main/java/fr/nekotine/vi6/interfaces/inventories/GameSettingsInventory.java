@@ -3,12 +3,15 @@ package fr.nekotine.vi6.interfaces.inventories;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
+import fr.nekotine.vi6.events.GameEnterPreparationPhaseEvent;
 import fr.nekotine.vi6.events.MapChangeEvent;
 import fr.nekotine.vi6.events.MoneyChangedEvent;
 import fr.nekotine.vi6.utils.Utils;
@@ -64,5 +67,12 @@ public class GameSettingsInventory extends BaseSharedInventory{
 	@EventHandler
 	public void moneyChange(MoneyChangedEvent e) {
 		inventory.setItem(13, Utils.createItemStack(Material.GOLD_INGOT,1,ChatColor.GOLD+"Argent",ChatColor.LIGHT_PURPLE+""+ChatColor.UNDERLINE+game.getMoney()));
+	}
+	@EventHandler
+	public void onGameStart(GameEnterPreparationPhaseEvent e) {
+		if(e.getGame().equals(game)) {
+			inventory.getViewers().forEach(HumanEntity::closeInventory);
+			HandlerList.unregisterAll(this);
+		}
 	}
 }

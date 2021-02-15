@@ -11,6 +11,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
+import fr.nekotine.vi6.events.GameEnterPreparationPhaseEvent;
 import fr.nekotine.vi6.events.IsRankedChangeEvent;
 import net.wesjd.anvilgui.AnvilGUI;
 
@@ -52,6 +53,13 @@ public class GameMoneyAnvil implements Listener{
 	public void isRankedChange(IsRankedChangeEvent e) {
 		if(e.isRanked() && e.getGame().equals(game)) {
 			game.openSettings(player);
+			AnvilGUI.Response.close();
+			HandlerList.unregisterAll(this);
+		}
+	}
+	@EventHandler
+	public void onGameStart(GameEnterPreparationPhaseEvent e) {
+		if(e.getGame().equals(game)) {
 			AnvilGUI.Response.close();
 			HandlerList.unregisterAll(this);
 		}

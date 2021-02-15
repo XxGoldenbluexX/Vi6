@@ -5,7 +5,7 @@ import org.bukkit.event.HandlerList;
 
 import fr.nekotine.vi6.Game;
 
-public class GameStartEvent extends Event{
+public class GameEnterPreparationPhaseEvent extends Event{
 	private final Game game;
 	private static final HandlerList handlers = new HandlerList();
 	public static HandlerList getHandlerList() {
@@ -15,7 +15,7 @@ public class GameStartEvent extends Event{
 	public HandlerList getHandlers() {
 		return handlers;
 	}
-	public GameStartEvent(Game game) {
+	public GameEnterPreparationPhaseEvent(Game game) {
 		this.game=game;
 	}
 	public Game getGame() {

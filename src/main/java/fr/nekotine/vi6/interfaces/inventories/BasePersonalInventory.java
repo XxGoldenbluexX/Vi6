@@ -12,7 +12,6 @@ import org.bukkit.inventory.ItemStack;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
-import fr.nekotine.vi6.events.GameStartEvent;
 import fr.nekotine.vi6.events.PlayerLeaveGameEvent;
 
 public abstract class BasePersonalInventory implements Listener{
@@ -28,13 +27,6 @@ public abstract class BasePersonalInventory implements Listener{
 		Bukkit.getPluginManager().registerEvents(this, main);
 	}
 	public abstract void itemClicked(ItemStack itm, int slot);
-	@EventHandler
-	public void onGameStart(GameStartEvent e) {
-		if(e.getGame().equals(game)) {
-			player.closeInventory();
-			HandlerList.unregisterAll(this);
-		}
-	}
 	@EventHandler
 	public void onInventoryClose(InventoryCloseEvent e) {
 		if(e.getInventory().equals(inventory)) {

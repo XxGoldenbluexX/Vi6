@@ -2,10 +2,8 @@
 package fr.nekotine.vi6.interfaces.inventories;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
@@ -13,7 +11,6 @@ import org.bukkit.inventory.ItemStack;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
-import fr.nekotine.vi6.events.GameStartEvent;
 import fr.nekotine.vi6.events.PlayerLeaveGameEvent;
 
 public abstract class BaseSharedInventory implements Listener{
@@ -29,14 +26,6 @@ public abstract class BaseSharedInventory implements Listener{
 	}
 	
 	public abstract void itemClicked(Player player,ItemStack itm);
-
-	@EventHandler
-	public void onGameStart(GameStartEvent e) {
-		if(e.getGame().equals(game)) {
-			inventory.getViewers().forEach(HumanEntity::closeInventory);
-			HandlerList.unregisterAll(this);
-		}
-	}
 	
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent e) {

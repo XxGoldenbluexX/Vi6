@@ -14,16 +14,21 @@ import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.nekotine.vi6.enums.GameState;
 import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.events.GameEndEvent;
-import fr.nekotine.vi6.events.GameStartEvent;
+import fr.nekotine.vi6.events.GameEnterInGamePhaseEvent;
+import fr.nekotine.vi6.events.GameEnterPreparationPhaseEvent;
 import fr.nekotine.vi6.events.IsRankedChangeEvent;
 import fr.nekotine.vi6.events.MapChangeEvent;
 import fr.nekotine.vi6.events.MoneyChangedEvent;
@@ -45,6 +50,7 @@ import fr.nekotine.vi6.yml.DisplayTexts;
 
 public class Game implements Listener{
 	private static final int DEFAULT_RANKED_MONEY = 1000;
+	private static final int DEFAULT_PREPARATION_SECONDS = 2*60;
 	
 	private final Vi6Main main;
 	private int idPartie;
@@ -64,6 +70,8 @@ public class Game implements Listener{
 	
 	private final ArrayList<Integer> nbtCompteur = new ArrayList<>();
 	private final ArrayList<Objet> objetsList = new ArrayList<>();
+	
+	private BossBar bb;
 	public Game(Vi6Main main, String name) {
 		this.main=main;
 		this.name=name;
@@ -181,10 +189,25 @@ public class Game implements Listener{
 		HandlerList.unregisterAll(this);
 	}
 	
-	public boolean startGame() {//START--------------------
+	public boolean isEveryoneReady() {
 		for(PlayerWrapper wrapper : playerList.values()) {
 			if(!wrapper.isReady()) return false;
 		}
+		return true;
+	}
+	public void setReady(Player player, boolean isReady) {
+		PlayerWrapper wrap = getWrapper(player);
+		if(wrap==null) return;
+		wrap.setReady(isReady);
+		if(isReady && state==GameState.Preparation) {
+			if(isEveryoneReady()) {
+				enterInGamePhase();
+			}
+		}
+	}
+	
+	public boolean enterPreparationPhase() {//START--------------------
+		if(!isEveryoneReady()) return false;
 		if (map!=null) {map.unload();map=null;}
 		map = Carte.load(mapName);
 		if (map==null) return false;
@@ -192,20 +215,41 @@ public class Game implements Listener{
 		map.enable(main);
 		map.start();
 		state=GameState.Preparation;
+		new OpenPreparationItem(main, this);
+		bb = Bukkit.createBossBar(ChatColor.GOLD+"Temps restant"+ChatColor.WHITE+": "+ChatColor.AQUA+DEFAULT_PREPARATION_SECONDS/60+ChatColor.WHITE+":"+
+		ChatColor.AQUA+DEFAULT_PREPARATION_SECONDS%60, BarColor.BLUE, BarStyle.SOLID);
 		for(Entry<Player, PlayerWrapper> playerAndTeam : playerList.entrySet()) {
 			playerAndTeam.getKey().getInventory().clear();
 			playerAndTeam.getValue().setReady(false);
 			playerAndTeam.getValue().setMoney(money);
 			playerAndTeam.getValue().clearStatusEffects();
 			playerAndTeam.getValue().getStealedArtefactList().clear();
+			bb.addPlayer(playerAndTeam.getKey());
 			Bukkit.getPluginManager().registerEvents(new PlayerGame(name, playerAndTeam.getKey().getUniqueId(), idPartie, playerAndTeam.getValue().getTeam()), main);
 		}
-		startTime = LocalTime.now().toString();
-		new OpenPreparationItem(main, this);
-		Bukkit.getPluginManager().callEvent(new GameStartEvent(this));
+		new BukkitRunnable() {
+			int seconds = DEFAULT_PREPARATION_SECONDS;
+			@Override
+			public void run() {
+				seconds--;
+				bb.setProgress(seconds / (double)DEFAULT_PREPARATION_SECONDS);
+				bb.setTitle(ChatColor.GOLD+"Temps restant"+ChatColor.WHITE+": "+ChatColor.AQUA+seconds/60+"m"+ChatColor.WHITE+":"+
+						ChatColor.AQUA+seconds%60+"s");
+				if(seconds==0) {
+					enterInGamePhase();
+					this.cancel();
+				}
+			}
+		}.runTaskTimer(main, 0, 20);
+		Bukkit.getPluginManager().callEvent(new GameEnterPreparationPhaseEvent(this));
 		return true;
 	}
 	
+	public void enterInGamePhase() {
+		bb.removeAll();
+		startTime = LocalTime.now().toString();
+		Bukkit.getPluginManager().callEvent(new GameEnterInGamePhaseEvent(this));
+	}
 	
 	
 	public boolean endGame() {

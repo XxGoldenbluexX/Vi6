@@ -8,6 +8,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -15,6 +16,7 @@ import org.bukkit.inventory.ItemStack;
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.enums.Team;
+import fr.nekotine.vi6.events.GameEnterInGamePhaseEvent;
 import fr.nekotine.vi6.objet.Objet;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.utils.ObjetsSkinsTagType;
@@ -97,7 +99,7 @@ public class PreparationInventory extends BasePersonalInventory{
 		switch(itm.getType()) {
 		case REDSTONE_BLOCK:
 			if(slot==0) {
-				game.getWrapper(player).setReady(true);
+				game.setReady(player, true);
 				inventory.setItem(0, Utils.createItemStack(Material.EMERALD_BLOCK,1,ChatColor.GREEN+"Prêt",""));
 			}else {
 				createObjet(itm);
@@ -105,7 +107,7 @@ public class PreparationInventory extends BasePersonalInventory{
 			break;
 		case EMERALD_BLOCK:
 			if(slot==0) {
-				game.getWrapper(player).setReady(false);
+				game.setReady(player, false);
 				inventory.setItem(0, Utils.createItemStack(Material.REDSTONE_BLOCK,1,ChatColor.RED+"En attente",""));
 			}else {
 				createObjet(itm);
@@ -191,6 +193,13 @@ public class PreparationInventory extends BasePersonalInventory{
 					}
 				}
 			}
+		}
+	}
+	@EventHandler
+	public void onGameStart(GameEnterInGamePhaseEvent e) {
+		if(e.getGame().equals(game)) {
+			player.closeInventory();
+			HandlerList.unregisterAll(this);
 		}
 	}
 }

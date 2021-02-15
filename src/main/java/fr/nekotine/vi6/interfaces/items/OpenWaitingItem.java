@@ -9,7 +9,7 @@ import org.bukkit.event.Listener;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
-import fr.nekotine.vi6.events.GameStartEvent;
+import fr.nekotine.vi6.events.GameEnterPreparationPhaseEvent;
 import fr.nekotine.vi6.events.PlayerJoinGameEvent;
 import fr.nekotine.vi6.events.PlayerLeaveGameEvent;
 import fr.nekotine.vi6.interfaces.inventories.WaitingInventory;
@@ -22,7 +22,7 @@ public class OpenWaitingItem extends BaseInventoryItem implements Listener{
 		this.game=game;
 	}
 	@EventHandler
-	public void onGameStart(GameStartEvent e) {
+	public void onGameStart(GameEnterPreparationPhaseEvent e) {
 		if(e.getGame().equals(game)) {
 			for(Player player : game.getPlayerList()) {
 				player.getInventory().remove(item);

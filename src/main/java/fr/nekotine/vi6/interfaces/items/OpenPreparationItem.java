@@ -4,10 +4,12 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
-import fr.nekotine.vi6.events.GameStartEvent;
+import fr.nekotine.vi6.events.GameEnterInGamePhaseEvent;
+import fr.nekotine.vi6.events.GameEnterPreparationPhaseEvent;
 import fr.nekotine.vi6.interfaces.inventories.PreparationInventory;
 import fr.nekotine.vi6.utils.Utils;
 
@@ -26,8 +28,17 @@ public class OpenPreparationItem extends BaseInventoryItem{
 		}
 	}
 	@EventHandler
-	public void onGameStart(GameStartEvent e) {
-		if(game.equals(e.getGame())) {
+	public void onGameStart(GameEnterInGamePhaseEvent e) {
+		if(e.getGame().equals(game)) {
+			for(Player player : game.getPlayerList()) {
+				player.getInventory().remove(item);
+			}
+			HandlerList.unregisterAll(this);
+		}
+	}
+	@EventHandler
+	public void onGameStart(GameEnterPreparationPhaseEvent e) {
+		if(e.getGame().equals(game)) {
 			for(Player player : game.getPlayerList()) {
 				player.getInventory().setItem(8, item);
 			}

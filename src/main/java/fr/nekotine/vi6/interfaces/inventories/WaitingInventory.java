@@ -4,12 +4,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.enums.Team;
+import fr.nekotine.vi6.events.GameEnterPreparationPhaseEvent;
 import fr.nekotine.vi6.utils.Utils;
 
 public class WaitingInventory extends BasePersonalInventory{
@@ -45,14 +47,14 @@ public class WaitingInventory extends BasePersonalInventory{
 			HandlerList.unregisterAll(this);
 			break;
 		case SUNFLOWER:
-			game.startGame();
+			game.enterPreparationPhase();
 			break;
 		case EMERALD_BLOCK:
-			game.getWrapper(player).setReady(false);
+			game.setReady(player, false);
 			inventory.setItem(13, Utils.createItemStack(Material.REDSTONE_BLOCK, 1, ChatColor.RED+"En Attente", ""));
 			break;
 		case REDSTONE_BLOCK:
-			game.getWrapper(player).setReady(true);
+			game.setReady(player, true);
 			inventory.setItem(13, Utils.createItemStack(Material.EMERALD_BLOCK, 1, ChatColor.GREEN+"Prêt", ""));
 			break;
 		case BLUE_BANNER:
@@ -77,6 +79,13 @@ public class WaitingInventory extends BasePersonalInventory{
 			break;
 		default:
 			break;
+		}
+	}
+	@EventHandler
+	public void onGameStart(GameEnterPreparationPhaseEvent e) {
+		if(e.getGame().equals(game)) {
+			player.closeInventory();
+			HandlerList.unregisterAll(this);
 		}
 	}
 }

@@ -68,6 +68,7 @@ public class Vi6Main extends JavaPlugin {
 		Carte.setMapFolder(mapf);
 		SQLInterface.load(this);
 		DisplayTexts.instance.load(this);
+		createGame("test");
 		CommandAPI.onEnable(this);//enable CommandAPI
 		Vi6commandMaker.makevi6(this).register();//registering commands
 	}
