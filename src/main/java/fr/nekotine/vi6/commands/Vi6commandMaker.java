@@ -219,19 +219,25 @@ public class Vi6commandMaker {
 	
 	public static CommandAPICommand artefactRemove(Argument mapArgument) {
 		return new CommandAPICommand("remove")
-				.withArguments(mapArgument,new StringArgument("name"))
+				.withArguments(mapArgument,artefactListArgument())
 				.executes((player,args)->{
 					Carte map = (Carte)args[0];
-					String name = (String)args[1];
-					Artefact a = map.getArtefact(name);
+					Artefact a = map.getArtefact((String)args[1]);
 					if (a!=null){
 						map.getArtefactList().remove(a);
 						Carte.save(map);
 						map.unload();
-						player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_artefact_remove_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", name)));
+						player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_artefact_remove_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", a.getName())));
 					}else {
-						player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_artefact_remove_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", name)));
+						player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_artefact_remove_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", (String)args[1])));
 					}
 				});
+	}
+	
+	
+	private static Argument artefactListArgument() {
+		return new StringArgument("artefactList").overrideSuggestions((sender, args) -> {
+			return ((Carte)args[0]).getArtefactList().stream().map(Artefact::getName).toArray(String[]::new);
+		});
 	}
 }
