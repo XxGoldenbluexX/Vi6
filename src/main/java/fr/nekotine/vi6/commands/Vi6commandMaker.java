@@ -42,15 +42,12 @@ public class Vi6commandMaker {
 		}).overrideSuggestions((sender) -> {return Vi6Main.getGameList().stream().map(Game::getName).toArray(String[]::new);});
 		Argument mapArgument = new CustomArgument<Carte>("carteList",(input)-> {
 			Carte map = Carte.load(input);
-			System.out.println("-->>map=="+map);
 			if (map==null) {
 				throw new CustomArgumentException(new MessageBuilder("No map with this name: ").appendArgInput().appendHere());
 			}else {
-				System.out.println("-->>map's name=="+map.getName());
 				return map;
 			}
 		}).overrideSuggestions(sender -> {return Carte.getMapList().toArray(String[]::new);});
-		//tiens return ((Carte)args[]).getArtefactList().stream().map(Artefact::getName).toArray(String[]::new);});
 		return new CommandAPICommand("vi6")
 				.withPermission("vi6.main")
 				.withSubcommand(makeHelp(mainHelp))
