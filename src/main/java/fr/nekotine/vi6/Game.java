@@ -6,16 +6,19 @@ import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
 
 import fr.nekotine.vi6.enums.GameState;
 import fr.nekotine.vi6.enums.Team;
@@ -59,7 +62,7 @@ public class Game implements Listener{
 	private MapSelectionInventory mapInterface;
 	private GameSettingsInventory settingsInterface;
 	
-	private int nbtCompteur=0;
+	private final ArrayList<Integer> nbtCompteur = new ArrayList<>();
 	private final ArrayList<Objet> objetsList = new ArrayList<>();
 	public Game(Vi6Main main, String name) {
 		this.main=main;
@@ -67,6 +70,7 @@ public class Game implements Listener{
 		new OpenWaitingItem(main, this);
 		settingsInterface = new GameSettingsInventory(main, this);
 		mapInterface = new MapSelectionInventory(main, this);
+		nbtCompteur.add(0);
 		Bukkit.getPluginManager().registerEvents(this, main);
 	}
 	
@@ -75,8 +79,11 @@ public class Game implements Listener{
 	}
 	
 	public int getNBT() {
-		nbtCompteur++;
-		return nbtCompteur;
+		if(nbtCompteur.size()>1) {
+			return nbtCompteur.remove(1);
+		}
+		nbtCompteur.set(0, nbtCompteur.get(0)+1);
+		return nbtCompteur.get(0);
 	}
 	
 	public void addObjet(Objet obj) {
@@ -84,6 +91,8 @@ public class Game implements Listener{
 	}
 	
 	public void removeObjet(Objet obj) {
+		nbtCompteur.add(obj.itemStack.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(main, getName()+"ObjetNBT"), PersistentDataType.INTEGER));
+		Collections.sort(nbtCompteur.subList(1, nbtCompteur.size()));
 		objetsList.remove(obj);
 	}
 	

@@ -14,6 +14,8 @@ import org.bukkit.persistence.PersistentDataType;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
+import fr.nekotine.vi6.enums.GameState;
+import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.events.GameEndEvent;
 import fr.nekotine.vi6.events.GameStartEvent;
 import fr.nekotine.vi6.events.GameTickEvent;
@@ -30,10 +32,10 @@ public abstract class Objet implements Listener{
 		this.game = game;
 		this.itemStack = itemStack;
 		ItemMeta meta = itemStack.getItemMeta();
-		meta.getPersistentDataContainer().set(new NamespacedKey(main, "ObjetNBT"), PersistentDataType.INTEGER, game.getNBT());
+		meta.getPersistentDataContainer().set(new NamespacedKey(main, game.getName()+"ObjetNBT"), PersistentDataType.INTEGER, game.getNBT());
 		itemStack.setItemMeta(meta);
 		System.out.println("creating objet "+objet.toString()+" with nbt : "+
-		itemStack.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(main, "ObjetNBT"), PersistentDataType.INTEGER));
+		itemStack.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(main, game.getName()+"ObjetNBT"), PersistentDataType.INTEGER));
 	}
 	
 	public abstract void gameStart();
@@ -80,7 +82,15 @@ public abstract class Objet implements Listener{
 	}
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent e) {
-		if(e.getItem().equals(itemStack)) action(e.getAction());
+		if(e.getItem().equals(itemStack)) {
+			if(game.getPlayerTeam(e.getPlayer())==Team.VOLEUR){
+				if(game.getState()==GameState.Ingame) {
+					action(e.getAction());
+				}
+			}else {
+				action(e.getAction());
+			}
+		}
 	}
 	public void vendre(Player player) {
 		sell();
