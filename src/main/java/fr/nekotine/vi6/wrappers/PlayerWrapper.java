@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Scoreboard;
 
-import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.enums.PlayerState;
 import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.map.Artefact;
@@ -14,7 +15,10 @@ import fr.nekotine.vi6.statuseffects.StatusEffect;
 
 public class PlayerWrapper {
 	
-	private Game gameref;
+	private static final String READY_PREFIX="☑";
+	private static final String NOT_READY_PREFIX="☐";
+	
+	private String currentScoreboardName="";
 	private Team team = Team.GARDE;
 	private boolean isReady=false;
 	private PlayerState state=PlayerState.WAITING;
@@ -24,9 +28,8 @@ public class PlayerWrapper {
 	private final ArrayList<StatusEffect> statusEffects = new ArrayList<StatusEffect>();
 	private final ArrayList<Artefact> stealedObjects = new ArrayList<>();
 	
-	public PlayerWrapper(Player player,Game game) {
+	public PlayerWrapper(Player player) {
 		this.player = player;
-		gameref=game;
 	}
 
 	public Team getTeam() {
@@ -43,6 +46,14 @@ public class PlayerWrapper {
 	
 	public void changeTeam(Team team) {
 		this.team = team;
+		updateScoreboard();
+	}
+	
+	public void updateScoreboard() {
+		Scoreboard sc = player.getScoreboard();
+		sc.resetScores(currentScoreboardName);
+		currentScoreboardName=(isReady?READY_PREFIX:NOT_READY_PREFIX)+team.getChatColor()+player.getName();
+		sc.getObjective(DisplaySlot.SIDEBAR).getScore(currentScoreboardName).setScore(0);
 	}
 
 	public Player getPlayer() {
@@ -55,6 +66,7 @@ public class PlayerWrapper {
 	
 	public void setReady(boolean ready) {
 		isReady=ready;
+		updateScoreboard();
 	}
 	
 	public void removeStatusEffect(StatusEffect eff) {

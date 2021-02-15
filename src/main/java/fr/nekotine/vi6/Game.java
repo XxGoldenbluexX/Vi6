@@ -58,8 +58,8 @@ public class Game implements Listener{
 	private final Vi6Main main;
 	private int idPartie;
 	private String startTime;
-	private final Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
-	private final Objective scoreboardSidebar;
+	private Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
+	private Objective scoreboardSidebar;
 	private final String name;
 	private boolean isRanked=true;
 	private GameState state = GameState.Waiting;
@@ -194,6 +194,8 @@ public class Game implements Listener{
 		endGame();
 		if (map!=null) {map.unload();map=null;}
 		HandlerList.unregisterAll(this);
+		scoreboardSidebar.unregister();
+		scoreboard=null;
 	}
 	
 	public boolean isEveryoneReady() {
@@ -267,12 +269,12 @@ public class Game implements Listener{
 	
 	public boolean addPlayer(Player p) {
 		if (state==GameState.Waiting && !playerList.keySet().contains(p)) {
+			p.setScoreboard(scoreboard);
 			playerList.put(p, new PlayerWrapper(p));
 			for (Player pl : playerList.keySet()) {
 				pl.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_join"),new MessageFormater("§p",p.getName())));
 			}
 			p.getInventory().clear();
-			p.setScoreboard(scoreboard);
 			Bukkit.getPluginManager().callEvent(new PlayerJoinGameEvent(this, p));
 			return true;
 		}
