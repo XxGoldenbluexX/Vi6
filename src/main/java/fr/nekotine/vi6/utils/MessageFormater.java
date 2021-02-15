@@ -14,7 +14,7 @@ public class MessageFormater {
 	
 	public static String format(String text,MessageFormater... f) {
 		for (MessageFormater ff : f) {
-			text=text.replace(ff.getKey(), ff.getValue());
+			if (ff.getKey()!=null && ff.getValue()!=null) text=text.replace(ff.getKey(), ff.getValue());
 		}
 		return text;
 	}
