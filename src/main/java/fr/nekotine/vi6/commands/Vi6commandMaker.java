@@ -8,6 +8,9 @@ import dev.jorel.commandapi.arguments.Argument;
 import dev.jorel.commandapi.arguments.CustomArgument;
 import dev.jorel.commandapi.arguments.CustomArgument.CustomArgumentException;
 import dev.jorel.commandapi.arguments.CustomArgument.MessageBuilder;
+import dev.jorel.commandapi.arguments.GreedyStringArgument;
+import dev.jorel.commandapi.arguments.LocationArgument;
+import dev.jorel.commandapi.arguments.LocationType;
 import dev.jorel.commandapi.arguments.StringArgument;
 import dev.jorel.commandapi.executors.CommandExecutor;
 import fr.nekotine.vi6.Game;
@@ -32,27 +35,11 @@ public class Vi6commandMaker {
 	//----------------------MAIN-------------------------\/
 	
 	public static CommandAPICommand makevi6(Vi6Main main) {
-		Argument gameArgument = new CustomArgument<Game>("gameList",(input)-> {
-			Game g = Vi6Main.getGame(input);
-			if (g==null) {
-				throw new CustomArgumentException(new MessageBuilder("No game with this name: ").appendArgInput().appendHere());
-			}else {
-				return g;
-			}
-		}).overrideSuggestions((sender) -> {return Vi6Main.getGameList().stream().map(Game::getName).toArray(String[]::new);});
-		Argument mapArgument = new CustomArgument<Carte>("carteList",(input)-> {
-			Carte map = Carte.load(input);
-			if (map==null) {
-				throw new CustomArgumentException(new MessageBuilder("No map with this name: ").appendArgInput().appendHere());
-			}else {
-				return map;
-			}
-		}).overrideSuggestions(sender -> {return Carte.getMapList().toArray(String[]::new);});
 		return new CommandAPICommand("vi6")
 				.withPermission("vi6.main")
 				.withSubcommand(makeHelp(mainHelp))
-				.withSubcommand(game(main,gameArgument))
-				.withSubcommand(map(main,mapArgument))
+				.withSubcommand(game(main))
+				.withSubcommand(map(main))
 				.executes(mainHelp);
 	}
 
@@ -65,7 +52,15 @@ public class Vi6commandMaker {
 	
 	//----------------------GAME-------------------------\/
 	
-	private static CommandAPICommand game(Vi6Main main, Argument gameArgument) {
+	private static CommandAPICommand game(Vi6Main main) {
+		Argument gameArgument = new CustomArgument<Game>("gameList",(input)-> {
+			Game g = Vi6Main.getGame(input);
+			if (g==null) {
+				throw new CustomArgumentException(new MessageBuilder("No game with this name: ").appendArgInput().appendHere());
+			}else {
+				return g;
+			}
+		}).overrideSuggestions((sender) -> {return Vi6Main.getGameList().stream().map(Game::getName).toArray(String[]::new);});
 		return new CommandAPICommand("game")
 				.withSubcommand(makeHelp(gameHelp))
 				.withSubcommand(gameCreate(main))
@@ -109,7 +104,15 @@ public class Vi6commandMaker {
 	
 	//----------------------MAP-------------------------\/
 	
-	private static CommandAPICommand map(Vi6Main main, Argument mapArgument) {
+	private static CommandAPICommand map(Vi6Main main) {
+		Argument mapArgument = new CustomArgument<Carte>("carteList",(input)-> {
+			Carte map = Carte.load(input);
+			if (map==null) {
+				throw new CustomArgumentException(new MessageBuilder("No map with this name: ").appendArgInput().appendHere());
+			}else {
+				return map;
+			}
+		}).overrideSuggestions(sender -> {return Carte.getMapList().toArray(String[]::new);});
 		return new CommandAPICommand("map")
 				.withSubcommand(makeHelp(mapHelp))
 				.withSubcommand(mapList())
@@ -191,10 +194,16 @@ public class Vi6commandMaker {
 	//----ARTEFACT-----\/
 	
 	public static CommandAPICommand artefact(Argument mapArgument) {
+		Argument artefactList = new StringArgument("artefactList").overrideSuggestions((sender, args) -> {
+			return ((Carte)args[0]).getArtefactList().stream().map(Artefact::getName).toArray(String[]::new);
+		});
 		return new CommandAPICommand("artefact")
 				.withPermission("vi6.map.edit")
 				.withSubcommand(artefactAdd(mapArgument))
-				.withSubcommand(artefactRemove(mapArgument));
+				.withSubcommand(artefactRename(mapArgument,artefactList))
+				.withSubcommand(artefactDisplayRename(mapArgument,artefactList))
+				.withSubcommand(artefactSetZone(mapArgument,artefactList))
+				.withSubcommand(artefactRemove(mapArgument,artefactList));
 	}
 	
 	public static CommandAPICommand artefactAdd(Argument mapArgument) {
@@ -214,9 +223,9 @@ public class Vi6commandMaker {
 				});
 	}
 	
-	public static CommandAPICommand artefactRemove(Argument mapArgument) {
+	public static CommandAPICommand artefactRemove(Argument mapArgument, Argument artefactList) {
 		return new CommandAPICommand("remove")
-				.withArguments(mapArgument,artefactListArgument())
+				.withArguments(mapArgument,artefactList)
 				.executes((player,args)->{
 					Carte map = (Carte)args[0];
 					Artefact a = map.getArtefact((String)args[1]);
@@ -231,10 +240,56 @@ public class Vi6commandMaker {
 				});
 	}
 	
+	public static CommandAPICommand artefactRename(Argument mapArgument, Argument artefactList) {
+		return new CommandAPICommand("rename")
+				.withArguments(mapArgument,artefactList, new StringArgument("newName"))
+				.executes((player,args)->{
+					Carte map = (Carte)args[0];
+					Artefact a = map.getArtefact((String)args[1]);
+					if (a!=null){
+						a.setName((String)args[2]);
+						Carte.save(map);
+						map.unload();
+						// message artefact rename
+					}else {
+						// message artefact n'existe pas
+					}
+				});
+	}
 	
-	private static Argument artefactListArgument() {
-		return new StringArgument("artefactList").overrideSuggestions((sender, args) -> {
-			return ((Carte)args[0]).getArtefactList().stream().map(Artefact::getName).toArray(String[]::new);
-		});
+	public static CommandAPICommand artefactDisplayRename(Argument mapArgument, Argument artefactList) {
+		return new CommandAPICommand("displayRename")
+				.withArguments(mapArgument,artefactList, new GreedyStringArgument("newDisplayName"))
+				.executes((player,args)->{
+					Carte map = (Carte)args[0];
+					Artefact a = map.getArtefact((String)args[1]);
+					if (a!=null){
+						a.setDisplayName((String)args[2]);
+						Carte.save(map);
+						map.unload();
+						// message artefact diplayReName
+					}else {
+						// message artefact n'existe pas
+					}
+				});
+	}
+	
+	public static CommandAPICommand artefactSetZone(Argument mapArgument, Argument artefactList) {
+		return new CommandAPICommand("setZone")
+				.withArguments(mapArgument,artefactList,new LocationArgument("zone1Location", LocationType.PRECISE_POSITION),new LocationArgument("zone2Location", LocationType.BLOCK_POSITION))
+				.executes((player,args)->{
+					Carte map = (Carte)args[0];
+					Artefact a = map.getArtefact((String)args[1]);
+					if (a!=null){
+						Location loc1 = (Location)args[2];
+						Location loc2 = (Location)args[3];
+						a.setZone(new DetectionZone(loc1.getBlockX(), loc1.getBlockY(), loc1.getBlockZ(), loc2.getBlockX(), loc2.getBlockY(), loc2.getBlockZ()));
+						Carte.save(map);
+						map.unload();
+						//message artefact zone set
+					}else {
+						// message artefact n'existe pas
+					}
+				});
 	}
 }
