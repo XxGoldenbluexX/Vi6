@@ -61,12 +61,14 @@ public class PreparationInventory extends BasePersonalInventory{
 		if(28*(page-1)<objets.size()){
 			byte index=11;
 			for(ObjetsSkins obj : objets.subList(28*(page-1), objets.size())) {
+				ObjetsSkins skin = game.getWrapper(player).getSelectedSkin(obj.getObjet());
+				if(skin==null) skin = obj;
 				List<String> lore = new ArrayList<>();
 				for(String l : obj.getLore()) {
 					lore.add(l);
 				}
-				lore.add(ChatColor.GOLD+"Coût: "+obj.getObjet().getCost());
-				inventory.setItem(index, Utils.createObjetItemStack(main, obj, 1, lore.toArray(String[]::new)));
+				lore.add(ChatColor.GOLD+"Coût: "+skin.getObjet().getCost());
+				inventory.setItem(index, Utils.createObjetItemStack(main, obj.getName(), skin, 1, lore.toArray(String[]::new)));
 				index++;
 				if(index==45) {
 					break;
@@ -132,7 +134,7 @@ public class PreparationInventory extends BasePersonalInventory{
 			break;
 		case DIAMOND_CHESTPLATE:
 			if(slot==36) {
-				//skins
+				new SkinInventory(game, main, player, page);
 			}else {
 				createObjet(itm);
 			}

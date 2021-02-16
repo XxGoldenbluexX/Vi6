@@ -76,6 +76,15 @@ public class PlayerWrapper {
 		return null;
 	}
 	
+	public boolean flipSelected(ObjetsSkins skin) {
+		if(selectedSkins.contains(skin)) {
+			selectedSkins.remove(skin);
+			return false;
+		}
+		selectedSkins.add(skin);
+		return true;
+	}
+	
 	public void changeTeam(Team team) {
 		this.team = team;
 		updateScoreboard();
