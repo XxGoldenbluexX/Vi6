@@ -9,8 +9,8 @@ import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
 
 public class Lantern extends Objet{
-	public Lantern(Vi6Main main, ObjetsList objet, Player player, Game game) {
-		super(main, objet, new ItemStack(Material.LANTERN), game);
+	public Lantern(Vi6Main main, ObjetsList objet, Player player, Game game, Material material) {
+		super(main, objet, new ItemStack(material), game);
 		player.getInventory().addItem(itemStack);
 	}
 	@Override

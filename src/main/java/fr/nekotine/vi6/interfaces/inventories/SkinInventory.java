@@ -15,6 +15,7 @@ import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.events.GameEnterInGamePhaseEvent;
 import fr.nekotine.vi6.objet.ObjetsSkins;
+import fr.nekotine.vi6.utils.ObjetsSkinsTagType;
 import fr.nekotine.vi6.utils.Utils;
 
 public class SkinInventory extends BasePersonalInventory{
@@ -48,8 +49,8 @@ public class SkinInventory extends BasePersonalInventory{
 		List<ObjetsSkins> skins = ObjetsSkins.getSkins(game.getWrapper(player).getTeam());
 		if(28*(page-1)<skins.size()){
 			byte index=11;
-			for(ObjetsSkins obj : skins.subList(28*(page-1), skins.size())) {
-				inventory.setItem(index, Utils.createObjetItemStack(main, obj, 1, obj.getLore()));
+			for(ObjetsSkins skin : skins.subList(28*(page-1), skins.size())) {
+				inventory.setItem(index, Utils.createSkinItemStack(main, game, player, skin, 1, skin.getLore()));
 				index++;
 				if(index==45) {
 					break;
@@ -86,7 +87,7 @@ public class SkinInventory extends BasePersonalInventory{
 				new PreparationInventory(main, game, player, preparationPage);
 				HandlerList.unregisterAll(this);
 			}else {
-				
+				flipSelected(itm);
 			}
 			break;
 		case PAPER:
@@ -95,10 +96,11 @@ public class SkinInventory extends BasePersonalInventory{
 			}else if(slot==53) {
 				showSkinsPage(page+1);
 			}else {
-				
+				flipSelected(itm);
 			}
 			break;
 		default:
+			flipSelected(itm);
 			break;
 		}
 		
@@ -108,6 +110,16 @@ public class SkinInventory extends BasePersonalInventory{
 		if(e.getGame().equals(game)) {
 			player.closeInventory();
 			HandlerList.unregisterAll(this);
+		}
+	}
+	private void flipSelected(ItemStack item) {
+		ObjetsSkins objetSkin = item.getItemMeta().getPersistentDataContainer().get(ObjetsSkinsTagType.getNamespacedKey(main), new ObjetsSkinsTagType());
+		if(objetSkin!=null) {
+			if(game.getWrapper(player).flipSelected(objetSkin)) {
+				item.addUnsafeEnchantment(Utils.enchant, 1);
+			}else {
+				item.removeEnchantment(Utils.enchant);
+			}
 		}
 	}
 }
