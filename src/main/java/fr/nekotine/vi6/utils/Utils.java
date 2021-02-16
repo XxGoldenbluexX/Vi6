@@ -3,6 +3,7 @@ package fr.nekotine.vi6.utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -56,9 +57,13 @@ public class Utils {
 			}
 		}
 		meta.getPersistentDataContainer().set(ObjetsSkinsTagType.getNamespacedKey(main), new ObjetsSkinsTagType(), skin);
-		meta.setLore(loreList);
 		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-		if(game.getWrapper(player).isSkinsSelected(skin)) item.addUnsafeEnchantment(enchant, 1);
+		if(game.getWrapper(player).isSkinsSelected(skin)) {
+			item.addUnsafeEnchantment(enchant, 1);
+			loreList.add(ChatColor.GREEN+"[SÉLECTIONNÉE]");
+		}
+		meta.setLore(loreList);
+		
 		item.setItemMeta(meta);
 		return item;
 	}

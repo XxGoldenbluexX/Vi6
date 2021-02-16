@@ -75,7 +75,8 @@ public class Game implements Listener{
 	private final ArrayList<Integer> nbtCompteur = new ArrayList<>();
 	private final ArrayList<Objet> objetsList = new ArrayList<>();
 	
-	private BossBar bb;
+	private final BossBar bb = Bukkit.createBossBar(ChatColor.GOLD+"Temps restant"+ChatColor.WHITE+": "+ChatColor.AQUA+DEFAULT_PREPARATION_SECONDS/60+ChatColor.WHITE+":"+
+			ChatColor.AQUA+DEFAULT_PREPARATION_SECONDS%60, BarColor.BLUE, BarStyle.SOLID);
 	public Game(Vi6Main main, String name) {
 		this.main=main;
 		this.name=name;
@@ -225,8 +226,6 @@ public class Game implements Listener{
 		map.start();
 		state=GameState.Preparation;
 		new OpenPreparationItem(main, this);
-		bb = Bukkit.createBossBar(ChatColor.GOLD+"Temps restant"+ChatColor.WHITE+": "+ChatColor.AQUA+DEFAULT_PREPARATION_SECONDS/60+ChatColor.WHITE+":"+
-		ChatColor.AQUA+DEFAULT_PREPARATION_SECONDS%60, BarColor.BLUE, BarStyle.SOLID);
 		for(Entry<Player, PlayerWrapper> playerAndTeam : playerList.entrySet()) {
 			playerAndTeam.getKey().getInventory().clear();
 			playerAndTeam.getValue().setReady(false);

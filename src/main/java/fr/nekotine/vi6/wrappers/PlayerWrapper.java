@@ -2,7 +2,6 @@ package fr.nekotine.vi6.wrappers;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -49,24 +48,8 @@ public class PlayerWrapper {
 		return money;
 	}
 	
-	public void addSkins(ObjetsSkins skin) {
-		if(!selectedSkins.contains(skin)) {
-			selectedSkins.add(skin);
-		}
-	}
-	
-	public void removeSkin(ObjetsSkins skin) {
-		if(selectedSkins.contains(skin)) {
-			selectedSkins.remove(skin);
-		}
-	}
-	
 	public boolean isSkinsSelected(ObjetsSkins skin) {
 		return selectedSkins.contains(skin);
-	}
-	
-	public List<ObjetsSkins> getSkins(){
-		return selectedSkins;
 	}
 	
 	public ObjetsSkins getSelectedSkin(ObjetsList obj) {
@@ -74,6 +57,12 @@ public class PlayerWrapper {
 			if(skin.getObjet()==obj) return skin;
 		}
 		return null;
+	}
+	
+	public void clearAllSkinsForObjet(ObjetsList obj) {
+		for(ObjetsSkins skin : selectedSkins) {
+			if(skin.getObjet()==obj) selectedSkins.remove(skin);
+		}
 	}
 	
 	public boolean flipSelected(ObjetsSkins skin) {

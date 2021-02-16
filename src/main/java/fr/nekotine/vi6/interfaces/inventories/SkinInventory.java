@@ -117,8 +117,13 @@ public class SkinInventory extends BasePersonalInventory{
 		if(objetSkin!=null) {
 			if(game.getWrapper(player).flipSelected(objetSkin)) {
 				item.addUnsafeEnchantment(Utils.enchant, 1);
+				List<String> lore = item.getLore();
+				lore.add(ChatColor.GREEN+"[SÉLECTIONNÉE]");
+				item.setLore(lore);
 			}else {
 				item.removeEnchantment(Utils.enchant);
+				List<String> lore = item.getLore().subList(0, item.getLore().size()-1);
+				item.setLore(lore);
 			}
 		}
 	}
