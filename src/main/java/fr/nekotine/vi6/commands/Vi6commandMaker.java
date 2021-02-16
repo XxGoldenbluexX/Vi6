@@ -126,6 +126,7 @@ public class Vi6commandMaker {
 				.withSubcommand(mapMinimapSpawn(mapArgument))
 				.withSubcommand(artefact(mapArgument))
 				.withSubcommand(entree(mapArgument))
+				.withSubcommand(sortie(mapArgument))
 				.executes(mapHelp);
 	}
 	
