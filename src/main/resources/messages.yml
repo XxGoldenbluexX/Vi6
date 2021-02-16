@@ -27,7 +27,7 @@ map_artefact_rename_success: "§aL'artefact §p de la carte §v a bien été ren
 #§v = map's name §p = artefact's name
 map_artefact_rename_exist: "§cAucun artefact du nom de §p existe dans la carte §v."
 #§v = map's name §p = artefact's name
-map_artefact_displayname_success: "§aL'artefact §p de la carte §v a bien été renomé."
+map_artefact_displayname_success: "§aLe nouveau nom d'apparat de l'artefact §p de la carte §v a bien été définit."
 #§v = map's name §p = artefact's name
 map_artefact_displayname_exist: "§cAucun artefact du nom de §p existe dans la carte §v."
 #§v = map's name §p = artefact's name
@@ -38,3 +38,23 @@ map_artefact_zone_exist: "§cAucun artefact du nom de §p existe dans la carte �
 map_artefact_block_success: "§aLe block représentant l'artefact §p de la carte §v a bien été définit."
 #§v = map's name §p = artefact's name
 map_artefact_block_exist: "§cAucun artefact du nom de §p existe dans la carte §v."
+#§v = map's name §p = entrance's name
+map_entrance_add_exist: "§cUne entrée du nom de §p existe déja dans la carte §v."
+#§v = map's name §p = entrance's name
+map_entrance_add_success: "§aL'entrée §p a bien été ajouté a la carte §v."
+#§v = map's name §p = entrance's name
+map_entrance_remove_exist: "§cAucune entrée du nom de §p existe dans la carte §v."
+#§v = map's name §p = entrance's name
+map_entrance_remove_success: "§aL'entrée §p a bien été retirée a la carte §v."
+#§v = map's name §p = entrance's name
+map_entrance_displayname_exist: "§cAucune entrée du nom de §p existe dans la carte §v."
+#§v = map's name §p = entrance's name
+map_entrance_displayname_success: "§aLe nouveau nom d'apparat de l'entrée §p de la carte §v a bien été définit."
+#§v = map's name §p = entrance's name
+map_entrance_removezones_exist: "§cAucune entrée du nom de §p existe dans la carte §v."
+#§v = map's name §p = entrance's name
+map_entrance_removezones_success: "§aLes zones de détection de l'entrée §p de la carte §v on bien été retirées."
+#§v = map's name §p = entrance's name
+map_entrance_addzone_exist: "§cAucune entrée du nom de §p existe dans la carte §v."
+#§v = map's name §p = entrance's name
+map_entrance_addzone_success: "§aUne nouvelle zone pour l'entrée §p de la carte §v a bien été ajoutée.."

@@ -1,9 +1,5 @@
 package fr.nekotine.vi6.commands;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -332,7 +328,7 @@ public class Vi6commandMaker {
 				.withSubcommand(entranceAdd(mapArgument))
 				.withSubcommand(entranceRename(mapArgument, entranceList))
 				.withSubcommand(entranceDisplayRename(mapArgument, entranceList))
-				.withSubcommand(entranceRemoveZone(mapArgument, entranceList))
+				.withSubcommand(entranceRemoveZones(mapArgument, entranceList))
 				.withSubcommand(entranceAddZone(mapArgument, entranceList))
 				.withSubcommand(entranceRemove(mapArgument, entranceList));
 	}
@@ -344,12 +340,12 @@ public class Vi6commandMaker {
 					Carte map = (Carte)args[0];
 					String name = (String)args[1];
 					if (map.getEntrance(name)!=null){
-						//entree existe deja
+						player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_entrance_add_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", name)));
 					}else {
 						map.getEntreeList().add(new Entree(name, name, new DetectionZone[] {}, new Location(player.getWorld(),0,0,0)));
 						Carte.save(map);
 						map.unload();
-						//entree créee
+						player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_entrance_add_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", name)));
 					}
 				});
 	}
@@ -364,9 +360,9 @@ public class Vi6commandMaker {
 						map.getEntreeList().remove(e);
 						Carte.save(map);
 						map.unload();
-						//entree suprimée
+						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_entrance_remove_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", e.getName())));
 					}else {
-						//entree n'existe pas
+						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_entrance_remove_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", (String)args[1])));
 					}
 				});
 	}
@@ -381,9 +377,9 @@ public class Vi6commandMaker {
 						e.setName((String)args[2]);
 						Carte.save(map);
 						map.unload();
-						//entree renomee
+						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_entrance_rename_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", e.getName())));
 					}else {
-						//entree existe pas
+						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_entrance_rename_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", (String)args[1])));
 					}
 				});
 	}
@@ -398,20 +394,27 @@ public class Vi6commandMaker {
 						e.setDisplayName((String)args[2]);
 						Carte.save(map);
 						map.unload();
-						//entree display renomee
+						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_entrance_displayname_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", e.getName())));
 					}else {
-						//entree existe pas
+						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_entrance_displayname_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", (String)args[1])));
 					}
 				});
 	}
 	
-	public static CommandAPICommand entranceRemoveZone(Argument mapArgument, Argument entranceList) {
-		return new CommandAPICommand("removeZone")
-				.withArguments(mapArgument,entranceList, new StringArgument("zoneList").overrideSuggestions((sender,args)->{
-					return Arrays.asList(((Carte)args[0]).getEntrance((String)args[1]).getZones()).stream().map(DetectionZone::getCoordinates).toArray(String[]::new);
-				}))
+	public static CommandAPICommand entranceRemoveZones(Argument mapArgument, Argument entranceList) {
+		return new CommandAPICommand("removeZones")
+				.withArguments(mapArgument,entranceList)
 				.executes((sender,args)->{
-					
+					Carte map = (Carte)args[0];
+					Entree e = map.getEntrance((String)args[1]);
+					if (e!=null){
+						e.getZones().clear();;
+						Carte.save(map);
+						map.unload();
+						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_entrance_removezones_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", e.getName())));
+					}else {
+						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_entrance_removezones_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", (String)args[1])));
+					}
 				});
 	}
 	
@@ -424,17 +427,12 @@ public class Vi6commandMaker {
 					if (e!=null){
 						Location loc1 = (Location)args[2];
 						Location loc2 = (Location)args[3];
-						List<DetectionZone>  zones = new ArrayList<>();
-						for(DetectionZone zone : e.getZones()) {
-							zones.add(zone);
-						}
-						zones.add(new DetectionZone(loc1.getX(), loc1.getY(), loc1.getZ(), loc2.getX(), loc2.getY(), loc2.getZ()));
-						e.setZones(zones.toArray(DetectionZone[]::new));
+						e.addZone(new DetectionZone(loc1.getX(), loc1.getY(), loc1.getZ(), loc2.getX(), loc2.getY(), loc2.getZ()));
 						Carte.save(map);
 						map.unload();
-							//zone ajoutee
+						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_entrance_addzone_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", e.getName())));
 					}else {
-						//entree existe pas
+						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_entrance_addzone_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", (String)args[1])));
 					}
 				});
 	}

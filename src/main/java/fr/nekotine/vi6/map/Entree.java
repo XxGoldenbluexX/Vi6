@@ -1,5 +1,6 @@
 package fr.nekotine.vi6.map;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,13 +20,13 @@ public class Entree implements ConfigurationSerializable,ZoneDetectionListener{
 	
 	private String name;
 	private String displayName;
-	private DetectionZone[] zones;
+	private ArrayList<DetectionZone> zones;
 	private Location tpLoc;
 	
-	public Entree(String name,String displayName, DetectionZone[] zone, Location loc) {
+	public Entree(String name,String displayName, DetectionZone[] zones, Location loc) {
 		this.name=name;
 		this.displayName=displayName;
-		setZones(zone);
+		addZone(zones);
 		tpLoc=loc;
 	}
 	
@@ -40,9 +41,9 @@ public class Entree implements ConfigurationSerializable,ZoneDetectionListener{
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("name",name);
 		map.put("displayName", displayName);
-		map.put("nb_zones", zones.length);
-		for (int i=0;i<zones.length;i++) {
-			map.put(DetectionZone.getYamlprefix()+i,zones[i]);
+		map.put("nb_zones", zones.size());
+		for (int i=0;i<zones.size();i++) {
+			map.put(DetectionZone.getYamlprefix()+i,zones.get(i));
 		}
 		map.put("tp_location", tpLoc);
 		return map;
@@ -65,19 +66,14 @@ public class Entree implements ConfigurationSerializable,ZoneDetectionListener{
 		this.displayName = displayName;
 	}
 
-	public DetectionZone[] getZones() {
+	public ArrayList<DetectionZone> getZones() {
 		return zones;
 	}
 
-	public void setZones(DetectionZone[] zones) {
-		if (this.zones!=null) {
-			for (DetectionZone zone : zones) {
-				zone.removeListener(this);
-			}
-		}
-		this.zones = zones;
-		for (DetectionZone zone : zones) {
-			zone.addListener(this);
+	public void addZone(DetectionZone... zones) {
+		for (DetectionZone z : zones) {
+			this.zones.add(z);
+			z.addListener(this);
 		}
 	}
 	
