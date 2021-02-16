@@ -25,7 +25,7 @@ public class Utils {
 		item.setItemMeta(meta);
 		return item;
 	}
-	public static ItemStack createItemStack(Vi6Main main, ObjetsSkins objet, int quantity, String... lore) {
+	public static ItemStack createObjetItemStack(Vi6Main main, ObjetsSkins objet, int quantity, String... lore) {
 		ItemStack item = new ItemStack(objet.getMaterial(),quantity);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName(objet.getName());

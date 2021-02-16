@@ -22,7 +22,7 @@ public class OpenPreparationItem extends BaseInventoryItem{
 	@Override
 	public void playerInteract(Player player) {
 		if(game.getPlayerList().contains(player)) {
-			new PreparationInventory(main, game, player);
+			new PreparationInventory(main, game, player, 1);
 		}else {
 			player.getInventory().remove(item);
 		}

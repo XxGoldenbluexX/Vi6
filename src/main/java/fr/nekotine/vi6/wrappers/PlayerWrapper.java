@@ -2,6 +2,7 @@ package fr.nekotine.vi6.wrappers;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -10,6 +11,8 @@ import org.bukkit.scoreboard.Scoreboard;
 import fr.nekotine.vi6.enums.PlayerState;
 import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.map.Artefact;
+import fr.nekotine.vi6.objet.ObjetsList;
+import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.statuseffects.Effects;
 import fr.nekotine.vi6.statuseffects.StatusEffect;
 
@@ -28,6 +31,7 @@ public class PlayerWrapper {
 	private final ArrayList<StatusEffect> statusEffects = new ArrayList<StatusEffect>();
 	private final ArrayList<Artefact> stealedObjects = new ArrayList<>();
 	
+	private ArrayList<ObjetsSkins> selectedSkins = new ArrayList<>();
 	public PlayerWrapper(Player player) {
 		this.player = player;
 		updateScoreboard();
@@ -43,6 +47,33 @@ public class PlayerWrapper {
 	
 	public int getMoney() {
 		return money;
+	}
+	
+	public void addSkins(ObjetsSkins skin) {
+		if(!selectedSkins.contains(skin)) {
+			selectedSkins.add(skin);
+		}
+	}
+	
+	public void removeSkin(ObjetsSkins skin) {
+		if(selectedSkins.contains(skin)) {
+			selectedSkins.remove(skin);
+		}
+	}
+	
+	public boolean isSkinsSelected(ObjetsSkins skin) {
+		return selectedSkins.contains(skin);
+	}
+	
+	public List<ObjetsSkins> getSkins(){
+		return selectedSkins;
+	}
+	
+	public ObjetsSkins getSelectedSkin(ObjetsList obj) {
+		for(ObjetsSkins skin : selectedSkins) {
+			if(skin.getObjet()==obj) return skin;
+		}
+		return null;
 	}
 	
 	public void changeTeam(Team team) {

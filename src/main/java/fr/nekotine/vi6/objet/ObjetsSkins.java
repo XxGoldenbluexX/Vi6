@@ -221,4 +221,13 @@ public enum ObjetsSkins {
 		}
 		return objets;
 	}
+	public static List<ObjetsSkins> getSkins(Team team){
+		List<ObjetsSkins> objets = new ArrayList<>();
+		for(ObjetsSkins obj : values()) {
+			if(obj.getObjet().getTeam()==team && obj.skinType==SkinType.SKIN) {
+				objets.add(obj);
+			}
+		}
+		return objets;
+	}
 }

@@ -24,8 +24,9 @@ import fr.nekotine.vi6.utils.Utils;
 
 public class PreparationInventory extends BasePersonalInventory{
 	private int page;
-	public PreparationInventory(Vi6Main main, Game game, Player player) {
+	public PreparationInventory(Vi6Main main, Game game, Player player, int page) {
 		super(game, main, player);
+		this.page=page;
 		inventory = Bukkit.createInventory(player, 9*6, "Préparation");
 		if(game.getWrapper(player).getTeam()==Team.GARDE) {
 			for(byte index=1;index<=1+9*5;index+=9) {
@@ -52,7 +53,7 @@ public class PreparationInventory extends BasePersonalInventory{
 		inventory.setItem(9, Utils.createItemStack(Material.COMPOSTER,1,ChatColor.DARK_RED+"Tout vendre",""));
 		inventory.setItem(36, Utils.createItemStack(Material.DIAMOND_CHESTPLATE,1,ChatColor.GOLD+"Apparences",""));
 		inventory.setItem(45, Utils.createItemStack(Material.GOLD_INGOT,1,ChatColor.GOLD+"Argent: "+game.getWrapper(player).getMoney(),""));
-		showObjetPage(1);
+		showObjetPage(page);
 		player.openInventory(inventory);
 	}
 	public void showObjetPage(int page) {
@@ -65,7 +66,7 @@ public class PreparationInventory extends BasePersonalInventory{
 					lore.add(l);
 				}
 				lore.add(ChatColor.GOLD+"Coût: "+obj.getObjet().getCost());
-				inventory.setItem(index, Utils.createItemStack(main, obj, 1, lore.toArray(String[]::new)));
+				inventory.setItem(index, Utils.createObjetItemStack(main, obj, 1, lore.toArray(String[]::new)));
 				index++;
 				if(index==45) {
 					break;
