@@ -3,6 +3,7 @@ game_leave: "§p a quitté cette partie de vi6."
 game_artefact*steal*guard: "§3Un artéfact a été volé"
 #§v = artefact's name §p = stealer's name
 game_artefact*steal*thief: "§p a volé §v"
+##MAP EDITION
 map_list: "Voici la liste des cartes présentes dans le fichier \"Maps\":"
 #§v = map's name
 map_create_exist: "§eUne carte du nom de §v existe déja."
@@ -14,6 +15,7 @@ map_remove_absent: "§eAucune carte du nom de §v."
 map_remove_success: "§aLa carte §v a bien été retirée."
 #§v = map's name
 map_guardSpawn_success: "§aLe point de spawn das gardes a bien été changé pour la carte §v."
+#ARTEFACT
 #§v = map's name §p = artefact's name
 map_artefact_add_exist: "§cUn artefact du nom de §p existe déja dans la carte §v."
 #§v = map's name §p = artefact's name
@@ -38,6 +40,7 @@ map_artefact_zone_exist: "§cAucun artefact du nom de §p existe dans la carte �
 map_artefact_block_success: "§aLe block représentant l'artefact §p de la carte §v a bien été définit."
 #§v = map's name §p = artefact's name
 map_artefact_block_exist: "§cAucun artefact du nom de §p existe dans la carte §v."
+#ENTRANCE
 #§v = map's name §p = entrance's name
 map_entrance_add_exist: "§cUne entrée du nom de §p existe déja dans la carte §v."
 #§v = map's name §p = entrance's name
@@ -58,3 +61,20 @@ map_entrance_removezones_success: "§aLes zones de détection de l'entrée §p d
 map_entrance_addzone_exist: "§cAucune entrée du nom de §p existe dans la carte §v."
 #§v = map's name §p = entrance's name
 map_entrance_addzone_success: "§aUne nouvelle zone pour l'entrée §p de la carte §v a bien été ajoutée.."
+#EXIT
+#§v = map's name §p = exit's name
+map_exit_add_exist: "§cUne sortie du nom de §p existe déja dans la carte §v."
+#§v = map's name §p = exit's name
+map_exit_add_success: "§aLa sortie §p a bien été ajouté a la carte §v."
+#§v = map's name §p = exit's name
+map_exit_remove_exist: "§cAucune sortie du nom de §p existe dans la carte §v."
+#§v = map's name §p = exit's name
+map_exit_remove_success: "§aLa sortie §p a bien été retirée a la carte §v."
+#§v = map's name §p = exit's name
+map_exit_displayname_exist: "§cAucune sortie du nom de §p existe dans la carte §v."
+#§v = map's name §p = exit's name
+map_exit_displayname_success: "§aLe nouveau nom d'apparat de la sortie §p de la carte §v a bien été définit."
+#§v = map's name §p = exit's name
+map_exit_setzone_exist: "§cAucune sortie du nom de §p existe dans la carte §v."
+#§v = map's name §p = exit's name
+map_exit_setzone_success: "§aLa zone de la sortie §p de la carte §v a bien été définit."

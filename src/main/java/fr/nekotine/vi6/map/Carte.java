@@ -98,6 +98,27 @@ public class Carte implements ConfigurationSerializable {
 		}
 		return null;
 	}
+	
+	public Sortie getExit(String name) {
+		for (Sortie s : sorties) {
+			if (s.getName().equals(name)) return s;
+		}
+		return null;
+	}
+	
+	public Passage getPassage(String name) {
+		for (Passage p : passages) {
+			if (p.getName().equals(name)) return p;
+		}
+		return null;
+	}
+	
+	public Gateway getGateway(String name) {
+		for (Gateway g : gateways) {
+			if (g.getName().equals(name)) return g;
+		}
+		return null;
+	}
 
 	//STATIC------------------
 	@Override

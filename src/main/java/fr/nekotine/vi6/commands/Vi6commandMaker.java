@@ -20,6 +20,7 @@ import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.map.Artefact;
 import fr.nekotine.vi6.map.Carte;
 import fr.nekotine.vi6.map.Entree;
+import fr.nekotine.vi6.map.Sortie;
 import fr.nekotine.vi6.utils.DetectionZone;
 import fr.nekotine.vi6.utils.MessageFormater;
 import fr.nekotine.vi6.yml.DisplayTexts;
@@ -385,7 +386,7 @@ public class Vi6commandMaker {
 	}
 	
 	public static CommandAPICommand entranceDisplayRename(Argument mapArgument, Argument entranceList) {
-		return new CommandAPICommand("displayRename")
+		return new CommandAPICommand("displayname")
 				.withArguments(mapArgument,entranceList, new GreedyStringArgument("newDisplayName"))
 				.executes((sender,args)->{
 					Carte map = (Carte)args[0];
@@ -436,5 +437,107 @@ public class Vi6commandMaker {
 					}
 				});
 	}
+	
+	//----SORTIE-----\/
+	
+		public static CommandAPICommand sortie(Argument mapArgument) {
+			Argument exitList = new StringArgument("exitList").overrideSuggestions((sender, args) -> {
+				return ((Carte)args[0]).getSortieList().stream().map(Sortie::getName).toArray(String[]::new);
+			});
+			return new CommandAPICommand("exit")
+					.withPermission("vi6.map.edit")
+					.withSubcommand(sortieAdd(mapArgument))
+					.withSubcommand(sortieRemove(mapArgument, exitList))
+					.withSubcommand(sortieRemove(mapArgument, exitList))
+					.withSubcommand(sortieDisplayname(mapArgument, exitList))
+					.withSubcommand(sortieSetZone(mapArgument, exitList));
+		}
+		
+		public static CommandAPICommand sortieAdd(Argument mapArgument) {
+			return new CommandAPICommand("add")
+					.withArguments(mapArgument,new StringArgument("name"))
+					.executes((sender,args)->{
+						Carte map = (Carte)args[0];
+						String name = (String)args[1];
+						if (map.getExit(name)!=null){
+							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_exit_add_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", name)));
+						}else {
+							map.getSortieList().add(new Sortie(name,name,new DetectionZone(0,0,0,0,0,0)));
+							Carte.save(map);
+							map.unload();
+							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_exit_add_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", name)));
+						}
+					});
+		}
+		
+		public static CommandAPICommand sortieRemove(Argument mapArgument, Argument exitList) {
+			return new CommandAPICommand("remove")
+					.withArguments(mapArgument,exitList)
+					.executes((sender,args)->{
+						Carte map = (Carte)args[0];
+						Sortie s = map.getExit((String)args[1]);
+						if (s!=null){
+							map.getSortieList().remove(s);
+							Carte.save(map);
+							map.unload();
+							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_exit_remove_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", s.getName())));
+						}else {
+							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_exit_remove_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", (String)args[1])));
+						}
+					});
+		}
+		
+		public static CommandAPICommand sortieRename(Argument mapArgument, Argument exitList) {
+			return new CommandAPICommand("rename")
+					.withArguments(mapArgument,exitList, new StringArgument("newName"))
+					.executes((sender,args)->{
+						Carte map = (Carte)args[0];
+						Sortie s = map.getExit((String)args[1]);
+						if (s!=null){
+							s.setName((String)args[2]);
+							Carte.save(map);
+							map.unload();
+							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_exit_rename_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", s.getName())));
+						}else {
+							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_exit_rename_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", (String)args[1])));
+						}
+					});
+		}
+		
+		public static CommandAPICommand sortieDisplayname(Argument mapArgument, Argument exitList) {
+			return new CommandAPICommand("displayname")
+					.withArguments(mapArgument,exitList, new GreedyStringArgument("newDisplayName"))
+					.executes((sender,args)->{
+						Carte map = (Carte)args[0];
+						Sortie s = map.getExit((String)args[1]);
+						if (s!=null){
+							s.setDisplayName((String)args[2]);
+							Carte.save(map);
+							map.unload();
+							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_exit_displayname_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", s.getName())));
+						}else {
+							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_exit_displayname_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", (String)args[1])));
+						}
+					});
+		}
+		
+		public static CommandAPICommand sortieSetZone(Argument mapArgument, Argument exitList) {
+			return new CommandAPICommand("setZone")
+					.withArguments(mapArgument,exitList,new LocationArgument("corner1"),new LocationArgument("corner2"))
+					.executes((sender,args)->{
+						Carte map = (Carte)args[0];
+						Sortie s = map.getExit((String)args[1]);
+						if (s!=null){
+							Location corner1 = (Location)args[2];
+							Location corner2 = (Location)args[3];
+							s.setZone(new DetectionZone(corner1.getX(),corner1.getY(),corner1.getZ(),corner2.getX(),corner2.getY(),corner2.getZ()));
+							Carte.save(map);
+							map.unload();
+							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_exit_setzone_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", s.getName())));
+						}else {
+							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_exit_setzone_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", (String)args[1])));
+						}
+					});
+		}
 	
 }
