@@ -300,7 +300,7 @@ public class Vi6commandMaker {
 	}
 	
 	public static CommandAPICommand artefactSetBlock(Argument mapArgument, Argument artefactList) {
-		return new CommandAPICommand("setZone")
+		return new CommandAPICommand("setBlock")
 				.withArguments(mapArgument,artefactList,new LocationArgument("zone1Location", LocationType.BLOCK_POSITION).safeOverrideSuggestions((sender)->{
 					ArrayList<Location> list = new ArrayList<>();
 					if (sender instanceof Player) {
