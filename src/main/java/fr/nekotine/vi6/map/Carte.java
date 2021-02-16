@@ -91,6 +91,13 @@ public class Carte implements ConfigurationSerializable {
 		}
 		return null;
 	}
+	
+	public Entree getEntrance(String name) {
+		for (Entree e : entrees) {
+			if (e.getName().equals(name)) return e;
+		}
+		return null;
+	}
 
 	//STATIC------------------
 	@Override

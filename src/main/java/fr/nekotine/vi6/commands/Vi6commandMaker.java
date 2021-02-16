@@ -1,11 +1,12 @@
 package fr.nekotine.vi6.commands;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 import dev.jorel.commandapi.CommandAPICommand;
@@ -22,6 +23,7 @@ import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.map.Artefact;
 import fr.nekotine.vi6.map.Carte;
+import fr.nekotine.vi6.map.Entree;
 import fr.nekotine.vi6.utils.DetectionZone;
 import fr.nekotine.vi6.utils.MessageFormater;
 import fr.nekotine.vi6.yml.DisplayTexts;
@@ -126,6 +128,7 @@ public class Vi6commandMaker {
 				.withSubcommand(mapGuardSpawn(mapArgument))
 				.withSubcommand(mapMinimapSpawn(mapArgument))
 				.withSubcommand(artefact(mapArgument))
+				.withSubcommand(entree(mapArgument))
 				.executes(mapHelp);
 	}
 	
@@ -206,7 +209,7 @@ public class Vi6commandMaker {
 				.withPermission("vi6.map.edit")
 				.withSubcommand(artefactAdd(mapArgument))
 				.withSubcommand(artefactRename(mapArgument,artefactList))
-				.withSubcommand(artefactDisplayname(mapArgument,artefactList))
+				.withSubcommand(artefactDisplayRename(mapArgument,artefactList))
 				.withSubcommand(artefactSetZone(mapArgument,artefactList))
 				.withSubcommand(artefactRemove(mapArgument,artefactList))
 				.withSubcommand(artefactSetBlock(mapArgument,artefactList));
@@ -263,8 +266,8 @@ public class Vi6commandMaker {
 				});
 	}
 	
-	public static CommandAPICommand artefactDisplayname(Argument mapArgument, Argument artefactList) {
-		return new CommandAPICommand("displayname")
+	public static CommandAPICommand artefactDisplayRename(Argument mapArgument, Argument artefactList) {
+		return new CommandAPICommand("displayRename")
 				.withArguments(mapArgument,artefactList, new GreedyStringArgument("newDisplayName"))
 				.executes((sender,args)->{
 					Carte map = (Carte)args[0];
@@ -282,14 +285,14 @@ public class Vi6commandMaker {
 	
 	public static CommandAPICommand artefactSetZone(Argument mapArgument, Argument artefactList) {
 		return new CommandAPICommand("setZone")
-				.withArguments(mapArgument,artefactList,new LocationArgument("zone1Location", LocationType.PRECISE_POSITION),new LocationArgument("zone2Location", LocationType.BLOCK_POSITION))
+				.withArguments(mapArgument,artefactList,new LocationArgument("zone1Location"),new LocationArgument("zone2Location"))
 				.executes((sender,args)->{
 					Carte map = (Carte)args[0];
 					Artefact a = map.getArtefact((String)args[1]);
 					if (a!=null){
 						Location loc1 = (Location)args[2];
 						Location loc2 = (Location)args[3];
-						a.setZone(new DetectionZone(loc1.getBlockX(), loc1.getBlockY(), loc1.getBlockZ(), loc2.getBlockX(), loc2.getBlockY(), loc2.getBlockZ()));
+						a.setZone(new DetectionZone(loc1.getX(), loc1.getY(), loc1.getZ(), loc2.getX(), loc2.getY(), loc2.getZ()));
 						Carte.save(map);
 						map.unload();
 						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_artefact_zone_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", a.getName())));
@@ -317,4 +320,123 @@ public class Vi6commandMaker {
 					}
 				});
 	}
+	
+	//----ENTREE-----\/
+	
+	public static CommandAPICommand entree(Argument mapArgument) {
+		Argument entranceList = new StringArgument("entranceList").overrideSuggestions((sender, args) -> {
+			return ((Carte)args[0]).getEntreeList().stream().map(Entree::getName).toArray(String[]::new);
+		});
+		return new CommandAPICommand("entrance")
+				.withPermission("vi6.map.edit")
+				.withSubcommand(entranceAdd(mapArgument))
+				.withSubcommand(entranceRename(mapArgument, entranceList))
+				.withSubcommand(entranceDisplayRename(mapArgument, entranceList))
+				.withSubcommand(entranceRemoveZone(mapArgument, entranceList))
+				.withSubcommand(entranceAddZone(mapArgument, entranceList))
+				.withSubcommand(entranceRemove(mapArgument, entranceList));
+	}
+	
+	public static CommandAPICommand entranceAdd(Argument mapArgument) {
+		return new CommandAPICommand("add")
+				.withArguments(mapArgument,new StringArgument("name"))
+				.executesPlayer((player,args)->{
+					Carte map = (Carte)args[0];
+					String name = (String)args[1];
+					if (map.getEntrance(name)!=null){
+						//entree existe deja
+					}else {
+						map.getEntreeList().add(new Entree(name, name, new DetectionZone[] {}, new Location(player.getWorld(),0,0,0)));
+						Carte.save(map);
+						map.unload();
+						//entree créee
+					}
+				});
+	}
+	
+	public static CommandAPICommand entranceRemove(Argument mapArgument, Argument entranceList) {
+		return new CommandAPICommand("remove")
+				.withArguments(mapArgument,entranceList)
+				.executes((sender,args)->{
+					Carte map = (Carte)args[0];
+					Entree e = map.getEntrance((String)args[1]);
+					if (e!=null){
+						map.getEntreeList().remove(e);
+						Carte.save(map);
+						map.unload();
+						//entree suprimée
+					}else {
+						//entree n'existe pas
+					}
+				});
+	}
+	
+	public static CommandAPICommand entranceRename(Argument mapArgument, Argument entranceList) {
+		return new CommandAPICommand("rename")
+				.withArguments(mapArgument,entranceList, new StringArgument("newName"))
+				.executes((sender,args)->{
+					Carte map = (Carte)args[0];
+					Entree e = map.getEntrance((String)args[1]);
+					if (e!=null){
+						e.setName((String)args[2]);
+						Carte.save(map);
+						map.unload();
+						//entree renomee
+					}else {
+						//entree existe pas
+					}
+				});
+	}
+	
+	public static CommandAPICommand entranceDisplayRename(Argument mapArgument, Argument entranceList) {
+		return new CommandAPICommand("displayRename")
+				.withArguments(mapArgument,entranceList, new GreedyStringArgument("newDisplayName"))
+				.executes((sender,args)->{
+					Carte map = (Carte)args[0];
+					Entree e = map.getEntrance((String)args[1]);
+					if (e!=null){
+						e.setDisplayName((String)args[2]);
+						Carte.save(map);
+						map.unload();
+						//entree display renomee
+					}else {
+						//entree existe pas
+					}
+				});
+	}
+	
+	public static CommandAPICommand entranceRemoveZone(Argument mapArgument, Argument entranceList) {
+		return new CommandAPICommand("removeZone")
+				.withArguments(mapArgument,entranceList, new StringArgument("zoneList").overrideSuggestions((sender,args)->{
+					return Arrays.asList(((Carte)args[0]).getEntrance((String)args[1]).getZones()).stream().map(DetectionZone::getCoordinates).toArray(String[]::new);
+				}))
+				.executes((sender,args)->{
+					
+				});
+	}
+	
+	public static CommandAPICommand entranceAddZone(Argument mapArgument, Argument entranceList) {
+		return new CommandAPICommand("addZone")
+				.withArguments(mapArgument,entranceList, new LocationArgument("zone1Location"), new LocationArgument("zone2Location"))
+				.executes((sender,args)->{
+					Carte map = (Carte)args[0];
+					Entree e = map.getEntrance((String)args[1]);
+					if (e!=null){
+						Location loc1 = (Location)args[2];
+						Location loc2 = (Location)args[3];
+						List<DetectionZone>  zones = new ArrayList<>();
+						for(DetectionZone zone : e.getZones()) {
+							zones.add(zone);
+						}
+						zones.add(new DetectionZone(loc1.getX(), loc1.getY(), loc1.getZ(), loc2.getX(), loc2.getY(), loc2.getZ()));
+						e.setZones(zones.toArray(DetectionZone[]::new));
+						Carte.save(map);
+						map.unload();
+							//zone ajoutee
+					}else {
+						//entree existe pas
+					}
+				});
+	}
+	
 }

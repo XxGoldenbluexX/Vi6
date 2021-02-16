@@ -94,7 +94,7 @@ public class Entree implements ConfigurationSerializable,ZoneDetectionListener{
 			z.destroy();
 		}
 	}
-
+	
 	@Override
 	public boolean playerEnterZone(Player player,DetectionZone zone,Vi6Main mainref) {
 		return false;

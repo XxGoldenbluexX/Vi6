@@ -13,6 +13,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.util.Vector;
 
 import fr.nekotine.vi6.Vi6Main;
 
@@ -127,6 +128,10 @@ public class DetectionZone implements ConfigurationSerializable,Listener {
 
 	public double getX1() {
 		return x1;
+	}
+	
+	public Vector[] getCoordinates() {
+		return new Vector[] {new Vector(x1, y1, z2), new Vector(x2, y2, z2)};
 	}
 	
 	public boolean isPosInside(double x, double y, double z) {
