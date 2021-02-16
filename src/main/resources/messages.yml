@@ -34,3 +34,7 @@ map_artefact_displayname_exist: "§cAucun artefact du nom de §p existe dans la 
 map_artefact_zone_success: "§aLa zone de l'artefact §p de la carte §v a bien été définit."
 #§v = map's name §p = artefact's name
 map_artefact_zone_exist: "§cAucun artefact du nom de §p existe dans la carte §v."
+#§v = map's name §p = artefact's name
+map_artefact_block_success: "§aLe block représentant l'artefact §p de la carte §v a bien été définit."
+#§v = map's name §p = artefact's name
+map_artefact_block_exist: "§cAucun artefact du nom de §p existe dans la carte §v."

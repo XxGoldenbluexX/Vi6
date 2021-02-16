@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.entity.Player;
@@ -30,6 +33,8 @@ public class Artefact implements ConfigurationSerializable,ZoneDetectionListener
 	private String name;
 	private String displayName;
 	private DetectionZone zone;
+	private BlockData blockdata;
+	private Location blockLoc;
 	private int nbVoleurInside = 0;
 	private int nbGuardInside = 0;
 	private int captureLevel = 0;
@@ -37,10 +42,12 @@ public class Artefact implements ConfigurationSerializable,ZoneDetectionListener
 	private CaptureState status=CaptureState.STEALABLE;
 	private Vi6Main mainref;
 	
-	public Artefact(String name,String displayName,DetectionZone zone) {
+	public Artefact(String name,String displayName,DetectionZone zone,BlockData bdata,Location blockLoc) {
 		this.name=name;
 		this.displayName = displayName;
 		this.zone=zone;
+		this.blockdata=bdata;
+		this.setBlockLoc(blockLoc);
 	}
 	
 	public String getName() {
@@ -68,11 +75,13 @@ public class Artefact implements ConfigurationSerializable,ZoneDetectionListener
 		map.put("name", name);
 		map.put("displayName", displayName);
 		map.put("zone", zone);
+		map.put("blockdata", blockdata.getAsString(true));
+		map.put("blockloc", blockLoc);
 		return map;
 	}
 	
 	public static Artefact deserialize(Map<String, Object> args) {
-		return new Artefact((String)args.get("name"),(String)args.get("displayName"),(DetectionZone)args.get("zone"));
+		return new Artefact((String)args.get("name"),(String)args.get("displayName"),(DetectionZone)args.get("zone"),Bukkit.createBlockData((String)args.get("blockdata")),(Location)args.get("blockloc"));
 	}
 
 	@Override
@@ -169,5 +178,21 @@ public class Artefact implements ConfigurationSerializable,ZoneDetectionListener
 
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
+	}
+
+	public BlockData getBlockData() {
+		return blockdata;
+	}
+
+	public void setBlockData(BlockData data) {
+		this.blockdata = data;
+	}
+
+	public Location getBlockLoc() {
+		return blockLoc;
+	}
+
+	public void setBlockLoc(Location blockLoc) {
+		this.blockLoc = blockLoc;
 	}
 }

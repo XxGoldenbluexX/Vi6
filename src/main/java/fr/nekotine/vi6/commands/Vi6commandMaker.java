@@ -1,6 +1,11 @@
 package fr.nekotine.vi6.commands;
 
+import java.util.ArrayList;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 import dev.jorel.commandapi.CommandAPICommand;
@@ -203,19 +208,20 @@ public class Vi6commandMaker {
 				.withSubcommand(artefactRename(mapArgument,artefactList))
 				.withSubcommand(artefactDisplayname(mapArgument,artefactList))
 				.withSubcommand(artefactSetZone(mapArgument,artefactList))
-				.withSubcommand(artefactRemove(mapArgument,artefactList));
+				.withSubcommand(artefactRemove(mapArgument,artefactList))
+				.withSubcommand(artefactSetBlock(mapArgument,artefactList));
 	}
 	
 	public static CommandAPICommand artefactAdd(Argument mapArgument) {
 		return new CommandAPICommand("add")
 				.withArguments(mapArgument,new StringArgument("name"))
-				.executes((player,args)->{
+				.executesPlayer((player,args)->{
 					Carte map = (Carte)args[0];
 					String name = (String)args[1];
 					if (map.getArtefact(name)!=null){
 						player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_artefact_add_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", name)));
 					}else {
-						map.getArtefactList().add(new Artefact(name, name, new DetectionZone(0,0,0,0,0,0)));
+						map.getArtefactList().add(new Artefact(name, name, new DetectionZone(0,0,0,0,0,0),Bukkit.createBlockData(Material.AIR),new Location(player.getWorld(),0,0,0)));
 						Carte.save(map);
 						map.unload();
 						player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_artefact_add_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", name)));
@@ -226,16 +232,16 @@ public class Vi6commandMaker {
 	public static CommandAPICommand artefactRemove(Argument mapArgument, Argument artefactList) {
 		return new CommandAPICommand("remove")
 				.withArguments(mapArgument,artefactList)
-				.executes((player,args)->{
+				.executes((sender,args)->{
 					Carte map = (Carte)args[0];
 					Artefact a = map.getArtefact((String)args[1]);
 					if (a!=null){
 						map.getArtefactList().remove(a);
 						Carte.save(map);
 						map.unload();
-						player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_artefact_remove_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", a.getName())));
+						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_artefact_remove_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", a.getName())));
 					}else {
-						player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_artefact_remove_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", (String)args[1])));
+						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_artefact_remove_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", (String)args[1])));
 					}
 				});
 	}
@@ -243,16 +249,16 @@ public class Vi6commandMaker {
 	public static CommandAPICommand artefactRename(Argument mapArgument, Argument artefactList) {
 		return new CommandAPICommand("rename")
 				.withArguments(mapArgument,artefactList, new StringArgument("newName"))
-				.executes((player,args)->{
+				.executes((sender,args)->{
 					Carte map = (Carte)args[0];
 					Artefact a = map.getArtefact((String)args[1]);
 					if (a!=null){
 						a.setName((String)args[2]);
 						Carte.save(map);
 						map.unload();
-						player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_artefact_rename_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", a.getName())));
+						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_artefact_rename_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", a.getName())));
 					}else {
-						player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_artefact_rename_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", (String)args[1])));
+						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_artefact_rename_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", (String)args[1])));
 					}
 				});
 	}
@@ -260,16 +266,16 @@ public class Vi6commandMaker {
 	public static CommandAPICommand artefactDisplayname(Argument mapArgument, Argument artefactList) {
 		return new CommandAPICommand("displayname")
 				.withArguments(mapArgument,artefactList, new GreedyStringArgument("newDisplayName"))
-				.executes((player,args)->{
+				.executes((sender,args)->{
 					Carte map = (Carte)args[0];
 					Artefact a = map.getArtefact((String)args[1]);
 					if (a!=null){
 						a.setDisplayName((String)args[2]);
 						Carte.save(map);
 						map.unload();
-						player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_artefact_displayname_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", a.getName())));
+						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_artefact_displayname_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", a.getName())));
 					}else {
-						player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_artefact_displayname_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", (String)args[1])));
+						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_artefact_displayname_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", (String)args[1])));
 					}
 				});
 	}
@@ -277,7 +283,7 @@ public class Vi6commandMaker {
 	public static CommandAPICommand artefactSetZone(Argument mapArgument, Argument artefactList) {
 		return new CommandAPICommand("setZone")
 				.withArguments(mapArgument,artefactList,new LocationArgument("zone1Location", LocationType.PRECISE_POSITION),new LocationArgument("zone2Location", LocationType.BLOCK_POSITION))
-				.executes((player,args)->{
+				.executes((sender,args)->{
 					Carte map = (Carte)args[0];
 					Artefact a = map.getArtefact((String)args[1]);
 					if (a!=null){
@@ -286,9 +292,39 @@ public class Vi6commandMaker {
 						a.setZone(new DetectionZone(loc1.getBlockX(), loc1.getBlockY(), loc1.getBlockZ(), loc2.getBlockX(), loc2.getBlockY(), loc2.getBlockZ()));
 						Carte.save(map);
 						map.unload();
-						player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_artefact_zone_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", a.getName())));
+						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_artefact_zone_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", a.getName())));
 					}else {
-						player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_artefact_zone_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", (String)args[1])));
+						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_artefact_zone_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", (String)args[1])));
+					}
+				});
+	}
+	
+	public static CommandAPICommand artefactSetBlock(Argument mapArgument, Argument artefactList) {
+		return new CommandAPICommand("setZone")
+				.withArguments(mapArgument,artefactList,new LocationArgument("zone1Location", LocationType.BLOCK_POSITION).safeOverrideSuggestions((sender)->{
+					ArrayList<Location> list = new ArrayList<>();
+					if (sender instanceof Player) {
+						Player p = (Player) sender;
+						Block b = p.getTargetBlock(5);
+						if (b!=null) {
+							list.add(b.getLocation());
+						}
+						
+					}
+					return list.toArray(Location[]::new);
+				}))
+				.executes((sender,args)->{
+					Carte map = (Carte)args[0];
+					Artefact a = map.getArtefact((String)args[1]);
+					if (a!=null){
+						Location loc = (Location)args[2];
+						a.setBlockLoc(loc);
+						a.setBlockData(loc.getBlock().getBlockData());
+						Carte.save(map);
+						map.unload();
+						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_artefact_block_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", a.getName())));
+					}else {
+						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_artefact_block_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", (String)args[1])));
 					}
 				});
 	}
