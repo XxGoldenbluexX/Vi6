@@ -20,7 +20,7 @@ public class Entree implements ConfigurationSerializable,ZoneDetectionListener{
 	
 	private String name;
 	private String displayName;
-	private ArrayList<DetectionZone> zones;
+	private ArrayList<DetectionZone> zones = new ArrayList<>();
 	private Location tpLoc;
 	
 	public Entree(String name,String displayName, DetectionZone[] zones, Location loc) {
