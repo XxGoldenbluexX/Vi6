@@ -216,7 +216,7 @@ public class Game implements Listener{
 		}
 	}
 	
-	public boolean enterPreparationPhase() {//START-------------------
+	public boolean enterPreparationPhase() {//START------------------
 		if(!isEveryoneReady()) return false;
 		if (map!=null) {map.unload();map=null;}
 		map = Carte.load(mapName);
