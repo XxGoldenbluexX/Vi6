@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
@@ -21,6 +22,7 @@ import fr.nekotine.vi6.Vi6Main;
 public class Carte implements ConfigurationSerializable {
 
 	private static File mapFolder;
+	private static final String THIEF_SPAWN_PREFIX="thiefSpawn_";
 	
 	private Game game;
 	private Location guardSpawn;
@@ -31,6 +33,7 @@ public class Carte implements ConfigurationSerializable {
 	private final ArrayList<Passage> passages = new ArrayList<>();
 	private final ArrayList<Gateway> gateways = new ArrayList<>();
 	private final ArrayList<Artefact> artefacts = new ArrayList<>();
+	private final HashMap<String,Location> thiefSpawns = new HashMap<>();
 
 	public Carte(String name,Location guardSpawn, Location minimapSpawn) {
 		this.name=name;
@@ -119,6 +122,10 @@ public class Carte implements ConfigurationSerializable {
 		}
 		return null;
 	}
+	
+	public Location getThiefSpawn(String name) {
+		return thiefSpawns.get(name);
+	}
 
 	//STATIC------------------
 	@Override
@@ -143,6 +150,10 @@ public class Carte implements ConfigurationSerializable {
 		for (int i=0;i<artefacts.size();i++) {
 			map.put(Artefact.getYamlPrefix()+i, artefacts.get(i));
 		}
+		map.put("spawnList", new ArrayList<String>(thiefSpawns.keySet()));
+		for (String s : thiefSpawns.keySet()) {
+			map.put(THIEF_SPAWN_PREFIX+s, thiefSpawns.get(s));
+		}
 		return map;
 	}
 	
@@ -155,6 +166,14 @@ public class Carte implements ConfigurationSerializable {
 		for (int i=0;i<nb;i++) {
 			Entree e = (Entree) args.get(Entree.getYamlPrefix()+i);
 			if (e!=null) entresref.add(e);
+		}
+		//THIEF SPAWNS
+		@SuppressWarnings("unchecked")
+		List<String> thiefSpawns = (List<String>)args.get("spawnList");
+		if (thiefSpawns!=null) {
+			for (String s : thiefSpawns) {
+				map.thiefSpawns.put(s, (Location)args.get(THIEF_SPAWN_PREFIX+s));
+			}
 		}
 		//ADDING SORTIES
 		nb=(int)args.get("nbSorties");
@@ -268,6 +287,10 @@ public class Carte implements ConfigurationSerializable {
 
 	public void setMinimapSpawn(Location minimapSpawn) {
 		this.minimapSpawn = minimapSpawn;
+	}
+
+	public HashMap<String,Location> getThiefSpawnList() {
+		return thiefSpawns;
 	}
 	
 }

@@ -1,6 +1,5 @@
 package fr.nekotine.vi6.map;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,20 +19,18 @@ public class Entree implements ConfigurationSerializable,ZoneDetectionListener{
 	
 	private String name;
 	private String displayName;
-	private ArrayList<DetectionZone> zones = new ArrayList<>();
+	private DetectionZone zone;
 	private Location tpLoc;
 	
-	public Entree(String name,String displayName, DetectionZone[] zones, Location loc) {
+	public Entree(String name,String displayName, DetectionZone zone, Location loc) {
 		this.name=name;
 		this.displayName=displayName;
-		addZone(zones);
+		this.zone=zone;
 		tpLoc=loc;
 	}
 	
 	public void enable(Vi6Main mainref) {
-		for (DetectionZone z : zones) {
-			z.enable(mainref);
-		}
+		zone.enable(mainref);
 	}
 	
 	@Override
@@ -41,21 +38,13 @@ public class Entree implements ConfigurationSerializable,ZoneDetectionListener{
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("name",name);
 		map.put("displayName", displayName);
-		map.put("nb_zones", zones.size());
-		for (int i=0;i<zones.size();i++) {
-			map.put(DetectionZone.getYamlprefix()+i,zones.get(i));
-		}
+		map.put("zone", zone);
 		map.put("tp_location", tpLoc);
 		return map;
 	}
 	
 	public static Entree deserialize(Map<String, Object> args) {
-		int size = (int) args.get("nb_zones");
-		DetectionZone[] zone = new DetectionZone[size];
-		for (int i=0;i<size;i++) {
-			zone[i]=(DetectionZone)args.get(DetectionZone.getYamlprefix()+i);
-		}
-		return new Entree((String)args.get("name"),(String)args.get("displayName"),zone,(Location)args.get("tp_location"));
+		return new Entree((String)args.get("name"),(String)args.get("displayName"),(DetectionZone)args.get("zone"),(Location)args.get("tp_location"));
 	}
 
 	public String getDisplayName() {
@@ -66,15 +55,12 @@ public class Entree implements ConfigurationSerializable,ZoneDetectionListener{
 		this.displayName = displayName;
 	}
 
-	public ArrayList<DetectionZone> getZones() {
-		return zones;
+	public DetectionZone getZone() {
+		return zone;
 	}
 
-	public void addZone(DetectionZone... zones) {
-		for (DetectionZone z : zones) {
-			this.zones.add(z);
-			z.addListener(this);
-		}
+	public void setZone(DetectionZone zone) {
+		this.zone=zone;
 	}
 	
 	public Location getTpLoc() {
@@ -86,9 +72,7 @@ public class Entree implements ConfigurationSerializable,ZoneDetectionListener{
 	}
 	
 	public void destroy() {
-		for (DetectionZone z : zones) {
-			z.destroy();
-		}
+		zone.destroy();
 	}
 	
 	@Override
