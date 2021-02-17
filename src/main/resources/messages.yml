@@ -15,6 +15,14 @@ map_remove_absent: "§eAucune carte du nom de §v."
 map_remove_success: "§aLa carte §v a bien été retirée."
 #§v = map's name
 map_guardSpawn_success: "§aLe point de spawn das gardes a bien été changé pour la carte §v."
+#§v = map's name §p = spawn name
+map_addThiefSpawn_exist: "§eUn point d'apparition de voleur du nom de §p existe déja sur la carte §v."
+#§v = map's name §p = spawn name
+map_addThiefSpawn_success: "§eLe point d'apparition de voleur du nom de §p a bien été définit sur la carte §v."
+#§v = map's name §p = spawn name
+map_removeThiefSpawn_exist: "§eAucun point d'apparition de voleur du nom de §p existe sur la carte §v."
+#§v = map's name §p = spawn name
+map_removeThiefSpawn_success: "§eLe point d'apparition de voleur du nom de §p a bien été retiré de la carte §v."
 #ARTEFACT
 #§v = map's name §p = artefact's name
 map_artefact_add_exist: "§cUn artefact du nom de §p existe déja dans la carte §v."
@@ -54,13 +62,9 @@ map_entrance_displayname_exist: "§cAucune entrée du nom de §p existe dans la 
 #§v = map's name §p = entrance's name
 map_entrance_displayname_success: "§aLe nouveau nom d'apparat de l'entrée §p de la carte §v a bien été définit."
 #§v = map's name §p = entrance's name
-map_entrance_removezones_exist: "§cAucune entrée du nom de §p existe dans la carte §v."
+map_entrance_setzone_exist: "§cAucune entrée du nom de §p existe dans la carte §v."
 #§v = map's name §p = entrance's name
-map_entrance_removezones_success: "§aLes zones de détection de l'entrée §p de la carte §v on bien été retirées."
-#§v = map's name §p = entrance's name
-map_entrance_addzone_exist: "§cAucune entrée du nom de §p existe dans la carte §v."
-#§v = map's name §p = entrance's name
-map_entrance_addzone_success: "§aUne nouvelle zone pour l'entrée §p de la carte §v a bien été ajoutée.."
+map_entrance_setzone_success: "§aLa zone de l'entrée §p de la carte §v a bien été définie."
 #EXIT
 #§v = map's name §p = exit's name
 map_exit_add_exist: "§cUne sortie du nom de §p existe déja dans la carte §v."

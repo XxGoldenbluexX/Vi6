@@ -200,16 +200,36 @@ public class Vi6commandMaker {
 	public static CommandAPICommand mapAddThiefSpawn(Argument mapArgument) {
 		return new CommandAPICommand("addThiefSpawn")
 				.withPermission("vi6.map.edit")
-				.withArguments(mapArgument,new StringArgument("name"))
+				.withArguments(mapArgument,new StringArgument("name").overrideSuggestions((sender, args) -> {
+					return ((Carte)args[0]).getThiefSpawnList().keySet().toArray(String[]::new);
+				}))
 				.executesPlayer((player,args)->{
 					Carte map = (Carte)args[0];
 					String name = (String)args[1];
 					if (map.getThiefSpawn(name)!=null) {
-						player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_minimapSpawn_success"),new MessageFormater("§v", map.getName())));
+						player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_addThiefSpawn_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", name)));
 					}else {
 						map.getThiefSpawnList().put(name, player.getLocation());
 						Carte.save(map);
-						player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_minimapSpawn_success"),new MessageFormater("§v", map.getName())));
+						player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_addThiefSpawn_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", name)));
+					}
+					map.unload();
+				});
+	}
+	
+	public static CommandAPICommand mapRemoveThiefSpawn(Argument mapArgument) {
+		return new CommandAPICommand("addThiefSpawn")
+				.withPermission("vi6.map.edit")
+				.withArguments(mapArgument,new StringArgument("name"))
+				.executesPlayer((player,args)->{
+					Carte map = (Carte)args[0];
+					String name = (String)args[1];
+					if (map.getThiefSpawn(name)==null) {
+						player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_removeThiefSpawn_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", name)));
+					}else {
+						map.getThiefSpawnList().remove(name);
+						Carte.save(map);
+						player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_removeThiefSpawn_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", name)));
 					}
 					map.unload();
 				});
