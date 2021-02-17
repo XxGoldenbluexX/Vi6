@@ -18,11 +18,14 @@ import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
@@ -77,6 +80,7 @@ public class Game implements Listener{
 	
 	private final BossBar bb = Bukkit.createBossBar(ChatColor.GOLD+"Temps restant"+ChatColor.WHITE+": "+ChatColor.AQUA+DEFAULT_PREPARATION_SECONDS/60+ChatColor.WHITE+":"+
 			ChatColor.AQUA+DEFAULT_PREPARATION_SECONDS%60, BarColor.BLUE, BarStyle.SOLID);
+	private BukkitTask ticker;
 	public Game(Vi6Main main, String name) {
 		this.main=main;
 		this.name=name;
@@ -242,7 +246,7 @@ public class Game implements Listener{
 			}
 			Bukkit.getPluginManager().registerEvents(new PlayerGame(name, playerAndWrapper.getKey().getUniqueId(), idPartie, playerAndWrapper.getValue().getTeam()), main);
 		}
-		new BukkitRunnable() {
+		ticker = new BukkitRunnable() {
 			int seconds = DEFAULT_PREPARATION_SECONDS;
 			@Override
 			public void run() {
@@ -252,7 +256,6 @@ public class Game implements Listener{
 						ChatColor.AQUA+seconds%60+"s");
 				if(seconds==0) {
 					enterInGamePhase();
-					this.cancel();
 				}
 			}
 		}.runTaskTimer(main, 0, 20);
@@ -262,13 +265,27 @@ public class Game implements Listener{
 	
 	public void enterInGamePhase() {
 		bb.removeAll();
+		ticker.cancel();
 		startTime = LocalTime.now().toString();
+		state=GameState.Ingame;
+		ticker = new BukkitRunnable() {
+			@Override
+			public void run() {
+				for(Objet obj : objetsList) {
+					obj.tick();
+				}
+				for(Artefact art : map.getArtefactList()) {
+					art.tick(Game.this);
+				}
+			}
+		}.runTaskTimer(main, 0, 1);
 		Bukkit.getPluginManager().callEvent(new GameEnterInGamePhaseEvent(this));
 	}
 	
 	
 	public boolean endGame() {
 		if (state==GameState.Waiting) return false;
+		ticker.cancel();
 		state=GameState.Waiting;
 		return false;
 	}
@@ -327,5 +344,10 @@ public class Game implements Listener{
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	@EventHandler
+	public void onDisconnect(PlayerQuitEvent e) {
+		removePlayer(e.getPlayer());
 	}
 }
