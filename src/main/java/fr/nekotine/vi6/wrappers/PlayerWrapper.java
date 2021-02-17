@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Scoreboard;
@@ -30,6 +31,7 @@ public class PlayerWrapper {
 	private final Player player;
 	private final ArrayList<StatusEffect> statusEffects = new ArrayList<StatusEffect>();
 	private final ArrayList<Artefact> stealedObjects = new ArrayList<>();
+	private Location thiefSpawnPoint;
 	
 	private ArrayList<ObjetsSkins> selectedSkins = new ArrayList<>();
 	public PlayerWrapper(Player player) {
@@ -154,6 +156,14 @@ public class PlayerWrapper {
 		while (ite.hasNext()) {
 			ite.next().remove();
 		}
+	}
+
+	public Location getThiefSpawnPoint() {
+		return thiefSpawnPoint;
+	}
+
+	public void setThiefSpawnPoint(Location thiefSpawnPoint) {
+		this.thiefSpawnPoint = thiefSpawnPoint;
 	}
 	
 }

@@ -267,6 +267,11 @@ public class Game implements Listener{
 		bb.removeAll();
 		ticker.cancel();
 		startTime = LocalTime.now().toString();
+		for(Entry<Player, PlayerWrapper> playerAndWrapper : playerList.entrySet()) {
+			Player player = playerAndWrapper.getKey();
+			PlayerWrapper wrapper = playerAndWrapper.getValue();
+			player.teleport(wrapper.getThiefSpawnPoint());
+		};
 		state=GameState.Ingame;
 		ticker = new BukkitRunnable() {
 			@Override
