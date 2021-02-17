@@ -226,14 +226,21 @@ public class Game implements Listener{
 		map.start();
 		state=GameState.Preparation;
 		new OpenPreparationItem(main, this);
-		for(Entry<Player, PlayerWrapper> playerAndTeam : playerList.entrySet()) {
-			playerAndTeam.getKey().getInventory().clear();
-			playerAndTeam.getValue().setReady(false);
-			playerAndTeam.getValue().setMoney(money);
-			playerAndTeam.getValue().clearStatusEffects();
-			playerAndTeam.getValue().getStealedArtefactList().clear();
-			bb.addPlayer(playerAndTeam.getKey());
-			Bukkit.getPluginManager().registerEvents(new PlayerGame(name, playerAndTeam.getKey().getUniqueId(), idPartie, playerAndTeam.getValue().getTeam()), main);
+		for(Entry<Player, PlayerWrapper> playerAndWrapper : playerList.entrySet()) {
+			Player player = playerAndWrapper.getKey();
+			PlayerWrapper wrapper = playerAndWrapper.getValue();
+			player.getInventory().clear();
+			wrapper.setReady(false);
+			wrapper.setMoney(money);
+			wrapper.clearStatusEffects();
+			wrapper.getStealedArtefactList().clear();
+			bb.addPlayer(playerAndWrapper.getKey());
+			if (wrapper.getTeam()==Team.GARDE) {
+				player.teleport(map.getGuardSpawn());
+			}else {
+				player.teleport(map.getGuardSpawn());
+			}
+			Bukkit.getPluginManager().registerEvents(new PlayerGame(name, playerAndWrapper.getKey().getUniqueId(), idPartie, playerAndWrapper.getValue().getTeam()), main);
 		}
 		new BukkitRunnable() {
 			int seconds = DEFAULT_PREPARATION_SECONDS;
