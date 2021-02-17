@@ -3,6 +3,7 @@ package fr.nekotine.vi6.wrappers;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Scoreboard;
@@ -17,8 +18,8 @@ import fr.nekotine.vi6.statuseffects.StatusEffect;
 
 public class PlayerWrapper {
 	
-	private static final String READY_PREFIX="☑ ";
-	private static final String NOT_READY_PREFIX="☐ ";
+	private static final String READY_PREFIX=ChatColor.GREEN+"☑ ";
+	private static final String NOT_READY_PREFIX=ChatColor.RED+"☐ ";
 	
 	private String currentScoreboardName="";
 	private Team team = Team.GARDE;
