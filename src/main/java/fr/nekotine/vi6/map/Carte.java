@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
@@ -22,7 +21,6 @@ import fr.nekotine.vi6.Vi6Main;
 public class Carte implements ConfigurationSerializable {
 
 	private static File mapFolder;
-	private static final String THIEF_SPAWN_PREFIX="thiefSpawn_";
 	
 	private Game game;
 	private Location guardSpawn;
@@ -33,7 +31,7 @@ public class Carte implements ConfigurationSerializable {
 	private final ArrayList<Passage> passages = new ArrayList<>();
 	private final ArrayList<Gateway> gateways = new ArrayList<>();
 	private final ArrayList<Artefact> artefacts = new ArrayList<>();
-	private final HashMap<String,Location> thiefSpawns = new HashMap<>();
+	private final ArrayList<SpawnVoleur> thiefSpawns = new ArrayList<>();
 
 	public Carte(String name,Location guardSpawn, Location minimapSpawn) {
 		this.name=name;
@@ -46,6 +44,7 @@ public class Carte implements ConfigurationSerializable {
 		for (Sortie s : sorties) {s.enable(main);}
 		for (Passage p : passages) {p.enable(main);}
 		for (Artefact a : artefacts) {a.enable(main);}
+		for (SpawnVoleur sv : thiefSpawns) {sv.enable(main);}
 	}
 	
 	public void start() {
@@ -58,6 +57,7 @@ public class Carte implements ConfigurationSerializable {
 		for (Sortie s : sorties) {s.destroy();}
 		for (Passage p : passages) {p.destroy();}
 		for (Artefact a : artefacts) {a.destroy();}
+		for (SpawnVoleur sv : thiefSpawns) {sv.destroy();}
 	}
 	
 	public ArrayList<Entree> getEntreeList() {
@@ -78,6 +78,10 @@ public class Carte implements ConfigurationSerializable {
 
 	public ArrayList<Artefact> getArtefactList() {
 		return artefacts;
+	}
+
+	public ArrayList<SpawnVoleur> getThiefSpawnsList() {
+		return thiefSpawns;
 	}
 
 	public Game getGame() {
@@ -123,8 +127,11 @@ public class Carte implements ConfigurationSerializable {
 		return null;
 	}
 	
-	public Location getThiefSpawn(String name) {
-		return thiefSpawns.get(name);
+	public SpawnVoleur getThiefSpawns(String name) {
+		for (SpawnVoleur sv : thiefSpawns) {
+			if (sv.getName().equals(name)) return sv;
+		}
+		return null;
 	}
 
 	//STATIC------------------
@@ -138,6 +145,7 @@ public class Carte implements ConfigurationSerializable {
 		map.put("nbSorties", sorties.size());
 		map.put("nbPassages", passages.size());
 		map.put("nbArtefacts", artefacts.size());
+		map.put("nbSpawnsVoleurs", thiefSpawns.size());
 		for (int i=0;i<entrees.size();i++) {
 			map.put(Entree.getYamlPrefix()+i, entrees.get(i));
 		}
@@ -150,9 +158,8 @@ public class Carte implements ConfigurationSerializable {
 		for (int i=0;i<artefacts.size();i++) {
 			map.put(Artefact.getYamlPrefix()+i, artefacts.get(i));
 		}
-		map.put("spawnList", new ArrayList<String>(thiefSpawns.keySet()));
-		for (String s : thiefSpawns.keySet()) {
-			map.put(THIEF_SPAWN_PREFIX+s, thiefSpawns.get(s));
+		for (int i=0;i<thiefSpawns.size();i++) {
+			map.put(SpawnVoleur.getYamlPrefix()+i, thiefSpawns.get(i));
 		}
 		return map;
 	}
@@ -166,14 +173,6 @@ public class Carte implements ConfigurationSerializable {
 		for (int i=0;i<nb;i++) {
 			Entree e = (Entree) args.get(Entree.getYamlPrefix()+i);
 			if (e!=null) entresref.add(e);
-		}
-		//THIEF SPAWNS
-		@SuppressWarnings("unchecked")
-		List<String> thiefSpawns = (List<String>)args.get("spawnList");
-		if (thiefSpawns!=null) {
-			for (String s : thiefSpawns) {
-				map.thiefSpawns.put(s, (Location)args.get(THIEF_SPAWN_PREFIX+s));
-			}
 		}
 		//ADDING SORTIES
 		nb=(int)args.get("nbSorties");
@@ -201,6 +200,13 @@ public class Carte implements ConfigurationSerializable {
 		for (int i=0;i<nb;i++) {
 			Artefact e = (Artefact) args.get(Artefact.getYamlPrefix()+i);
 			if (e!=null) artefactsref.add(e);
+		}
+		//ADDING SPAWNVOLEURS
+		nb=(int)args.get("nbSpawnsVoleurs");
+		ArrayList<SpawnVoleur> spawnsvoleursref = map.getThiefSpawnsList();
+		for (int i=0;i<nb;i++) {
+			SpawnVoleur e = (SpawnVoleur) args.get(SpawnVoleur.getYamlPrefix()+i);
+			if (e!=null) spawnsvoleursref.add(e);
 		}
 		return map;
 	}
@@ -288,9 +294,4 @@ public class Carte implements ConfigurationSerializable {
 	public void setMinimapSpawn(Location minimapSpawn) {
 		this.minimapSpawn = minimapSpawn;
 	}
-
-	public HashMap<String,Location> getThiefSpawnList() {
-		return thiefSpawns;
-	}
-	
 }

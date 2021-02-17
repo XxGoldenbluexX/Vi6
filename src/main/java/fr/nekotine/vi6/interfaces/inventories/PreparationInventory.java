@@ -104,9 +104,7 @@ public class PreparationInventory extends BasePersonalInventory{
 		case REDSTONE_BLOCK:
 			if(slot==0) {
 				if(game.getWrapper(player).getTeam()==Team.VOLEUR&&game.getWrapper(player).getThiefSpawnPoint()==null) {
-					player.sendMessage(ChatColor.RED+DisplayTexts.getMessage("game_thieSpawnPoint_notSelected"));
-					
-					//ptit message le joueur n'a pas sélectionné de spawn :)
+					player.sendMessage(ChatColor.RED+DisplayTexts.getMessage("game_thiefSpawnPoint_notSelected"));
 					break;
 				}
 				game.setReady(player, true);
