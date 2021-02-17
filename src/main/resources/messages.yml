@@ -62,6 +62,10 @@ map_entrance_remove_exist: "§cAucune entrée du nom de §p existe dans la carte
 #§v = map's name §p = entrance's name
 map_entrance_remove_success: "§aL'entrée §p a bien été retirée a la carte §v."
 #§v = map's name §p = entrance's name
+map_entrance_rename_success: "§aL'entrée §p de la carte §v a bien été renomé."
+#§v = map's name §p = entrance's name
+map_entrance_rename_exist: "§cAucune entrée du nom de §p existe dans la carte §v."
+#§v = map's name §p = entrance's name
 map_entrance_displayname_exist: "§cAucune entrée du nom de §p existe dans la carte §v."
 #§v = map's name §p = entrance's name
 map_entrance_displayname_success: "§aLe nouveau nom d'apparat de l'entrée §p de la carte §v a bien été définit."
@@ -79,6 +83,10 @@ map_exit_remove_exist: "§cAucune sortie du nom de §p existe dans la carte §v.
 #§v = map's name §p = exit's name
 map_exit_remove_success: "§aLa sortie §p a bien été retirée a la carte §v."
 #§v = map's name §p = exit's name
+map_exit_rename_success: "§aLa sortie §p de la carte §v a bien été renomé."
+#§v = map's name §p = exit's name
+map_exit_rename_exist: "§cAucune sortie du nom de §p existe dans la carte §v."
+#§v = map's name §p = exit's name
 map_exit_displayname_exist: "§cAucune sortie du nom de §p existe dans la carte §v."
 #§v = map's name §p = exit's name
 map_exit_displayname_success: "§aLe nouveau nom d'apparat de la sortie §p de la carte §v a bien été définit."
@@ -86,3 +94,32 @@ map_exit_displayname_success: "§aLe nouveau nom d'apparat de la sortie §p de l
 map_exit_setzone_exist: "§cAucune sortie du nom de §p existe dans la carte §v."
 #§v = map's name §p = exit's name
 map_exit_setzone_success: "§aLa zone de la sortie §p de la carte §v a bien été définit."
+#PASSAGE
+#§v = map's name §p = passage's name
+map_passage_add_exist: "§cUn passage du nom de §p existe déja dans la carte §v."
+#§v = map's name §p = passage's name
+map_passage_add_success: "§aLe passage §p a bien été ajouté a la carte §v."
+#§v = map's name §p = passage's name
+map_passage_remove_exist: "§cAucun passage du nom de §p existe dans la carte §v."
+#§v = map's name §p = passage's name
+map_passage_remove_success: "§aLe passage §p a bien été retiré a la carte §v."
+#§v = map's name §p = exit's name
+map_passage_rename_success: "§aLe passage §p de la carte §v a bien été renomé."
+#§v = map's name §p = exit's name
+map_passage_rename_exist: "§cAucun passage du nom de §p existe dans la carte §v."
+#§v = map's name §p = exit's name
+map_passage_roomA_success: "§aLa salle A du passage §p de la carte §v a bien été définit."
+#§v = map's name §p = exit's name
+map_passage_roomA_exist: "§cAucun passage du nom de §p existe dans la carte §v."
+#§v = map's name §p = exit's name
+map_passage_roomB_success: "§aLa salle B du passage §p de la carte §v a bien été définit."
+#§v = map's name §p = exit's name
+map_passage_roomB_exist: "§cAucun passage du nom de §p existe dans la carte §v."
+#§v = map's name §p = exit's name
+map_passage_setZoneA_success: "§aLa zone A du passage §p de la carte §v a bien été définit."
+#§v = map's name §p = exit's name
+map_passage_setZoneA_exist: "§cAucun passage du nom de §p existe dans la carte §v."
+#§v = map's name §p = exit's name
+map_passage_setZoneB_success: "§aLa zone B du passage §p de la carte §v a bien été définit."
+#§v = map's name §p = exit's name
+map_passage_setZoneB_exist: "§cAucun passage du nom de §p existe dans la carte §v."

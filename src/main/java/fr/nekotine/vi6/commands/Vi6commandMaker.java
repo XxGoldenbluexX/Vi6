@@ -20,6 +20,7 @@ import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.map.Artefact;
 import fr.nekotine.vi6.map.Carte;
 import fr.nekotine.vi6.map.Entree;
+import fr.nekotine.vi6.map.Passage;
 import fr.nekotine.vi6.map.Sortie;
 import fr.nekotine.vi6.utils.DetectionZone;
 import fr.nekotine.vi6.utils.MessageFormater;
@@ -561,4 +562,145 @@ public class Vi6commandMaker {
 					});
 		}
 	
+		//----PASSAGE-----\/
+	
+		public static CommandAPICommand passage(Argument mapArgument) {
+			Argument passageList = new StringArgument("passageList").overrideSuggestions((sender, args) -> {
+				return ((Carte)args[0]).getPassageList().stream().map(Passage::getName).toArray(String[]::new);
+			});
+			return new CommandAPICommand("passage")
+					.withPermission("vi6.map.edit")
+					.withSubcommand(passageAdd(mapArgument))
+					.withSubcommand(passageRemove(mapArgument,passageList))
+					.withSubcommand(passageRename(mapArgument,passageList))
+					.withSubcommand(passageSalleA(mapArgument,passageList))
+					.withSubcommand(passageSalleB(mapArgument,passageList))
+					.withSubcommand(passageSetZoneA(mapArgument,passageList))
+					.withSubcommand(passageSetZoneB(mapArgument,passageList));
+		}
+		
+		public static CommandAPICommand passageAdd(Argument mapArgument) {
+			return new CommandAPICommand("add")
+					.withArguments(mapArgument,new StringArgument("name"),new StringArgument("roomA"),new StringArgument("roomB"))
+					.executes((sender,args)->{
+						Carte map = (Carte)args[0];
+						String name = (String)args[1];
+						String salleA = (String)args[2];
+						String salleB = (String)args[3];
+						if (map.getPassage(name)!=null){
+							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_passage_add_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", name)));
+						}else {
+							map.getPassageList().add(new Passage(name,salleA,salleB,new DetectionZone(0,0,0,0,0,0),new DetectionZone(0,0,0,0,0,0)));
+							Carte.save(map);
+							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_passage_add_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", name)));
+						}
+						map.unload();
+					});
+		}
+		
+		public static CommandAPICommand passageRemove(Argument mapArgument, Argument exitList) {
+			return new CommandAPICommand("remove")
+					.withArguments(mapArgument,exitList)
+					.executes((sender,args)->{
+						Carte map = (Carte)args[0];
+						Passage p = map.getPassage((String)args[1]);
+						if (p!=null){
+							map.getPassageList().remove(p);
+							Carte.save(map);
+							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_passage_remove_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", p.getName())));
+						}else {
+							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_passage_remove_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", (String)args[1])));
+						}
+						map.unload();
+					});
+		}
+		
+		public static CommandAPICommand passageRename(Argument mapArgument, Argument exitList) {
+			return new CommandAPICommand("rename")
+					.withArguments(mapArgument,exitList, new StringArgument("newName"))
+					.executes((sender,args)->{
+						Carte map = (Carte)args[0];
+						Passage p = map.getPassage((String)args[1]);
+						if (p!=null){
+							p.setName((String)args[2]);
+							Carte.save(map);
+							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_passage_rename_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", p.getName())));
+						}else {
+							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_passage_rename_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", (String)args[1])));
+						}
+						map.unload();
+					});
+		}
+		
+		public static CommandAPICommand passageSalleA(Argument mapArgument, Argument exitList) {
+			return new CommandAPICommand("setRoomA")
+					.withArguments(mapArgument,exitList, new StringArgument("roomA"))
+					.executes((sender,args)->{
+						Carte map = (Carte)args[0];
+						Passage p = map.getPassage((String)args[1]);
+						if (p!=null){
+							p.setSalleA((String)args[2]);
+							Carte.save(map);
+							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_passage_roomA_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", p.getName())));
+						}else {
+							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_passage_roomA_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", (String)args[1])));
+						}
+						map.unload();
+					});
+		}
+		
+		public static CommandAPICommand passageSalleB(Argument mapArgument, Argument exitList) {
+			return new CommandAPICommand("setRoomB")
+					.withArguments(mapArgument,exitList, new StringArgument("roomB"))
+					.executes((sender,args)->{
+						Carte map = (Carte)args[0];
+						Passage p = map.getPassage((String)args[1]);
+						if (p!=null){
+							p.setSalleB((String)args[2]);
+							Carte.save(map);
+							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_passage_roomB_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", p.getName())));
+						}else {
+							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_passage_roomB_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", (String)args[1])));
+						}
+						map.unload();
+					});
+		}
+		
+		public static CommandAPICommand passageSetZoneA(Argument mapArgument, Argument exitList) {
+			return new CommandAPICommand("setZoneA")
+					.withArguments(mapArgument,exitList,new LocationArgument("corner1"),new LocationArgument("corner2"))
+					.executes((sender,args)->{
+						Carte map = (Carte)args[0];
+						Passage p = map.getPassage((String)args[1]);
+						if (p!=null){
+							Location corner1 = (Location)args[2];
+							Location corner2 = (Location)args[3];
+							p.setZoneA(new DetectionZone(corner1.getX(),corner1.getY(),corner1.getZ(),corner2.getX(),corner2.getY(),corner2.getZ()));
+							Carte.save(map);
+							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_passage_setZoneA_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", p.getName())));
+						}else {
+							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_passage_setZoneA_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", (String)args[1])));
+						}
+						map.unload();
+					});
+		}
+		
+		public static CommandAPICommand passageSetZoneB(Argument mapArgument, Argument exitList) {
+			return new CommandAPICommand("setZoneB")
+					.withArguments(mapArgument,exitList,new LocationArgument("corner1"),new LocationArgument("corner2"))
+					.executes((sender,args)->{
+						Carte map = (Carte)args[0];
+						Passage p = map.getPassage((String)args[1]);
+						if (p!=null){
+							Location corner1 = (Location)args[2];
+							Location corner2 = (Location)args[3];
+							p.setZoneB(new DetectionZone(corner1.getX(),corner1.getY(),corner1.getZ(),corner2.getX(),corner2.getY(),corner2.getZ()));
+							Carte.save(map);
+							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_passage_setZoneB_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", p.getName())));
+						}else {
+							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_passage_setZoneB_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", (String)args[1])));
+						}
+						map.unload();
+					});
+		}
 }
