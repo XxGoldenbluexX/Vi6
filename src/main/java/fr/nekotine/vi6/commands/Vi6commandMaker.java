@@ -197,6 +197,24 @@ public class Vi6commandMaker {
 				});
 	}
 	
+	public static CommandAPICommand mapAddThiefSpawn(Argument mapArgument) {
+		return new CommandAPICommand("addThiefSpawn")
+				.withPermission("vi6.map.edit")
+				.withArguments(mapArgument,new StringArgument("name"))
+				.executesPlayer((player,args)->{
+					Carte map = (Carte)args[0];
+					String name = (String)args[1];
+					if (map.getThiefSpawn(name)!=null) {
+						player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_minimapSpawn_success"),new MessageFormater("§v", map.getName())));
+					}else {
+						map.getThiefSpawnList().put(name, player.getLocation());
+						Carte.save(map);
+						player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_minimapSpawn_success"),new MessageFormater("§v", map.getName())));
+					}
+					map.unload();
+				});
+	}
+	
 	//----ARTEFACT-----\/
 	
 	public static CommandAPICommand artefact(Argument mapArgument) {
@@ -224,9 +242,9 @@ public class Vi6commandMaker {
 					}else {
 						map.getArtefactList().add(new Artefact(name, name, new DetectionZone(0,0,0,0,0,0),Bukkit.createBlockData(Material.AIR),new Location(player.getWorld(),0,0,0)));
 						Carte.save(map);
-						map.unload();
 						player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_artefact_add_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", name)));
 					}
+					map.unload();
 				});
 	}
 	
@@ -239,11 +257,11 @@ public class Vi6commandMaker {
 					if (a!=null){
 						map.getArtefactList().remove(a);
 						Carte.save(map);
-						map.unload();
 						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_artefact_remove_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", a.getName())));
 					}else {
 						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_artefact_remove_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", (String)args[1])));
 					}
+					map.unload();
 				});
 	}
 	
@@ -256,11 +274,11 @@ public class Vi6commandMaker {
 					if (a!=null){
 						a.setName((String)args[2]);
 						Carte.save(map);
-						map.unload();
 						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_artefact_rename_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", a.getName())));
 					}else {
 						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_artefact_rename_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", (String)args[1])));
 					}
+					map.unload();
 				});
 	}
 	
@@ -273,11 +291,11 @@ public class Vi6commandMaker {
 					if (a!=null){
 						a.setDisplayName((String)args[2]);
 						Carte.save(map);
-						map.unload();
 						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_artefact_displayname_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", a.getName())));
 					}else {
 						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_artefact_displayname_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", (String)args[1])));
 					}
+					map.unload();
 				});
 	}
 	
@@ -292,11 +310,11 @@ public class Vi6commandMaker {
 						Location loc2 = (Location)args[3];
 						a.setZone(new DetectionZone(loc1.getX(), loc1.getY(), loc1.getZ(), loc2.getX(), loc2.getY(), loc2.getZ()));
 						Carte.save(map);
-						map.unload();
 						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_artefact_zone_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", a.getName())));
 					}else {
 						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_artefact_zone_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", (String)args[1])));
 					}
+					map.unload();
 				});
 	}
 	
@@ -311,11 +329,11 @@ public class Vi6commandMaker {
 						a.setBlockLoc(loc);
 						a.setBlockData(loc.getBlock().getBlockData());
 						Carte.save(map);
-						map.unload();
 						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_artefact_block_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", a.getName())));
 					}else {
 						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_artefact_block_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", (String)args[1])));
 					}
+					map.unload();
 				});
 	}
 	
@@ -330,8 +348,7 @@ public class Vi6commandMaker {
 				.withSubcommand(entranceAdd(mapArgument))
 				.withSubcommand(entranceRename(mapArgument, entranceList))
 				.withSubcommand(entranceDisplayRename(mapArgument, entranceList))
-				.withSubcommand(entranceRemoveZones(mapArgument, entranceList))
-				.withSubcommand(entranceAddZone(mapArgument, entranceList))
+				.withSubcommand(entranceSetZone(mapArgument, entranceList))
 				.withSubcommand(entranceRemove(mapArgument, entranceList));
 	}
 	
@@ -344,11 +361,11 @@ public class Vi6commandMaker {
 					if (map.getEntrance(name)!=null){
 						player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_entrance_add_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", name)));
 					}else {
-						map.getEntreeList().add(new Entree(name, name, new DetectionZone[] {}, new Location(player.getWorld(),0,0,0)));
+						map.getEntreeList().add(new Entree(name, name, new DetectionZone(0,0,0,0,0,0), new Location(player.getWorld(),0,0,0)));
 						Carte.save(map);
-						map.unload();
 						player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_entrance_add_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", name)));
 					}
+					map.unload();
 				});
 	}
 	
@@ -361,11 +378,11 @@ public class Vi6commandMaker {
 					if (e!=null){
 						map.getEntreeList().remove(e);
 						Carte.save(map);
-						map.unload();
 						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_entrance_remove_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", e.getName())));
 					}else {
 						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_entrance_remove_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", (String)args[1])));
 					}
+					map.unload();
 				});
 	}
 	
@@ -378,11 +395,11 @@ public class Vi6commandMaker {
 					if (e!=null){
 						e.setName((String)args[2]);
 						Carte.save(map);
-						map.unload();
 						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_entrance_rename_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", e.getName())));
 					}else {
 						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_entrance_rename_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", (String)args[1])));
 					}
+					map.unload();
 				});
 	}
 	
@@ -395,33 +412,16 @@ public class Vi6commandMaker {
 					if (e!=null){
 						e.setDisplayName((String)args[2]);
 						Carte.save(map);
-						map.unload();
 						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_entrance_displayname_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", e.getName())));
 					}else {
 						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_entrance_displayname_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", (String)args[1])));
 					}
+					map.unload();
 				});
 	}
 	
-	public static CommandAPICommand entranceRemoveZones(Argument mapArgument, Argument entranceList) {
-		return new CommandAPICommand("removeZones")
-				.withArguments(mapArgument,entranceList)
-				.executes((sender,args)->{
-					Carte map = (Carte)args[0];
-					Entree e = map.getEntrance((String)args[1]);
-					if (e!=null){
-						e.getZones().clear();;
-						Carte.save(map);
-						map.unload();
-						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_entrance_removezones_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", e.getName())));
-					}else {
-						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_entrance_removezones_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", (String)args[1])));
-					}
-				});
-	}
-	
-	public static CommandAPICommand entranceAddZone(Argument mapArgument, Argument entranceList) {
-		return new CommandAPICommand("addZone")
+	public static CommandAPICommand entranceSetZone(Argument mapArgument, Argument entranceList) {
+		return new CommandAPICommand("setZone")
 				.withArguments(mapArgument,entranceList, new LocationArgument("zone1Location"), new LocationArgument("zone2Location"))
 				.executes((sender,args)->{
 					Carte map = (Carte)args[0];
@@ -429,13 +429,13 @@ public class Vi6commandMaker {
 					if (e!=null){
 						Location loc1 = (Location)args[2];
 						Location loc2 = (Location)args[3];
-						e.addZone(new DetectionZone(loc1.getX(), loc1.getY(), loc1.getZ(), loc2.getX(), loc2.getY(), loc2.getZ()));
+						e.setZone(new DetectionZone(loc1.getX(), loc1.getY(), loc1.getZ(), loc2.getX(), loc2.getY(), loc2.getZ()));
 						Carte.save(map);
-						map.unload();
-						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_entrance_addzone_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", e.getName())));
+						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_entrance_setzone_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", e.getName())));
 					}else {
-						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_entrance_addzone_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", (String)args[1])));
+						sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_entrance_setzone_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", (String)args[1])));
 					}
+					map.unload();
 				});
 	}
 	
@@ -465,9 +465,9 @@ public class Vi6commandMaker {
 						}else {
 							map.getSortieList().add(new Sortie(name,name,new DetectionZone(0,0,0,0,0,0)));
 							Carte.save(map);
-							map.unload();
 							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_exit_add_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", name)));
 						}
+						map.unload();
 					});
 		}
 		
@@ -480,11 +480,11 @@ public class Vi6commandMaker {
 						if (s!=null){
 							map.getSortieList().remove(s);
 							Carte.save(map);
-							map.unload();
 							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_exit_remove_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", s.getName())));
 						}else {
 							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_exit_remove_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", (String)args[1])));
 						}
+						map.unload();
 					});
 		}
 		
@@ -497,11 +497,11 @@ public class Vi6commandMaker {
 						if (s!=null){
 							s.setName((String)args[2]);
 							Carte.save(map);
-							map.unload();
 							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_exit_rename_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", s.getName())));
 						}else {
 							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_exit_rename_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", (String)args[1])));
 						}
+						map.unload();
 					});
 		}
 		
@@ -514,11 +514,11 @@ public class Vi6commandMaker {
 						if (s!=null){
 							s.setDisplayName((String)args[2]);
 							Carte.save(map);
-							map.unload();
 							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_exit_displayname_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", s.getName())));
 						}else {
 							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_exit_displayname_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", (String)args[1])));
 						}
+						map.unload();
 					});
 		}
 		
@@ -533,11 +533,11 @@ public class Vi6commandMaker {
 							Location corner2 = (Location)args[3];
 							s.setZone(new DetectionZone(corner1.getX(),corner1.getY(),corner1.getZ(),corner2.getX(),corner2.getY(),corner2.getZ()));
 							Carte.save(map);
-							map.unload();
 							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_exit_setzone_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", s.getName())));
 						}else {
 							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_exit_setzone_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", (String)args[1])));
 						}
+						map.unload();
 					});
 		}
 	
