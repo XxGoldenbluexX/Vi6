@@ -19,7 +19,6 @@ import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.enums.GameState;
 import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.events.GameEndEvent;
-import fr.nekotine.vi6.events.GameTickEvent;
 import fr.nekotine.vi6.events.PlayerLeaveMapEvent;
 
 public abstract class Objet implements Listener{
@@ -55,10 +54,6 @@ public abstract class Objet implements Listener{
 			}
 			HandlerList.unregisterAll(this);
 		}
-	}
-	@EventHandler
-	public void onGameTick(GameTickEvent e) {
-		if(e.getGame().equals(game)) tick();
 	}
 	@EventHandler
 	public void onPlayerLeaveMap(PlayerLeaveMapEvent e) {
