@@ -21,6 +21,7 @@ import fr.nekotine.vi6.objet.Objet;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.utils.ObjetsSkinsTagType;
 import fr.nekotine.vi6.utils.Utils;
+import fr.nekotine.vi6.yml.DisplayTexts;
 
 public class PreparationInventory extends BasePersonalInventory{
 	private int page;
@@ -102,6 +103,12 @@ public class PreparationInventory extends BasePersonalInventory{
 		switch(itm.getType()) {
 		case REDSTONE_BLOCK:
 			if(slot==0) {
+				if(game.getWrapper(player).getTeam()==Team.VOLEUR&&game.getWrapper(player).getThiefSpawnPoint()==null) {
+					player.sendMessage(ChatColor.RED+DisplayTexts.getMessage("game_thieSpawnPoint_notSelected"));
+					
+					//ptit message le joueur n'a pas sélectionné de spawn :)
+					break;
+				}
 				game.setReady(player, true);
 				inventory.setItem(0, Utils.createItemStack(Material.EMERALD_BLOCK,1,ChatColor.GREEN+"Prêt",""));
 			}else {
