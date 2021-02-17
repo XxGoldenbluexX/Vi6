@@ -20,6 +20,7 @@ import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.map.Artefact;
 import fr.nekotine.vi6.map.Carte;
 import fr.nekotine.vi6.map.Entree;
+import fr.nekotine.vi6.map.Gateway;
 import fr.nekotine.vi6.map.Passage;
 import fr.nekotine.vi6.map.Sortie;
 import fr.nekotine.vi6.utils.DetectionZone;
@@ -128,6 +129,7 @@ public class Vi6commandMaker {
 				.withSubcommand(artefact(mapArgument))
 				.withSubcommand(entree(mapArgument))
 				.withSubcommand(sortie(mapArgument))
+				.withSubcommand(passage(mapArgument))
 				.executes(mapHelp);
 	}
 	
@@ -695,6 +697,27 @@ public class Vi6commandMaker {
 							Location corner1 = (Location)args[2];
 							Location corner2 = (Location)args[3];
 							p.setZoneB(new DetectionZone(corner1.getX(),corner1.getY(),corner1.getZ(),corner2.getX(),corner2.getY(),corner2.getZ()));
+							Carte.save(map);
+							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_passage_setZoneB_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", p.getName())));
+						}else {
+							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_passage_setZoneB_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", (String)args[1])));
+						}
+						map.unload();
+					});
+		}
+		
+		public static CommandAPICommand passageToGatewaySetZoneB(Argument mapArgument, Argument exitList) {
+			return new CommandAPICommand("setZoneB")
+					.withArguments(mapArgument,exitList,new LocationArgument("corner1"),new LocationArgument("corner2"))
+					.executes((sender,args)->{
+						Carte map = (Carte)args[0];
+						Passage p = map.getPassage((String)args[1]);
+						if (p!=null){
+							map.getPassageList().remove(p);
+							Location corner1 = (Location)args[2];
+							Location corner2 = (Location)args[3];
+							Gateway g = new Gateway(p.getName(),p.getSalleA(),p.getSalleB(),p.getZoneA(),p.getZoneB(),corner1,corner2);
+							map.getPassageList().add(g);
 							Carte.save(map);
 							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_passage_setZoneB_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", p.getName())));
 						}else {
