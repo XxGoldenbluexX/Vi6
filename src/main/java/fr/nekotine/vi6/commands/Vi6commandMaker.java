@@ -23,6 +23,7 @@ import fr.nekotine.vi6.map.Entree;
 import fr.nekotine.vi6.map.Gateway;
 import fr.nekotine.vi6.map.Passage;
 import fr.nekotine.vi6.map.Sortie;
+import fr.nekotine.vi6.map.SpawnVoleur;
 import fr.nekotine.vi6.utils.DetectionZone;
 import fr.nekotine.vi6.utils.MessageFormater;
 import fr.nekotine.vi6.yml.DisplayTexts;
@@ -205,16 +206,17 @@ public class Vi6commandMaker {
 	public static CommandAPICommand mapAddThiefSpawn(Argument mapArgument) {
 		return new CommandAPICommand("addThiefSpawn")
 				.withPermission("vi6.map.edit")
-				.withArguments(mapArgument,new StringArgument("name").overrideSuggestions((sender, args) -> {
-					return ((Carte)args[0]).getThiefSpawnList().keySet().toArray(String[]::new);
-				}))
+				.withArguments(mapArgument,new StringArgument("name"),new StringArgument("name"),new LocationArgument("minimapLoc"),new LocationArgument("spawnLoc"))
 				.executesPlayer((player,args)->{
 					Carte map = (Carte)args[0];
 					String name = (String)args[1];
 					if (map.getThiefSpawn(name)!=null) {
 						player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_addThiefSpawn_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", name)));
 					}else {
-						map.getThiefSpawnList().put(name, player.getLocation());
+						String dname = (String)args[2];
+						Location minmap = (Location)args[3];
+						Location spwn = (Location)args[4];
+						map.getThiefSpawnsList().add(new SpawnVoleur(name,dname,minmap,spwn));
 						Carte.save(map);
 						player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_addThiefSpawn_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", name)));
 					}
@@ -225,16 +227,18 @@ public class Vi6commandMaker {
 	public static CommandAPICommand mapRemoveThiefSpawn(Argument mapArgument) {
 		return new CommandAPICommand("addThiefSpawn")
 				.withPermission("vi6.map.edit")
-				.withArguments(mapArgument,new StringArgument("name"))
+				.withArguments(mapArgument,new StringArgument("name").overrideSuggestions((sender, args) -> {
+					return ((Carte)args[0]).getThiefSpawnsList().stream().map(SpawnVoleur::getName).toArray(String[]::new);
+				}))
 				.executesPlayer((player,args)->{
 					Carte map = (Carte)args[0];
-					String name = (String)args[1];
-					if (map.getThiefSpawn(name)==null) {
-						player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_removeThiefSpawn_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", name)));
+					SpawnVoleur ts = map.getThiefSpawn((String)args[1]);
+					if (ts==null) {
+						player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_removeThiefSpawn_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", (String)args[1])));
 					}else {
-						map.getThiefSpawnList().remove(name);
+						map.getThiefSpawnsList().remove(ts);
 						Carte.save(map);
-						player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_removeThiefSpawn_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", name)));
+						player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_removeThiefSpawn_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", ts.getName())));
 					}
 					map.unload();
 				});
@@ -741,8 +745,6 @@ public class Vi6commandMaker {
 						Gateway g = map.getGateway((String)args[1]);
 						if (g!=null){
 							map.getPassageList().remove(g);
-							Location corner1 = (Location)args[2];
-							Location corner2 = (Location)args[3];
 							Passage p = new Passage(g.getName(),g.getSalleA(),g.getSalleB(),g.getZoneA(),g.getZoneB());
 							map.getPassageList().add(g);
 							Carte.save(map);

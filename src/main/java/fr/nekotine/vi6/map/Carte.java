@@ -127,7 +127,7 @@ public class Carte implements ConfigurationSerializable {
 		return null;
 	}
 	
-	public SpawnVoleur getThiefSpawns(String name) {
+	public SpawnVoleur getThiefSpawn(String name) {
 		for (SpawnVoleur sv : thiefSpawns) {
 			if (sv.getName().equals(name)) return sv;
 		}
