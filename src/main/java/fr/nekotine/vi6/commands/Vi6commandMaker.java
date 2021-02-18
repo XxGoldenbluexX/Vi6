@@ -131,6 +131,8 @@ public class Vi6commandMaker {
 				.withSubcommand(entree(mapArgument))
 				.withSubcommand(sortie(mapArgument))
 				.withSubcommand(passage(mapArgument))
+				.withSubcommand(mapAddThiefSpawn(mapArgument))
+				.withSubcommand(mapRemoveThiefSpawn(mapArgument))
 				.executes(mapHelp);
 	}
 	
