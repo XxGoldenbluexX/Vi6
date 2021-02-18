@@ -718,7 +718,7 @@ public class Vi6commandMaker {
 		
 		public static CommandAPICommand passageToGateway(Argument mapArgument, Argument exitList) {
 			return new CommandAPICommand("passageToGateway")
-					.withArguments(mapArgument,exitList,new LocationArgument("corner1"),new LocationArgument("corner2"))
+					.withArguments(mapArgument,exitList,new LocationArgument("corner1", LocationType.BLOCK_POSITION),new LocationArgument("corner2", LocationType.BLOCK_POSITION))
 					.executes((sender,args)->{
 						Carte map = (Carte)args[0];
 						Passage p = map.getPassage((String)args[1]);
