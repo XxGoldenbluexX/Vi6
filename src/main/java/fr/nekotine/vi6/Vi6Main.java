@@ -19,6 +19,7 @@ import fr.nekotine.vi6.map.Entree;
 import fr.nekotine.vi6.map.Gateway;
 import fr.nekotine.vi6.map.Passage;
 import fr.nekotine.vi6.map.Sortie;
+import fr.nekotine.vi6.map.SpawnVoleur;
 import fr.nekotine.vi6.sql.SQLInterface;
 import fr.nekotine.vi6.utils.DetectionZone;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
@@ -55,7 +56,7 @@ public class Vi6Main extends JavaPlugin {
 		ConfigurationSerialization.registerClass(Artefact.class, "Artefact");
 		ConfigurationSerialization.registerClass(Carte.class, "Carte");
 		ConfigurationSerialization.registerClass(DetectionZone.class, "DetectionZone");
-		ConfigurationSerialization.registerClass(Entree.class, "SpawnVoleur");
+		ConfigurationSerialization.registerClass(SpawnVoleur.class, "SpawnVoleur");
 		pmanager=Bukkit.getPluginManager();//getting pmanager reference
 		//File creation
 		saveDefaultConfig();//making config.yml
