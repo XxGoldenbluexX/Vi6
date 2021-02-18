@@ -227,7 +227,7 @@ public class Vi6commandMaker {
 	}
 	
 	public static CommandAPICommand mapRemoveThiefSpawn(Argument mapArgument) {
-		return new CommandAPICommand("addThiefSpawn")
+		return new CommandAPICommand("removeThiefSpawn")
 				.withPermission("vi6.map.edit")
 				.withArguments(mapArgument,new StringArgument("name").overrideSuggestions((sender, args) -> {
 					return ((Carte)args[0]).getThiefSpawnsList().stream().map(SpawnVoleur::getName).toArray(String[]::new);
@@ -332,7 +332,7 @@ public class Vi6commandMaker {
 	
 	public static CommandAPICommand artefactSetZone(Argument mapArgument, Argument artefactList) {
 		return new CommandAPICommand("setZone")
-				.withArguments(mapArgument,artefactList,new LocationArgument("zone1Location"),new LocationArgument("zone2Location"))
+				.withArguments(mapArgument,artefactList,new LocationArgument("zone1Location",LocationType.BLOCK_POSITION),new LocationArgument("zone2Location",LocationType.BLOCK_POSITION))
 				.executes((sender,args)->{
 					Carte map = (Carte)args[0];
 					Artefact a = map.getArtefact((String)args[1]);
