@@ -9,6 +9,7 @@ import java.util.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
@@ -45,6 +46,7 @@ public class Carte implements ConfigurationSerializable {
 		for (Passage p : passages) {p.enable(main);}
 		for (Artefact a : artefacts) {a.enable(main);}
 		for (SpawnVoleur sv : thiefSpawns) {sv.enable(main);}
+		for (Gateway g : gateways) {g.close(Material.BRICKS);}
 	}
 	
 	public void start() {
