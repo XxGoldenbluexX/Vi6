@@ -15,6 +15,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.NamespacedKey;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
@@ -25,6 +26,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -240,6 +243,8 @@ public class Game implements Listener{
 			PlayerWrapper wrapper = playerAndWrapper.getValue();
 			player.getInventory().clear();
 			player.setGameMode(GameMode.ADVENTURE);
+			player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+			player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, Integer.MAX_VALUE, 0, false, false, false));
 			wrapper.setReady(false);
 			wrapper.setMoney(money);
 			wrapper.clearStatusEffects();
@@ -273,6 +278,7 @@ public class Game implements Listener{
 		bb.removeAll();
 		ticker.cancel();
 		startTime = LocalTime.now().toString();
+		scoreboardSidebar.setDisplaySlot(null);
 		for(Entry<Player, PlayerWrapper> playerAndWrapper : playerList.entrySet()) {
 			Player player = playerAndWrapper.getKey();
 			PlayerWrapper wrapper = playerAndWrapper.getValue();
@@ -299,6 +305,7 @@ public class Game implements Listener{
 	
 	public boolean endGame() {
 		if (state==GameState.Waiting) return false;
+		scoreboardSidebar.setDisplaySlot(DisplaySlot.SIDEBAR);
 		ticker.cancel();
 		state=GameState.Waiting;
 		return false;
