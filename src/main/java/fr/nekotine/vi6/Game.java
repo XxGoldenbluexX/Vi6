@@ -242,7 +242,7 @@ public class Game implements Listener{
 			if (wrapper.getTeam()==Team.GARDE) {
 				player.teleport(map.getGuardSpawn());
 			}else {
-				player.teleport(map.getGuardSpawn());
+				player.teleport(map.getMinimapSpawn());
 			}
 			Bukkit.getPluginManager().registerEvents(new PlayerGame(name, playerAndWrapper.getKey().getUniqueId(), idPartie, playerAndWrapper.getValue().getTeam()), main);
 		}
