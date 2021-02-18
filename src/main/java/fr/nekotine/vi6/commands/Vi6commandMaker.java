@@ -200,6 +200,8 @@ public class Vi6commandMaker {
 				});
 	}
 	
+	//----THIEFSPAWN-----\/
+	
 	public static CommandAPICommand mapAddThiefSpawn(Argument mapArgument) {
 		return new CommandAPICommand("addThiefSpawn")
 				.withPermission("vi6.map.edit")
@@ -578,7 +580,9 @@ public class Vi6commandMaker {
 					.withSubcommand(passageSalleA(mapArgument,passageList))
 					.withSubcommand(passageSalleB(mapArgument,passageList))
 					.withSubcommand(passageSetZoneA(mapArgument,passageList))
-					.withSubcommand(passageSetZoneB(mapArgument,passageList));
+					.withSubcommand(passageSetZoneB(mapArgument,passageList))
+					.withSubcommand(passageToGateway(mapArgument,passageList))
+					.withSubcommand(gatewayToPassage(mapArgument));
 		}
 		
 		public static CommandAPICommand passageAdd(Argument mapArgument) {
@@ -706,8 +710,8 @@ public class Vi6commandMaker {
 					});
 		}
 		
-		public static CommandAPICommand passageToGatewaySetZoneB(Argument mapArgument, Argument exitList) {
-			return new CommandAPICommand("setZoneB")
+		public static CommandAPICommand passageToGateway(Argument mapArgument, Argument exitList) {
+			return new CommandAPICommand("passageToGateway")
 					.withArguments(mapArgument,exitList,new LocationArgument("corner1"),new LocationArgument("corner2"))
 					.executes((sender,args)->{
 						Carte map = (Carte)args[0];
@@ -719,9 +723,32 @@ public class Vi6commandMaker {
 							Gateway g = new Gateway(p.getName(),p.getSalleA(),p.getSalleB(),p.getZoneA(),p.getZoneB(),corner1,corner2);
 							map.getPassageList().add(g);
 							Carte.save(map);
-							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_passage_setZoneB_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", p.getName())));
+							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_passage_toGateway_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", p.getName())));
 						}else {
-							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_passage_setZoneB_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", (String)args[1])));
+							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_passage_toGateway_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", (String)args[1])));
+						}
+						map.unload();
+					});
+		}
+		
+		public static CommandAPICommand gatewayToPassage(Argument mapArgument) {
+			return new CommandAPICommand("gatewayToPassage")
+					.withArguments(mapArgument,new StringArgument("gatewayList").overrideSuggestions((sender, args) -> {
+						return ((Carte)args[0]).getGatewayList().stream().map(Gateway::getName).toArray(String[]::new);
+					}))
+					.executes((sender,args)->{
+						Carte map = (Carte)args[0];
+						Gateway g = map.getGateway((String)args[1]);
+						if (g!=null){
+							map.getPassageList().remove(g);
+							Location corner1 = (Location)args[2];
+							Location corner2 = (Location)args[3];
+							Passage p = new Passage(g.getName(),g.getSalleA(),g.getSalleB(),g.getZoneA(),g.getZoneB());
+							map.getPassageList().add(g);
+							Carte.save(map);
+							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_passage_toPassage_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", p.getName())));
+						}else {
+							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_passage_toPassage_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", (String)args[1])));
 						}
 						map.unload();
 					});

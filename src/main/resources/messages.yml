@@ -103,23 +103,31 @@ map_passage_add_success: "§aLe passage §p a bien été ajouté a la carte §v.
 map_passage_remove_exist: "§cAucun passage du nom de §p existe dans la carte §v."
 #§v = map's name §p = passage's name
 map_passage_remove_success: "§aLe passage §p a bien été retiré a la carte §v."
-#§v = map's name §p = exit's name
+#§v = map's name §p = passage's name
 map_passage_rename_success: "§aLe passage §p de la carte §v a bien été renomé."
-#§v = map's name §p = exit's name
+#§v = map's name §p = passage's name
 map_passage_rename_exist: "§cAucun passage du nom de §p existe dans la carte §v."
-#§v = map's name §p = exit's name
+#§v = map's name §p = passage's name
 map_passage_roomA_success: "§aLa salle A du passage §p de la carte §v a bien été définit."
-#§v = map's name §p = exit's name
+#§v = map's name §p = passage's name
 map_passage_roomA_exist: "§cAucun passage du nom de §p existe dans la carte §v."
-#§v = map's name §p = exit's name
+#§v = map's name §p = passage's name
 map_passage_roomB_success: "§aLa salle B du passage §p de la carte §v a bien été définit."
-#§v = map's name §p = exit's name
+#§v = map's name §p = passage's name
 map_passage_roomB_exist: "§cAucun passage du nom de §p existe dans la carte §v."
-#§v = map's name §p = exit's name
+#§v = map's name §p = passage's name
 map_passage_setZoneA_success: "§aLa zone A du passage §p de la carte §v a bien été définit."
-#§v = map's name §p = exit's name
+#§v = map's name §p = passage's name
 map_passage_setZoneA_exist: "§cAucun passage du nom de §p existe dans la carte §v."
-#§v = map's name §p = exit's name
+#§v = map's name §p = passage's name
 map_passage_setZoneB_success: "§aLa zone B du passage §p de la carte §v a bien été définit."
-#§v = map's name §p = exit's name
+#§v = map's name §p = passage's name
 map_passage_setZoneB_exist: "§cAucun passage du nom de §p existe dans la carte §v."
+#§v = map's name §p = passage's name
+map_passage_toGateway_success: "§aLe passage §p de la carte §v est devenue un cadre de porte."
+#§v = map's name §p = passage's name
+map_passage_toGateway_exist: "§cAucun passage du nom de §p existe dans la carte §v."
+#§v = map's name §p = passage's name
+map_passage_toPassage_success: "§aLe cadre de porte §p de la carte §v est devenue un passage."
+#§v = map's name §p = passage's name
+map_passage_toPassage_exist: "§cAucun passage du nom de §p existe dans la carte §v."
