@@ -7,13 +7,15 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
-import org.bukkit.entity.Entity;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerInteractAtEntityEvent;
+import org.bukkit.event.server.PluginDisableEvent;
 
+import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.utils.MessageFormater;
@@ -28,7 +30,7 @@ public class SpawnVoleur implements ConfigurationSerializable,Listener{
 	private Location minimapLocation;
 	
 	private Vi6Main mainref;
-	private Entity armorStand;
+	private ArmorStand armorStand;
 	public SpawnVoleur(String name, String displayName, Location mapLocation, Location minimapLocation) {
 		this.setName(name);
 		this.setDisplayName(displayName);
@@ -75,21 +77,29 @@ public class SpawnVoleur implements ConfigurationSerializable,Listener{
 		return yamlPrefix;
 	}
 	public void destroy() {
-		armorStand.remove();
+		if(armorStand!=null) {
+			armorStand.remove();
+		}
 		HandlerList.unregisterAll(this);
 	}
 	public void enable(Vi6Main mainref) {
 		this.mainref=mainref;
-		armorStand = minimapLocation.getWorld().spawnEntity(minimapLocation, EntityType.ARMOR_STAND);
+		armorStand = (ArmorStand)minimapLocation.getWorld().spawnEntity(minimapLocation, EntityType.ARMOR_STAND);
+		armorStand.setVisible(false);
 		armorStand.setInvulnerable(true);
-		armorStand.setFireTicks(-1);
+		armorStand.setGravity(false);
+		armorStand.setFireTicks(Game.getDefaultPreparationSeconds()*20);
 		Bukkit.getPluginManager().registerEvents(this, mainref);
 	}
 	@EventHandler
-	public void playerHitEntity(PlayerInteractEntityEvent e) {
+	public void playerHitEntity(PlayerInteractAtEntityEvent e) {
 		if(armorStand.equals(e.getRightClicked()) && mainref.getPlayerWrapper(e.getPlayer()).getTeam()==Team.VOLEUR) {
 			mainref.getPlayerWrapper(e.getPlayer()).setThiefSpawnPoint(mapLocation);
 			e.getPlayer().sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_thiefSpawnPoint_selected"),new MessageFormater("§e", displayName)));
 		}
+	}
+	@EventHandler
+	public void onDisable(PluginDisableEvent e) {
+		if(e.getPlugin().getClass()==mainref.getClass()&&armorStand!=null) armorStand.remove();
 	}
 }

@@ -182,6 +182,10 @@ public class Game implements Listener{
 		return DEFAULT_RANKED_MONEY;
 	}
 	
+	public static int getDefaultPreparationSeconds() {
+		return DEFAULT_PREPARATION_SECONDS;
+	}
+	
 	public void setMoney(int money) {
 		this.money=money;
 		Bukkit.getPluginManager().callEvent(new MoneyChangedEvent(this,money));
@@ -272,6 +276,9 @@ public class Game implements Listener{
 		for(Entry<Player, PlayerWrapper> playerAndWrapper : playerList.entrySet()) {
 			Player player = playerAndWrapper.getKey();
 			PlayerWrapper wrapper = playerAndWrapper.getValue();
+			if(wrapper.getThiefSpawnPoint()==null){
+				wrapper.setThiefSpawnPoint(map.getThiefSpawnsList().get(0).getMapLocation());
+			}
 			player.teleport(wrapper.getThiefSpawnPoint());
 		};
 		state=GameState.Ingame;

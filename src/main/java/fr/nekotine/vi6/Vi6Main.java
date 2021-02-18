@@ -55,6 +55,7 @@ public class Vi6Main extends JavaPlugin {
 		ConfigurationSerialization.registerClass(Artefact.class, "Artefact");
 		ConfigurationSerialization.registerClass(Carte.class, "Carte");
 		ConfigurationSerialization.registerClass(DetectionZone.class, "DetectionZone");
+		ConfigurationSerialization.registerClass(Entree.class, "SpawnVoleur");
 		pmanager=Bukkit.getPluginManager();//getting pmanager reference
 		//File creation
 		saveDefaultConfig();//making config.yml
@@ -73,6 +74,10 @@ public class Vi6Main extends JavaPlugin {
 		Vi6commandMaker.makevi6(this).register();//registering commands
 	}
 	
+	@Override
+	public void onDisable() {
+		super.onDisable();
+	}
 	
 	/**
 	 * Give the game of the name given
