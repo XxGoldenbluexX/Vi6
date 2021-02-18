@@ -274,6 +274,7 @@ public class Game implements Listener{
 		bb.removeAll();
 		ticker.cancel();
 		startTime = LocalTime.now().toString();
+		scoreboardSidebar.setDisplaySlot(null);
 		for(Entry<Player, PlayerWrapper> playerAndWrapper : playerList.entrySet()) {
 			Player player = playerAndWrapper.getKey();
 			PlayerWrapper wrapper = playerAndWrapper.getValue();
@@ -297,6 +298,7 @@ public class Game implements Listener{
 	
 	public boolean endGame() {
 		if (state==GameState.Waiting) return false;
+		scoreboardSidebar.setDisplaySlot(DisplaySlot.SIDEBAR);
 		ticker.cancel();
 		state=GameState.Waiting;
 		return false;
