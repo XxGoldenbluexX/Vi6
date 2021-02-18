@@ -13,6 +13,7 @@ import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.NamespacedKey;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -234,6 +235,7 @@ public class Game implements Listener{
 			Player player = playerAndWrapper.getKey();
 			PlayerWrapper wrapper = playerAndWrapper.getValue();
 			player.getInventory().clear();
+			player.setGameMode(GameMode.ADVENTURE);
 			wrapper.setReady(false);
 			wrapper.setMoney(money);
 			wrapper.clearStatusEffects();
