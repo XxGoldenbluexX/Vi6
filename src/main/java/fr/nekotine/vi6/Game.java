@@ -371,4 +371,12 @@ public class Game implements Listener{
 	public void onDisconnect(PlayerQuitEvent e) {
 		removePlayer(e.getPlayer());
 	}
+	public void onDisable() {
+		if(map!=null) {
+			map.unload();
+		}
+		for(Objet obj : objetsList) {
+			obj.gameEnd();
+		}
+	}
 }

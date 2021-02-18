@@ -77,7 +77,9 @@ public class Vi6Main extends JavaPlugin {
 	
 	@Override
 	public void onDisable() {
-		super.onDisable();
+		for(Game game : gameList) {
+			game.onDisable();
+		}
 	}
 	
 	/**

@@ -13,7 +13,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
-import org.bukkit.event.server.PluginDisableEvent;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
@@ -97,9 +96,5 @@ public class SpawnVoleur implements ConfigurationSerializable,Listener{
 			mainref.getPlayerWrapper(e.getPlayer()).setThiefSpawnPoint(mapLocation);
 			e.getPlayer().sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_thiefSpawnPoint_selected"),new MessageFormater("§e", displayName)));
 		}
-	}
-	@EventHandler
-	public void onDisable(PluginDisableEvent e) {
-		if(e.getPlugin().getClass()==mainref.getClass()&&armorStand!=null) armorStand.remove();
 	}
 }

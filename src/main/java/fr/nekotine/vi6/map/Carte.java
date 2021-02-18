@@ -296,4 +296,5 @@ public class Carte implements ConfigurationSerializable {
 	public void setMinimapSpawn(Location minimapSpawn) {
 		this.minimapSpawn = minimapSpawn;
 	}
+	
 }
