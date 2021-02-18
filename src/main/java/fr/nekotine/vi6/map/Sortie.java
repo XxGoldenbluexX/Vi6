@@ -21,7 +21,7 @@ public class Sortie implements ConfigurationSerializable,ZoneDetectionListener {
 	private DetectionZone zone;
 	
 	public Sortie(String name,String displayName, DetectionZone z) {
-		this.displayName=name;
+		this.name=name;
 		this.displayName=displayName;
 		setZone(z);
 	}
