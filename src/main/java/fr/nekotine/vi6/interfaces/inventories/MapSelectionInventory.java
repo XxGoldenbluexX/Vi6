@@ -31,7 +31,7 @@ public class MapSelectionInventory extends BaseSharedInventory{
 		inventory.setItem(19, Utils.createItemStack(Material.BLACK_STAINED_GLASS_PANE,1," ",""));
 		inventory.setItem(0, Utils.createItemStack(Material.BARRIER,1,ChatColor.RED+"Retour",""));
 		byte index=1;
-		game.setMapName(Carte.getMapList().get(0));
+		if(Carte.getMapList().size()>0) game.setMapName(Carte.getMapList().get(0));
 		for(String map : Carte.getMapList()) {
 			index++;
 			if(index%9==0) {
