@@ -254,6 +254,9 @@ public class Game implements Listener{
 				player.teleport(map.getGuardSpawn());
 			}else {
 				player.teleport(map.getMinimapSpawn());
+				for(Entry<Player, PlayerWrapper> p : playerList.entrySet()) {
+					if(wrapper.getTeam()==Team.GARDE) p.getKey().hidePlayer(main, player);
+				}
 			}
 			Bukkit.getPluginManager().registerEvents(new PlayerGame(name, playerAndWrapper.getKey().getUniqueId(), idPartie, playerAndWrapper.getValue().getTeam()), main);
 		}
@@ -287,9 +290,6 @@ public class Game implements Listener{
 			if(wrapper.getTeam()==Team.VOLEUR){
 				wrapper.setState(PlayerState.ENTERING);
 				if(wrapper.getThiefSpawnPoint()==null) wrapper.setThiefSpawnPoint(map.getThiefSpawnsList().get(0).getMapLocation());
-				for(Entry<Player, PlayerWrapper> p : playerList.entrySet()) {
-					if(wrapper.getTeam()==Team.GARDE) player.hidePlayer(main, p.getKey());
-				}
 				player.teleport(wrapper.getThiefSpawnPoint());
 			}else {
 				wrapper.setState(PlayerState.INSIDE);
