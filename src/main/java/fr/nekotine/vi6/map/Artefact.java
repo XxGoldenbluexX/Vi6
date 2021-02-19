@@ -65,6 +65,7 @@ public class Artefact implements ConfigurationSerializable,ZoneDetectionListener
 	
 	public void enable(Vi6Main mainref) {
 		zone.enable(mainref);
+		zone.addListener(this);
 		maxCaptureLevel=mainref.getConfig().getInt("captureTime",200);
 		this.mainref = mainref;
 	}

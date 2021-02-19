@@ -66,6 +66,7 @@ public class Sortie implements ConfigurationSerializable,ZoneDetectionListener {
 	
 	public void enable(Vi6Main mainref) {
 		zone.enable(mainref);
+		zone.addListener(this);
 	}
 
 	@Override

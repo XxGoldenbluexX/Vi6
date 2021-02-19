@@ -12,6 +12,7 @@ import org.bukkit.event.Listener;
 
 import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.events.GameEndEvent;
+import fr.nekotine.vi6.events.PlayerEnterMapEvent;
 import fr.nekotine.vi6.events.PlayerStealEvent;
 import fr.nekotine.vi6.events.PlayerUseObjetEvent;
 
@@ -72,6 +73,12 @@ public class PlayerGame implements Listener{
 			} catch (ParseException e1) {
 				e1.printStackTrace();
 			}
+		}
+	}
+	@EventHandler
+	public void playerEnterMap(PlayerEnterMapEvent e) {
+		if(e.getPlayer().getUniqueId()==playerUUID) {
+			entree=e.getEntreeName();
 		}
 	}
 }

@@ -13,7 +13,6 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.util.Vector;
 
 import fr.nekotine.vi6.Vi6Main;
 
@@ -83,6 +82,7 @@ public class DetectionZone implements ConfigurationSerializable,Listener {
 		Player p = evt.getPlayer();
 		if (isLocInside(evt.getTo()) && !playersInside.contains(p)) {
 			playersInside.add(p);
+			p.sendMessage("Enter zone");
 			for (ZoneDetectionListener l : listeners) {
 				if (l.playerEnterZone(p,this,mainref)) {
 					evt.setCancelled(true);
@@ -91,6 +91,7 @@ public class DetectionZone implements ConfigurationSerializable,Listener {
 			}
 		}
 		if (!isLocInside(evt.getTo()) && playersInside.contains(p)) {
+			p.sendMessage("Leave zone");
 			playersInside.remove(p);
 			for (ZoneDetectionListener l : listeners) {
 				if (l.playerLeaveZone(p,this,mainref)) {
@@ -130,12 +131,8 @@ public class DetectionZone implements ConfigurationSerializable,Listener {
 		return x1;
 	}
 	
-	public Vector[] getCoordinates() {
-		return new Vector[] {new Vector(x1, y1, z2), new Vector(x2, y2, z2)};
-	}
-	
 	public boolean isPosInside(double x, double y, double z) {
-		return ( (x>=x1 && x<=x2) && (y>=y1 && y<=y2) && (z>=z1 && z<=z2) );
+		return ( (x>=x1 && x<=x2+1) && (y>=y1 && y<=y2) && (z>=z1 && z<=z2+1) );
 	}
 	
 	public boolean isLocInside(Location loc) {

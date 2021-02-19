@@ -109,7 +109,9 @@ public class Passage implements ConfigurationSerializable, ZoneDetectionListener
 	
 	public void enable(Vi6Main mainref) {
 		zoneA.enable(mainref);
+		zoneA.addListener(this);
 		zoneB.enable(mainref);
+		zoneB.addListener(this);
 	}
 	
 	public static final String getYamlPrefix() {
