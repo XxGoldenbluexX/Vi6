@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Scoreboard;
 
+import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.enums.PlayerState;
 import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.map.Artefact;
@@ -32,9 +33,10 @@ public class PlayerWrapper {
 	private final ArrayList<StatusEffect> statusEffects = new ArrayList<StatusEffect>();
 	private final ArrayList<Artefact> stealedObjects = new ArrayList<>();
 	private Location thiefSpawnPoint;
-	
+	private final Game game;
 	private ArrayList<ObjetsSkins> selectedSkins = new ArrayList<>();
-	public PlayerWrapper(Player player) {
+	public PlayerWrapper(Game game, Player player) {
+		this.game=game;
 		this.player = player;
 		updateScoreboard();
 	}
@@ -164,6 +166,10 @@ public class PlayerWrapper {
 
 	public void setThiefSpawnPoint(Location thiefSpawnPoint) {
 		this.thiefSpawnPoint = thiefSpawnPoint;
+	}
+
+	public Game getGame() {
+		return game;
 	}
 	
 }

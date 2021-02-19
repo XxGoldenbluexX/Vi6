@@ -392,7 +392,7 @@ public class Vi6commandMaker {
 					if (map.getEntrance(name)!=null){
 						player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_entrance_add_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", name)));
 					}else {
-						map.getEntreeList().add(new Entree(name, name, new DetectionZone(0,0,0,0,0,0), new Location(player.getWorld(),0,0,0)));
+						map.getEntreeList().add(new Entree(name, name, new DetectionZone(0,0,0,0,0,0)));
 						Carte.save(map);
 						player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_entrance_add_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", name)));
 					}
@@ -453,7 +453,7 @@ public class Vi6commandMaker {
 	
 	public static CommandAPICommand entranceSetZone(Argument mapArgument, Argument entranceList) {
 		return new CommandAPICommand("setZone")
-				.withArguments(mapArgument,entranceList, new LocationArgument("zone1Location"), new LocationArgument("zone2Location"))
+				.withArguments(mapArgument,entranceList, new LocationArgument("zone1Location",LocationType.PRECISE_POSITION), new LocationArgument("zone2Location",LocationType.PRECISE_POSITION))
 				.executes((sender,args)->{
 					Carte map = (Carte)args[0];
 					Entree e = map.getEntrance((String)args[1]);

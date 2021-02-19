@@ -35,6 +35,7 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 
 import fr.nekotine.vi6.enums.GameState;
+import fr.nekotine.vi6.enums.PlayerState;
 import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.events.GameEndEvent;
 import fr.nekotine.vi6.events.GameEnterInGamePhaseEvent;
@@ -247,8 +248,7 @@ public class Game implements Listener{
 			player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, Integer.MAX_VALUE, 0, false, false, false));
 			wrapper.setReady(false);
 			wrapper.setMoney(money);
-			wrapper.clearStatusEffects();
-			wrapper.getStealedArtefactList().clear();
+			wrapper.setState(PlayerState.PREPARATION);
 			bb.addPlayer(playerAndWrapper.getKey());
 			if (wrapper.getTeam()==Team.GARDE) {
 				player.teleport(map.getGuardSpawn());
@@ -282,10 +282,18 @@ public class Game implements Listener{
 		for(Entry<Player, PlayerWrapper> playerAndWrapper : playerList.entrySet()) {
 			Player player = playerAndWrapper.getKey();
 			PlayerWrapper wrapper = playerAndWrapper.getValue();
-			if(wrapper.getThiefSpawnPoint()==null){
-				wrapper.setThiefSpawnPoint(map.getThiefSpawnsList().get(0).getMapLocation());
+			wrapper.clearStatusEffects();
+			wrapper.getStealedArtefactList().clear();
+			if(wrapper.getTeam()==Team.VOLEUR){
+				wrapper.setState(PlayerState.ENTERING);
+				if(wrapper.getThiefSpawnPoint()==null) wrapper.setThiefSpawnPoint(map.getThiefSpawnsList().get(0).getMapLocation());
+				for(Entry<Player, PlayerWrapper> p : playerList.entrySet()) {
+					if(wrapper.getTeam()==Team.GARDE) player.hidePlayer(main, p.getKey());
+				}
+				player.teleport(wrapper.getThiefSpawnPoint());
+			}else {
+				wrapper.setState(PlayerState.INSIDE);
 			}
-			player.teleport(wrapper.getThiefSpawnPoint());
 		};
 		state=GameState.Ingame;
 		ticker = new BukkitRunnable() {
@@ -312,9 +320,10 @@ public class Game implements Listener{
 	}
 	
 	public boolean addPlayer(Player p) {
-		if (state==GameState.Waiting && !playerList.keySet().contains(p)) {
+		if (main.getPlayerWrapper(p)==null && state==GameState.Waiting && !playerList.keySet().contains(p)) {
 			p.setScoreboard(scoreboard);
-			playerList.put(p, new PlayerWrapper(p));
+			playerList.put(p, new PlayerWrapper(this, p));
+			playerList.get(p).setState(PlayerState.WAITING);
 			for (Player pl : playerList.keySet()) {
 				pl.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_join"),new MessageFormater("§p",p.getName())));
 			}

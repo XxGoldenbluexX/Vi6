@@ -135,7 +135,6 @@ public class Vi6Main extends JavaPlugin {
 		for (Game g : gameList) {
 			Map<Player,PlayerWrapper> map = g.getPlayerMap();
 			if (map.containsKey(p)) return map.get(p);
-			getPlayerWrapper(p);
 		}
 		return null;
 	}
