@@ -1,2 +1,4 @@
 #capture time in tick
 captureTime: 200
+#scan delay in tick
+scanDelay: 600

@@ -14,6 +14,8 @@ import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.boss.BarColor;
@@ -34,6 +36,8 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 
+import com.comphenix.protocol.wrappers.WrappedDataWatcher;
+
 import fr.nekotine.vi6.enums.GameState;
 import fr.nekotine.vi6.enums.PlayerState;
 import fr.nekotine.vi6.enums.Team;
@@ -53,6 +57,9 @@ import fr.nekotine.vi6.interfaces.items.OpenWaitingItem;
 import fr.nekotine.vi6.map.Artefact;
 import fr.nekotine.vi6.map.Carte;
 import fr.nekotine.vi6.objet.Objet;
+import fr.nekotine.vi6.packetsWrappers.WrapperPlayServerEntityEquipment;
+import fr.nekotine.vi6.packetsWrappers.WrapperPlayServerEntityMetadata;
+import fr.nekotine.vi6.packetsWrappers.WrapperPlayServerSpawnEntity;
 import fr.nekotine.vi6.sql.PlayerGame;
 import fr.nekotine.vi6.sql.SQLInterface;
 import fr.nekotine.vi6.utils.MessageFormater;
@@ -86,6 +93,8 @@ public class Game implements Listener{
 	private final BossBar bb = Bukkit.createBossBar(ChatColor.GOLD+"Temps restant"+ChatColor.WHITE+": "+ChatColor.AQUA+DEFAULT_PREPARATION_SECONDS/60+ChatColor.WHITE+":"+
 			ChatColor.AQUA+DEFAULT_PREPARATION_SECONDS%60, BarColor.BLUE, BarStyle.SOLID);
 	private BukkitTask ticker;
+	private int scanTime=600;
+	private int scanTimer=0;
 	public Game(Vi6Main main, String name) {
 		this.main=main;
 		this.name=name;
@@ -237,6 +246,7 @@ public class Game implements Listener{
 		map.setGame(this);
 		map.enable(main);
 		map.start();
+		scanTime=main.getConfig().getInt("scanDelay", 600);
 		state=GameState.Preparation;
 		new OpenPreparationItem(main, this);
 		for(Entry<Player, PlayerWrapper> playerAndWrapper : playerList.entrySet()) {
@@ -282,6 +292,7 @@ public class Game implements Listener{
 		ticker.cancel();
 		startTime = LocalTime.now().toString();
 		scoreboardSidebar.setDisplaySlot(null);
+		scanTimer=0;
 		for(Entry<Player, PlayerWrapper> playerAndWrapper : playerList.entrySet()) {
 			Player player = playerAndWrapper.getKey();
 			PlayerWrapper wrapper = playerAndWrapper.getValue();
@@ -299,15 +310,68 @@ public class Game implements Listener{
 		ticker = new BukkitRunnable() {
 			@Override
 			public void run() {
-				for(Objet obj : objetsList) {
-					obj.tick();
-				}
-				for(Artefact art : map.getArtefactList()) {
-					art.tick(Game.this);
-				}
+				ingameTick();
 			}
 		}.runTaskTimer(main, 0, 1);
 		Bukkit.getPluginManager().callEvent(new GameEnterInGamePhaseEvent(this));
+	}
+	
+	public void ingameTick() {
+		for(Objet obj : objetsList) {
+			obj.tick();
+		}
+		for(Artefact art : map.getArtefactList()) {
+			art.tick(this);
+		}
+		scanTimer++;
+		if (scanTimer>=scanTime) {
+			scan();
+			scanTimer=0;
+		}
+	}
+	
+	public void scan() {
+		for (Player p : playerList.keySet()) {
+			if (playerList.get(p).getTeam()==Team.GARDE) {
+				Integer entityID = (int)(Math.random() * Integer.MAX_VALUE);
+				WrapperPlayServerSpawnEntity wrapCreate = new WrapperPlayServerSpawnEntity();
+				WrapperPlayServerEntityMetadata wrapEdit = new WrapperPlayServerEntityMetadata();
+				WrapperPlayServerEntityEquipment wrapEquipBoots = new WrapperPlayServerEntityEquipment();
+				wrapEquipBoots.setSlot((short) 2);
+				wrapEquipBoots.setItem(new ItemStack(Material.NETHERITE_BOOTS));
+				WrapperPlayServerEntityEquipment wrapEquipLeggings = new WrapperPlayServerEntityEquipment();
+				wrapEquipLeggings.setSlot((short) 3);
+				wrapEquipLeggings.setItem(new ItemStack(Material.NETHERITE_LEGGINGS));
+				WrapperPlayServerEntityEquipment wrapEquipChestplate = new WrapperPlayServerEntityEquipment();
+				wrapEquipChestplate.setSlot((short) 4);
+				wrapEquipChestplate.setItem(new ItemStack(Material.NETHERITE_CHESTPLATE));
+				WrapperPlayServerEntityEquipment wrapEquipHelmet = new WrapperPlayServerEntityEquipment();
+				wrapEquipHelmet.setSlot((short) 5);
+				wrapEquipHelmet.setItem(new ItemStack(Material.NETHERITE_HELMET));
+				WrappedDataWatcher dataWatcher = new WrappedDataWatcher(wrapEdit.getEntityMetadata());
+				dataWatcher.setObject(0, (byte)(0x20|0x40));
+				dataWatcher.setObject(14, (byte)(0x04|0x08));
+				Location pLoc = p.getLocation();
+				wrapCreate.setEntityID(entityID);
+				wrapCreate.setType(WrapperPlayServerSpawnEntity.ObjectTypes.ARMOR_STAND);
+				wrapCreate.setX(pLoc.getX());
+				wrapCreate.setY(pLoc.getY());
+				wrapCreate.setZ(pLoc.getZ());
+				wrapCreate.setPitch(pLoc.getPitch());
+				wrapCreate.setYaw(pLoc.getYaw());
+				wrapEdit.setEntityId(entityID);
+				for (Player pp : playerList.keySet()) {
+					if (playerList.get(p).getTeam()==Team.VOLEUR) {
+						wrapCreate.sendPacket(pp);
+						wrapEdit.sendPacket(pp);
+						wrapEquipBoots.sendPacket(pp);
+						wrapEquipLeggings.sendPacket(pp);
+						wrapEquipChestplate.sendPacket(pp);
+						wrapEquipHelmet.sendPacket(pp);
+					}
+				}
+			}
+		}
 	}
 	
 	
