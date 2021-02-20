@@ -36,7 +36,7 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 
-import com.comphenix.protocol.wrappers.WrappedDataWatcher;
+import com.comphenix.protocol.wrappers.WrappedWatchableObject;
 
 import fr.nekotine.vi6.enums.GameState;
 import fr.nekotine.vi6.enums.PlayerState;
@@ -334,23 +334,8 @@ public class Game implements Listener{
 		for (Player p : playerList.keySet()) {
 			if (playerList.get(p).getTeam()==Team.GARDE) {
 				Integer entityID = (int)(Math.random() * Integer.MAX_VALUE);
+				System.out.println("making create");
 				WrapperPlayServerSpawnEntity wrapCreate = new WrapperPlayServerSpawnEntity();
-				WrapperPlayServerEntityMetadata wrapEdit = new WrapperPlayServerEntityMetadata();
-				WrapperPlayServerEntityEquipment wrapEquipBoots = new WrapperPlayServerEntityEquipment();
-				wrapEquipBoots.setSlot((short) 2);
-				wrapEquipBoots.setItem(new ItemStack(Material.NETHERITE_BOOTS));
-				WrapperPlayServerEntityEquipment wrapEquipLeggings = new WrapperPlayServerEntityEquipment();
-				wrapEquipLeggings.setSlot((short) 3);
-				wrapEquipLeggings.setItem(new ItemStack(Material.NETHERITE_LEGGINGS));
-				WrapperPlayServerEntityEquipment wrapEquipChestplate = new WrapperPlayServerEntityEquipment();
-				wrapEquipChestplate.setSlot((short) 4);
-				wrapEquipChestplate.setItem(new ItemStack(Material.NETHERITE_CHESTPLATE));
-				WrapperPlayServerEntityEquipment wrapEquipHelmet = new WrapperPlayServerEntityEquipment();
-				wrapEquipHelmet.setSlot((short) 5);
-				wrapEquipHelmet.setItem(new ItemStack(Material.NETHERITE_HELMET));
-				WrappedDataWatcher dataWatcher = new WrappedDataWatcher(wrapEdit.getEntityMetadata());
-				dataWatcher.setObject(0, (byte)(0x20|0x40));
-				dataWatcher.setObject(14, (byte)(0x04|0x08));
 				Location pLoc = p.getLocation();
 				wrapCreate.setEntityID(entityID);
 				wrapCreate.setType(WrapperPlayServerSpawnEntity.ObjectTypes.ARMOR_STAND);
@@ -359,7 +344,28 @@ public class Game implements Listener{
 				wrapCreate.setZ(pLoc.getZ());
 				wrapCreate.setPitch(pLoc.getPitch());
 				wrapCreate.setYaw(pLoc.getYaw());
+				System.out.println("making boots");
+				WrapperPlayServerEntityEquipment wrapEquipBoots = new WrapperPlayServerEntityEquipment();
+				wrapEquipBoots.setSlot((short) 0);
+				wrapEquipBoots.setItem(new ItemStack(Material.NETHERITE_BOOTS));
+				System.out.println("making leggings");
+				WrapperPlayServerEntityEquipment wrapEquipLeggings = new WrapperPlayServerEntityEquipment();
+				wrapEquipLeggings.setSlot((short) 1);
+				wrapEquipLeggings.setItem(new ItemStack(Material.NETHERITE_LEGGINGS));
+				System.out.println("making chestplate");
+				WrapperPlayServerEntityEquipment wrapEquipChestplate = new WrapperPlayServerEntityEquipment();
+				wrapEquipChestplate.setSlot((short) 2);
+				wrapEquipChestplate.setItem(new ItemStack(Material.NETHERITE_CHESTPLATE));
+				System.out.println("making helmet");
+				WrapperPlayServerEntityEquipment wrapEquipHelmet = new WrapperPlayServerEntityEquipment();
+				wrapEquipHelmet.setSlot((short) 3);
+				System.out.println("making edit");
+				WrapperPlayServerEntityMetadata wrapEdit = new WrapperPlayServerEntityMetadata();
+				wrapEquipHelmet.setItem(new ItemStack(Material.NETHERITE_HELMET));
+				wrapEdit.getEntityMetadata().add(new WrappedWatchableObject(0, (byte)(0x20|0x40)));
+				wrapEdit.getEntityMetadata().add(new WrappedWatchableObject(14, (byte)(0x04|0x08)));
 				wrapEdit.setEntityId(entityID);
+				System.out.println("sending packets to oblivion");
 				for (Player pp : playerList.keySet()) {
 					if (playerList.get(p).getTeam()==Team.VOLEUR) {
 						wrapCreate.sendPacket(pp);
