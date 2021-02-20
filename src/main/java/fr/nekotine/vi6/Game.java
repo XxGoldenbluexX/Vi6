@@ -42,6 +42,9 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.wrappers.WrappedDataWatcher;
+import com.comphenix.protocol.wrappers.WrappedDataWatcher.Registry;
+import com.comphenix.protocol.wrappers.WrappedDataWatcher.Serializer;
 
 import fr.nekotine.vi6.enums.GameState;
 import fr.nekotine.vi6.enums.PlayerState;
@@ -340,6 +343,7 @@ public class Game implements Listener{
 			if (playerList.get(p).getTeam()==Team.GARDE) {
 				Integer entityID = (int)(Math.random() * Integer.MAX_VALUE);
 				System.out.println("making create");
+				///CREATE PACKET
 				Location pLoc = p.getLocation();
 				PacketContainer createPacket = pmanager.createPacket(PacketType.Play.Server.SPAWN_ENTITY);
 				// Entity ID
@@ -362,49 +366,31 @@ public class Game implements Listener{
 				createPacket.getDoubles().write(2, pLoc.getZ());
 		        // Set UUID
 				createPacket.getUUIDs().write(0, UUID.randomUUID());
-				/*
-				Location pLoc = p.getLocation();
-				wrapCreate.setEntityID(entityID);
-				wrapCreate.setType(WrapperPlayServerSpawnEntity.ObjectTypes.ARMOR_STAND);
-				wrapCreate.setX(pLoc.getX());
-				wrapCreate.setY(pLoc.getY());
-				wrapCreate.setZ(pLoc.getZ());
-				wrapCreate.setPitch(pLoc.getPitch());
-				wrapCreate.setYaw(pLoc.getYaw());
-				System.out.println("making boots");
-				WrapperPlayServerEntityEquipment wrapEquipBoots = new WrapperPlayServerEntityEquipment();
-				wrapEquipBoots.setSlot((short) 0);
-				wrapEquipBoots.setItem(new ItemStack(Material.NETHERITE_BOOTS));
-				System.out.println("making leggings");
-				WrapperPlayServerEntityEquipment wrapEquipLeggings = new WrapperPlayServerEntityEquipment();
-				wrapEquipLeggings.setSlot((short) 1);
-				wrapEquipLeggings.setItem(new ItemStack(Material.NETHERITE_LEGGINGS));
-				System.out.println("making chestplate");
-				WrapperPlayServerEntityEquipment wrapEquipChestplate = new WrapperPlayServerEntityEquipment();
-				wrapEquipChestplate.setSlot((short) 2);
-				wrapEquipChestplate.setItem(new ItemStack(Material.NETHERITE_CHESTPLATE));
-				System.out.println("making helmet");
-				WrapperPlayServerEntityEquipment wrapEquipHelmet = new WrapperPlayServerEntityEquipment();
-				wrapEquipHelmet.setSlot((short) 3);
-				System.out.println("making edit");
-				WrapperPlayServerEntityMetadata wrapEdit = new WrapperPlayServerEntityMetadata();
-				wrapEquipHelmet.setItem(new ItemStack(Material.NETHERITE_HELMET));
-				wrapEdit.getEntityMetadata().add(new WrappedWatchableObject(0, (byte)(0x20|0x40)));
-				wrapEdit.getEntityMetadata().add(new WrappedWatchableObject(14, (byte)(0x04|0x08)));
-				wrapEdit.setEntityId(entityID);*/
+				///METADATA PACKET
+				PacketContainer metadataPacket = pmanager.createPacket(PacketType.Play.Server.ENTITY_METADATA);
+				//Entity ID
+				metadataPacket.getIntegers().write(0, entityID);
+				//Watcher
+				WrappedDataWatcher watcher = new WrappedDataWatcher();
+				Serializer serializer = Registry.get(Byte.class);
+				watcher.setObject(0, serializer,(((byte)0x40)|((byte)0x20)));
+				watcher.setObject(14, serializer,(((byte)0x08)|((byte)0x04)));
+				metadataPacket.getWatchableCollectionModifier().write(0, watcher.getWatchableObjects());
 				System.out.println("sending packets to oblivion");
-				for (Player pp : playerList.keySet()) {
-					if (playerList.get(pp).getTeam()==Team.VOLEUR) {
-						try {
-							pmanager.sendServerPacket(pp, createPacket);
-						} catch (InvocationTargetException e) {
-							e.printStackTrace();
-						}/*
-						wrapEdit.sendPacket(pp);
-						wrapEquipBoots.sendPacket(pp);
-						wrapEquipLeggings.sendPacket(pp);
-						wrapEquipChestplate.sendPacket(pp);
-						wrapEquipHelmet.sendPacket(pp);*/
+				sendPacketToTeam(Team.VOLEUR, createPacket, metadataPacket);
+			}
+		}
+	}
+	
+	private void sendPacketToTeam(Team team,PacketContainer... packet) {
+		ProtocolManager pmanager = ProtocolLibrary.getProtocolManager();
+		for (Player pp : playerList.keySet()) {
+			if (playerList.get(pp).getTeam()==team) {
+				for (PacketContainer p : packet) {
+					try {
+						pmanager.sendServerPacket(pp, p);
+					} catch (InvocationTargetException e) {
+						e.printStackTrace();
 					}
 				}
 			}
