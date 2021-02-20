@@ -24,7 +24,6 @@ import fr.nekotine.vi6.sql.SQLInterface;
 import fr.nekotine.vi6.utils.DetectionZone;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 import fr.nekotine.vi6.yml.DisplayTexts;
-import io.github.retrooper.packetevents.PacketEvents;
 
 /**
  * Main class of the minecraft plugin
