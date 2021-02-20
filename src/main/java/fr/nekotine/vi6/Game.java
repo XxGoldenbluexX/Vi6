@@ -351,8 +351,8 @@ public class Game implements Listener{
 				createPacket.getIntegers().write(2, 0);
 				createPacket.getIntegers().write(3, 0);
 		        // Set yaw pitch
-				createPacket.getIntegers().write(4, 0);
-				createPacket.getIntegers().write(5, 0);
+				createPacket.getIntegers().write(4, (int)pLoc.getPitch());
+				createPacket.getIntegers().write(5, (int)pLoc.getYaw());
 		        // Set object data
 				createPacket.getIntegers().write(6, 0);
 		        // Set location
