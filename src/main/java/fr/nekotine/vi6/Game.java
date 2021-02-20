@@ -22,7 +22,6 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
@@ -344,18 +343,17 @@ public class Game implements Listener{
 				PacketContainer createPacket = pmanager.createPacket(PacketType.Play.Server.SPAWN_ENTITY);
 				// Entity ID
 				createPacket.getIntegers().write(0, entityID);
-				createPacket.getEntityTypeModifier().write(0, EntityType.ARMOR_STAND);
 		        // Entity Type
-				createPacket.getIntegers().write(1, 78);
+				createPacket.getIntegers().write(6, 78);
 		        // Set optional velocity (/8000)
-				createPacket.getIntegers().write(5, 0);
-				createPacket.getIntegers().write(6, 0);
-				createPacket.getIntegers().write(7, 0);
+				createPacket.getIntegers().write(1, 0);
+				createPacket.getIntegers().write(2, 0);
+				createPacket.getIntegers().write(3, 0);
 		        // Set yaw pitch
-				createPacket.getIntegers().write(2, (int)pLoc.getPitch());
-				createPacket.getIntegers().write(3, (int)pLoc.getYaw());
+				createPacket.getIntegers().write(4, (int)pLoc.getPitch());
+				createPacket.getIntegers().write(5, (int)pLoc.getYaw());
 		        // Set object data
-				createPacket.getIntegers().write(4, 0);
+				createPacket.getIntegers().write(6, 0);
 		        // Set location
 				createPacket.getDoubles().write(0, pLoc.getX());
 				createPacket.getDoubles().write(1, pLoc.getY());
