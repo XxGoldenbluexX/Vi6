@@ -394,7 +394,7 @@ public class Game implements Listener{
 				wrapEdit.setEntityId(entityID);*/
 				System.out.println("sending packets to oblivion");
 				for (Player pp : playerList.keySet()) {
-					if (playerList.get(p).getTeam()==Team.VOLEUR) {
+					if (playerList.get(pp).getTeam()==Team.VOLEUR) {
 						try {
 							pmanager.sendServerPacket(pp, createPacket);
 						} catch (InvocationTargetException e) {
