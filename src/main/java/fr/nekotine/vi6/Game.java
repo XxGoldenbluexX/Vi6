@@ -14,8 +14,6 @@ import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.boss.BarColor;
@@ -36,8 +34,6 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 
-import com.comphenix.protocol.wrappers.WrappedWatchableObject;
-
 import fr.nekotine.vi6.enums.GameState;
 import fr.nekotine.vi6.enums.PlayerState;
 import fr.nekotine.vi6.enums.Team;
@@ -57,9 +53,6 @@ import fr.nekotine.vi6.interfaces.items.OpenWaitingItem;
 import fr.nekotine.vi6.map.Artefact;
 import fr.nekotine.vi6.map.Carte;
 import fr.nekotine.vi6.objet.Objet;
-import fr.nekotine.vi6.packetsWrappers.WrapperPlayServerEntityEquipment;
-import fr.nekotine.vi6.packetsWrappers.WrapperPlayServerEntityMetadata;
-import fr.nekotine.vi6.packetsWrappers.WrapperPlayServerSpawnEntity;
 import fr.nekotine.vi6.sql.PlayerGame;
 import fr.nekotine.vi6.sql.SQLInterface;
 import fr.nekotine.vi6.utils.MessageFormater;
@@ -334,7 +327,7 @@ public class Game implements Listener{
 	
 	public void scan() {
 		for (Player p : playerList.keySet()) {
-			if (playerList.get(p).getTeam()==Team.GARDE) {
+			if (playerList.get(p).getTeam()==Team.GARDE) {/*
 				Integer entityID = (int)(Math.random() * Integer.MAX_VALUE);
 				System.out.println("making create");
 				WrapperPlayServerSpawnEntity wrapCreate = new WrapperPlayServerSpawnEntity();
@@ -377,7 +370,7 @@ public class Game implements Listener{
 						wrapEquipChestplate.sendPacket(pp);
 						wrapEquipHelmet.sendPacket(pp);
 					}
-				}
+				}*/
 			}
 		}
 	}

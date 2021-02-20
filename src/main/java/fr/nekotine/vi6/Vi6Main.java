@@ -11,9 +11,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
-
 import dev.jorel.commandapi.CommandAPI;
 import fr.nekotine.vi6.commands.Vi6commandMaker;
 import fr.nekotine.vi6.map.Artefact;
@@ -40,7 +37,6 @@ import fr.nekotine.vi6.yml.DisplayTexts;
 public class Vi6Main extends JavaPlugin {
 	
 	private PluginManager pmanager;
-	private ProtocolManager protomanager;
 	private static List<Game> gameList = new ArrayList<Game>(1);
 	
 	@Override
@@ -62,7 +58,6 @@ public class Vi6Main extends JavaPlugin {
 		ConfigurationSerialization.registerClass(DetectionZone.class, "DetectionZone");
 		ConfigurationSerialization.registerClass(SpawnVoleur.class, "SpawnVoleur");
 		pmanager=Bukkit.getPluginManager();//getting pmanager reference
-		protomanager = ProtocolLibrary.getProtocolManager();
 		//File creation
 		saveDefaultConfig();//making config.yml
 		if (getDataFolder().exists()) {//making dataFolder
@@ -142,10 +137,6 @@ public class Vi6Main extends JavaPlugin {
 			if (map.containsKey(p)) return map.get(p);
 		}
 		return null;
-	}
-
-	public ProtocolManager getProtomanager() {
-		return protomanager;
 	}
 	
 }
