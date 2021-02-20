@@ -345,6 +345,7 @@ public class Game implements Listener{
 				createPacket.getIntegers().write(0, entityID);
 		        // Entity Type
 				createPacket.getIntegers().write(6, 78);
+				createPacket.getEntityTypeModifier().write(0, EntityType.ARMOR_STAND);
 		        // Set optional velocity (/8000)
 				createPacket.getIntegers().write(1, 0);
 				createPacket.getIntegers().write(2, 0);
