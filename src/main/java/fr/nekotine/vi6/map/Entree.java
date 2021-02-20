@@ -8,11 +8,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.enums.PlayerState;
 import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.events.PlayerEnterMapEvent;
+import fr.nekotine.vi6.statuseffects.Effects;
+import fr.nekotine.vi6.statuseffects.StatusEffect;
 import fr.nekotine.vi6.utils.DetectionZone;
 import fr.nekotine.vi6.utils.ZoneDetectionListener;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
@@ -21,7 +24,8 @@ import fr.nekotine.vi6.wrappers.PlayerWrapper;
 public class Entree implements ConfigurationSerializable,ZoneDetectionListener{
 
 	private static final String yamlPrefix = "Entree_";
-	
+	private static final int DELAY_BEFORE_STATUS_CLEAR_SECONDS = 10;
+	private static final int DELAY_BEFORE_CAPTURE_SECONDS = 60;
 	private String name;
 	private String displayName;
 	private DetectionZone zone;
@@ -79,7 +83,19 @@ public class Entree implements ConfigurationSerializable,ZoneDetectionListener{
 				if(gamePlayer.getValue().getTeam()==Team.GARDE) gamePlayer.getKey().showPlayer(mainref, player);
 			}
 			wrap.setState(PlayerState.INSIDE);
+			StatusEffect fantom = new StatusEffect(Effects.Fantomatique);
+			StatusEffect insond = new StatusEffect(Effects.Insondable);
+			wrap.addStatusEffect(fantom);
+			wrap.addStatusEffect(insond);
+			fantom.autoRemove(mainref,  DELAY_BEFORE_STATUS_CLEAR_SECONDS*20);
+			insond.autoRemove(mainref,  DELAY_BEFORE_STATUS_CLEAR_SECONDS*20);
 			player.sendMessage("You entered map");
+			new BukkitRunnable() {
+				@Override
+				public void run() {
+					wrap.setCanCapture(true);
+				}
+			}.runTaskLater(mainref, DELAY_BEFORE_CAPTURE_SECONDS*20);
 			Bukkit.getPluginManager().callEvent(new PlayerEnterMapEvent(player, wrap.getGame(), name));
 		}
 		return false;

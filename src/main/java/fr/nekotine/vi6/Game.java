@@ -62,6 +62,8 @@ import fr.nekotine.vi6.packetsWrappers.WrapperPlayServerEntityMetadata;
 import fr.nekotine.vi6.packetsWrappers.WrapperPlayServerSpawnEntity;
 import fr.nekotine.vi6.sql.PlayerGame;
 import fr.nekotine.vi6.sql.SQLInterface;
+import fr.nekotine.vi6.statuseffects.Effects;
+import fr.nekotine.vi6.statuseffects.StatusEffect;
 import fr.nekotine.vi6.utils.MessageFormater;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 import fr.nekotine.vi6.yml.DisplayTexts;
@@ -265,7 +267,9 @@ public class Game implements Listener{
 			}else {
 				player.teleport(map.getMinimapSpawn());
 				for(Entry<Player, PlayerWrapper> p : playerList.entrySet()) {
-					if(wrapper.getTeam()==Team.GARDE) p.getKey().hidePlayer(main, player);
+					if(p.getValue().getTeam()==Team.GARDE) {
+						p.getKey().hidePlayer(main, player);
+					}
 				}
 			}
 			Bukkit.getPluginManager().registerEvents(new PlayerGame(name, playerAndWrapper.getKey().getUniqueId(), idPartie, playerAndWrapper.getValue().getTeam()), main);
@@ -336,7 +340,7 @@ public class Game implements Listener{
 				Integer entityID = (int)(Math.random() * Integer.MAX_VALUE);
 				WrapperPlayServerSpawnEntity wrapCreate = new WrapperPlayServerSpawnEntity();
 				WrapperPlayServerEntityMetadata wrapEdit = new WrapperPlayServerEntityMetadata();
-				WrapperPlayServerEntityEquipment wrapEquipBoots = new WrapperPlayServerEntityEquipment();
+			/*	WrapperPlayServerEntityEquipment wrapEquipBoots = new WrapperPlayServerEntityEquipment();
 				wrapEquipBoots.setSlot((short) 2);
 				wrapEquipBoots.setItem(new ItemStack(Material.NETHERITE_BOOTS));
 				WrapperPlayServerEntityEquipment wrapEquipLeggings = new WrapperPlayServerEntityEquipment();
@@ -347,7 +351,7 @@ public class Game implements Listener{
 				wrapEquipChestplate.setItem(new ItemStack(Material.NETHERITE_CHESTPLATE));
 				WrapperPlayServerEntityEquipment wrapEquipHelmet = new WrapperPlayServerEntityEquipment();
 				wrapEquipHelmet.setSlot((short) 5);
-				wrapEquipHelmet.setItem(new ItemStack(Material.NETHERITE_HELMET));
+				wrapEquipHelmet.setItem(new ItemStack(Material.NETHERITE_HELMET));*/
 				WrappedDataWatcher dataWatcher = new WrappedDataWatcher(wrapEdit.getEntityMetadata());
 				dataWatcher.setObject(0, (byte)(0x20|0x40));
 				dataWatcher.setObject(14, (byte)(0x04|0x08));
@@ -364,10 +368,10 @@ public class Game implements Listener{
 					if (playerList.get(p).getTeam()==Team.VOLEUR) {
 						wrapCreate.sendPacket(pp);
 						wrapEdit.sendPacket(pp);
-						wrapEquipBoots.sendPacket(pp);
+						/*wrapEquipBoots.sendPacket(pp);
 						wrapEquipLeggings.sendPacket(pp);
 						wrapEquipChestplate.sendPacket(pp);
-						wrapEquipHelmet.sendPacket(pp);
+						wrapEquipHelmet.sendPacket(pp);*/
 					}
 				}
 			}

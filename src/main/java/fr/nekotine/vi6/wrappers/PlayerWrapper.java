@@ -34,6 +34,7 @@ public class PlayerWrapper {
 	private final ArrayList<Artefact> stealedObjects = new ArrayList<>();
 	private Location thiefSpawnPoint;
 	private final Game game;
+	private boolean canCapture = false;
 	private ArrayList<ObjetsSkins> selectedSkins = new ArrayList<>();
 	public PlayerWrapper(Game game, Player player) {
 		this.game=game;
@@ -170,6 +171,14 @@ public class PlayerWrapper {
 
 	public Game getGame() {
 		return game;
+	}
+
+	public boolean isCanCapture() {
+		return canCapture;
+	}
+
+	public void setCanCapture(boolean canCapture) {
+		this.canCapture = canCapture;
 	}
 	
 }

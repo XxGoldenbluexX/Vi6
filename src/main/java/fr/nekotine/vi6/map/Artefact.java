@@ -140,7 +140,7 @@ public class Artefact implements ConfigurationSerializable,ZoneDetectionListener
 	public PlayerWrapper capture(ArrayList<Player> list) {
 		for (Player p : list) {
 			PlayerWrapper w = mainref.getPlayerWrapper(p);
-			if (w!=null && w.getTeam()==Team.VOLEUR && w.getState()==PlayerState.INSIDE) {
+			if (w!=null && w.getTeam()==Team.VOLEUR && w.getState()==PlayerState.INSIDE && w.isCanCapture()) {
 				w.getStealedArtefactList().add(this);
 				status=CaptureState.CARRIED;
 				return w;
