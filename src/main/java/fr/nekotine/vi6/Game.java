@@ -354,7 +354,7 @@ public class Game implements Listener{
 				createPacket.getIntegers().write(4, 0);
 				createPacket.getIntegers().write(5, 0);
 		        // Set object data
-				createPacket.getIntegers().write(7, 0);
+				createPacket.getIntegers().write(6, 0);
 		        // Set location
 				createPacket.getDoubles().write(0, pLoc.getX());
 				createPacket.getDoubles().write(1, pLoc.getY());
