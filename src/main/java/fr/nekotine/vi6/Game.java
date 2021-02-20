@@ -373,8 +373,8 @@ public class Game implements Listener{
 				//Watcher
 				WrappedDataWatcher watcher = new WrappedDataWatcher();
 				Serializer serializer = Registry.get(Byte.class);
-				watcher.setObject(0, serializer,(((byte)0x40)|((byte)0x20)));
-				watcher.setObject(14, serializer,(((byte)0x08)|((byte)0x04)));
+				watcher.setObject(0, serializer,(byte)(((byte)0x40)|((byte)0x20)));
+				watcher.setObject(14, serializer,(byte)(((byte)0x08)|((byte)0x04)));
 				metadataPacket.getWatchableCollectionModifier().write(0, watcher.getWatchableObjects());
 				System.out.println("sending packets to oblivion");
 				sendPacketToTeam(Team.VOLEUR, createPacket, metadataPacket);
