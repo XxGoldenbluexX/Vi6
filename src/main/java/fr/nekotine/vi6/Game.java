@@ -22,6 +22,7 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
@@ -343,6 +344,7 @@ public class Game implements Listener{
 				PacketContainer createPacket = pmanager.createPacket(PacketType.Play.Server.SPAWN_ENTITY);
 				// Entity ID
 				createPacket.getIntegers().write(0, entityID);
+				createPacket.getEntityTypeModifier().write(0, EntityType.ARMOR_STAND);
 		        // Entity Type
 				createPacket.getIntegers().write(6, 78);
 		        // Set optional velocity (/8000)
