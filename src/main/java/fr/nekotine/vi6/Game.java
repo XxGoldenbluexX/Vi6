@@ -1,5 +1,6 @@
 package fr.nekotine.vi6;
 
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Date;
 import java.sql.Time;
 import java.text.ParseException;
@@ -10,10 +11,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.boss.BarColor;
@@ -33,6 +36,11 @@ import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
+
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
+import com.comphenix.protocol.events.PacketContainer;
 
 import fr.nekotine.vi6.enums.GameState;
 import fr.nekotine.vi6.enums.PlayerState;
@@ -58,6 +66,7 @@ import fr.nekotine.vi6.sql.SQLInterface;
 import fr.nekotine.vi6.utils.MessageFormater;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 import fr.nekotine.vi6.yml.DisplayTexts;
+import io.github.retrooper.packetevents.packetwrappers.play.out.entity.WrappedPacketOutEntity;
 
 public class Game implements Listener{
 	private static final int DEFAULT_RANKED_MONEY = 1000;
@@ -287,7 +296,7 @@ public class Game implements Listener{
 		ticker.cancel();
 		startTime = LocalTime.now().toString();
 		scoreboardSidebar.setDisplaySlot(null);
-		scanTimer=0;
+		scanTimer=scanTime-20;
 		for(Entry<Player, PlayerWrapper> playerAndWrapper : playerList.entrySet()) {
 			Player player = playerAndWrapper.getKey();
 			PlayerWrapper wrapper = playerAndWrapper.getValue();
@@ -326,11 +335,33 @@ public class Game implements Listener{
 	}
 	
 	public void scan() {
+		ProtocolManager pmanager = ProtocolLibrary.getProtocolManager();
 		for (Player p : playerList.keySet()) {
-			if (playerList.get(p).getTeam()==Team.GARDE) {/*
+			if (playerList.get(p).getTeam()==Team.GARDE) {
 				Integer entityID = (int)(Math.random() * Integer.MAX_VALUE);
 				System.out.println("making create");
-				WrapperPlayServerSpawnEntity wrapCreate = new WrapperPlayServerSpawnEntity();
+				Location pLoc = p.getLocation();
+				PacketContainer createPacket = pmanager.createPacket(PacketType.Play.Server.SPAWN_ENTITY);
+				// Entity ID
+				createPacket.getIntegers().write(0, entityID);
+		        // Entity Type
+				createPacket.getIntegers().write(6, 78);
+		        // Set optional velocity (/8000)
+				createPacket.getIntegers().write(1, 0);
+				createPacket.getIntegers().write(2, 0);
+				createPacket.getIntegers().write(3, 0);
+		        // Set yaw pitch
+				createPacket.getIntegers().write(4, 0);
+				createPacket.getIntegers().write(5, 0);
+		        // Set object data
+				createPacket.getIntegers().write(7, 0);
+		        // Set location
+				createPacket.getDoubles().write(0, pLoc.getX());
+				createPacket.getDoubles().write(1, pLoc.getY());
+				createPacket.getDoubles().write(2, pLoc.getZ());
+		        // Set UUID
+				createPacket.getUUIDs().write(0, UUID.randomUUID());
+				/*
 				Location pLoc = p.getLocation();
 				wrapCreate.setEntityID(entityID);
 				wrapCreate.setType(WrapperPlayServerSpawnEntity.ObjectTypes.ARMOR_STAND);
@@ -359,18 +390,22 @@ public class Game implements Listener{
 				wrapEquipHelmet.setItem(new ItemStack(Material.NETHERITE_HELMET));
 				wrapEdit.getEntityMetadata().add(new WrappedWatchableObject(0, (byte)(0x20|0x40)));
 				wrapEdit.getEntityMetadata().add(new WrappedWatchableObject(14, (byte)(0x04|0x08)));
-				wrapEdit.setEntityId(entityID);
+				wrapEdit.setEntityId(entityID);*/
 				System.out.println("sending packets to oblivion");
 				for (Player pp : playerList.keySet()) {
 					if (playerList.get(p).getTeam()==Team.VOLEUR) {
-						wrapCreate.sendPacket(pp);
+						try {
+							pmanager.sendServerPacket(pp, createPacket);
+						} catch (InvocationTargetException e) {
+							e.printStackTrace();
+						}/*
 						wrapEdit.sendPacket(pp);
 						wrapEquipBoots.sendPacket(pp);
 						wrapEquipLeggings.sendPacket(pp);
 						wrapEquipChestplate.sendPacket(pp);
-						wrapEquipHelmet.sendPacket(pp);
+						wrapEquipHelmet.sendPacket(pp);*/
 					}
-				}*/
+				}
 			}
 		}
 	}
