@@ -16,8 +16,10 @@ import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.enums.PlayerState;
 import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.utils.DetectionZone;
+import fr.nekotine.vi6.utils.MessageFormater;
 import fr.nekotine.vi6.utils.ZoneDetectionListener;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
+import fr.nekotine.vi6.yml.DisplayTexts;
 
 @SerializableAs("Artefact")
 public class Artefact implements ConfigurationSerializable,ZoneDetectionListener{
@@ -35,7 +37,6 @@ public class Artefact implements ConfigurationSerializable,ZoneDetectionListener
 	private DetectionZone zone;
 	private BlockData blockdata;
 	private Location blockLoc;
-	private int nbVoleurInside = 0;
 	private int nbGuardInside = 0;
 	private int captureLevel = 0;
 	private int maxCaptureLevel=200;
@@ -89,13 +90,10 @@ public class Artefact implements ConfigurationSerializable,ZoneDetectionListener
 	public boolean playerEnterZone(Player player, DetectionZone zone, Vi6Main mainref) {
 		if (zone.equals(zone)) {
 			PlayerWrapper w = mainref.getPlayerWrapper(player);
-			if (w!=null && (w.getState()==PlayerState.INSIDE || w.getState()==PlayerState.INSIDE)) {
+			if (w!=null && (w.getState()==PlayerState.INSIDE || w.getState()==PlayerState.PREPARATION)) {
 				switch (w.getTeam()) {
 				case GARDE:
 					nbGuardInside++;
-					break;
-				case VOLEUR:
-					nbVoleurInside++;
 					break;
 				default:
 					break;
@@ -109,13 +107,10 @@ public class Artefact implements ConfigurationSerializable,ZoneDetectionListener
 	public boolean playerLeaveZone(Player player, DetectionZone zone, Vi6Main mainref) {
 		if (zone.equals(zone)) {
 			PlayerWrapper w = mainref.getPlayerWrapper(player);
-			if (w!=null && (w.getState()==PlayerState.INSIDE || w.getState()==PlayerState.INSIDE)) {
+			if (w!=null && (w.getState()==PlayerState.INSIDE || w.getState()==PlayerState.PREPARATION)) {
 				switch (w.getTeam()) {
 				case GARDE:
 					nbGuardInside--;
-					break;
-				case VOLEUR:
-					nbVoleurInside--;
 					break;
 				default:
 					break;
@@ -127,10 +122,16 @@ public class Artefact implements ConfigurationSerializable,ZoneDetectionListener
 	
 	public void tick(Game g) {
 		if (status!=CaptureState.STEALABLE) return;
-		if (nbVoleurInside>0) {
-			captureLevel+=nbGuardInside>0?0:nbVoleurInside;
-			if (captureLevel>=maxCaptureLevel) {
-				g.showCaptureMessage(this,capture(zone.getPlayerInsideList()));
+		ArrayList<Player> voleurInside = voleurInsideList();
+		if (voleurInside.size()>0) {
+			if (nbGuardInside<=0) {
+				captureLevel+=voleurInside.size();
+				for (Player p : voleurInside) {
+					p.sendActionBar(MessageFormater.formatWithColorCodes('§', DisplayTexts.getMessage("game_artefact_stealing"), new MessageFormater("§v", displayName)));
+				}
+				if (captureLevel>=maxCaptureLevel) {
+					g.showCaptureMessage(this,capture(voleurInside));
+				}
 			}
 		}else {
 			captureLevel-=captureLevel>0?1:0;
@@ -147,6 +148,15 @@ public class Artefact implements ConfigurationSerializable,ZoneDetectionListener
 			}
 		}
 		return null;
+	}
+	
+	private ArrayList<Player> voleurInsideList() {
+		ArrayList<Player> l = new ArrayList<Player>();
+		for (Player p : zone.getPlayerInsideList()) {
+			PlayerWrapper w = mainref.getPlayerWrapper(p);
+			if (w!=null && w.getTeam()==Team.VOLEUR && w.getState()==PlayerState.INSIDE && w.isCanCapture()) l.add(p);
+		}
+		return l;
 	}
 
 	public CaptureState getStatus() {

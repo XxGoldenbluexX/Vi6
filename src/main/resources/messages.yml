@@ -2,6 +2,7 @@ game_join: "§p a rejoint cette partie de vi6."
 game_leave: "§p a quitté cette partie de vi6."
 game_artefact_steal_guard: "§3Un artéfact a été volé"
 game_artefact_steal_thief: "§p a volé §v"
+game_artefact_stealing: "§6En train de voler §v..."
 game_thiefSpawnPoint_notSelected: "Veillez à sélectionner une entrée!"
 #§e = thiefSpawnPoint name
 game_thiefSpawnPoint_selected: "§2Entrée §e sélectionnée"
