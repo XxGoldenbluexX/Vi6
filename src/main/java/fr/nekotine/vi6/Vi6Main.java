@@ -102,6 +102,7 @@ public class Vi6Main extends JavaPlugin {
 	
 	public boolean removeGame(Game game) {
 		if (!gameList.contains(game)) return false;
+		game.destroy();
 		gameList.remove(game);
 		return true;
 	}

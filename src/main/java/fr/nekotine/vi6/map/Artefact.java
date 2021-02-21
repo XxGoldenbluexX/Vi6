@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
@@ -58,6 +59,7 @@ public class Artefact implements ConfigurationSerializable,ZoneDetectionListener
 	public void reset() {
 		status=CaptureState.STEALABLE;
 		captureLevel=0;
+		blockLoc.getBlock().setBlockData(blockdata);
 	}
 	
 	public void destroy() {
@@ -144,6 +146,7 @@ public class Artefact implements ConfigurationSerializable,ZoneDetectionListener
 			if (w!=null && w.getTeam()==Team.VOLEUR && w.getState()==PlayerState.INSIDE && w.isCanCapture()) {
 				w.getStealedArtefactList().add(this);
 				status=CaptureState.CARRIED;
+				blockLoc.getBlock().setBlockData(Bukkit.createBlockData(Material.AIR));
 				return w;
 			}
 		}
