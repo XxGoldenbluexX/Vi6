@@ -23,6 +23,8 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
+import org.bukkit.attribute.AttributeModifier.Operation;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
@@ -33,7 +35,10 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -259,6 +264,17 @@ public class Game implements Listener{
 		}
 	}
 	
+	private ItemStack makeSwordItem(Material mat,int damage) {
+		ItemStack itm = new ItemStack(mat);
+		ItemMeta meta = itm.getItemMeta();
+		int realDamages = Math.max(0, damage-1);
+		meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED,new AttributeModifier("pvp_1.8",1000,Operation.ADD_NUMBER));
+		meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE,new AttributeModifier("diamondSwordDamages",realDamages,Operation.ADD_NUMBER));
+		meta.setUnbreakable(true);
+		itm.setItemMeta(meta);
+		return itm;
+	}
+	
 	public boolean enterPreparationPhase() {//START------------------
 		if(!isEveryoneReady()) return false;
 		if (map!=null) {map.unload();map=null;}
@@ -277,6 +293,11 @@ public class Game implements Listener{
 			player.setGameMode(GameMode.ADVENTURE);
 			player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
 			player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, Integer.MAX_VALUE, 0, false, false, false));
+			PlayerInventory inv = player.getInventory();
+			inv.setHelmet(makeSwordItem(Material.DIAMOND_HELMET,1));
+			inv.setChestplate(makeSwordItem(Material.DIAMOND_CHESTPLATE,1));
+			inv.setLeggings(makeSwordItem(Material.DIAMOND_LEGGINGS,1));
+			inv.setBoots(makeSwordItem(Material.DIAMOND_BOOTS,1));
 			wrapper.setReady(false);
 			wrapper.setMoney(money);
 			wrapper.setState(PlayerState.PREPARATION);
