@@ -90,7 +90,7 @@ public class Entree implements ConfigurationSerializable,ZoneDetectionListener{
 			wrap.addStatusEffect(insond);
 			fantom.autoRemove(mainref,  DELAY_BEFORE_STATUS_CLEAR_SECONDS*20);
 			insond.autoRemove(mainref,  DELAY_BEFORE_STATUS_CLEAR_SECONDS*20);
-			player.sendMessage("You entered map");
+			player.sendMessage("[Entree.class] "+"You entered map");
 			new BukkitRunnable() {
 				@Override
 				public void run() {
