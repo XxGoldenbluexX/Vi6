@@ -524,11 +524,18 @@ public class Game implements Listener{
 			for(Entry<Player, PlayerWrapper> p : playerList.entrySet()) {
 				p.getKey().sendMessage("[Game.class]" + e.getEntity().getName()+" est mort avec "+playerList.get(e.getEntity()).getStealedArtefactList().size()+
 						" artefacts");
-				if(p.getValue().getTeam()==Team.VOLEUR && (p.getValue().getState()==PlayerState.ENTERING || p.getValue().getState()==PlayerState.INSIDE)) {
-					return;
-				}
+			}
+			if(!isThiefLeft()) {
 				endGame();
 			}
 		}
+	}
+	public boolean isThiefLeft() {
+		for(PlayerWrapper wrap : playerList.values()) {
+			if(wrap.getTeam()==Team.VOLEUR && (wrap.getState()==PlayerState.ENTERING || wrap.getState()==PlayerState.INSIDE)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

@@ -88,9 +88,8 @@ public class Sortie implements ConfigurationSerializable,ZoneDetectionListener {
 			}
 			for(Entry<Player, PlayerWrapper> p : wrap.getGame().getPlayerMap().entrySet()) {
 				p.getKey().sendMessage("[Sortie.class] "+player.getName()+" s'est échappé avec "+wrap.getStealedArtefactList().size()+" artefacts!");
-				if(p.getValue().getTeam()==Team.VOLEUR && (p.getValue().getState()==PlayerState.ENTERING || p.getValue().getState()==PlayerState.INSIDE)) {
-					return false;
-				}
+			}
+			if(!wrap.getGame().isThiefLeft()) {
 				wrap.getGame().endGame();
 			}
 		}
