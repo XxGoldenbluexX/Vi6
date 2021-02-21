@@ -151,6 +151,10 @@ public class Game implements Listener{
 		return null;
 	}
 	
+	public ArrayList<Objet> getObjets(){
+		return objetsList;
+	}
+	
 	public void openSettings(Player player) {
 		player.openInventory(settingsInterface.inventory);
 	}

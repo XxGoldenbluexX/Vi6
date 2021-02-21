@@ -3,13 +3,19 @@ package fr.nekotine.vi6.map;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bukkit.GameMode;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import fr.nekotine.vi6.Vi6Main;
+import fr.nekotine.vi6.enums.PlayerState;
+import fr.nekotine.vi6.enums.Team;
+import fr.nekotine.vi6.objet.Objet;
 import fr.nekotine.vi6.utils.DetectionZone;
 import fr.nekotine.vi6.utils.ZoneDetectionListener;
+import fr.nekotine.vi6.wrappers.PlayerWrapper;
 
 @SerializableAs("Sortie")
 public class Sortie implements ConfigurationSerializable,ZoneDetectionListener {
@@ -71,6 +77,18 @@ public class Sortie implements ConfigurationSerializable,ZoneDetectionListener {
 
 	@Override
 	public boolean playerEnterZone(Player player,DetectionZone zone,Vi6Main mainref) {
+		PlayerWrapper wrap = mainref.getPlayerWrapper(player);
+		if(wrap!=null && wrap.getTeam()==Team.VOLEUR && wrap.getState()==PlayerState.INSIDE && wrap.isCanEscape()) {
+			wrap.setState(PlayerState.LEAVED);
+			player.setGameMode(GameMode.SPECTATOR);
+			for(ItemStack itm : player.getInventory().getContents()) {
+				Objet objet = wrap.getGame().getObjet(itm);
+				if(objet!=null) objet.leaveMap();
+			}
+			for(Player p : wrap.getGame().getPlayerList()) {
+				p.sendMessage("[Sortie.class] "+player.getName()+" s'est échappé avec "+wrap.getStealedArtefactList().size()+" artefacts!");
+			}
+		}
 		return false;
 	}
 

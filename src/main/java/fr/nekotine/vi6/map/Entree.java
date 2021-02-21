@@ -26,6 +26,7 @@ public class Entree implements ConfigurationSerializable,ZoneDetectionListener{
 	private static final String yamlPrefix = "Entree_";
 	private static final int DELAY_BEFORE_STATUS_CLEAR_SECONDS = 10;
 	private static final int DELAY_BEFORE_CAPTURE_SECONDS = 60;
+	private static final int DELAY_BEFORE_ESCAPE_SECONDS = 60;
 	private String name;
 	private String displayName;
 	private DetectionZone zone;
@@ -96,6 +97,12 @@ public class Entree implements ConfigurationSerializable,ZoneDetectionListener{
 					wrap.setCanCapture(true);
 				}
 			}.runTaskLater(mainref, DELAY_BEFORE_CAPTURE_SECONDS*20);
+			new BukkitRunnable() {
+				@Override
+				public void run() {
+					wrap.setCanEscape(true);
+				}
+			}.runTaskLater(mainref, DELAY_BEFORE_ESCAPE_SECONDS*20);
 			Bukkit.getPluginManager().callEvent(new PlayerEnterMapEvent(player, wrap.getGame(), name));
 		}
 		return false;
@@ -116,6 +123,10 @@ public class Entree implements ConfigurationSerializable,ZoneDetectionListener{
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public static int getDelayBeforeEscapeSeconds() {
+		return DELAY_BEFORE_ESCAPE_SECONDS;
 	}
 
 }

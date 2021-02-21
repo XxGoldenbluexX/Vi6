@@ -35,6 +35,7 @@ public class PlayerWrapper {
 	private Location thiefSpawnPoint;
 	private final Game game;
 	private boolean canCapture = false;
+	private boolean canEscape = false;
 	private ArrayList<ObjetsSkins> selectedSkins = new ArrayList<>();
 	public PlayerWrapper(Game game, Player player) {
 		this.game=game;
@@ -179,6 +180,14 @@ public class PlayerWrapper {
 
 	public void setCanCapture(boolean canCapture) {
 		this.canCapture = canCapture;
+	}
+
+	public boolean isCanEscape() {
+		return canEscape;
+	}
+
+	public void setCanEscape(boolean canEscape) {
+		this.canEscape = canEscape;
 	}
 	
 }
