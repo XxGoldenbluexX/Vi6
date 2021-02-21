@@ -488,10 +488,11 @@ public class Game implements Listener{
 	public boolean removePlayer(Player p) {
 		if (playerList.keySet().contains(p)) {
 			endGame();
-			playerList.remove(p);
 			for (Player pl : playerList.keySet()) {
-				pl.sendMessage(String.format(DisplayTexts.getMessage("game_leave"), p.getName()));
+				pl.sendMessage(MessageFormater.formatWithColorCodes('§', DisplayTexts.getMessage("game_leave"), new MessageFormater("§p",p.getName())));
 			}
+			playerList.get(p).destroy();
+			playerList.remove(p);
 			p.getInventory().clear();
 			p.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
 			Bukkit.getPluginManager().callEvent(new PlayerLeaveGameEvent(this, p));

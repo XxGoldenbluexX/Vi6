@@ -42,6 +42,11 @@ public class PlayerWrapper {
 		this.player = player;
 		updateScoreboard();
 	}
+	
+	public void destroy() {
+		clearStatusEffects();
+		player.getScoreboard().resetScores(currentScoreboardName);
+	}
 
 	public Team getTeam() {
 		return team;
