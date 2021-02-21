@@ -82,6 +82,10 @@ public class Entree implements ConfigurationSerializable,ZoneDetectionListener{
 	@Override
 	public boolean playerEnterZone(Player player,DetectionZone zone,Vi6Main mainref) {
 		PlayerWrapper wrap = mainref.getPlayerWrapper(player);
+		if(wrap!=null) {
+			System.out.println("Team: "+wrap.getTeam());
+			System.out.println("State: "+wrap.getState());
+		}
 		if(wrap!=null && wrap.getTeam()==Team.VOLEUR && wrap.getState()==PlayerState.ENTERING) {
 			for(Entry<Player, PlayerWrapper> gamePlayer : wrap.getGame().getPlayerMap().entrySet()) {
 				if(gamePlayer.getValue().getTeam()==Team.GARDE) gamePlayer.getKey().showPlayer(mainref, player);
