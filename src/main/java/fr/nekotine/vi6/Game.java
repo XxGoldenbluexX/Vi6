@@ -80,8 +80,8 @@ import fr.nekotine.vi6.wrappers.PlayerWrapper;
 import fr.nekotine.vi6.yml.DisplayTexts;
 
 public class Game implements Listener{
-	private static final int DEFAULT_RANKED_MONEY = 1000;
-	private static final int DEFAULT_PREPARATION_SECONDS = 2*60;
+	private static int DEFAULT_RANKED_MONEY;
+	private static int DEFAULT_PREPARATION_TIME;
 	
 	private final Vi6Main main;
 	private int idPartie;
@@ -95,7 +95,7 @@ public class Game implements Listener{
 	
 	private String mapName;
 	private Carte map;
-	private int money=DEFAULT_RANKED_MONEY;
+	private int money;
 	
 	private MapSelectionInventory mapInterface;
 	private GameSettingsInventory settingsInterface;
@@ -103,8 +103,8 @@ public class Game implements Listener{
 	private final ArrayList<Integer> nbtCompteur = new ArrayList<>();
 	private final ArrayList<Objet> objetsList = new ArrayList<>();
 	
-	private final BossBar bb = Bukkit.createBossBar(ChatColor.GOLD+"Temps restant"+ChatColor.WHITE+": "+ChatColor.AQUA+DEFAULT_PREPARATION_SECONDS/60+ChatColor.WHITE+":"+
-			ChatColor.AQUA+DEFAULT_PREPARATION_SECONDS%60, BarColor.BLUE, BarStyle.SOLID);
+	private final BossBar bb = Bukkit.createBossBar(ChatColor.GOLD+"Temps restant"+ChatColor.WHITE+": "+ChatColor.AQUA+DEFAULT_PREPARATION_TIME/60+ChatColor.WHITE+":"+
+			ChatColor.AQUA+DEFAULT_PREPARATION_TIME%60, BarColor.BLUE, BarStyle.SOLID);
 	private BukkitTask ticker;
 	private int scanTime=600;
 	private int scanTimer=0;
@@ -115,6 +115,9 @@ public class Game implements Listener{
 		settingsInterface = new GameSettingsInventory(main, this);
 		mapInterface = new MapSelectionInventory(main, this);
 		nbtCompteur.add(0);
+		DEFAULT_RANKED_MONEY = main.getConfig().getInt("rankedMoney",1000);
+		DEFAULT_PREPARATION_TIME = main.getConfig().getInt("preparationTime",2*60);
+		money=DEFAULT_RANKED_MONEY;
 		Bukkit.getPluginManager().registerEvents(this, main);
 		scoreboardSidebar = scoreboard.registerNewObjective("sidebar", "dummy", ChatColor.GOLD+name);
 		scoreboardSidebar.setDisplaySlot(DisplaySlot.SIDEBAR);
@@ -213,7 +216,7 @@ public class Game implements Listener{
 	}
 	
 	public static int getDefaultPreparationSeconds() {
-		return DEFAULT_PREPARATION_SECONDS;
+		return DEFAULT_PREPARATION_TIME;
 	}
 	
 	public void setMoney(int money) {
@@ -290,11 +293,11 @@ public class Game implements Listener{
 			Bukkit.getPluginManager().registerEvents(new PlayerGame(name, playerAndWrapper.getKey().getUniqueId(), idPartie, playerAndWrapper.getValue().getTeam()), main);
 		}
 		ticker = new BukkitRunnable() {
-			int seconds = DEFAULT_PREPARATION_SECONDS;
+			int seconds = DEFAULT_PREPARATION_TIME;
 			@Override
 			public void run() {
 				seconds--;
-				bb.setProgress(seconds / (double)DEFAULT_PREPARATION_SECONDS);
+				bb.setProgress(seconds / (double)DEFAULT_PREPARATION_TIME);
 				bb.setTitle(ChatColor.GOLD+"Temps restant"+ChatColor.WHITE+": "+ChatColor.AQUA+seconds/60+"m"+ChatColor.WHITE+":"+
 						ChatColor.AQUA+seconds%60+"s");
 				if(seconds==0) {
