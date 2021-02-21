@@ -1,12 +1,11 @@
 game_join: "§p a rejoint cette partie de vi6."
 game_leave: "§p a quitté cette partie de vi6."
-game_artefact*steal*guard: "§3Un artéfact a été volé"
+game_artefact_steal_guard: "§3Un artéfact a été volé"
+game_artefact_steal_thief: "§p a volé §v"
 game_thiefSpawnPoint_notSelected: "Veillez à sélectionner une entrée!"
 #§e = thiefSpawnPoint name
 game_thiefSpawnPoint_selected: "§2Entrée §e sélectionnée"
-
 #§v = artefact's name §p = stealer's name
-game_artefact*steal*thief: "§p a volé §v"
 ##MAP EDITION
 map_list: "Voici la liste des cartes présentes dans le fichier \"Maps\":"
 #§v = map's name
