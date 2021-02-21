@@ -116,7 +116,7 @@ public class Vi6commandMaker {
 		return new CommandAPICommand("join")
 				.withArguments(gameArgument,new PlayerArgument("player").safeOverrideSuggestions((sender)->{return Bukkit.getServer().getOnlinePlayers().stream().filter(e->mainref.getPlayerWrapper(e)==null).toArray(Player[]::new);}))
 				.executes((sender,args)->{
-					((Game)args[0]).addPlayer((Player)sender);
+					((Game)args[0]).addPlayer((Player)args[1]);
 				});
 	}
 	
