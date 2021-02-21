@@ -38,11 +38,11 @@ public class Entree implements ConfigurationSerializable,ZoneDetectionListener{
 	}
 	
 	public void enable(Vi6Main mainref) {
-		this.zone.addListener(this);
 		DELAY_BEFORE_STATUS_CLEAR=mainref.getConfig().getInt("effectsClearDelay", 10*20);
 		DELAY_BEFORE_CAPTURE=mainref.getConfig().getInt("captureEnteringDelay", 60*20);
 		DELAY_BEFORE_ESCAPE=mainref.getConfig().getInt("escapeEnteringDelay", 60*20);
 		zone.enable(mainref);
+		this.zone.addListener(this);
 	}
 	
 	@Override
