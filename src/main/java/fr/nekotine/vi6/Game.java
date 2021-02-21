@@ -446,6 +446,7 @@ public class Game implements Listener{
 		for(Objet obj : objetsList) {
 			obj.gameEnd();
 		}
+		scoreboardSidebar.setDisplaySlot(DisplaySlot.SIDEBAR);
 		for(Entry<Player, PlayerWrapper> p : playerList.entrySet()) {
 			p.getKey().setGameMode(GameMode.SPECTATOR);
 			p.getValue().setReady(false);
@@ -455,7 +456,6 @@ public class Game implements Listener{
 			p.getValue().setCanEscape(false);
 			p.getValue().setThiefSpawnPoint(null);
 		}
-		scoreboardSidebar.setDisplaySlot(DisplaySlot.SIDEBAR);
 		ticker.cancel();
 		state=GameState.Waiting;
 		Bukkit.getPluginManager().callEvent(new GameEndEvent(this, idPartie));
