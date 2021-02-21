@@ -441,6 +441,7 @@ public class Game implements Listener{
 		try {
 			idPartie = SQLInterface.addPartie(Date.valueOf(LocalDate.now()), new Time(SQLInterface.getTimeFormat().parse(LocalTime.now().toString()).getTime() - SQLInterface.getTimeFormat().parse(startTime).getTime()), money, isRanked, mapName);
 		} catch (ParseException e) {
+			idPartie=-1;
 			e.printStackTrace();
 		}
 		for(Objet obj : objetsList) {
