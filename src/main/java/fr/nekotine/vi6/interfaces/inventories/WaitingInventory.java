@@ -58,6 +58,7 @@ public class WaitingInventory extends BasePersonalInventory{
 			inventory.setItem(13, Utils.createItemStack(Material.EMERALD_BLOCK, 1, ChatColor.GREEN+"Prêt", ""));
 			break;
 		case BLUE_BANNER:
+			if(game.getWrapper(player).isReady()) return;
 			game.getWrapper(player).changeTeam(Team.VOLEUR);
 			inventory.setItem(16, Utils.createItemStack(Material.RED_BANNER, 1, ChatColor.RED+"Voleur", ""));
 			for(byte index=1;index<=26;index++) {
@@ -68,6 +69,7 @@ public class WaitingInventory extends BasePersonalInventory{
 			}
 			break;
 		case RED_BANNER:
+			if(game.getWrapper(player).isReady()) return;
 			game.getWrapper(player).changeTeam(Team.GARDE);
 			for(byte index=1;index<=26;index++) {
 				if(index==10||index==13||index==16) {
