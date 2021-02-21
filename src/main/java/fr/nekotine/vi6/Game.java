@@ -344,9 +344,11 @@ public class Game implements Listener{
 	
 	public void scan() {
 		ProtocolManager pmanager = ProtocolLibrary.getProtocolManager();
+		ArrayList<Integer> idList = new ArrayList<>();
 		for (Player p : playerList.keySet()) {
 			if (playerList.get(p).getTeam()==Team.GARDE) {
 				int entityID = (int)(Math.random() * Integer.MAX_VALUE);
+				idList.add(entityID);
 				///CREATE PACKET
 				Location pLoc = p.getLocation();
 				PacketContainer createPacket = pmanager.createPacket(PacketType.Play.Server.SPAWN_ENTITY);
@@ -392,6 +394,15 @@ public class Game implements Listener{
 				sendPacketToTeam(Team.VOLEUR, createPacket, metadataPacket,equipPacket);
 			}
 		}
+		new BukkitRunnable() {
+			
+			@Override
+			public void run() {
+				PacketContainer packet = pmanager.createPacket(PacketType.Play.Server.ENTITY_DESTROY);
+				packet.getIntegerArrays().write(0, idList.stream().mapToInt(Integer::intValue).toArray());
+				sendPacketToTeam(Team.VOLEUR, packet);
+			}
+		};
 	}
 	
 	private void sendPacketToTeam(Team team,PacketContainer... packet) {
