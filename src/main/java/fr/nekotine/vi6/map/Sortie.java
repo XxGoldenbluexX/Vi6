@@ -83,8 +83,10 @@ public class Sortie implements ConfigurationSerializable,ZoneDetectionListener {
 			wrap.setState(PlayerState.LEAVED);
 			player.setGameMode(GameMode.SPECTATOR);
 			for(ItemStack itm : player.getInventory().getContents()) {
-				Objet objet = wrap.getGame().getObjet(itm);
-				if(objet!=null) objet.leaveMap();
+				if(itm!=null) {
+					Objet objet = wrap.getGame().getObjet(itm);
+					if(objet!=null) objet.leaveMap();
+				}
 			}
 			for(Entry<Player, PlayerWrapper> p : wrap.getGame().getPlayerMap().entrySet()) {
 				p.getKey().sendMessage("[Sortie.class] "+player.getName()+" s'est échappé avec "+wrap.getStealedArtefactList().size()+" artefacts!");
