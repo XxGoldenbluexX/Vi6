@@ -9,6 +9,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
@@ -17,6 +18,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.boss.BarColor;
@@ -42,6 +44,9 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.wrappers.EnumWrappers;
+import com.comphenix.protocol.wrappers.EnumWrappers.ItemSlot;
+import com.comphenix.protocol.wrappers.Pair;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher.Registry;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher.Serializer;
@@ -341,16 +346,15 @@ public class Game implements Listener{
 		ProtocolManager pmanager = ProtocolLibrary.getProtocolManager();
 		for (Player p : playerList.keySet()) {
 			if (playerList.get(p).getTeam()==Team.GARDE) {
-				Integer entityID = (int)(Math.random() * Integer.MAX_VALUE);
-				System.out.println("making create");
+				int entityID = (int)(Math.random() * Integer.MAX_VALUE);
 				///CREATE PACKET
 				Location pLoc = p.getLocation();
 				PacketContainer createPacket = pmanager.createPacket(PacketType.Play.Server.SPAWN_ENTITY);
 				// Entity ID
 				createPacket.getIntegers().write(0, entityID);
+				createPacket.getEntityTypeModifier().write(0, EntityType.ARMOR_STAND);
 		        // Entity Type
 				createPacket.getIntegers().write(6, 78);
-				createPacket.getEntityTypeModifier().write(0, EntityType.ARMOR_STAND);
 		        // Set optional velocity (/8000)
 				createPacket.getIntegers().write(1, 0);
 				createPacket.getIntegers().write(2, 0);
@@ -376,8 +380,16 @@ public class Game implements Listener{
 				watcher.setObject(0, serializer,(byte)(0x40|0x20));
 				watcher.setObject(14, serializer,(byte)(0x08|0x04));
 				metadataPacket.getWatchableCollectionModifier().write(0, watcher.getWatchableObjects());
-				System.out.println("sending packets to oblivion");
-				sendPacketToTeam(Team.VOLEUR, createPacket, metadataPacket);
+				///EQUIPMENT PACKET
+				PacketContainer equipPacket = pmanager.createPacket(PacketType.Play.Server.ENTITY_EQUIPMENT);
+				equipPacket.getIntegers().write(0, entityID);
+				List<Pair<ItemSlot, ItemStack>> pairList = new ArrayList<>();
+				pairList.add(new Pair<>(EnumWrappers.ItemSlot.HEAD, new ItemStack(Material.NETHERITE_HELMET)));
+				pairList.add(new Pair<>(EnumWrappers.ItemSlot.CHEST, new ItemStack(Material.NETHERITE_CHESTPLATE)));
+				pairList.add(new Pair<>(EnumWrappers.ItemSlot.LEGS, new ItemStack(Material.NETHERITE_LEGGINGS)));
+				pairList.add(new Pair<>(EnumWrappers.ItemSlot.FEET, new ItemStack(Material.NETHERITE_BOOTS)));
+				equipPacket.getSlotStackPairLists().write(0, pairList);
+				sendPacketToTeam(Team.VOLEUR, createPacket, metadataPacket,equipPacket);
 			}
 		}
 	}
