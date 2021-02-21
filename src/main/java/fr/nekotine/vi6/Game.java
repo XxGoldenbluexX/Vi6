@@ -68,6 +68,7 @@ import fr.nekotine.vi6.events.PlayerLeaveGameEvent;
 import fr.nekotine.vi6.interfaces.inventories.GameMoneyAnvil;
 import fr.nekotine.vi6.interfaces.inventories.GameSettingsInventory;
 import fr.nekotine.vi6.interfaces.inventories.MapSelectionInventory;
+import fr.nekotine.vi6.interfaces.items.BaseInventoryItem;
 import fr.nekotine.vi6.interfaces.items.OpenPreparationItem;
 import fr.nekotine.vi6.interfaces.items.OpenWaitingItem;
 import fr.nekotine.vi6.map.Artefact;
@@ -451,6 +452,7 @@ public class Game implements Listener{
 			obj.gameEnd();
 		}
 		scoreboardSidebar.setDisplaySlot(DisplaySlot.SIDEBAR);
+		BaseInventoryItem waitingItem = new OpenWaitingItem(main, this);
 		for(Entry<Player, PlayerWrapper> p : playerList.entrySet()) {
 			p.getKey().setGameMode(GameMode.SPECTATOR);
 			p.getValue().setReady(false);
@@ -459,6 +461,8 @@ public class Game implements Listener{
 			p.getValue().setCanCapture(false);
 			p.getValue().setCanEscape(false);
 			p.getValue().setThiefSpawnPoint(null);
+			p.getKey().getInventory().clear();
+			p.getKey().getInventory().setItem(0, waitingItem.item);
 		}
 		ticker.cancel();
 		state=GameState.Waiting;

@@ -14,7 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import fr.nekotine.vi6.Vi6Main;
 
 public abstract class BaseInventoryItem implements Listener{
-	protected final ItemStack item;
+	public final ItemStack item;
 	protected final Vi6Main main;
 	public BaseInventoryItem(Vi6Main main, ItemStack item) {
 		this.main=main;
