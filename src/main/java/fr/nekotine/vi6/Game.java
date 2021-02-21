@@ -20,6 +20,8 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -393,6 +395,7 @@ public class Game implements Listener{
 				equipPacket.getSlotStackPairLists().write(0, pairList);
 				sendPacketToTeam(Team.VOLEUR, createPacket, metadataPacket,equipPacket);
 			}
+			p.playSound(p.getLocation().add(0, 3, 0), Sound.BLOCK_BEACON_POWER_SELECT, SoundCategory.MASTER, 1, 1);
 		}
 		new BukkitRunnable() {
 			
@@ -400,7 +403,15 @@ public class Game implements Listener{
 			public void run() {
 				PacketContainer packet = pmanager.createPacket(PacketType.Play.Server.ENTITY_DESTROY);
 				packet.getIntegerArrays().write(0, idList.stream().mapToInt(Integer::intValue).toArray());
-				sendPacketToTeam(Team.VOLEUR, packet);
+				for (Player p : playerList.keySet()) {
+					if (playerList.get(p).getTeam()==Team.VOLEUR) {
+						try {
+							pmanager.sendServerPacket(p, packet);
+						} catch (InvocationTargetException e) {
+							e.printStackTrace();
+						}
+					}
+				}
 			}
 		};
 	}
