@@ -123,13 +123,15 @@ public class PreparationInventory extends BasePersonalInventory{
 			break;
 		case COMPOSTER:
 			if(slot==9) {
-				for(ItemStack item : player.getInventory().getContents()) {
-					if(item!=null) {
-						Objet obj = game.getObjet(item);
-						if(obj!=null) {
-							obj.vendre(player);
-							game.getWrapper(player).setMoney(game.getWrapper(player).getMoney()+obj.objet.getCost());
-							inventory.setItem(45, Utils.createItemStack(Material.GOLD_INGOT,1,ChatColor.GOLD+"Argent: "+game.getWrapper(player).getMoney(),""));
+				if(!game.getWrapper(player).isReady()) {
+					for(ItemStack item : player.getInventory().getContents()) {
+						if(item!=null) {
+							Objet obj = game.getObjet(item);
+							if(obj!=null) {
+								obj.vendre(player);
+								game.getWrapper(player).setMoney(game.getWrapper(player).getMoney()+obj.objet.getCost());
+								inventory.setItem(45, Utils.createItemStack(Material.GOLD_INGOT,1,ChatColor.GOLD+"Argent: "+game.getWrapper(player).getMoney(),""));
+							}
 						}
 					}
 				}
@@ -162,7 +164,6 @@ public class PreparationInventory extends BasePersonalInventory{
 			createObjet(itm);
 			break;
 		}
-		
 	}
 	public void createObjet(ItemStack item) {
 		ObjetsSkins objetSkin = item.getItemMeta().getPersistentDataContainer().get(ObjetsSkinsTagType.getNamespacedKey(main), new ObjetsSkinsTagType());
@@ -181,7 +182,7 @@ public class PreparationInventory extends BasePersonalInventory{
 					}
 				}
 			}
-			if(game.getWrapper(player).getMoney()>=objetSkin.getObjet().getCost()) {
+			if(!game.getWrapper(player).isReady() && game.getWrapper(player).getMoney()>=objetSkin.getObjet().getCost()) {
 				game.getWrapper(player).setMoney(game.getWrapper(player).getMoney()-objetSkin.getObjet().getCost());
 				inventory.setItem(45, Utils.createItemStack(Material.GOLD_INGOT,1,ChatColor.GOLD+"Argent: "+game.getWrapper(player).getMoney(),""));
 				game.addObjet(ObjetsSkins.createObjet(main,objetSkin, player, game));

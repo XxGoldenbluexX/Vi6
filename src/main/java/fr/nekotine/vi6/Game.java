@@ -326,7 +326,7 @@ public class Game implements Listener{
 					enterInGamePhase();
 				}
 			}
-		}.runTaskTimer(main, 0, 60);
+		}.runTaskTimer(main, 0, 20);
 		Bukkit.getPluginManager().callEvent(new GameEnterPreparationPhaseEvent(this));
 		return true;
 	}
