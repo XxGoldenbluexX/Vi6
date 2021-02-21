@@ -398,7 +398,6 @@ public class Game implements Listener{
 			p.playSound(p.getLocation().add(0, 3, 0), Sound.BLOCK_BEACON_POWER_SELECT, SoundCategory.MASTER, 1, 1);
 		}
 		new BukkitRunnable() {
-			
 			@Override
 			public void run() {
 				PacketContainer packet = pmanager.createPacket(PacketType.Play.Server.ENTITY_DESTROY);
@@ -413,7 +412,7 @@ public class Game implements Listener{
 					}
 				}
 			}
-		};
+		}.runTaskLater(main, 140);
 	}
 	
 	private void sendPacketToTeam(Team team,PacketContainer... packet) {
