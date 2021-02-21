@@ -13,6 +13,7 @@ import dev.jorel.commandapi.arguments.CustomArgument.MessageBuilder;
 import dev.jorel.commandapi.arguments.GreedyStringArgument;
 import dev.jorel.commandapi.arguments.LocationArgument;
 import dev.jorel.commandapi.arguments.LocationType;
+import dev.jorel.commandapi.arguments.PlayerArgument;
 import dev.jorel.commandapi.arguments.StringArgument;
 import dev.jorel.commandapi.executors.CommandExecutor;
 import fr.nekotine.vi6.Game;
@@ -74,6 +75,8 @@ public class Vi6commandMaker {
 				.withSubcommand(gameJoin(gameArgument))
 				.withSubcommand(gameLeave(gameArgument))
 				.withSubcommand(gameRemove(main,gameArgument))
+				.withSubcommand(gameJoinPlayer(main,gameArgument))
+				.withSubcommand(gameStop(gameArgument))
 				.executes(gameHelp);
 	}
 	
@@ -96,6 +99,22 @@ public class Vi6commandMaker {
 	private static CommandAPICommand gameJoin(Argument gameArgument) {
 		return new CommandAPICommand("join")
 				.withArguments(gameArgument)
+				.executesPlayer((sender,args)->{
+					((Game)args[0]).addPlayer(sender);
+				});
+	}
+	
+	private static CommandAPICommand gameStop(Argument gameArgument) {
+		return new CommandAPICommand("stop")
+				.withArguments(gameArgument)
+				.executes((sender,args)->{
+					((Game)args[0]).endGame();
+				});
+	}
+	
+	private static CommandAPICommand gameJoinPlayer(Vi6Main mainref,Argument gameArgument) {
+		return new CommandAPICommand("join")
+				.withArguments(gameArgument,new PlayerArgument("player").safeOverrideSuggestions((sender)->{return Bukkit.getServer().getOnlinePlayers().stream().filter(e->mainref.getPlayerWrapper(e)==null).toArray(Player[]::new);}))
 				.executes((sender,args)->{
 					((Game)args[0]).addPlayer((Player)sender);
 				});
@@ -104,8 +123,8 @@ public class Vi6commandMaker {
 	private static CommandAPICommand gameLeave(Argument gameArgument) {
 		return new CommandAPICommand("leave")
 				.withArguments(gameArgument)
-				.executes((sender,args)->{
-					((Game)args[0]).removePlayer((Player)sender);
+				.executesPlayer((sender,args)->{
+					((Game)args[0]).removePlayer(sender);
 				});
 	}
 	
