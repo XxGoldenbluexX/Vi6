@@ -78,7 +78,7 @@ public class Vi6Main extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		for(Game game : gameList) {
-			game.onDisable();
+			game.destroy();
 		}
 	}
 	

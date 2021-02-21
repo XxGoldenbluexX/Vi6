@@ -434,6 +434,9 @@ public class Game implements Listener{
 	
 	public boolean endGame() {
 		if (state==GameState.Waiting) return false;
+		for(Objet obj : objetsList) {
+			obj.gameEnd();
+		}
 		scoreboardSidebar.setDisplaySlot(DisplaySlot.SIDEBAR);
 		ticker.cancel();
 		state=GameState.Waiting;
