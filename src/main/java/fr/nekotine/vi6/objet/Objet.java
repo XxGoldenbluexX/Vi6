@@ -19,7 +19,6 @@ import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.enums.GameState;
 import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.events.GameEndEvent;
-import fr.nekotine.vi6.events.PlayerLeaveMapEvent;
 
 public abstract class Objet implements Listener{
 	
@@ -52,14 +51,6 @@ public abstract class Objet implements Listener{
 			for(Player player : game.getPlayerList()) {
 				player.getInventory().removeItem(itemStack);
 			}
-			HandlerList.unregisterAll(this);
-		}
-	}
-	@EventHandler
-	public void onPlayerLeaveMap(PlayerLeaveMapEvent e) {
-		if(e.getGame().equals(game)&&e.getPlayer().getInventory().contains(itemStack)) {
-			leaveMap();
-			e.getPlayer().getInventory().removeItem(itemStack);
 			HandlerList.unregisterAll(this);
 		}
 	}

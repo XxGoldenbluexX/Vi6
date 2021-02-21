@@ -31,6 +31,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
@@ -437,13 +438,28 @@ public class Game implements Listener{
 	
 	public boolean endGame() {
 		if (state==GameState.Waiting) return false;
+		try {
+			idPartie = SQLInterface.addPartie(Date.valueOf(LocalDate.now()), new Time(SQLInterface.getTimeFormat().parse(LocalTime.now().toString()).getTime() - SQLInterface.getTimeFormat().parse(startTime).getTime()), money, isRanked, mapName);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 		for(Objet obj : objetsList) {
 			obj.gameEnd();
+		}
+		for(Entry<Player, PlayerWrapper> p : playerList.entrySet()) {
+			p.getKey().setGameMode(GameMode.SPECTATOR);
+			p.getValue().setReady(false);
+			p.getValue().setState(PlayerState.WAITING);
+			p.getValue().clearStatusEffects();
+			p.getValue().setCanCapture(false);
+			p.getValue().setCanEscape(false);
+			p.getValue().setThiefSpawnPoint(null);
 		}
 		scoreboardSidebar.setDisplaySlot(DisplaySlot.SIDEBAR);
 		ticker.cancel();
 		state=GameState.Waiting;
-		return false;
+		Bukkit.getPluginManager().callEvent(new GameEndEvent(this, idPartie));
+		return true;
 	}
 	
 	public boolean addPlayer(Player p) {
@@ -494,17 +510,25 @@ public class Game implements Listener{
 		return playerList.get(p);
 	}
 	
-	public void gameEnd() {
-		try {
-			idPartie = SQLInterface.addPartie(Date.valueOf(LocalDate.now()), new Time(SQLInterface.getTimeFormat().parse(LocalTime.now().toString()).getTime() - SQLInterface.getTimeFormat().parse(startTime).getTime()), money, isRanked, mapName);
-			Bukkit.getPluginManager().callEvent(new GameEndEvent(this, idPartie));
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-	}
-	
 	@EventHandler
 	public void onDisconnect(PlayerQuitEvent e) {
 		removePlayer(e.getPlayer());
+	}
+	
+	@EventHandler
+	public void playerDeath(PlayerDeathEvent e) {
+		if(playerList.containsKey(e.getEntity()) && playerList.get(e.getEntity()).getTeam()==Team.VOLEUR 
+				&& playerList.get(e.getEntity()).getState()==PlayerState.INSIDE) {
+			playerList.get(e.getEntity()).setState(PlayerState.LEAVED);
+			e.getEntity().setGameMode(GameMode.SPECTATOR);
+			for(Entry<Player, PlayerWrapper> p : playerList.entrySet()) {
+				p.getKey().sendMessage("[Game.class]" + e.getEntity().getName()+" est mort avec "+playerList.get(e.getEntity()).getStealedArtefactList().size()+
+						" artefacts");
+				if(p.getValue().getTeam()==Team.VOLEUR && (p.getValue().getState()==PlayerState.ENTERING || p.getValue().getState()==PlayerState.INSIDE)) {
+					return;
+				}
+				endGame();
+			}
+		}
 	}
 }

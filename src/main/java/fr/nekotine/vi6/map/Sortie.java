@@ -2,6 +2,7 @@ package fr.nekotine.vi6.map;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.bukkit.GameMode;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
@@ -85,8 +86,12 @@ public class Sortie implements ConfigurationSerializable,ZoneDetectionListener {
 				Objet objet = wrap.getGame().getObjet(itm);
 				if(objet!=null) objet.leaveMap();
 			}
-			for(Player p : wrap.getGame().getPlayerList()) {
-				p.sendMessage("[Sortie.class] "+player.getName()+" s'est échappé avec "+wrap.getStealedArtefactList().size()+" artefacts!");
+			for(Entry<Player, PlayerWrapper> p : wrap.getGame().getPlayerMap().entrySet()) {
+				p.getKey().sendMessage("[Sortie.class] "+player.getName()+" s'est échappé avec "+wrap.getStealedArtefactList().size()+" artefacts!");
+				if(p.getValue().getTeam()==Team.VOLEUR && (p.getValue().getState()==PlayerState.ENTERING || p.getValue().getState()==PlayerState.INSIDE)) {
+					return false;
+				}
+				wrap.getGame().endGame();
 			}
 		}
 		return false;
