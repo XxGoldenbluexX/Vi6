@@ -35,6 +35,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -298,6 +299,7 @@ public class Game implements Listener{
 			inv.setChestplate(makeSwordItem(Material.DIAMOND_CHESTPLATE,1));
 			inv.setLeggings(makeSwordItem(Material.DIAMOND_LEGGINGS,1));
 			inv.setBoots(makeSwordItem(Material.DIAMOND_BOOTS,1));
+			inv.setItem(0, makeSwordItem(Material.DIAMOND_SWORD, 7));
 			wrapper.setReady(false);
 			wrapper.setMoney(money);
 			wrapper.setState(PlayerState.PREPARATION);
