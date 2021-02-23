@@ -86,9 +86,10 @@ public class SQLInterface {
 		try {
 			Connection c = DriverManager.getConnection("jdbc:sqlite:"+dataFolderURL+"/Vi6Database.db");
 			String sql = "INSERT INTO Partie (Id_Partie,Date_Partie,Duree,Argent,IsRanked,Nom_Carte) "+
-							"OUTPUT Id_Partie "+
 							"VALUES ("+date+","+duree+","+argent+","+isRanked+","+nomCarte+");";
 			Statement sttmt = c.createStatement();
+			sttmt.executeUpdate(sql);
+			sql = "SELECT MAX(ID_Partie) FROM Partie";
 			ResultSet rs = sttmt.executeQuery(sql);
 			sttmt.close();
 			c.close();
@@ -105,6 +106,8 @@ public class SQLInterface {
 							"OUTPUT Id_Partie "+
 							"VALUES ("+idPartieTueur+","+salleMort+","+idPartie+","+playerUUID.toString()+","+team.toString()+","+entree+","+sortie+");";
 			Statement sttmt = c.createStatement();
+			sttmt.executeUpdate(sql);
+			sql = "SELECT MAX(Id_PartieJoueur) FROM PartieJoueur";
 			ResultSet rs = sttmt.executeQuery(sql);
 			sttmt.close();
 			c.close();

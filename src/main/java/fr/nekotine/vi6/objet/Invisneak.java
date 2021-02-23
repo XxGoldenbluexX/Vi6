@@ -35,12 +35,12 @@ public class Invisneak extends Objet{
 	public void tick() {
 		if(effect!=null) {
 			if(isGuardNear(getHolder())) {
-				System.out.println("GUARD NEAR!");
+				getHolder().sendMessage("GUARD NEAR!");
 				game.getWrapper(getHolder()).removeStatusEffect(effect);
 				effect=null;
 			}
 		}else if(isSneaking && !isGuardNear(getHolder())) {
-			System.out.println("GUARD NO LONGER HERE");
+			getHolder().sendMessage("GUARD NO LONGER HERE");
 			effect = new StatusEffect(Effects.Invisible);
 			game.getWrapper(getHolder()).addStatusEffect(effect);
 		}
@@ -73,11 +73,11 @@ public class Invisneak extends Objet{
 		if(e.getPlayer().getInventory().contains(itemStack)) {
 			isSneaking=e.isSneaking();
 			if(e.isSneaking()) {
-				System.out.println("Applying invi");
+				
 				effect = new StatusEffect(Effects.Invisible);
 				game.getWrapper(e.getPlayer()).addStatusEffect(effect);
 			}else if (effect!=null){
-				System.out.println("Removing invi");
+				e.getPlayer().sendMessage("Removing invi");
 				game.getWrapper(e.getPlayer()).removeStatusEffect(effect);
 				effect=null;
 			}

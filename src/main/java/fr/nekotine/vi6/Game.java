@@ -116,13 +116,13 @@ public class Game implements Listener{
 	public Game(Vi6Main main, String name) {
 		this.main=main;
 		this.name=name;
+		DEFAULT_RANKED_MONEY = main.getConfig().getInt("rankedMoney",1000);
+		DEFAULT_PREPARATION_TIME = main.getConfig().getInt("preparationTime",2*60);
+		money=DEFAULT_RANKED_MONEY;
 		new OpenWaitingItem(main, this);
 		settingsInterface = new GameSettingsInventory(main, this);
 		mapInterface = new MapSelectionInventory(main, this);
 		nbtCompteur.add(0);
-		DEFAULT_RANKED_MONEY = main.getConfig().getInt("rankedMoney",1000);
-		DEFAULT_PREPARATION_TIME = main.getConfig().getInt("preparationTime",2*60);
-		money=DEFAULT_RANKED_MONEY;
 		Bukkit.getPluginManager().registerEvents(this, main);
 		scoreboardSidebar = scoreboard.registerNewObjective("sidebar", "dummy", ChatColor.GOLD+name);
 		scoreboardSidebar.setDisplaySlot(DisplaySlot.SIDEBAR);
