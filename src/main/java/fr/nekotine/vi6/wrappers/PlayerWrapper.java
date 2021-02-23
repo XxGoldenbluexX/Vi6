@@ -190,16 +190,36 @@ public class PlayerWrapper {
 	
 	public void removeStatusEffect(StatusEffect eff) {
 		statusEffects.remove(eff);
-		updateEffect(eff.getEffect());
+		updateRemoveEffect(eff.getEffect());
 	}
 	
 	public void addStatusEffect(StatusEffect eff) {
+		updateAddEffect(eff.getEffect());
 		statusEffects.add(eff);
-		updateEffect(eff.getEffect());
 	}
 	
-	public void updateEffect(Effects e) {
+	public void updateRemoveEffect(Effects e) {
 		if (haveEffect(e)) return;
+		if (Effects.isCounterable(e) && haveEffect(Effects.getCounter(e)))return;
+		e.disable(player, this);
+		if (Effects.isCountering(e)){
+			Effects countered = Effects.getCountered(e);
+			if (haveEffect(countered)) {
+				countered.enable(player, this);
+			}
+		}
+	}
+	
+	public void updateAddEffect(Effects e) {
+		if (haveEffect(e)) return;
+		if (Effects.isCounterable(e) && haveEffect(Effects.getCounter(e))) return;
+		e.enable(player, this);
+		if (Effects.isCountering(e)){
+			Effects countered = Effects.getCountered(e);
+			if (haveEffect(countered)) {
+				countered.disable(player, this);
+			}
+		}
 	}
 	
 	//---------------------------
