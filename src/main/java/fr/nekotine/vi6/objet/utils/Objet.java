@@ -1,4 +1,4 @@
-package fr.nekotine.vi6.objet;
+package fr.nekotine.vi6.objet.utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -19,6 +19,7 @@ import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.enums.GameState;
 import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.events.GameEndEvent;
+import fr.nekotine.vi6.objet.ObjetsList;
 
 public abstract class Objet implements Listener{
 	
@@ -38,11 +39,11 @@ public abstract class Objet implements Listener{
 	
 	public abstract void gameEnd();
 	public abstract void tick();
-	public abstract void leaveMap();
-	public abstract void death();
-	public abstract void sell();
-	public abstract void action(Action action);
-	public abstract void drop();
+	public abstract void leaveMap(Player holder);
+	public abstract void death(Player holder);
+	public abstract void sell(Player holder);
+	public abstract void action(Action action, Player holder);
+	public abstract void drop(Player holder);
 
 	@EventHandler
 	public void onGameEnd(GameEndEvent e) {
@@ -57,7 +58,7 @@ public abstract class Objet implements Listener{
 	@EventHandler
 	public void onPlayerDeath(PlayerDeathEvent e) {
 		if(e.getEntity().getInventory().contains(itemStack)) {
-			death();
+			death(e.getEntity());
 			e.getEntity().getInventory().removeItem(itemStack);
 			HandlerList.unregisterAll(this);
 		}
@@ -67,10 +68,10 @@ public abstract class Objet implements Listener{
 		if(itemStack.equals(e.getItem())) {
 			if(game.getPlayerTeam(e.getPlayer())==Team.VOLEUR){
 				if(game.getState()==GameState.Ingame) {
-					action(e.getAction());
+					action(e.getAction(),e.getPlayer());
 				}
 			}else {
-				action(e.getAction());
+				action(e.getAction(),e.getPlayer());
 			}
 		}
 	}
@@ -80,15 +81,15 @@ public abstract class Objet implements Listener{
 			e.setCancelled(true);
 			if(game.getPlayerTeam(e.getPlayer())==Team.VOLEUR){
 				if(game.getState()==GameState.Ingame) {
-					drop();
+					drop(e.getPlayer());
 				}
 			}else {
-				drop();
+				drop(e.getPlayer());
 			}
 		}
 	}
 	public void vendre(Player player) {
-		sell();
+		sell(player);
 		player.getInventory().removeItem(itemStack);
 		game.removeObjet(this);
 		HandlerList.unregisterAll(this);

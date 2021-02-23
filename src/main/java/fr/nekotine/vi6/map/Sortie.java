@@ -13,7 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.enums.PlayerState;
 import fr.nekotine.vi6.enums.Team;
-import fr.nekotine.vi6.objet.Objet;
+import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.utils.DetectionZone;
 import fr.nekotine.vi6.utils.ZoneDetectionListener;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
@@ -85,7 +85,7 @@ public class Sortie implements ConfigurationSerializable,ZoneDetectionListener {
 			for(ItemStack itm : player.getInventory().getContents()) {
 				if(itm!=null) {
 					Objet objet = wrap.getGame().getObjet(itm);
-					if(objet!=null) objet.leaveMap();
+					if(objet!=null) objet.leaveMap(player);
 				}
 			}
 			for(Entry<Player, PlayerWrapper> p : wrap.getGame().getPlayerMap().entrySet()) {

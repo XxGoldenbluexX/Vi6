@@ -10,17 +10,13 @@ import org.bukkit.entity.Player;
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.enums.Team;
+import fr.nekotine.vi6.objet.utils.Objet;
+import fr.nekotine.vi6.objet.utils.SkinType;
 
 public enum ObjetsSkins {
-	Lantern(ObjetsList.LANTERN,
+	/*Lantern(ObjetsList.LANTERN,
 			SkinType.DEFAULT,
 			ChatColor.RED+"Lanterne",
-			Material.LANTERN,
-			new String[]{"Ceci est la rune Lanterne (skin de base de la Lanterne)"},
-			Material.LANTERN),
-	Lantern0(ObjetsList.LANTERN,
-			SkinType.DEFAULT,
-			ChatColor.RED+"Lanterne0",
 			Material.LANTERN,
 			new String[]{"Ceci est la rune Lanterne (skin de base de la Lanterne)"},
 			Material.LANTERN),
@@ -29,13 +25,12 @@ public enum ObjetsSkins {
 			ChatColor.BLUE+"LanterneBleue",
 			Material.SOUL_LANTERN,
 			new String[]{"Ceci est le skin LanterneBleue"},
-			Material.SOUL_LANTERN),
-	SeaLantern(Lantern.getObjet(),
-			SkinType.SKIN,
-			ChatColor.BLUE+"Lanterne Des profondeurs",
-			Material.SOUL_LANTERN,
-			new String[]{"Ceci est un skin  de Lanterne"},
-			Material.SEA_LANTERN);
+			Material.SOUL_LANTERN),*/
+	InviSneak(ObjetsList.INVISNEAK,
+			SkinType.DEFAULT,
+			ChatColor.GOLD+"Invisible",
+			Material.GLASS_PANE,
+			new String[]{ChatColor.LIGHT_PURPLE+"Devenez invisible en vous accroupissant"});
 	
 	////////////////////////////////
 	private final ObjetsList objet;
@@ -43,16 +38,14 @@ public enum ObjetsSkins {
 	private final String objetName;
 	private final Material material;
 	private final String[] lore;
-	private final Material skinMaterial;
 	////////////////////////////////
-	ObjetsSkins(ObjetsList objet, SkinType skinType, /* Param�tres itemStack du shop ->*/String objetName, Material material, String[] lore , 
-			Material skinMaterial/*, autres parametres spécifiques à certaines runes*/) {
+	ObjetsSkins(ObjetsList objet, SkinType skinType, /* Param�tres itemStack du shop ->*/String objetName, Material material, String[] lore
+			/*, autres parametres spécifiques à certaines runes*/) {
 		this.objet = objet;
 		this.skinType = skinType;
 		this.objetName=objetName;
 		this.material=material;
 		this.lore = lore;
-		this.skinMaterial=skinMaterial;
 	}
 	////////////////////////////////
 	
@@ -74,7 +67,9 @@ public enum ObjetsSkins {
 	public static Objet createObjet(Vi6Main main, ObjetsSkins skin, Player player, Game game) {
 		switch(skin.getObjet()) {
 		case LANTERN:
-			return new Lantern(main, skin.getObjet(), player, game, skin.getSkinMaterial());
+			//return new Lantern(main, skin.getObjet(), player, game, skin.getSkinMaterial());
+		case INVISNEAK:
+			return new Invisneak(main, skin.getObjet(), player, game);
 		default:
 			return null;
 		}
@@ -96,9 +91,5 @@ public enum ObjetsSkins {
 			}
 		}
 		return objets;
-	}
-
-	public Material getSkinMaterial() {
-		return skinMaterial;
 	}
 }
