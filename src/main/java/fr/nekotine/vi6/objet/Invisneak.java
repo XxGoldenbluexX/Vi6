@@ -72,11 +72,10 @@ public class Invisneak extends Objet{
 	public void onSneakToggle(PlayerToggleSneakEvent e) {
 		if(e.getPlayer().getInventory().contains(itemStack)) {
 			isSneaking=e.isSneaking();
-			if(e.isSneaking()) 
+			if(isSneaking) {
 				effect = new StatusEffect(Effects.Invisible);
 				game.getWrapper(e.getPlayer()).addStatusEffect(effect);
 		}else if (effect!=null){
-			System.out.println(skin);
 			if(skin!=null) {
 				switch(skin) {
 				case InviSneakSkin:
@@ -85,10 +84,10 @@ public class Invisneak extends Objet{
 				}
 			}else {
 				e.getPlayer().sendMessage("Removing invi");
-			}
-				
+			}	
 			game.getWrapper(e.getPlayer()).removeStatusEffect(effect);
 			effect=null;
+			}
 		}
 	}
 	private boolean isGuardNear(Player holder) {
