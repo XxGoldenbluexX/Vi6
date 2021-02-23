@@ -61,7 +61,7 @@ public class Vi6Main extends JavaPlugin {
 		ConfigurationSerialization.registerClass(DetectionZone.class, "DetectionZone");
 		ConfigurationSerialization.registerClass(SpawnVoleur.class, "SpawnVoleur");
 		pmanager=Bukkit.getPluginManager();//getting pmanager reference
-		//new ItemHider(ProtocolLibrary.getProtocolManager(),this); comming soon
+		new ItemHider(ProtocolLibrary.getProtocolManager(),this);
 		//File creation
 		saveDefaultConfig();//making config.yml
 		if (getDataFolder().exists()) {//making dataFolder
