@@ -21,8 +21,8 @@ public class Invisneak extends Objet{
 	private final int DETECTION_RANGE_IN_BLOCKS=3;
 	private StatusEffect effect;
 	private boolean isSneaking;
-	public Invisneak(Vi6Main main, ObjetsList objet, Player player, Game game) {
-		super(main, objet, new ItemStack(Material.GLASS_PANE), game);
+	public Invisneak(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Player player, Game game) {
+		super(main, objet, skin, new ItemStack(Material.GLASS_PANE), game);
 		player.getInventory().addItem(itemStack);
 	}
 
@@ -72,15 +72,23 @@ public class Invisneak extends Objet{
 	public void onSneakToggle(PlayerToggleSneakEvent e) {
 		if(e.getPlayer().getInventory().contains(itemStack)) {
 			isSneaking=e.isSneaking();
-			if(e.isSneaking()) {
-				
+			if(e.isSneaking()) 
 				effect = new StatusEffect(Effects.Invisible);
 				game.getWrapper(e.getPlayer()).addStatusEffect(effect);
-			}else if (effect!=null){
+		}else if (effect!=null){
+			System.out.println(skin);
+			if(skin!=null) {
+				switch(skin) {
+				case InviSneakSkin:
+					e.getPlayer().sendMessage("Shiny Removing invi");
+					break;
+				}
+			}else {
 				e.getPlayer().sendMessage("Removing invi");
-				game.getWrapper(e.getPlayer()).removeStatusEffect(effect);
-				effect=null;
 			}
+				
+			game.getWrapper(e.getPlayer()).removeStatusEffect(effect);
+			effect=null;
 		}
 	}
 	private boolean isGuardNear(Player holder) {

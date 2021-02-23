@@ -17,9 +17,9 @@ import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.events.GameEnterInGamePhaseEvent;
-import fr.nekotine.vi6.objet.ObjetsSkins;
+import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.utils.Objet;
-import fr.nekotine.vi6.utils.ObjetsSkinsTagType;
+import fr.nekotine.vi6.utils.ObjetsListTagType;
 import fr.nekotine.vi6.utils.Utils;
 import fr.nekotine.vi6.yml.DisplayTexts;
 
@@ -58,18 +58,16 @@ public class PreparationInventory extends BasePersonalInventory{
 		player.openInventory(inventory);
 	}
 	public void showObjetPage(int page) {
-		List<ObjetsSkins> objets = ObjetsSkins.getDefaultSkins(game.getWrapper(player).getTeam());
+		List<ObjetsList> objets = ObjetsList.getObjetsForTeam(game.getWrapper(player).getTeam());
 		if(28*(page-1)<objets.size()){
 			byte index=11;
-			for(ObjetsSkins obj : objets.subList(28*(page-1), objets.size())) {
-				ObjetsSkins skin = game.getWrapper(player).getSelectedSkin(obj.getObjet());
-				if(skin==null) skin = obj;
+			for(ObjetsList obj : objets.subList(28*(page-1), objets.size())) {
 				List<String> lore = new ArrayList<>();
-				for(String l : obj.getLore()) {
+				for(String l : obj.getInShopLore()) {
 					lore.add(l);
+					lore.add(ChatColor.GOLD+"Coût: "+obj.getCost());
 				}
-				lore.add(ChatColor.GOLD+"Coût: "+skin.getObjet().getCost());
-				inventory.setItem(index, Utils.createObjetItemStack(main, obj.getName(), skin, 1, lore.toArray(String[]::new)));
+				inventory.setItem(index, Utils.createObjetItemStack(main, obj.getInShopName(), obj, 1, lore.toArray(String[]::new)));
 				index++;
 				if(index==45) {
 					break;
@@ -84,7 +82,6 @@ public class PreparationInventory extends BasePersonalInventory{
 				}
 				inventory.setItem(index, new ItemStack(Material.AIR));
 			}
-			
 		}
 		if(page>1) {
 			inventory.setItem(47, Utils.createItemStack(Material.PAPER,1,ChatColor.RED+"Page précédente",""));
@@ -129,7 +126,7 @@ public class PreparationInventory extends BasePersonalInventory{
 							Objet obj = game.getObjet(item);
 							if(obj!=null) {
 								obj.vendre(player);
-								game.getWrapper(player).setMoney(game.getWrapper(player).getMoney()+obj.objet.getCost());
+								game.getWrapper(player).setMoney(game.getWrapper(player).getMoney()+obj.getObjet().getCost());
 								inventory.setItem(45, Utils.createItemStack(Material.GOLD_INGOT,1,ChatColor.GOLD+"Argent: "+game.getWrapper(player).getMoney(),""));
 							}
 						}
@@ -166,26 +163,26 @@ public class PreparationInventory extends BasePersonalInventory{
 		}
 	}
 	public void createObjet(ItemStack item) {
-		ObjetsSkins objetSkin = item.getItemMeta().getPersistentDataContainer().get(ObjetsSkinsTagType.getNamespacedKey(main), new ObjetsSkinsTagType());
-		if(objetSkin!=null) {
+		ObjetsList objet = item.getItemMeta().getPersistentDataContainer().get(ObjetsListTagType.getNamespacedKey(main), new ObjetsListTagType());
+		if(objet!=null) {
 			int count=0;
 			for(ItemStack itemstack : player.getInventory().getContents()) {
 				if(itemstack!=null) {
 					Objet obj = game.getObjet(itemstack);
 					if(obj!=null) {
-						if(obj.objet==objetSkin.getObjet()) {
+						if(obj.getObjet()==objet) {
 							count++;
-							if(count==objetSkin.getObjet().getLimit()) {
+							if(count==objet.getLimit()) {
 								return;
 							}
 						}
 					}
 				}
 			}
-			if(!game.getWrapper(player).isReady() && game.getWrapper(player).getMoney()>=objetSkin.getObjet().getCost()) {
-				game.getWrapper(player).setMoney(game.getWrapper(player).getMoney()-objetSkin.getObjet().getCost());
+			if(!game.getWrapper(player).isReady() && game.getWrapper(player).getMoney()>=objet.getCost()) {
+				game.getWrapper(player).setMoney(game.getWrapper(player).getMoney()-objet.getCost());
 				inventory.setItem(45, Utils.createItemStack(Material.GOLD_INGOT,1,ChatColor.GOLD+"Argent: "+game.getWrapper(player).getMoney(),""));
-				game.addObjet(ObjetsSkins.createObjet(main,objetSkin, player, game));
+				game.addObjet(ObjetsList.createObjet(main, objet, player, game));
 			}
 		}
 	}
@@ -197,7 +194,7 @@ public class PreparationInventory extends BasePersonalInventory{
 					Objet obj = game.getObjet(e.getCurrentItem());
 					if(obj!=null) {
 						obj.vendre(player);
-						game.getWrapper(player).setMoney(game.getWrapper(player).getMoney()+obj.objet.getCost());
+						game.getWrapper(player).setMoney(game.getWrapper(player).getMoney()+obj.getObjet().getCost());
 						inventory.setItem(45, Utils.createItemStack(Material.GOLD_INGOT,1,ChatColor.GOLD+"Argent: "+game.getWrapper(player).getMoney(),""));
 					}
 				}

@@ -20,15 +20,18 @@ import fr.nekotine.vi6.enums.GameState;
 import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.events.GameEndEvent;
 import fr.nekotine.vi6.objet.ObjetsList;
+import fr.nekotine.vi6.objet.ObjetsSkins;
 
 public abstract class Objet implements Listener{
 	
-	public final ObjetsList objet;
+	protected final ObjetsList objet;
+	protected final ObjetsSkins skin;
 	protected final Game game;
-	public final ItemStack itemStack;
+	protected final ItemStack itemStack;
 	
-	public Objet(Vi6Main main, ObjetsList objet, ItemStack itemStack, Game game) {
+	public Objet(Vi6Main main, ObjetsList objet, ObjetsSkins skin, ItemStack itemStack, Game game) {
 		this.objet = objet;
+		this.skin=skin;
 		this.game = game;
 		this.itemStack = itemStack;
 		ItemMeta meta = this.itemStack.getItemMeta();
@@ -93,5 +96,16 @@ public abstract class Objet implements Listener{
 		player.getInventory().removeItem(itemStack);
 		game.removeObjet(this);
 		HandlerList.unregisterAll(this);
+	}
+
+	public ObjetsList getObjet() {
+		return objet;
+	}
+
+	public ObjetsSkins getSkin() {
+		return skin;
+	}
+	public ItemStack getItemStack() {
+		return itemStack;
 	}
 }

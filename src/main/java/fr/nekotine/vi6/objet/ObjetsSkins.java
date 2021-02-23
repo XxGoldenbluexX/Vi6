@@ -5,88 +5,50 @@ import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 
-import fr.nekotine.vi6.Game;
-import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.enums.Team;
-import fr.nekotine.vi6.objet.utils.Objet;
-import fr.nekotine.vi6.objet.utils.SkinType;
 
 public enum ObjetsSkins {
-	/*Lantern(ObjetsList.LANTERN,
-			SkinType.DEFAULT,
-			ChatColor.RED+"Lanterne",
-			Material.LANTERN,
-			new String[]{"Ceci est la rune Lanterne (skin de base de la Lanterne)"},
-			Material.LANTERN),
-	BlueLantern(Lantern.getObjet(),
-			SkinType.SKIN,
-			ChatColor.BLUE+"LanterneBleue",
-			Material.SOUL_LANTERN,
-			new String[]{"Ceci est le skin LanterneBleue"},
-			Material.SOUL_LANTERN),*/
-	InviSneak(ObjetsList.INVISNEAK,
-			SkinType.DEFAULT,
+	InviSneakSkin(ObjetsList.INVISNEAK,
 			ChatColor.GOLD+"Invisible",
 			Material.GLASS_PANE,
-			new String[]{ChatColor.LIGHT_PURPLE+"Devenez invisible en vous accroupissant"});
+			new String[]{ChatColor.LIGHT_PURPLE+"C'est un skin pose pas de question"});
 	
 	////////////////////////////////
+	
 	private final ObjetsList objet;
-	private final SkinType skinType;
-	private final String objetName;
-	private final Material material;
-	private final String[] lore;
+	private final String inShopName;
+	private final Material inShopMaterial;
+	private final String[] inShopLore;
 	////////////////////////////////
-	ObjetsSkins(ObjetsList objet, SkinType skinType, /* Param�tres itemStack du shop ->*/String objetName, Material material, String[] lore
-			/*, autres parametres spécifiques à certaines runes*/) {
+	ObjetsSkins(ObjetsList objet, String inShopName, Material inShopMaterial, String... inShopLore) {
 		this.objet = objet;
-		this.skinType = skinType;
-		this.objetName=objetName;
-		this.material=material;
-		this.lore = lore;
+		this.inShopName=inShopName;
+		this.inShopMaterial=inShopMaterial;
+		this.inShopLore=inShopLore;
 	}
 	////////////////////////////////
 	
 	public ObjetsList getObjet() {
 		return objet;
 	}
-	public String getName() {
-		return objetName;
+
+	public String getInShopName() {
+		return inShopName;
 	}
-	public Material getMaterial() {
-		return material;
+
+	public Material getInShopMaterial() {
+		return inShopMaterial;
 	}
-	public SkinType getSkinType() {
-		return skinType;
+
+	public String[] getInShopLore() {
+		return inShopLore;
 	}
-	public String[] getLore() {
-		return lore;
-	}
-	public static Objet createObjet(Vi6Main main, ObjetsSkins skin, Player player, Game game) {
-		switch(skin.getObjet()) {
-		case LANTERN:
-			//return new Lantern(main, skin.getObjet(), player, game, skin.getSkinMaterial());
-		case INVISNEAK:
-			return new Invisneak(main, skin.getObjet(), player, game);
-		default:
-			return null;
-		}
-	}
-	public static List<ObjetsSkins> getDefaultSkins(Team team){
+	
+	public static List<ObjetsSkins> getSkinsForTeam(Team team){
 		List<ObjetsSkins> objets = new ArrayList<>();
 		for(ObjetsSkins obj : values()) {
-			if(obj.getObjet().getTeam()==team && obj.skinType==SkinType.DEFAULT) {
-				objets.add(obj);
-			}
-		}
-		return objets;
-	}
-	public static List<ObjetsSkins> getSkins(Team team){
-		List<ObjetsSkins> objets = new ArrayList<>();
-		for(ObjetsSkins obj : values()) {
-			if(obj.getObjet().getTeam()==team && obj.skinType==SkinType.SKIN) {
+			if(obj.getObjet().getTeam()==team) {
 				objets.add(obj);
 			}
 		}
