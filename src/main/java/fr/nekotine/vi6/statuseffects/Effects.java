@@ -1,14 +1,34 @@
 package fr.nekotine.vi6.statuseffects;
 
+import org.bukkit.entity.Player;
+
+import fr.nekotine.vi6.wrappers.PlayerWrapper;
+
 public enum Effects {
 	
-	Invisible,
-	Decouvert,
-	Sondé,
-	Insondable,
-	Glow,
-	InGlowable,
-	Fantomatique;
+	Invisible((p,w)->{},(p,w)->{}),
+	Decouvert((p,w)->{},(p,w)->{}),
+	Sondé((p,w)->{},(p,w)->{}),
+	Insondable((p,w)->{},(p,w)->{}),
+	Glow((p,w)->{},(p,w)->{}),
+	InGlowable((p,w)->{},(p,w)->{}),
+	Fantomatique((p,w)->{},(p,w)->{});
+	
+	private final StatusEffectUpdate enableLambda;
+	private final StatusEffectUpdate disableLambda;
+	
+	private Effects(StatusEffectUpdate enable,StatusEffectUpdate disable) {
+		this.enableLambda=enable;
+		this.disableLambda=disable;
+	}
+	
+	public void enable(Player p, PlayerWrapper w) {
+		enableLambda.run(p, w);
+	}
+	
+	public void disable(Player p, PlayerWrapper w) {
+		disableLambda.run(p, w);
+	}
 	
 	public static Effects getCounter(Effects e) {
 		switch(e) {
@@ -22,8 +42,25 @@ public enum Effects {
 		}
 	}
 	
+	public static Effects getCountered(Effects e) {
+		switch(e) {
+		case Decouvert:
+			return Invisible;
+		case Insondable:
+			return Sondé;
+		case InGlowable:
+			return Glow;
+		default: return null;
+		}
+	}
+	
 	public static boolean isCounterable(Effects e) {
 		return getCounter(e)!=null;
 	}
 	
+	public static boolean isCountering(Effects e) {
+		return getCountered(e)!=null;
+	}
+	
 }
+

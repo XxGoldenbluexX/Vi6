@@ -110,25 +110,6 @@ public class PlayerWrapper {
 		isReady=ready;
 		updateScoreboard();
 	}
-	
-	public void removeStatusEffect(StatusEffect eff) {
-		statusEffects.remove(eff);
-	}
-	
-	public void addStatusEffect(StatusEffect eff) {
-		statusEffects.add(eff);
-		eff.setWrapper(this);
-	}
-	
-	public boolean haveEffect(Effects effect) {
-		if (Effects.isCounterable(effect)) {
-			if (haveEffect(Effects.getCounter(effect))) return false;
-		}
-		for (StatusEffect e : statusEffects) {
-			if (e.getEffect()==effect) return true;
-		}
-		return false;
-	}
 
 	public String getCurrentSalle() {
 		return currentSalle;
@@ -148,23 +129,6 @@ public class PlayerWrapper {
 
 	public ArrayList<Artefact> getStealedArtefactList() {
 		return stealedObjects;
-	}
-	
-	public void clearStatusEffect(Effects e) {
-		Iterator<StatusEffect> ite = statusEffects.iterator();
-		while (ite.hasNext()) {
-			StatusEffect ef = ite.next();
-			if (ef.getEffect()==e) {
-				ef.remove();
-			}
-		}
-	}
-
-	public void clearStatusEffects() {
-		Iterator<StatusEffect> ite = statusEffects.iterator();
-		while (ite.hasNext()) {
-			ite.next().remove();
-		}
 	}
 
 	public Location getThiefSpawnPoint() {
@@ -194,5 +158,50 @@ public class PlayerWrapper {
 	public void setCanEscape(boolean canEscape) {
 		this.canEscape = canEscape;
 	}
+	
+	//STATUS EFFECTS-------------
+	
+	public void clearStatusEffect(Effects e) {
+		Iterator<StatusEffect> ite = statusEffects.iterator();
+		while (ite.hasNext()) {
+			StatusEffect ef = ite.next();
+			if (ef.getEffect()==e) {
+				ef.remove();
+			}
+		}
+	}
+	
+	public void clearStatusEffects() {
+		Iterator<StatusEffect> ite = statusEffects.iterator();
+		while (ite.hasNext()) {
+			ite.next().remove();
+		}
+	}
+	
+	public boolean haveEffect(Effects effect) {
+		if (Effects.isCounterable(effect)) {
+			if (haveEffect(Effects.getCounter(effect))) return false;
+		}
+		for (StatusEffect e : statusEffects) {
+			if (e.getEffect()==effect) return true;
+		}
+		return false;
+	}
+	
+	public void removeStatusEffect(StatusEffect eff) {
+		statusEffects.remove(eff);
+		updateEffect(eff.getEffect());
+	}
+	
+	public void addStatusEffect(StatusEffect eff) {
+		statusEffects.add(eff);
+		updateEffect(eff.getEffect());
+	}
+	
+	public void updateEffect(Effects e) {
+		if (haveEffect(e)) return;
+	}
+	
+	//---------------------------
 	
 }

@@ -19,7 +19,7 @@ public class StatusEffect {
 	}
 	
 	public void setWrapper(PlayerWrapper w) {
-		if (wrapper!=null) wrapper.removeStatusEffect(this);
+		if (wrapper!=null) remove();
 		wrapper=w;
 	}
 	
