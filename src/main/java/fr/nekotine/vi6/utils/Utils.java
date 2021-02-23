@@ -13,6 +13,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
+import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 
 public class Utils {
@@ -31,8 +32,8 @@ public class Utils {
 		item.setItemMeta(meta);
 		return item;
 	}
-	public static ItemStack createObjetItemStack(Vi6Main main, String displayName, ObjetsSkins objet, int quantity, String... lore) {
-		ItemStack item = new ItemStack(objet.getMaterial(),quantity);
+	public static ItemStack createObjetItemStack(Vi6Main main, String displayName, ObjetsList objet, int quantity, String... lore) {
+		ItemStack item = new ItemStack(objet.getInShopMaterial(),quantity);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName(displayName);
 		List<String> loreList = new ArrayList<>(); 
@@ -41,15 +42,15 @@ public class Utils {
 				loreList.add(line);
 			}
 		}
-		meta.getPersistentDataContainer().set(ObjetsSkinsTagType.getNamespacedKey(main), new ObjetsSkinsTagType(), objet);
+		meta.getPersistentDataContainer().set(ObjetsListTagType.getNamespacedKey(main), new ObjetsListTagType(), objet);
 		meta.setLore(loreList);
 		item.setItemMeta(meta);
 		return item;
 	}
 	public static ItemStack createSkinItemStack(Vi6Main main, Game game, Player player, ObjetsSkins skin, int quantity, String... lore) {
-		ItemStack item = new ItemStack(skin.getMaterial(),quantity);
+		ItemStack item = new ItemStack(skin.getInShopMaterial(),quantity);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(skin.getName());
+		meta.setDisplayName(skin.getInShopName());
 		List<String> loreList = new ArrayList<>(); 
 		for(String line : lore) {
 			if(line!="") {

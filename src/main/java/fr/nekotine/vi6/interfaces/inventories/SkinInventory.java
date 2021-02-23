@@ -46,11 +46,11 @@ public class SkinInventory extends BasePersonalInventory{
 		player.openInventory(inventory);
 	}
 	public void showSkinsPage(int page) {
-		List<ObjetsSkins> skins = ObjetsSkins.getSkins(game.getWrapper(player).getTeam());
+		List<ObjetsSkins> skins = ObjetsSkins.getSkinsForTeam(game.getWrapper(player).getTeam());
 		if(28*(page-1)<skins.size()){
 			byte index=11;
 			for(ObjetsSkins skin : skins.subList(28*(page-1), skins.size())) {
-				inventory.setItem(index, Utils.createSkinItemStack(main, game, player, skin, 1, skin.getLore()));
+				inventory.setItem(index, Utils.createSkinItemStack(main, game, player, skin, 1, skin.getInShopLore()));
 				index++;
 				if(index==45) {
 					break;
