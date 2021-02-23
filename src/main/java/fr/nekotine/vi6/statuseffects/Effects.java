@@ -1,16 +1,28 @@
 package fr.nekotine.vi6.statuseffects;
 
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 
 public enum Effects {
 	
-	Invisible((p,w)->{},(p,w)->{}),
+	Invisible((p,w)->{
+		p.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 0, false, false, true));
+		ItemHider.get().hidePlayer(p);
+	},(p,w)->{
+		p.removePotionEffect(PotionEffectType.INVISIBILITY);
+		ItemHider.get().unHidePlayer(p);
+	}),
 	Decouvert((p,w)->{},(p,w)->{}),
 	Sondé((p,w)->{},(p,w)->{}),
 	Insondable((p,w)->{},(p,w)->{}),
-	Glow((p,w)->{},(p,w)->{}),
+	Glow((p,w)->{
+		p.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, Integer.MAX_VALUE, 0, false, false, true));
+	},(p,w)->{
+		p.removePotionEffect(PotionEffectType.GLOWING);
+	}),
 	InGlowable((p,w)->{},(p,w)->{}),
 	Fantomatique((p,w)->{},(p,w)->{});
 	
