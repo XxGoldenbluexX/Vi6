@@ -93,17 +93,19 @@ public class Entree implements ConfigurationSerializable,ZoneDetectionListener{
 			wrap.addStatusEffect(insond);
 			fantom.autoRemove(mainref,  DELAY_BEFORE_STATUS_CLEAR);
 			insond.autoRemove(mainref,  DELAY_BEFORE_STATUS_CLEAR);
-			player.sendMessage("[Entree.class] "+"You entered map");
+			player.sendMessage("[Entree.class] You entered map");
 			new BukkitRunnable() {
 				@Override
 				public void run() {
 					wrap.setCanCapture(true);
+					player.sendMessage("[Entree.class] You can now capture");
 				}
 			}.runTaskLater(mainref, DELAY_BEFORE_CAPTURE);
 			new BukkitRunnable() {
 				@Override
 				public void run() {
 					wrap.setCanEscape(true);
+					player.sendMessage("[Entree.class] You can now escape");
 				}
 			}.runTaskLater(mainref, DELAY_BEFORE_ESCAPE);
 			Bukkit.getPluginManager().callEvent(new PlayerEnterMapEvent(player, wrap.getGame(), name));
