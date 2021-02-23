@@ -80,6 +80,7 @@ import fr.nekotine.vi6.map.Carte;
 import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.sql.PlayerGame;
 import fr.nekotine.vi6.sql.SQLInterface;
+import fr.nekotine.vi6.statuseffects.ItemHider;
 import fr.nekotine.vi6.utils.MessageFormater;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 import fr.nekotine.vi6.yml.DisplayTexts;
@@ -348,6 +349,7 @@ public class Game implements Listener{
 				player.teleport(wrapper.getThiefSpawnPoint());
 			}else {
 				wrapper.setState(PlayerState.INSIDE);
+				ItemHider.get().hideFromPlayer(player);
 			}
 		};
 		state=GameState.Ingame;
@@ -484,6 +486,7 @@ public class Game implements Listener{
 			p.getValue().setThiefSpawnPoint(null);
 			p.getKey().getInventory().clear();
 			p.getKey().getInventory().setItem(0, waitingItem.item);
+			if (p.getValue().getTeam()==Team.GARDE)ItemHider.get().hideFromPlayer(p.getKey());
 		}
 		ticker.cancel();
 		state=GameState.Waiting;
