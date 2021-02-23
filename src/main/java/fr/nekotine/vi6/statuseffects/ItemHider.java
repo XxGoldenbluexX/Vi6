@@ -35,7 +35,6 @@ public class ItemHider {
 		mnger.addPacketListener(new PacketAdapter(main,PacketType.Play.Server.ENTITY_EQUIPMENT) {
 			@Override
 			public void onPacketSending(PacketEvent event) {
-				super.onPacketSending(event);
 				PacketContainer packet = event.getPacket();
 				if (!hideFrom.contains(event.getPlayer())) return;
 				for (Player p : hiden) {
