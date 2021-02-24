@@ -21,7 +21,9 @@ public enum ObjetsList {
 			1,
 			ChatColor.GOLD+"Invisible",
 			Material.GLASS_PANE,
-			new String[]{ChatColor.LIGHT_PURPLE+"Devenez invisible en vous accroupissant"});
+			ChatColor.LIGHT_PURPLE+"Devenez invisible en vous accroupissant"),
+	BUISSON_FURTIF(BuissonFurtif.class,Team.VOLEUR,1000,1,
+			ChatColor.GREEN+"BuissonFurtif",Material.OAK_LEAVES,ChatColor.LIGHT_PURPLE+"Devenez invisible et insondable dans les buissons");
 	
 	////////////////////////////////
 	private final Class<?> objetClass;
