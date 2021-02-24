@@ -37,7 +37,7 @@ public class PlayerGame implements Listener{
 	private HashMap<String, Time> artefactStolen = new HashMap<>();
 	private HashMap<String, Time> objectUsed = new HashMap<>();
 
-	public PlayerGame(String gameName, UUID playerUUID, int idPartie, Team team) {
+	public PlayerGame(String gameName, UUID playerUUID, Team team) {
 		this.gameName=gameName;
 		this.playerUUID=playerUUID;
 		this.team = team;
