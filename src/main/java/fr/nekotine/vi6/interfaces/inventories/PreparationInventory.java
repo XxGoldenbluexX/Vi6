@@ -19,8 +19,8 @@ import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.events.GameEnterInGamePhaseEvent;
 import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.utils.Objet;
+import fr.nekotine.vi6.utils.IsCreator;
 import fr.nekotine.vi6.utils.ObjetsListTagType;
-import fr.nekotine.vi6.utils.Utils;
 import fr.nekotine.vi6.yml.DisplayTexts;
 import net.kyori.adventure.text.Component;
 
@@ -32,29 +32,29 @@ public class PreparationInventory extends BasePersonalInventory{
 		inventory = Bukkit.createInventory(player, 9*6, Component.text("Préparation"));
 		if(game.getWrapper(player).getTeam()==Team.GARDE) {
 			for(byte index=1;index<=1+9*5;index+=9) {
-				inventory.setItem(index, Utils.createItemStack(Material.BLUE_STAINED_GLASS_PANE,1," ",""));
+				inventory.setItem(index, IsCreator.createItemStack(Material.BLUE_STAINED_GLASS_PANE,1," ",""));
 			}
-			inventory.setItem(18, Utils.createItemStack(Material.BLUE_STAINED_GLASS_PANE,1," ",""));
-			inventory.setItem(27, Utils.createItemStack(Material.BLUE_STAINED_GLASS_PANE,1," ",""));
+			inventory.setItem(18, IsCreator.createItemStack(Material.BLUE_STAINED_GLASS_PANE,1," ",""));
+			inventory.setItem(27, IsCreator.createItemStack(Material.BLUE_STAINED_GLASS_PANE,1," ",""));
 		}else {
 			for(byte index=1;index<=1+9*5;index+=9) {
-				inventory.setItem(index, Utils.createItemStack(Material.RED_STAINED_GLASS_PANE,1," ",""));
+				inventory.setItem(index, IsCreator.createItemStack(Material.RED_STAINED_GLASS_PANE,1," ",""));
 			}
-			inventory.setItem(18, Utils.createItemStack(Material.RED_STAINED_GLASS_PANE,1," ",""));
-			inventory.setItem(27, Utils.createItemStack(Material.RED_STAINED_GLASS_PANE,1," ",""));
+			inventory.setItem(18, IsCreator.createItemStack(Material.RED_STAINED_GLASS_PANE,1," ",""));
+			inventory.setItem(27, IsCreator.createItemStack(Material.RED_STAINED_GLASS_PANE,1," ",""));
 		}
 		for(byte index=2;index<=8;index++) {
-			inventory.setItem(index, Utils.createItemStack(Material.BLACK_STAINED_GLASS_PANE,1," ",""));
-			inventory.setItem(index+45, Utils.createItemStack(Material.BLACK_STAINED_GLASS_PANE,1," ",""));
+			inventory.setItem(index, IsCreator.createItemStack(Material.BLACK_STAINED_GLASS_PANE,1," ",""));
+			inventory.setItem(index+45, IsCreator.createItemStack(Material.BLACK_STAINED_GLASS_PANE,1," ",""));
 		}
 		if(game.getWrapper(player).isReady()) {
-			inventory.setItem(0, Utils.createItemStack(Material.EMERALD_BLOCK,1,ChatColor.GREEN+"Prêt",""));
+			inventory.setItem(0, IsCreator.createItemStack(Material.EMERALD_BLOCK,1,ChatColor.GREEN+"Prêt",""));
 		}else {
-			inventory.setItem(0, Utils.createItemStack(Material.REDSTONE_BLOCK,1,ChatColor.RED+"En attente",""));
+			inventory.setItem(0, IsCreator.createItemStack(Material.REDSTONE_BLOCK,1,ChatColor.RED+"En attente",""));
 		}
-		inventory.setItem(9, Utils.createItemStack(Material.COMPOSTER,1,ChatColor.DARK_RED+"Tout vendre",""));
-		inventory.setItem(36, Utils.createItemStack(Material.DIAMOND_CHESTPLATE,1,ChatColor.GOLD+"Apparences",""));
-		inventory.setItem(45, Utils.createItemStack(Material.GOLD_INGOT,1,ChatColor.GOLD+"Argent: "+game.getWrapper(player).getMoney(),""));
+		inventory.setItem(9, IsCreator.createItemStack(Material.COMPOSTER,1,ChatColor.DARK_RED+"Tout vendre",""));
+		inventory.setItem(36, IsCreator.createItemStack(Material.DIAMOND_CHESTPLATE,1,ChatColor.GOLD+"Apparences",""));
+		inventory.setItem(45, IsCreator.createItemStack(Material.GOLD_INGOT,1,ChatColor.GOLD+"Argent: "+game.getWrapper(player).getMoney(),""));
 		showObjetPage(page);
 		player.openInventory(inventory);
 	}
@@ -68,7 +68,7 @@ public class PreparationInventory extends BasePersonalInventory{
 					lore.add(l);
 					lore.add(ChatColor.GOLD+"Coût: "+obj.getCost());
 				}
-				inventory.setItem(index, Utils.createObjetItemStack(main, obj.getInShopName(), obj, 1, lore.toArray(String[]::new)));
+				inventory.setItem(index, IsCreator.createObjetItemStack(main, obj.getInShopName(), obj, 1, lore.toArray(String[]::new)));
 				index++;
 				if(index==45) {
 					break;
@@ -85,14 +85,14 @@ public class PreparationInventory extends BasePersonalInventory{
 			}
 		}
 		if(page>1) {
-			inventory.setItem(47, Utils.createItemStack(Material.PAPER,1,ChatColor.RED+"Page précédente",""));
+			inventory.setItem(47, IsCreator.createItemStack(Material.PAPER,1,ChatColor.RED+"Page précédente",""));
 		}else {
-			inventory.setItem(47, Utils.createItemStack(Material.BLACK_STAINED_GLASS_PANE,1," ",""));
+			inventory.setItem(47, IsCreator.createItemStack(Material.BLACK_STAINED_GLASS_PANE,1," ",""));
 		}
 		if(objets.size()>28*(page)) {
-			inventory.setItem(53, Utils.createItemStack(Material.PAPER,1,ChatColor.GREEN+"Page suivante",""));
+			inventory.setItem(53, IsCreator.createItemStack(Material.PAPER,1,ChatColor.GREEN+"Page suivante",""));
 		}else {
-			inventory.setItem(53, Utils.createItemStack(Material.BLACK_STAINED_GLASS_PANE,1," ",""));
+			inventory.setItem(53, IsCreator.createItemStack(Material.BLACK_STAINED_GLASS_PANE,1," ",""));
 		}
 		this.page=page;
 	}
@@ -106,7 +106,7 @@ public class PreparationInventory extends BasePersonalInventory{
 					break;
 				}
 				game.setReady(player, true);
-				inventory.setItem(0, Utils.createItemStack(Material.EMERALD_BLOCK,1,ChatColor.GREEN+"Prêt",""));
+				inventory.setItem(0, IsCreator.createItemStack(Material.EMERALD_BLOCK,1,ChatColor.GREEN+"Prêt",""));
 			}else {
 				createObjet(itm);
 			}
@@ -114,7 +114,7 @@ public class PreparationInventory extends BasePersonalInventory{
 		case EMERALD_BLOCK:
 			if(slot==0) {
 				game.setReady(player, false);
-				inventory.setItem(0, Utils.createItemStack(Material.REDSTONE_BLOCK,1,ChatColor.RED+"En attente",""));
+				inventory.setItem(0, IsCreator.createItemStack(Material.REDSTONE_BLOCK,1,ChatColor.RED+"En attente",""));
 			}else {
 				createObjet(itm);
 			}
@@ -128,7 +128,7 @@ public class PreparationInventory extends BasePersonalInventory{
 							if(obj!=null) {
 								obj.vendre(player);
 								game.getWrapper(player).setMoney(game.getWrapper(player).getMoney()+obj.getObjet().getCost());
-								inventory.setItem(45, Utils.createItemStack(Material.GOLD_INGOT,1,ChatColor.GOLD+"Argent: "+game.getWrapper(player).getMoney(),""));
+								inventory.setItem(45, IsCreator.createItemStack(Material.GOLD_INGOT,1,ChatColor.GOLD+"Argent: "+game.getWrapper(player).getMoney(),""));
 							}
 						}
 					}
@@ -171,18 +171,16 @@ public class PreparationInventory extends BasePersonalInventory{
 				if(itemstack!=null) {
 					Objet obj = game.getObjet(itemstack);
 					if(obj!=null) {
-						if(obj.getObjet()==objet) {
-							count++;
-							if(count==objet.getLimit()) {
-								return;
-							}
+						count++;
+						if(count==objet.getLimit()) {
+							return;
 						}
 					}
 				}
 			}
 			if(!game.getWrapper(player).isReady() && game.getWrapper(player).getMoney()>=objet.getCost()) {
 				game.getWrapper(player).setMoney(game.getWrapper(player).getMoney()-objet.getCost());
-				inventory.setItem(45, Utils.createItemStack(Material.GOLD_INGOT,1,ChatColor.GOLD+"Argent: "+game.getWrapper(player).getMoney(),""));
+				inventory.setItem(45, IsCreator.createItemStack(Material.GOLD_INGOT,1,ChatColor.GOLD+"Argent: "+game.getWrapper(player).getMoney(),""));
 				game.addObjet(ObjetsList.createObjet(main, objet, player, game));
 			}
 		}
@@ -196,7 +194,7 @@ public class PreparationInventory extends BasePersonalInventory{
 					if(obj!=null) {
 						obj.vendre(player);
 						game.getWrapper(player).setMoney(game.getWrapper(player).getMoney()+obj.getObjet().getCost());
-						inventory.setItem(45, Utils.createItemStack(Material.GOLD_INGOT,1,ChatColor.GOLD+"Argent: "+game.getWrapper(player).getMoney(),""));
+						inventory.setItem(45, IsCreator.createItemStack(Material.GOLD_INGOT,1,ChatColor.GOLD+"Argent: "+game.getWrapper(player).getMoney(),""));
 					}
 				}
 			}

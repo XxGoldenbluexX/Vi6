@@ -21,8 +21,6 @@ import fr.nekotine.vi6.utils.MessageFormater;
 import fr.nekotine.vi6.utils.ZoneDetectionListener;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 import fr.nekotine.vi6.yml.DisplayTexts;
-import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.audience.ForwardingAudience;
 
 @SerializableAs("Artefact")
 public class Artefact implements ConfigurationSerializable,ZoneDetectionListener{
