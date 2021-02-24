@@ -24,7 +24,7 @@ public class StatusEffect {
 	}
 	
 	public void remove() {
-		if (wrapper!=null) wrapper.removeStatusEffect(this);
+		if (wrapper!=null) {wrapper.removeStatusEffect(this);wrapper=null;}
 	}
 	
 	public void autoRemove(Plugin main,long delay) {
