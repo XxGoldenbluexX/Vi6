@@ -486,7 +486,7 @@ public class Game implements Listener{
 			p.getValue().setThiefSpawnPoint(null);
 			p.getKey().getInventory().clear();
 			p.getKey().getInventory().setItem(0, waitingItem.item);
-			if (p.getValue().getTeam()==Team.GARDE)ItemHider.get().hideFromPlayer(p.getKey());
+			if (p.getValue().getTeam()==Team.GARDE)ItemHider.get().unHideFromPlayer(p.getKey());
 		}
 		ticker.cancel();
 		state=GameState.Waiting;
