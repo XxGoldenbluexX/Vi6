@@ -49,10 +49,10 @@ public class ItemHider {
 	
 	public void hidePlayer(Player p) {
 		if (!hiden.contains(p)) {
-			hiden.add(p);
 			for (Player pp : hideFrom) {
 				hideP(p,pp);
 			}
+			hiden.add(p);
 		}
 	}
 	
@@ -70,11 +70,13 @@ public class ItemHider {
 			for (Player pp : hiden) {
 				hideP(pp,p);
 			}
+			hideFrom.add(p);
 		}
 	}
 	
 	public void unHideFromPlayer(Player p) {
 		if (hideFrom.contains(p)) {
+			hideFrom.remove(p);
 			for (Player pp : hiden) {
 				showP(pp,p);
 			}
