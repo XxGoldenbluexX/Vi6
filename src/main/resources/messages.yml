@@ -7,6 +7,12 @@ game_thiefSpawnPoint_notSelected: "Veillez à sélectionner une entrée!"
 #§e = thiefSpawnPoint name
 game_thiefSpawnPoint_selected: "§2Entrée §e sélectionnée"
 #§v = artefact's name §p = stealer's name
+game_player_enter_map: "[§bVi6§r] §6Vous rentrez dans §r[§b§m§r]"
+#§m = map Name
+game_player_canCapture: "[§bVi6§r] §6Vous pouvez désormais §bvoler §6les Artéfacts"
+game_player_canEscape: "[§bVi6§r] §6Vous pouvez désormais vous §benfuir"
+game_player_escaped: "[§bVi6§r] §b§p §6s'est échappé avec §b§n §6Artéfacts!"
+#§p = player name, §n = artefact count
 ##MAP EDITION
 map_list: "Voici la liste des cartes présentes dans le fichier \"Maps\":"
 #§v = map's name

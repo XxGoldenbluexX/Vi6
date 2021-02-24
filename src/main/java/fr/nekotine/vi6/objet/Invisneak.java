@@ -2,12 +2,12 @@ package fr.nekotine.vi6.objet;
 
 import java.util.Map.Entry;
 
-import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
-import org.bukkit.inventory.ItemStack;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
@@ -15,6 +15,7 @@ import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.statuseffects.Effects;
 import fr.nekotine.vi6.statuseffects.StatusEffect;
+import fr.nekotine.vi6.utils.IsCreator;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 
 public class Invisneak extends Objet{
@@ -22,7 +23,7 @@ public class Invisneak extends Objet{
 	private StatusEffect effect;
 	private boolean isSneaking;
 	public Invisneak(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Player player, Game game) {
-		super(main, objet, skin, new ItemStack(Material.GLASS_PANE), game);
+		super(main, objet, skin, IsCreator.createItemStack(objet.getInShopMaterial(), 1, objet.getInShopName(), objet.getInShopLore()), game);
 		player.getInventory().addItem(itemStack);
 	}
 
@@ -38,9 +39,13 @@ public class Invisneak extends Objet{
 				game.getWrapper(getHolder()).removeStatusEffect(effect);
 				effect=null;
 			}
-		}else if(isSneaking && !isGuardNear(getHolder())) {
-			effect = new StatusEffect(Effects.Invisible);
-			game.getWrapper(getHolder()).addStatusEffect(effect);
+		}else if(isSneaking) {
+			if(isGuardNear(getHolder())) {
+				getHolder().getWorld().playSound(getHolder().getLocation(),Sound.BLOCK_LAVA_EXTINGUISH, SoundCategory.MASTER, 0.1f, 2f);
+			}else{
+				effect = new StatusEffect(Effects.Invisible);
+				game.getWrapper(getHolder()).addStatusEffect(effect);
+			}
 		}
 	}
 
