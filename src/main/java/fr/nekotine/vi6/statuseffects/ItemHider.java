@@ -49,8 +49,13 @@ public class ItemHider {
 	
 	public void hidePlayer(Player p) {
 		if (!hiden.contains(p)) {
+			PacketContainer packet = hidePacket(p);
 			for (Player pp : hideFrom) {
-				hideP(p,pp);
+				try {
+					mnger.sendServerPacket(pp,packet);
+				}catch(InvocationTargetException e) {
+					
+				}
 			}
 			hiden.add(p);
 		}
@@ -59,8 +64,13 @@ public class ItemHider {
 	public void unHidePlayer(Player p) {
 		if (hiden.contains(p)) {
 			hiden.remove(p);
+			PacketContainer packet = showPacket(p);
 			for (Player pp : hideFrom) {
-				showP(p,pp);
+				try {
+					mnger.sendServerPacket(pp,packet);
+				}catch(InvocationTargetException e) {
+					
+				}
 			}
 		}
 	}
@@ -68,7 +78,11 @@ public class ItemHider {
 	public void hideFromPlayer(Player p) {
 		if (!hideFrom.contains(p)) {
 			for (Player pp : hiden) {
-				hideP(pp,p);
+				try {
+					mnger.sendServerPacket(p,hidePacket(pp));
+				}catch(InvocationTargetException e) {
+					
+				}
 			}
 			hideFrom.add(p);
 		}
@@ -78,7 +92,11 @@ public class ItemHider {
 		if (hideFrom.contains(p)) {
 			hideFrom.remove(p);
 			for (Player pp : hiden) {
-				showP(pp,p);
+				try {
+					mnger.sendServerPacket(p,showPacket(pp));
+				}catch(InvocationTargetException e) {
+					
+				}
 			}
 		}
 	}
@@ -87,25 +105,22 @@ public class ItemHider {
 		return instance;
 	}
 	
-	private void hideP(Player to, Player from) {
+	private PacketContainer hidePacket(Player p) {
 		PacketContainer equipPacket = mnger.createPacket(PacketType.Play.Server.ENTITY_EQUIPMENT);
-		equipPacket.getIntegers().write(0, to.getEntityId());
+		equipPacket.getIntegers().write(0, p.getEntityId());
 		List<Pair<ItemSlot, ItemStack>> pairList = new ArrayList<>();
 		for (EnumWrappers.ItemSlot slot : EnumWrappers.ItemSlot.values()) {
 			pairList.add(new Pair<>(slot, new ItemStack(Material.AIR)));
 		}
 		equipPacket.getSlotStackPairLists().write(0, pairList);
-		try {
-			mnger.sendServerPacket(from, equipPacket);
-		} catch (InvocationTargetException e) {
-		}
+		return equipPacket;
 	}
 	
-	private PacketContainer showP(Player to, Player from) {
+	private PacketContainer showPacket(Player p) {
 		PacketContainer equipPacket = mnger.createPacket(PacketType.Play.Server.ENTITY_EQUIPMENT);
-		equipPacket.getIntegers().write(0, to.getEntityId());
+		equipPacket.getIntegers().write(0, p.getEntityId());
 		List<Pair<ItemSlot, ItemStack>> pairList = new ArrayList<>();
-		PlayerInventory inv = to.getInventory();
+		PlayerInventory inv = p.getInventory();
 		for (EnumWrappers.ItemSlot slot : EnumWrappers.ItemSlot.values()) {
 			pairList.add(new Pair<>(slot, inv.getItem(getSlot(slot))));
 		}
