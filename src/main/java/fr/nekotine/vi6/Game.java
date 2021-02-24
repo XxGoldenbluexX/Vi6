@@ -84,6 +84,8 @@ import fr.nekotine.vi6.statuseffects.ItemHider;
 import fr.nekotine.vi6.utils.MessageFormater;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 import fr.nekotine.vi6.yml.DisplayTexts;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 
 public class Game implements Listener{
 	private static int DEFAULT_RANKED_MONEY;
@@ -125,7 +127,7 @@ public class Game implements Listener{
 		mapInterface = new MapSelectionInventory(main, this);
 		nbtCompteur.add(0);
 		Bukkit.getPluginManager().registerEvents(this, main);
-		scoreboardSidebar = scoreboard.registerNewObjective("sidebar", "dummy", ChatColor.GOLD+name);
+		scoreboardSidebar = scoreboard.registerNewObjective("sidebar", "dummy", Component.text(name).color(NamedTextColor.GOLD));
 		scoreboardSidebar.setDisplaySlot(DisplaySlot.SIDEBAR);
 		
 	}
@@ -293,18 +295,18 @@ public class Game implements Listener{
 			player.setGameMode(GameMode.ADVENTURE);
 			player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
 			player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, Integer.MAX_VALUE, 0, false, false, false));
-			PlayerInventory inv = player.getInventory();
-			inv.setHelmet(makeSwordItem(Material.DIAMOND_HELMET,1));
-			inv.setChestplate(makeSwordItem(Material.DIAMOND_CHESTPLATE,1));
-			inv.setLeggings(makeSwordItem(Material.DIAMOND_LEGGINGS,1));
-			inv.setBoots(makeSwordItem(Material.DIAMOND_BOOTS,1));
-			inv.setItem(0, makeSwordItem(Material.DIAMOND_SWORD, 7));
 			wrapper.setReady(false);
 			wrapper.setMoney(money);
 			wrapper.setState(PlayerState.PREPARATION);
 			bb.addPlayer(playerAndWrapper.getKey());
 			if (wrapper.getTeam()==Team.GARDE) {
 				player.teleport(map.getGuardSpawn());
+				PlayerInventory inv = player.getInventory();
+				inv.setHelmet(makeSwordItem(Material.DIAMOND_HELMET,1));
+				inv.setChestplate(makeSwordItem(Material.DIAMOND_CHESTPLATE,1));
+				inv.setLeggings(makeSwordItem(Material.DIAMOND_LEGGINGS,1));
+				inv.setBoots(makeSwordItem(Material.DIAMOND_BOOTS,1));
+				inv.setItem(0, makeSwordItem(Material.DIAMOND_SWORD, 7));
 			}else {
 				player.teleport(map.getMinimapSpawn());
 				for(Entry<Player, PlayerWrapper> p : playerList.entrySet()) {
