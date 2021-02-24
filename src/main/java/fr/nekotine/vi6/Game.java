@@ -315,7 +315,6 @@ public class Game implements Listener{
 					}
 				}
 			}
-			Bukkit.getPluginManager().registerEvents(new PlayerGame(name, playerAndWrapper.getKey().getUniqueId(), idPartie, playerAndWrapper.getValue().getTeam()), main);
 		}
 		ticker = new BukkitRunnable() {
 			int seconds = DEFAULT_PREPARATION_TIME;
@@ -353,7 +352,8 @@ public class Game implements Listener{
 				wrapper.setState(PlayerState.INSIDE);
 				ItemHider.get().hideFromPlayer(player);
 			}
-		};
+			Bukkit.getPluginManager().registerEvents(new PlayerGame(name, playerAndWrapper.getKey().getUniqueId(), playerAndWrapper.getValue().getTeam()), main);
+		}
 		state=GameState.Ingame;
 		ticker = new BukkitRunnable() {
 			@Override
@@ -467,11 +467,13 @@ public class Game implements Listener{
 	
 	public boolean endGame() {
 		if (state==GameState.Waiting) return false;
-		try {
-			idPartie = SQLInterface.addPartie(Date.valueOf(LocalDate.now()), new Time(SQLInterface.getTimeFormat().parse(LocalTime.now().toString()).getTime() - SQLInterface.getTimeFormat().parse(startTime).getTime()), money, isRanked, mapName);
-		} catch (ParseException e) {
-			idPartie=-1;
-			e.printStackTrace();
+		if(state==GameState.Ingame) {
+			try {
+				idPartie = SQLInterface.addPartie(Date.valueOf(LocalDate.now()), new Time(SQLInterface.getTimeFormat().parse(LocalTime.now().toString()).getTime() - SQLInterface.getTimeFormat().parse(startTime).getTime()), money, isRanked, mapName);
+			} catch (ParseException e) {
+				idPartie=-1;
+				e.printStackTrace();
+			}
 		}
 		for(Objet obj : objetsList) {
 			obj.gameEnd();
