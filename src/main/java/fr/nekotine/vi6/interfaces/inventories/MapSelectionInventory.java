@@ -19,12 +19,13 @@ import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.events.GameEnterPreparationPhaseEvent;
 import fr.nekotine.vi6.map.Carte;
 import fr.nekotine.vi6.utils.Utils;
+import net.kyori.adventure.text.Component;
 
 public class MapSelectionInventory extends BaseSharedInventory{
 	private static Enchantment enchant = Enchantment.DURABILITY;
 	public MapSelectionInventory(Vi6Main main,Game game) {
 		super(game, main);
-		inventory = Bukkit.createInventory(null, 9*3, "Carte");
+		inventory = Bukkit.createInventory(null, 9*3, Component.text("Carte"));
 		inventory.setItem(1, Utils.createItemStack(Material.BLACK_STAINED_GLASS_PANE,1," ",""));
 		inventory.setItem(9, Utils.createItemStack(Material.BLACK_STAINED_GLASS_PANE,1," ",""));
 		inventory.setItem(10, Utils.createItemStack(Material.BLACK_STAINED_GLASS_PANE,1," ",""));
@@ -60,16 +61,16 @@ public class MapSelectionInventory extends BaseSharedInventory{
 			break;
 		case PAPER:
 			for(ItemStack item : inventory.getStorageContents()) {
-				if(item.getType()==Material.PAPER&&item.getItemMeta().getDisplayName()==game.getMapName()) {
+				if(item.getType()==Material.PAPER&&item.getItemMeta().displayName().examinableName()==game.getMapName()) {
 					item.removeEnchantment(enchant);
 					break;
 				}
 			}
-			game.setMapName(itm.getItemMeta().getDisplayName());
+			game.setMapName(itm.getItemMeta().displayName().examinableName());
 			itm.addUnsafeEnchantment(enchant, 1);
 			
 			List<String> lore = new ArrayList<>();
-			lore.add(ChatColor.LIGHT_PURPLE+""+ChatColor.UNDERLINE+itm.getItemMeta().getDisplayName());
+			lore.add(ChatColor.LIGHT_PURPLE+""+ChatColor.UNDERLINE+itm.getItemMeta().displayName().examinableName());
 			inventory.getItem(18).setLore(lore);
 			break;
 		default:

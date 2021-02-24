@@ -22,13 +22,14 @@ import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.utils.ObjetsListTagType;
 import fr.nekotine.vi6.utils.Utils;
 import fr.nekotine.vi6.yml.DisplayTexts;
+import net.kyori.adventure.text.Component;
 
 public class PreparationInventory extends BasePersonalInventory{
 	private int page;
 	public PreparationInventory(Vi6Main main, Game game, Player player, int page) {
 		super(game, main, player);
 		this.page=page;
-		inventory = Bukkit.createInventory(player, 9*6, "Préparation");
+		inventory = Bukkit.createInventory(player, 9*6, Component.text("Préparation"));
 		if(game.getWrapper(player).getTeam()==Team.GARDE) {
 			for(byte index=1;index<=1+9*5;index+=9) {
 				inventory.setItem(index, Utils.createItemStack(Material.BLUE_STAINED_GLASS_PANE,1," ",""));

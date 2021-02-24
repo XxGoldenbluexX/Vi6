@@ -17,6 +17,7 @@ import fr.nekotine.vi6.events.GameEnterInGamePhaseEvent;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.utils.ObjetsSkinsTagType;
 import fr.nekotine.vi6.utils.Utils;
+import net.kyori.adventure.text.Component;
 
 public class SkinInventory extends BasePersonalInventory{
 	private int page;
@@ -24,7 +25,7 @@ public class SkinInventory extends BasePersonalInventory{
 	public SkinInventory(Game game, Vi6Main main, Player player, int preparationPage) {
 		super(game, main, player);
 		this.preparationPage=preparationPage;
-		inventory = Bukkit.createInventory(player, 9*6, "Apparences");
+		inventory = Bukkit.createInventory(player, 9*6, Component.text("Apparences"));
 		for(byte index=2;index<=8;index++) {
 			inventory.setItem(index, Utils.createItemStack(Material.BLACK_STAINED_GLASS_PANE,1," ",""));
 			inventory.setItem(index+45, Utils.createItemStack(Material.BLACK_STAINED_GLASS_PANE,1," ",""));

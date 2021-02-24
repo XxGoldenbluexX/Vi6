@@ -13,12 +13,13 @@ import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.events.GameEnterPreparationPhaseEvent;
 import fr.nekotine.vi6.utils.Utils;
+import net.kyori.adventure.text.Component;
 
 public class WaitingInventory extends BasePersonalInventory{
 	public WaitingInventory(Vi6Main main, Player player, Game game) {
 		super(game, main, player);
 		
-		inventory = Bukkit.createInventory(player, 9*3, game.getName());
+		inventory = Bukkit.createInventory(player, 9*3, Component.text(game.getName()));
 		if(game.getWrapper(player).getTeam()==Team.GARDE) {
 			for(byte index=1;index<=26;index++) {
 				inventory.setItem(index, Utils.createItemStack(Material.BLUE_STAINED_GLASS_PANE, 1," ", ""));
