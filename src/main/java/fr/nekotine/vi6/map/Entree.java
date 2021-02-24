@@ -17,8 +17,10 @@ import fr.nekotine.vi6.events.PlayerEnterMapEvent;
 import fr.nekotine.vi6.statuseffects.Effects;
 import fr.nekotine.vi6.statuseffects.StatusEffect;
 import fr.nekotine.vi6.utils.DetectionZone;
+import fr.nekotine.vi6.utils.MessageFormater;
 import fr.nekotine.vi6.utils.ZoneDetectionListener;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
+import fr.nekotine.vi6.yml.DisplayTexts;
 
 @SerializableAs("Entree")
 public class Entree implements ConfigurationSerializable,ZoneDetectionListener{
@@ -93,19 +95,21 @@ public class Entree implements ConfigurationSerializable,ZoneDetectionListener{
 			wrap.addStatusEffect(insond);
 			fantom.autoRemove(mainref,  DELAY_BEFORE_STATUS_CLEAR);
 			insond.autoRemove(mainref,  DELAY_BEFORE_STATUS_CLEAR);
-			player.sendMessage("[Entree.class] You entered map");
+			player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_player_enter_map"),
+					new MessageFormater("§m", wrap.getGame().getMapName())));
+			
 			new BukkitRunnable() {
 				@Override
 				public void run() {
 					wrap.setCanCapture(true);
-					player.sendMessage("[Entree.class] You can now capture");
+					player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_player_canCapture")));
 				}
 			}.runTaskLater(mainref, DELAY_BEFORE_CAPTURE);
 			new BukkitRunnable() {
 				@Override
 				public void run() {
 					wrap.setCanEscape(true);
-					player.sendMessage("[Entree.class] You can now escape");
+					player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_player_canEscape")));
 				}
 			}.runTaskLater(mainref, DELAY_BEFORE_ESCAPE);
 			Bukkit.getPluginManager().callEvent(new PlayerEnterMapEvent(player, wrap.getGame(), name));

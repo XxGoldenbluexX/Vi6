@@ -15,8 +15,10 @@ import fr.nekotine.vi6.enums.PlayerState;
 import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.utils.DetectionZone;
+import fr.nekotine.vi6.utils.MessageFormater;
 import fr.nekotine.vi6.utils.ZoneDetectionListener;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
+import fr.nekotine.vi6.yml.DisplayTexts;
 
 @SerializableAs("Sortie")
 public class Sortie implements ConfigurationSerializable,ZoneDetectionListener {
@@ -89,7 +91,8 @@ public class Sortie implements ConfigurationSerializable,ZoneDetectionListener {
 				}
 			}
 			for(Entry<Player, PlayerWrapper> p : wrap.getGame().getPlayerMap().entrySet()) {
-				p.getKey().sendMessage("[Sortie.class] "+player.getName()+" s'est échappé avec "+wrap.getStealedArtefactList().size()+" artefacts!");
+				p.getKey().sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_player_escaped"),
+						new MessageFormater("§p", player.getName()),new MessageFormater("§n", String.valueOf(wrap.getStealedArtefactList().size()))));
 			}
 			if(!wrap.getGame().isThiefLeft()) {
 				wrap.getGame().endGame();
