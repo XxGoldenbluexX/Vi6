@@ -5,14 +5,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import fr.nekotine.vi6.Vi6Main;
 
 public class DisplayTexts {
 	
-	private final HashMap<String,String> messages = new HashMap<String,String>();
+	private final HashMap<String,String> messages = new HashMap<>();
 	public static final DisplayTexts instance = new DisplayTexts();
 	
 	public boolean load(Vi6Main main) {
@@ -28,7 +27,7 @@ public class DisplayTexts {
 				String key = ite.next();
 				String value = config.getString(key);
 				if (value!=null) {
-					messages.put(key,ChatColor.translateAlternateColorCodes('§',value));
+					messages.put(key,value);
 				}else {
 					Bukkit.getLogger().info("Null value for \""+key+"\" in messages.yml");
 				}
@@ -44,7 +43,7 @@ public class DisplayTexts {
 	}
 	
 	private String getMsg(String name) {
-		return messages.getOrDefault(name, "noSuchText");
+		return messages.getOrDefault(name, "NoSuchText");
 	}
 
 }

@@ -85,7 +85,11 @@ import fr.nekotine.vi6.utils.MessageFormater;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 import fr.nekotine.vi6.yml.DisplayTexts;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.title.Title;
+import net.kyori.adventure.title.Title.Times;
+import net.kyori.adventure.util.Ticks;
 
 public class Game implements Listener{
 	private static int DEFAULT_RANKED_MONEY;
@@ -180,17 +184,19 @@ public class Game implements Listener{
 	}
 	
 	public void showCaptureMessage(Artefact a,PlayerWrapper p) {
+		final TextComponent msgGuard = MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_artefact_steal_guard"));
+		final TextComponent msgVoleur = MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_artefact_steal_thief"),
+				new MessageFormater("§v",a.getDisplayName()),new MessageFormater("§p",p.getPlayer().getName()));
+		Times titleTimes = Title.Times.of(Ticks.duration(5), Ticks.duration(20), Ticks.duration(20));
+		Title titleGuard = Title.title(msgGuard, Component.text(""),titleTimes);
+		Title titleVoleur = Title.title(msgVoleur, Component.text(""),titleTimes);
 		for (PlayerWrapper w : playerList.values()) {
-			String message="";
 			if (w.getTeam()==Team.GARDE) {
-				message = ChatColor.translateAlternateColorCodes('§',DisplayTexts.getMessage("game_artefact_steal_guard"));
-				w.getPlayer().sendTitle(message,"", 5, 20, 20);
-				w.getPlayer().sendMessage(message);
+				w.getPlayer().showTitle(titleGuard);
+				w.getPlayer().sendMessage(msgGuard);
 			}else {
-				message = MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_artefact_steal_thief"),
-						new MessageFormater("§v",a.getDisplayName()),new MessageFormater("§p",p.getPlayer().getName()));
-				w.getPlayer().sendTitle(message,"", 5, 20, 20);
-				w.getPlayer().sendMessage(message);
+				w.getPlayer().showTitle(titleVoleur);
+				w.getPlayer().sendMessage(msgVoleur);
 			}
 		}
 	}

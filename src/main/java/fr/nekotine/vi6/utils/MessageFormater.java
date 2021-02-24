@@ -1,6 +1,9 @@
 package fr.nekotine.vi6.utils;
 
-import net.md_5.bungee.api.ChatColor;
+import org.checkerframework.checker.nullness.qual.NonNull;
+
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 public class MessageFormater {
 	
@@ -19,9 +22,8 @@ public class MessageFormater {
 		return text;
 	}
 	
-	public static String formatWithColorCodes(char colorCode,String text,MessageFormater... f) {
-		text=ChatColor.translateAlternateColorCodes(colorCode, text);
-		return format(text,f);
+	public static @NonNull TextComponent formatWithColorCodes(char colorCode,String text,MessageFormater... f) {
+		return LegacyComponentSerializer.legacy(colorCode).deserialize(format(text,f));
 	}
 
 	public String getKey() {

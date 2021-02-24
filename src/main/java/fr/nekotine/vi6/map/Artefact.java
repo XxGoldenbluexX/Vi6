@@ -28,8 +28,8 @@ public class Artefact implements ConfigurationSerializable,ZoneDetectionListener
 	private static final String yamlPrefix = "Artefact_";
 	
 	public enum CaptureState{
-		STEALABLE,//l'objet peut etre vol�
-		CARRIED,//l'objet est port� par un voleur
+		STEALABLE,//l'objet peut etre volé
+		CARRIED,//l'objet est porté par un voleur
 		STEALED//un voleur c'est enfuit avec cet objet
 	}
 	
