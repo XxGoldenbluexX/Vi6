@@ -13,6 +13,7 @@ import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.events.GameEnterPreparationPhaseEvent;
 import fr.nekotine.vi6.events.IsRankedChangeEvent;
+import net.kyori.adventure.text.Component;
 import net.wesjd.anvilgui.AnvilGUI;
 
 public class GameMoneyAnvil implements Listener{
@@ -23,7 +24,7 @@ public class GameMoneyAnvil implements Listener{
 		this.player = Player;
 		ItemStack itemLeft = new ItemStack(Material.GOLD_INGOT);
 		ItemMeta meta = itemLeft.getItemMeta();
-		meta.setDisplayName(String.valueOf(game.getMoney()));
+		meta.displayName(Component.text(String.valueOf(game.getMoney())));
 		itemLeft.setItemMeta(meta);
 		new AnvilGUI.Builder()
 			.onLeftInputClick(player->game.openSettings(player))

@@ -15,12 +15,12 @@ import fr.nekotine.vi6.events.GameEnterPreparationPhaseEvent;
 import fr.nekotine.vi6.events.MapChangeEvent;
 import fr.nekotine.vi6.events.MoneyChangedEvent;
 import fr.nekotine.vi6.utils.Utils;
+import net.kyori.adventure.text.Component;
 
 public class GameSettingsInventory extends BaseSharedInventory{
 	public GameSettingsInventory(Vi6Main main, Game game) {
 		super(game, main);
-		
-		inventory = Bukkit.createInventory(null, 9*3, "Paramètres");
+		inventory = Bukkit.createInventory(null, 9*3, Component.text("Paramètres"));
 		for(byte index=1;index<=26;index++) {
 			inventory.setItem(index, Utils.createItemStack(Material.BLACK_STAINED_GLASS_PANE,1," ",""));
 		}
