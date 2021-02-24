@@ -12,7 +12,7 @@ import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.events.GameEnterPreparationPhaseEvent;
-import fr.nekotine.vi6.utils.Utils;
+import fr.nekotine.vi6.utils.IsCreator;
 import net.kyori.adventure.text.Component;
 
 public class WaitingInventory extends BasePersonalInventory{
@@ -22,21 +22,21 @@ public class WaitingInventory extends BasePersonalInventory{
 		inventory = Bukkit.createInventory(player, 9*3, Component.text(game.getName()));
 		if(game.getWrapper(player).getTeam()==Team.GARDE) {
 			for(byte index=1;index<=26;index++) {
-				inventory.setItem(index, Utils.createItemStack(Material.BLUE_STAINED_GLASS_PANE, 1," ", ""));
+				inventory.setItem(index, IsCreator.createItemStack(Material.BLUE_STAINED_GLASS_PANE, 1," ", ""));
 			}
-			inventory.setItem(16, Utils.createItemStack(Material.BLUE_BANNER, 1, ChatColor.BLUE+"Garde", ""));
+			inventory.setItem(16, IsCreator.createItemStack(Material.BLUE_BANNER, 1, ChatColor.BLUE+"Garde", ""));
 		}else {
 			for(byte index=1;index<=26;index++) {
-				inventory.setItem(index, Utils.createItemStack(Material.RED_STAINED_GLASS_PANE, 1, " ", ""));
+				inventory.setItem(index, IsCreator.createItemStack(Material.RED_STAINED_GLASS_PANE, 1, " ", ""));
 			}
-			inventory.setItem(16, Utils.createItemStack(Material.RED_BANNER, 1, ChatColor.RED+"Voleur", ""));
+			inventory.setItem(16, IsCreator.createItemStack(Material.RED_BANNER, 1, ChatColor.RED+"Voleur", ""));
 		}
-		inventory.setItem(0, Utils.createItemStack(Material.ANVIL, 1, ChatColor.GRAY+"Paramètres", ""));
-		inventory.setItem(10, Utils.createItemStack(Material.SUNFLOWER, 1, ChatColor.GOLD+"Lancer", ""));
+		inventory.setItem(0, IsCreator.createItemStack(Material.ANVIL, 1, ChatColor.GRAY+"Paramètres", ""));
+		inventory.setItem(10, IsCreator.createItemStack(Material.SUNFLOWER, 1, ChatColor.GOLD+"Lancer", ""));
 		if(game.getWrapper(player).isReady()) {
-			inventory.setItem(13, Utils.createItemStack(Material.EMERALD_BLOCK, 1, ChatColor.GREEN+"Prêt", ""));
+			inventory.setItem(13, IsCreator.createItemStack(Material.EMERALD_BLOCK, 1, ChatColor.GREEN+"Prêt", ""));
 		}else{
-			inventory.setItem(13, Utils.createItemStack(Material.REDSTONE_BLOCK, 1, ChatColor.RED+"En attente", ""));
+			inventory.setItem(13, IsCreator.createItemStack(Material.REDSTONE_BLOCK, 1, ChatColor.RED+"En attente", ""));
 		}
 		player.openInventory(inventory);
 	}
@@ -52,21 +52,21 @@ public class WaitingInventory extends BasePersonalInventory{
 			break;
 		case EMERALD_BLOCK:
 			game.setReady(player, false);
-			inventory.setItem(13, Utils.createItemStack(Material.REDSTONE_BLOCK, 1, ChatColor.RED+"En Attente", ""));
+			inventory.setItem(13, IsCreator.createItemStack(Material.REDSTONE_BLOCK, 1, ChatColor.RED+"En Attente", ""));
 			break;
 		case REDSTONE_BLOCK:
 			game.setReady(player, true);
-			inventory.setItem(13, Utils.createItemStack(Material.EMERALD_BLOCK, 1, ChatColor.GREEN+"Prêt", ""));
+			inventory.setItem(13, IsCreator.createItemStack(Material.EMERALD_BLOCK, 1, ChatColor.GREEN+"Prêt", ""));
 			break;
 		case BLUE_BANNER:
 			if(game.getWrapper(player).isReady()) return;
 			game.getWrapper(player).changeTeam(Team.VOLEUR);
-			inventory.setItem(16, Utils.createItemStack(Material.RED_BANNER, 1, ChatColor.RED+"Voleur", ""));
+			inventory.setItem(16, IsCreator.createItemStack(Material.RED_BANNER, 1, ChatColor.RED+"Voleur", ""));
 			for(byte index=1;index<=26;index++) {
 				if(index==10||index==13||index==16) {
 					continue;
 				}
-				inventory.setItem(index, Utils.createItemStack(Material.RED_STAINED_GLASS_PANE, 1, " ", ""));
+				inventory.setItem(index, IsCreator.createItemStack(Material.RED_STAINED_GLASS_PANE, 1, " ", ""));
 			}
 			break;
 		case RED_BANNER:
@@ -76,9 +76,9 @@ public class WaitingInventory extends BasePersonalInventory{
 				if(index==10||index==13||index==16) {
 					continue;
 				}
-				inventory.setItem(index, Utils.createItemStack(Material.BLUE_STAINED_GLASS_PANE, 1," ", ""));
+				inventory.setItem(index, IsCreator.createItemStack(Material.BLUE_STAINED_GLASS_PANE, 1," ", ""));
 			}
-			inventory.setItem(16, Utils.createItemStack(Material.BLUE_BANNER, 1, ChatColor.BLUE+"Garde", ""));
+			inventory.setItem(16, IsCreator.createItemStack(Material.BLUE_BANNER, 1, ChatColor.BLUE+"Garde", ""));
 			break;
 		default:
 			break;

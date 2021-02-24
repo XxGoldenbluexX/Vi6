@@ -13,12 +13,12 @@ import fr.nekotine.vi6.events.GameEnterPreparationPhaseEvent;
 import fr.nekotine.vi6.events.PlayerJoinGameEvent;
 import fr.nekotine.vi6.events.PlayerLeaveGameEvent;
 import fr.nekotine.vi6.interfaces.inventories.WaitingInventory;
-import fr.nekotine.vi6.utils.Utils;
+import fr.nekotine.vi6.utils.IsCreator;
 
 public class OpenWaitingItem extends BaseInventoryItem implements Listener{
 	private final Game game;
 	public OpenWaitingItem(Vi6Main main, Game game) {
-		super(main, Utils.createItemStack(Material.BEACON, 1, ChatColor.GOLD+game.getName(), ChatColor.LIGHT_PURPLE+"Intéragir pour ouvrir la partie"));
+		super(main, IsCreator.createItemStack(Material.BEACON, 1, ChatColor.GOLD+game.getName(), ChatColor.LIGHT_PURPLE+"Intéragir pour ouvrir la partie"));
 		this.game=game;
 	}
 	@EventHandler

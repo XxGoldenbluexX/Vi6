@@ -15,8 +15,8 @@ import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.events.GameEnterInGamePhaseEvent;
 import fr.nekotine.vi6.objet.ObjetsSkins;
+import fr.nekotine.vi6.utils.IsCreator;
 import fr.nekotine.vi6.utils.ObjetsSkinsTagType;
-import fr.nekotine.vi6.utils.Utils;
 import net.kyori.adventure.text.Component;
 
 public class SkinInventory extends BasePersonalInventory{
@@ -27,22 +27,22 @@ public class SkinInventory extends BasePersonalInventory{
 		this.preparationPage=preparationPage;
 		inventory = Bukkit.createInventory(player, 9*6, Component.text("Apparences"));
 		for(byte index=2;index<=8;index++) {
-			inventory.setItem(index, Utils.createItemStack(Material.BLACK_STAINED_GLASS_PANE,1," ",""));
-			inventory.setItem(index+45, Utils.createItemStack(Material.BLACK_STAINED_GLASS_PANE,1," ",""));
+			inventory.setItem(index, IsCreator.createItemStack(Material.BLACK_STAINED_GLASS_PANE,1," ",""));
+			inventory.setItem(index+45, IsCreator.createItemStack(Material.BLACK_STAINED_GLASS_PANE,1," ",""));
 		}
 		
 		if(game.getWrapper(player).getTeam()==Team.GARDE) {
 			for(byte index=0;index<=5;index++) {
-				inventory.setItem(index*9, Utils.createItemStack(Material.BLACK_STAINED_GLASS_PANE,1," ",""));
-				inventory.setItem(index*9+1, Utils.createItemStack(Material.BLUE_STAINED_GLASS_PANE,1," ",""));
+				inventory.setItem(index*9, IsCreator.createItemStack(Material.BLACK_STAINED_GLASS_PANE,1," ",""));
+				inventory.setItem(index*9+1, IsCreator.createItemStack(Material.BLUE_STAINED_GLASS_PANE,1," ",""));
 			}
 		}else {
 			for(byte index=0;index<=5;index++) {
-				inventory.setItem(index*9, Utils.createItemStack(Material.BLACK_STAINED_GLASS_PANE,1," ",""));
-				inventory.setItem(index*9+1, Utils.createItemStack(Material.RED_STAINED_GLASS_PANE,1," ",""));
+				inventory.setItem(index*9, IsCreator.createItemStack(Material.BLACK_STAINED_GLASS_PANE,1," ",""));
+				inventory.setItem(index*9+1, IsCreator.createItemStack(Material.RED_STAINED_GLASS_PANE,1," ",""));
 			}
 		}
-		inventory.setItem(9, Utils.createItemStack(Material.ARMOR_STAND,1,ChatColor.RED+"Retour",""));
+		inventory.setItem(9, IsCreator.createItemStack(Material.ARMOR_STAND,1,ChatColor.RED+"Retour",""));
 		showSkinsPage(1);
 		player.openInventory(inventory);
 	}
@@ -51,7 +51,7 @@ public class SkinInventory extends BasePersonalInventory{
 		if(28*(page-1)<skins.size()){
 			byte index=11;
 			for(ObjetsSkins skin : skins.subList(28*(page-1), skins.size())) {
-				inventory.setItem(index, Utils.createSkinItemStack(main, game, player, skin, 1, skin.getInShopLore()));
+				inventory.setItem(index, IsCreator.createSkinItemStack(main, game, player, skin, 1, skin.getInShopLore()));
 				index++;
 				if(index==45) {
 					break;
@@ -69,14 +69,14 @@ public class SkinInventory extends BasePersonalInventory{
 			
 		}
 		if(page>1) {
-			inventory.setItem(47, Utils.createItemStack(Material.PAPER,1,ChatColor.RED+"Page précédente",""));
+			inventory.setItem(47, IsCreator.createItemStack(Material.PAPER,1,ChatColor.RED+"Page précédente",""));
 		}else {
-			inventory.setItem(47, Utils.createItemStack(Material.BLACK_STAINED_GLASS_PANE,1," ",""));
+			inventory.setItem(47, IsCreator.createItemStack(Material.BLACK_STAINED_GLASS_PANE,1," ",""));
 		}
 		if(skins.size()>28*(page)) {
-			inventory.setItem(53, Utils.createItemStack(Material.PAPER,1,ChatColor.GREEN+"Page suivante",""));
+			inventory.setItem(53, IsCreator.createItemStack(Material.PAPER,1,ChatColor.GREEN+"Page suivante",""));
 		}else {
-			inventory.setItem(53, Utils.createItemStack(Material.BLACK_STAINED_GLASS_PANE,1," ",""));
+			inventory.setItem(53, IsCreator.createItemStack(Material.BLACK_STAINED_GLASS_PANE,1," ",""));
 		}
 		this.page=page;
 	}
@@ -117,12 +117,12 @@ public class SkinInventory extends BasePersonalInventory{
 		ObjetsSkins objetSkin = item.getItemMeta().getPersistentDataContainer().get(ObjetsSkinsTagType.getNamespacedKey(main), new ObjetsSkinsTagType());
 		if(objetSkin!=null) {
 			if(game.getWrapper(player).flipSelected(objetSkin)) {
-				item.addUnsafeEnchantment(Utils.enchant, 1);
+				item.addUnsafeEnchantment(IsCreator.enchant, 1);
 				List<String> lore = item.getLore();
 				lore.add(ChatColor.GREEN+"[SÉLECTIONNÉE]");
 				item.setLore(lore);
 			}else {
-				item.removeEnchantment(Utils.enchant);
+				item.removeEnchantment(IsCreator.enchant);
 				List<String> lore = item.getLore().subList(0, item.getLore().size()-1);
 				item.setLore(lore);
 			}

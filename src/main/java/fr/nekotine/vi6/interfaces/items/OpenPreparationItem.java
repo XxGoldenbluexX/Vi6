@@ -11,12 +11,12 @@ import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.events.GameEnterInGamePhaseEvent;
 import fr.nekotine.vi6.events.GameEnterPreparationPhaseEvent;
 import fr.nekotine.vi6.interfaces.inventories.PreparationInventory;
-import fr.nekotine.vi6.utils.Utils;
+import fr.nekotine.vi6.utils.IsCreator;
 
 public class OpenPreparationItem extends BaseInventoryItem{
 	private final Game game;
 	public OpenPreparationItem(Vi6Main main, Game game) {
-		super(main, Utils.createItemStack(Material.NETHERITE_INGOT, 1, ChatColor.GOLD+"Magasin", ChatColor.LIGHT_PURPLE+"Intéragir pour ouvrir le magasin"));
+		super(main, IsCreator.createItemStack(Material.NETHERITE_INGOT, 1, ChatColor.GOLD+"Magasin", ChatColor.LIGHT_PURPLE+"Intéragir pour ouvrir le magasin"));
 		this.game = game;
 	}
 	@Override
