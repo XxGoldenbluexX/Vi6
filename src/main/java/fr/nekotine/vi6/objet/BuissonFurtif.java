@@ -126,7 +126,7 @@ public class BuissonFurtif extends Objet {
 	}
 	
 	private boolean onGround(Player p) {
-		return (p.isFlying() && p.getLocation().subtract(0, 0.1, 0).getBlock().getType().isSolid());
+		return (!p.isFlying() && p.getLocation().subtract(0, 0.1, 0).getBlock().getType().isSolid());
 	}
 
 }
