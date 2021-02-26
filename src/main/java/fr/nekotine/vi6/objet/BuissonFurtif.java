@@ -18,6 +18,7 @@ import fr.nekotine.vi6.statuseffects.StatusEffect;
 import fr.nekotine.vi6.utils.IsCreator;
 import fr.nekotine.vi6.utils.TempBlock;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
+import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 
 public class BuissonFurtif extends Objet {
@@ -102,9 +103,9 @@ public class BuissonFurtif extends Objet {
 	@Override
 	public void drop(Player holder) {
 		if (placeBush(holder.getLocation())) {
-			//TODO playsound
+			holder.playSound(Sound.sound(Key.key("block.chorus_flower.grow"),Sound.Source.VOICE,1f,1f));
 		}else {
-			//holder.playSound(Sound.sound());
+			holder.playSound(Sound.sound(Key.key("entity.villager.no"),Sound.Source.VOICE,1f,1f));
 		}
 	}
 
