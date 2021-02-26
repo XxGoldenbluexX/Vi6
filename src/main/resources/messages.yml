@@ -9,7 +9,7 @@ game_thiefSpawnPoint_notSelected: "Veillez à sélectionner une entrée!"
 #§e = thiefSpawnPoint name
 game_thiefSpawnPoint_selected: "§2Entrée §e sélectionnée"
 #§v = artefact's name §p = stealer's name
-game_player_enter_map: "[§bVi6§r] §6Vous rentrez dans §r[§b§m§r]"
+game_player_enter_map: "[§bVi6§r] §6Vous §3rentrez dans §r[§b§m§r]"
 #§m = map Name
 game_player_canCapture: "[§bVi6§r] §6Vous pouvez désormais §3voler §6les §3Artéfacts"
 game_player_canEscape: "[§bVi6§r] §6Vous pouvez désormais vous §3enfuir"
@@ -20,6 +20,9 @@ game_ingame_start_voleur: "[§bVi6§r] §6Vous entrez en phase de §3capture...\
 game_ingame_start_garde: "[§bVi6§r] §6Vous entrez en phase de §3défense...\n§r[§bVi6§r] §3Trouvez §6et §3éliminez §6les §cvoleurs §6!"
 game_end: "[§bVi6§r] §6Fin de partie !\n§r[§bVi6§r] §6Total §3artéfacts §6volés: §b§n"
 #§n = artefact count
+game_shouldBeUnready: "[§bVi6§r] §6Vous devez être §c'En attente' §6pour çela !"
+game_death: "[§bVi6§r] §b§p §cest mort avec §b§n §cartéfacts !"
+#§p = player name, §n = artefact count
 ##MAP EDITION
 map_list: "Voici la liste des cartes présentes dans le fichier \"Maps\":"
 #§v = map's name

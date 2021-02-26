@@ -13,6 +13,8 @@ import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.events.GameEnterPreparationPhaseEvent;
 import fr.nekotine.vi6.utils.IsCreator;
+import fr.nekotine.vi6.utils.MessageFormater;
+import fr.nekotine.vi6.yml.DisplayTexts;
 import net.kyori.adventure.text.Component;
 
 public class WaitingInventory extends BasePersonalInventory{
@@ -59,14 +61,17 @@ public class WaitingInventory extends BasePersonalInventory{
 			inventory.setItem(13, IsCreator.createItemStack(Material.EMERALD_BLOCK, 1, ChatColor.GREEN+"Prêt", ""));
 			break;
 		case BLUE_BANNER:
-			if(game.getWrapper(player).isReady()) return;
-			game.getWrapper(player).changeTeam(Team.VOLEUR);
-			inventory.setItem(16, IsCreator.createItemStack(Material.RED_BANNER, 1, ChatColor.RED+"Voleur", ""));
-			for(byte index=1;index<=26;index++) {
-				if(index==10||index==13||index==16) {
-					continue;
+			if(!game.getWrapper(player).isReady()) {
+				game.getWrapper(player).changeTeam(Team.VOLEUR);
+				inventory.setItem(16, IsCreator.createItemStack(Material.RED_BANNER, 1, ChatColor.RED+"Voleur", ""));
+				for(byte index=1;index<=26;index++) {
+					if(index==10||index==13||index==16) {
+						continue;
+					}
+					inventory.setItem(index, IsCreator.createItemStack(Material.RED_STAINED_GLASS_PANE, 1, " ", ""));
 				}
-				inventory.setItem(index, IsCreator.createItemStack(Material.RED_STAINED_GLASS_PANE, 1, " ", ""));
+			}else {
+				player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_shouldBeUnready")));
 			}
 			break;
 		case RED_BANNER:

@@ -23,8 +23,9 @@ public class Invisneak extends Objet{
 	private StatusEffect effect;
 	private boolean isSneaking;
 	public Invisneak(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Player player, Game game) {
-		super(main, objet, skin, IsCreator.createItemStack(objet.getInShopMaterial(), 1, objet.getInShopName(), objet.getInShopLore()), game);
-		player.getInventory().addItem(itemStack);
+		super(main, objet, skin, IsCreator.createItemStack(
+				ObjetsList.INVISNEAK.getInShopMaterial(), 1, ObjetsList.INVISNEAK.getInShopName(), 
+				ObjetsList.INVISNEAK.getInShopLore()), game, player);
 	}
 
 	@Override

@@ -12,7 +12,7 @@ import fr.nekotine.vi6.objet.utils.Objet;
 public class Cactus extends Objet{
 
 	public Cactus(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Player player, Game game) {
-		super(main, objet, skin, new ItemStack(Material.CACTUS), game);
+		super(main, objet, skin, new ItemStack(Material.CACTUS), game, player);
 		// TODO Auto-generated constructor stub
 	}
 

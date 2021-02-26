@@ -20,6 +20,7 @@ import fr.nekotine.vi6.events.GameEnterInGamePhaseEvent;
 import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.utils.IsCreator;
+import fr.nekotine.vi6.utils.MessageFormater;
 import fr.nekotine.vi6.utils.ObjetsListTagType;
 import fr.nekotine.vi6.yml.DisplayTexts;
 import net.kyori.adventure.text.Component;
@@ -132,6 +133,8 @@ public class PreparationInventory extends BasePersonalInventory{
 							}
 						}
 					}
+				}else {
+					player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_shouldBeUnready")));
 				}
 			}else {
 				createObjet(itm);
@@ -164,25 +167,29 @@ public class PreparationInventory extends BasePersonalInventory{
 		}
 	}
 	public void createObjet(ItemStack item) {
-		ObjetsList objet = item.getItemMeta().getPersistentDataContainer().get(ObjetsListTagType.getNamespacedKey(main), new ObjetsListTagType());
-		if(objet!=null) {
-			int count=0;
-			for(ItemStack itemstack : player.getInventory().getContents()) {
-				if(itemstack!=null) {
-					Objet obj = game.getObjet(itemstack);
-					if(obj!=null) {
-						count++;
-						if(count==objet.getLimit()) {
-							return;
+		if(!game.getWrapper(player).isReady()) {
+			ObjetsList objet = item.getItemMeta().getPersistentDataContainer().get(ObjetsListTagType.getNamespacedKey(main), new ObjetsListTagType());
+			if(objet!=null) {
+				int count=0;
+				for(ItemStack itemstack : player.getInventory().getContents()) {
+					if(itemstack!=null) {
+						Objet obj = game.getObjet(itemstack);
+						if(obj!=null) {
+							count++;
+							if(count==objet.getLimit()) {
+								return;
+							}
 						}
 					}
 				}
+				if(game.getWrapper(player).getMoney()>=objet.getCost()) {
+					game.getWrapper(player).setMoney(game.getWrapper(player).getMoney()-objet.getCost());
+					inventory.setItem(45, IsCreator.createItemStack(Material.GOLD_INGOT,1,ChatColor.GOLD+"Argent: "+game.getWrapper(player).getMoney(),""));
+					game.addObjet(ObjetsList.createObjet(main, objet, player, game));
+				}
 			}
-			if(!game.getWrapper(player).isReady() && game.getWrapper(player).getMoney()>=objet.getCost()) {
-				game.getWrapper(player).setMoney(game.getWrapper(player).getMoney()-objet.getCost());
-				inventory.setItem(45, IsCreator.createItemStack(Material.GOLD_INGOT,1,ChatColor.GOLD+"Argent: "+game.getWrapper(player).getMoney(),""));
-				game.addObjet(ObjetsList.createObjet(main, objet, player, game));
-			}
+		}else {
+			player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_shouldBeUnready")));
 		}
 	}
 	@EventHandler

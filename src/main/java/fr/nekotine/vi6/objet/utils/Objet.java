@@ -29,7 +29,7 @@ public abstract class Objet implements Listener{
 	protected final Game game;
 	protected final ItemStack itemStack;
 	
-	public Objet(Vi6Main main, ObjetsList objet, ObjetsSkins skin, ItemStack itemStack, Game game) {
+	public Objet(Vi6Main main, ObjetsList objet, ObjetsSkins skin, ItemStack itemStack, Game game, Player player) {
 		this.objet = objet;
 		this.skin=skin;
 		this.game = game;
@@ -37,6 +37,7 @@ public abstract class Objet implements Listener{
 		ItemMeta meta = this.itemStack.getItemMeta();
 		meta.getPersistentDataContainer().set(new NamespacedKey(main, game.getName()+"ObjetNBT"), PersistentDataType.INTEGER, game.getNBT());
 		this.itemStack.setItemMeta(meta);
+		player.getInventory().addItem(itemStack);
 		Bukkit.getPluginManager().registerEvents(this, main);
 	}
 	

@@ -38,9 +38,8 @@ public class BuissonFurtif extends Objet {
 	public BuissonFurtif(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Player player, Game game) {
 		super(main, objet, skin, IsCreator.createItemStack(
 				ObjetsList.BUISSON_FURTIF.getInShopMaterial(),1,ObjetsList.BUISSON_FURTIF.getInShopName(),
-				ObjetsList.BUISSON_FURTIF.getInShopLore()), game);
+				ObjetsList.BUISSON_FURTIF.getInShopLore()), game, player);
 		this.player = player;
-		player.getInventory().addItem(itemStack);
 		wrapper = main.getPlayerWrapper(player);
 		valid=wrapper!=null;
 		System.out.println("Validitée:"+valid);

@@ -508,8 +508,8 @@ public class Game implements Listener{
 			}
 		}
 		for(Player p : playerList.keySet()) {
-			p.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_end"), new MessageFormater("§n", String.valueOf(totalVole))));
-			
+			p.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_end"), 
+					new MessageFormater("§n", String.valueOf(totalVole))));
 		}
 		ticker.cancel();
 		state=GameState.Waiting;
@@ -582,6 +582,9 @@ public class Game implements Listener{
 			for(Entry<Player, PlayerWrapper> p : playerList.entrySet()) {
 				p.getKey().sendMessage("[Game.class]" + e.getEntity().getName()+" est mort avec "+playerList.get(e.getEntity()).getStealedArtefactList().size()+
 						" artefacts");
+				p.getKey().sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_death"), 
+						new MessageFormater("§p", String.valueOf(e.getEntity().getName())), 
+						new MessageFormater("§n", String.valueOf(playerList.get(e.getEntity()).getStealedArtefactList().size()))));
 			}
 			if(!isThiefLeft()) {
 				endGame();
