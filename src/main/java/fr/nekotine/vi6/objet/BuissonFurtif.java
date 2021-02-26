@@ -42,7 +42,6 @@ public class BuissonFurtif extends Objet {
 		this.player = player;
 		wrapper = main.getPlayerWrapper(player);
 		valid=wrapper!=null;
-		System.out.println("Validitée:"+valid);
 		player.getInventory().setHelmet(new ItemStack(Material.OAK_LEAVES));
 	}
 
@@ -59,7 +58,7 @@ public class BuissonFurtif extends Objet {
 		if (!valid) return;
 		if (Arrays.stream(BUSHTYPE).anyMatch(e->e==player.getLocation().getBlock().getType())){
 			if (!wrapper.haveEffect(Effects.Insondable)) {wrapper.addStatusEffect(insondable);insondable.setWrapper(wrapper);}
-			if (!wrapper.haveEffect(Effects.Insondable)) {wrapper.addStatusEffect(insondable);invisible.setWrapper(wrapper);}
+			if (!wrapper.haveEffect(Effects.Invisible)) {wrapper.addStatusEffect(invisible);invisible.setWrapper(wrapper);}
 		}else{
 			insondable.remove();
 			invisible.remove();
