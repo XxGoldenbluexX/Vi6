@@ -321,6 +321,7 @@ public class Game implements Listener{
 					}
 				}
 			}
+			playerAndWrapper.getKey().sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_preparation_start")));
 		}
 		ticker = new BukkitRunnable() {
 			int seconds = DEFAULT_PREPARATION_TIME;
@@ -354,9 +355,12 @@ public class Game implements Listener{
 				wrapper.setState(PlayerState.ENTERING);
 				if(wrapper.getThiefSpawnPoint()==null) wrapper.setThiefSpawnPoint(map.getThiefSpawnsList().get(0).getMapLocation());
 				player.teleport(wrapper.getThiefSpawnPoint());
+				playerAndWrapper.getKey().sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_ingame_start_voleur")));
+				
 			}else {
 				wrapper.setState(PlayerState.INSIDE);
 				ItemHider.get().hideFromPlayer(player);
+				playerAndWrapper.getKey().sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_ingame_start_garde")));
 			}
 			Bukkit.getPluginManager().registerEvents(new PlayerGame(name, playerAndWrapper.getKey().getUniqueId(), playerAndWrapper.getValue().getTeam()), main);
 		}
@@ -486,6 +490,7 @@ public class Game implements Listener{
 		}
 		scoreboardSidebar.setDisplaySlot(DisplaySlot.SIDEBAR);
 		BaseInventoryItem waitingItem = new OpenWaitingItem(main, this);
+		int totalVole=0;
 		for(Entry<Player, PlayerWrapper> p : playerList.entrySet()) {
 			p.getKey().setGameMode(GameMode.SPECTATOR);
 			p.getValue().setReady(false);
@@ -496,7 +501,15 @@ public class Game implements Listener{
 			p.getValue().setThiefSpawnPoint(null);
 			p.getKey().getInventory().clear();
 			p.getKey().getInventory().setItem(0, waitingItem.item);
-			if (p.getValue().getTeam()==Team.GARDE)ItemHider.get().unHideFromPlayer(p.getKey());
+			if (p.getValue().getTeam()==Team.GARDE) {
+				ItemHider.get().unHideFromPlayer(p.getKey());
+			}else {
+				totalVole+=p.getValue().getStealedArtefactList().size();
+			}
+		}
+		for(Player p : playerList.keySet()) {
+			p.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_end"), new MessageFormater("§n", String.valueOf(totalVole))));
+			
 		}
 		ticker.cancel();
 		state=GameState.Waiting;
@@ -510,7 +523,8 @@ public class Game implements Listener{
 			playerList.put(p, new PlayerWrapper(this, p));
 			playerList.get(p).setState(PlayerState.WAITING);
 			for (Player pl : playerList.keySet()) {
-				pl.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_join"),new MessageFormater("§p",p.getName())));
+				pl.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_join"),
+						new MessageFormater("§p",p.getName()),new MessageFormater("§g",name)));
 			}
 			p.getInventory().clear();
 			Bukkit.getPluginManager().callEvent(new PlayerJoinGameEvent(this, p));
@@ -523,7 +537,8 @@ public class Game implements Listener{
 		if (playerList.keySet().contains(p)) {
 			endGame();
 			for (Player pl : playerList.keySet()) {
-				pl.sendMessage(MessageFormater.formatWithColorCodes('§', DisplayTexts.getMessage("game_leave"), new MessageFormater("§p",p.getName())));
+				pl.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_leave"),
+						new MessageFormater("§p",p.getName()),new MessageFormater("§g",name)));
 			}
 			playerList.get(p).destroy();
 			playerList.remove(p);
