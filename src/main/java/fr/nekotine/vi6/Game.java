@@ -308,10 +308,7 @@ public class Game implements Listener{
 			if (wrapper.getTeam()==Team.GARDE) {
 				player.teleport(map.getGuardSpawn());
 				PlayerInventory inv = player.getInventory();
-				inv.setHelmet(makeSwordItem(Material.DIAMOND_HELMET,1));
 				inv.setChestplate(makeSwordItem(Material.DIAMOND_CHESTPLATE,1));
-				inv.setLeggings(makeSwordItem(Material.DIAMOND_LEGGINGS,1));
-				inv.setBoots(makeSwordItem(Material.DIAMOND_BOOTS,1));
 				inv.setItem(0, makeSwordItem(Material.DIAMOND_SWORD, 7));
 			}else {
 				player.teleport(map.getMinimapSpawn());
@@ -432,10 +429,7 @@ public class Game implements Listener{
 				PacketContainer equipPacket = pmanager.createPacket(PacketType.Play.Server.ENTITY_EQUIPMENT);
 				equipPacket.getIntegers().write(0, entityID);
 				List<Pair<ItemSlot, ItemStack>> pairList = new ArrayList<>();
-				pairList.add(new Pair<>(EnumWrappers.ItemSlot.HEAD, new ItemStack(Material.NETHERITE_HELMET)));
 				pairList.add(new Pair<>(EnumWrappers.ItemSlot.CHEST, new ItemStack(Material.NETHERITE_CHESTPLATE)));
-				pairList.add(new Pair<>(EnumWrappers.ItemSlot.LEGS, new ItemStack(Material.NETHERITE_LEGGINGS)));
-				pairList.add(new Pair<>(EnumWrappers.ItemSlot.FEET, new ItemStack(Material.NETHERITE_BOOTS)));
 				equipPacket.getSlotStackPairLists().write(0, pairList);
 				sendPacketToTeam(Team.VOLEUR, createPacket, metadataPacket,equipPacket);
 			}
