@@ -30,6 +30,7 @@ public class BuissonFurtif extends Objet {
 	private final boolean valid;
 	private final StatusEffect insondable=new StatusEffect(Effects.Insondable);
 	private final StatusEffect invisible=new StatusEffect(Effects.Invisible);
+	private final ItemStack headBush = new ItemStack(Material.OAK_LEAVES);
 	private TempBlock bush1_bot;
 	private TempBlock bush1_top;
 	private TempBlock bush2_bot;
@@ -45,7 +46,7 @@ public class BuissonFurtif extends Objet {
 		this.player = player;
 		wrapper = main.getPlayerWrapper(player);
 		valid=wrapper!=null;
-		player.getInventory().setHelmet(new ItemStack(Material.OAK_LEAVES));
+		player.getInventory().setHelmet(headBush);
 	}
 
 	@Override
@@ -71,7 +72,7 @@ public class BuissonFurtif extends Objet {
 	private boolean placeBush(Location loc) {
 		Block blockBot=loc.getBlock();
 		Block blockTop=loc.clone().add(0, 1, 0).getBlock();
-		if (nbBush<2) {
+		if (nbBush<2 && onGround(player)) {
 			if (blockBot.getType()==Material.AIR && blockTop.getType()==Material.AIR) {
 				if (nbBush==0) {
 					bush1_top = new TempBlock(blockTop,Bukkit.createBlockData(Material.TALL_GRASS, "[half=upper]")).set();
@@ -89,14 +90,17 @@ public class BuissonFurtif extends Objet {
 
 	@Override
 	public void leaveMap(Player holder) {
+		player.getInventory().remove(headBush);
 	}
 
 	@Override
 	public void death(Player holder) {
+		player.getInventory().remove(headBush);
 	}
 
 	@Override
 	public void sell(Player holder) {
+		player.getInventory().remove(headBush);
 	}
 
 	@Override
@@ -119,6 +123,10 @@ public class BuissonFurtif extends Objet {
 			}
 		}
 		return false;
+	}
+	
+	private boolean onGround(Player p) {
+		return (p.isFlying() && p.getLocation().subtract(0, 0.1, 0).getBlock().getType().isSolid());
 	}
 
 }
