@@ -40,6 +40,7 @@ public class BuissonFurtif extends Objet {
 				ObjetsList.BUISSON_FURTIF.getInShopMaterial(),1,ObjetsList.BUISSON_FURTIF.getInShopName(),
 				ObjetsList.BUISSON_FURTIF.getInShopLore()), game);
 		this.player = player;
+		player.getInventory().addItem(itemStack);
 		wrapper = main.getPlayerWrapper(player);
 		valid=wrapper!=null;
 		player.getInventory().setHelmet(new ItemStack(Material.OAK_LEAVES));
