@@ -1,6 +1,7 @@
 package fr.nekotine.vi6.objet;
 
 import java.util.Arrays;
+import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -12,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
+import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.statuseffects.Effects;
 import fr.nekotine.vi6.statuseffects.StatusEffect;
@@ -34,6 +36,7 @@ public class BuissonFurtif extends Objet {
 	private TempBlock bush2_top;
 	private byte nbBush=0;
 	private static final Material[] BUSHTYPE = {Material.PEONY,Material.TALL_GRASS,Material.LARGE_FERN,Material.LILAC,Material.ROSE_BUSH};
+	private static final double DETECTION_RANGE_IN_BLOCKS = 2;
 	
 	public BuissonFurtif(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Player player, Game game) {
 		super(main, objet, skin, IsCreator.createItemStack(
@@ -56,7 +59,7 @@ public class BuissonFurtif extends Objet {
 	@Override
 	public void tick() {
 		if (!valid) return;
-		if (Arrays.stream(BUSHTYPE).anyMatch(e->e==player.getLocation().getBlock().getType())){
+		if (Arrays.stream(BUSHTYPE).anyMatch(e->e==player.getLocation().getBlock().getType()) && !isGuardNear(player)){
 			if (!wrapper.haveEffect(Effects.Insondable)) {wrapper.addStatusEffect(insondable);insondable.setWrapper(wrapper);}
 			if (!wrapper.haveEffect(Effects.Invisible)) {wrapper.addStatusEffect(invisible);invisible.setWrapper(wrapper);}
 		}else{
@@ -107,6 +110,15 @@ public class BuissonFurtif extends Objet {
 		}else {
 			holder.playSound(Sound.sound(Key.key("entity.villager.no"),Sound.Source.VOICE,1f,1f));
 		}
+	}
+	
+	private boolean isGuardNear(Player holder) {
+		if(holder!=null) {
+			for(Entry<Player, PlayerWrapper> p : game.getPlayerMap().entrySet()) {
+				if(p.getValue().getTeam()==Team.GARDE && holder.getLocation().distance(p.getKey().getLocation())<=DETECTION_RANGE_IN_BLOCKS) return true;
+			}
+		}
+		return false;
 	}
 
 }
