@@ -175,11 +175,13 @@ public class PreparationInventory extends BasePersonalInventory{
 					if(itemstack!=null) {
 						Objet obj = game.getObjet(itemstack);
 						if(obj!=null) {
-							count++;
-							if(count==objet.getLimit()) {
-								return;
+							if(obj.getObjet()==objet) {
+								count++;
 							}
 						}
+					}
+					if(count==objet.getLimit()) {
+						return;
 					}
 				}
 				if(game.getWrapper(player).getMoney()>=objet.getCost()) {

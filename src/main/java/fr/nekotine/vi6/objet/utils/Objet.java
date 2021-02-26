@@ -8,6 +8,8 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -91,6 +93,11 @@ public abstract class Objet implements Listener{
 				drop(e.getPlayer());
 			}
 		}
+	}
+	@EventHandler
+	public void inventoryClick(InventoryClickEvent e) {
+		if(itemStack.equals(e.getCurrentItem()) && 
+				e.getWhoClicked().getOpenInventory().getType()!=InventoryType.CRAFTING) e.setCancelled(true);
 	}
 	public void vendre(Player player) {
 		sell(player);
