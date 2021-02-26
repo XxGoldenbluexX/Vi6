@@ -74,11 +74,11 @@ public class BuissonFurtif extends Objet {
 		if (nbBush<2) {
 			if (blockBot.getType()==Material.AIR && blockTop.getType()==Material.AIR) {
 				if (nbBush==0) {
-					bush1_bot = new TempBlock(blockBot,Bukkit.createBlockData(Material.TALL_GRASS, "[half=lower]")).set();
 					bush1_top = new TempBlock(blockTop,Bukkit.createBlockData(Material.TALL_GRASS, "[half=upper]")).set();
+					bush1_bot = new TempBlock(blockBot,Bukkit.createBlockData(Material.TALL_GRASS, "[half=lower]")).set();
 				}else {
-					bush2_bot = new TempBlock(blockBot,Bukkit.createBlockData(Material.TALL_GRASS, "[half=lower]")).set();
 					bush2_top = new TempBlock(blockTop,Bukkit.createBlockData(Material.TALL_GRASS, "[half=upper]")).set();
+					bush2_bot = new TempBlock(blockBot,Bukkit.createBlockData(Material.TALL_GRASS, "[half=lower]")).set();
 				}
 				nbBush++;
 				return true;
