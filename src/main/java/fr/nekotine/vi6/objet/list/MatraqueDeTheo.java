@@ -18,6 +18,8 @@ import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.objet.utils.Objet;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
 
 public class MatraqueDeTheo extends Objet {
 	
@@ -30,6 +32,7 @@ public class MatraqueDeTheo extends Objet {
 		meta.addAttributeModifier(Attribute.GENERIC_ATTACK_KNOCKBACK,new AttributeModifier("dealKnockback",3,Operation.ADD_NUMBER));
 		meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES,ItemFlag.HIDE_UNBREAKABLE);
 		meta.setUnbreakable(true);
+		meta.displayName(Component.text("Matraque de théo").color(TextColor.color(255, 0, 0)));
 		MATRAQUE.setItemMeta(meta);
 	}
 

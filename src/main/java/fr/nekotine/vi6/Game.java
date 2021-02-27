@@ -120,6 +120,7 @@ public class Game implements Listener{
 		meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE,new AttributeModifier("diamondSwordDamages",7,Operation.ADD_NUMBER));
 		meta.setUnbreakable(true);
 		meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES,ItemFlag.HIDE_UNBREAKABLE);
+		meta.displayName(Component.text("Épée de garde").color(NamedTextColor.GOLD));
 		GUARD_SWORD.setItemMeta(meta);
 	}
 	
