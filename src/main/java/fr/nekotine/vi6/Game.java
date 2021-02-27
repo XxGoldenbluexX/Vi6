@@ -35,6 +35,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -112,6 +113,16 @@ public class Game implements Listener{
 	private MapSelectionInventory mapInterface;
 	private GameSettingsInventory settingsInterface;
 	
+	public static final ItemStack GUARD_SWORD = new ItemStack(Material.DIAMOND_SWORD);
+	static{
+		ItemMeta meta = GUARD_SWORD.getItemMeta();
+		meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED,new AttributeModifier("pvp_1.8",1000,Operation.ADD_NUMBER));
+		meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE,new AttributeModifier("diamondSwordDamages",7,Operation.ADD_NUMBER));
+		meta.setUnbreakable(true);
+		meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES,ItemFlag.HIDE_UNBREAKABLE);
+		GUARD_SWORD.setItemMeta(meta);
+	}
+	
 	private final ArrayList<Integer> nbtCompteur = new ArrayList<>();
 	private final ArrayList<Objet> objetsList = new ArrayList<>();
 	
@@ -132,8 +143,7 @@ public class Game implements Listener{
 		nbtCompteur.add(0);
 		Bukkit.getPluginManager().registerEvents(this, main);
 		scoreboardSidebar = scoreboard.registerNewObjective("sidebar", "dummy", Component.text(name).color(NamedTextColor.GOLD));
-		scoreboardSidebar.setDisplaySlot(DisplaySlot.SIDEBAR);
-		
+		scoreboardSidebar.setDisplaySlot(DisplaySlot.SIDEBAR);	
 	}
 	
 	public boolean isRanked() {
@@ -272,17 +282,6 @@ public class Game implements Listener{
 		}
 	}
 	
-	private ItemStack makeSwordItem(Material mat,int damage) {
-		ItemStack itm = new ItemStack(mat);
-		ItemMeta meta = itm.getItemMeta();
-		int realDamages = Math.max(0, damage-1);
-		meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED,new AttributeModifier("pvp_1.8",1000,Operation.ADD_NUMBER));
-		meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE,new AttributeModifier("diamondSwordDamages",realDamages,Operation.ADD_NUMBER));
-		meta.setUnbreakable(true);
-		itm.setItemMeta(meta);
-		return itm;
-	}
-	
 	public boolean enterPreparationPhase() {//START------------------
 		if(!isEveryoneReady()) return false;
 		if (map!=null) {map.unload();map=null;}
@@ -308,8 +307,8 @@ public class Game implements Listener{
 			if (wrapper.getTeam()==Team.GARDE) {
 				player.teleport(map.getGuardSpawn());
 				PlayerInventory inv = player.getInventory();
-				inv.setChestplate(makeSwordItem(Material.DIAMOND_CHESTPLATE,1));
-				inv.setItem(0, makeSwordItem(Material.DIAMOND_SWORD, 7));
+				inv.setChestplate(new ItemStack(Material.DIAMOND_CHESTPLATE));
+				inv.setItem(0, GUARD_SWORD);
 			}else {
 				player.teleport(map.getMinimapSpawn());
 				for(Entry<Player, PlayerWrapper> p : playerList.entrySet()) {

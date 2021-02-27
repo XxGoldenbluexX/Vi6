@@ -13,6 +13,7 @@ import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.objet.list.BuissonFurtif;
 import fr.nekotine.vi6.objet.list.Invisneak;
+import fr.nekotine.vi6.objet.list.MatraqueDeTheo;
 import fr.nekotine.vi6.objet.utils.Objet;
 
 public enum ObjetsList {
@@ -25,9 +26,9 @@ public enum ObjetsList {
 			Material.GLASS_PANE,
 			ChatColor.LIGHT_PURPLE+"Devenez invisible en vous accroupissant"),
 	BUISSON_FURTIF(BuissonFurtif.class,Team.VOLEUR,1000,1,
-			ChatColor.GREEN+"BuissonFurtif",Material.OAK_LEAVES,ChatColor.LIGHT_PURPLE+"Devenez invisible et insondable dans les buissons."),
-	MATRAQUE_DE_THEO(BuissonFurtif.class,Team.VOLEUR,1000,1,
-			ChatColor.GREEN+"BuissonFurtif",Material.OAK_LEAVES,ChatColor.LIGHT_PURPLE+"Tuez en un coup.",ChatColor.GRAY+"Faites rager les amateurs du bain de fumée.");
+			ChatColor.GREEN+"Buisson Furtif",Material.OAK_LEAVES,ChatColor.LIGHT_PURPLE+"Devenez invisible et insondable dans les buissons."),
+	MATRAQUE_DE_THEO(MatraqueDeTheo.class,Team.GARDE,1000,1,
+			ChatColor.DARK_RED+"Matraque de théo",Material.OAK_LEAVES,ChatColor.LIGHT_PURPLE+"Tuez en un coup.",ChatColor.GRAY+"Faites rager les amateurs du bain de fumée.");
 	
 	////////////////////////////////
 	private final Class<?> objetClass;
