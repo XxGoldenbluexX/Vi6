@@ -97,7 +97,7 @@ public class Entree implements ConfigurationSerializable,ZoneDetectionListener{
 			insond.autoRemove(mainref,  DELAY_BEFORE_STATUS_CLEAR);
 			player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_player_enter_map"),
 					new MessageFormater("§m", wrap.getGame().getMapName())));
-			
+			if(wrap.getGame().getScanTime()!=wrap.getGame().getDefaultScanTime()) wrap.getGame().setScanTime(wrap.getGame().getDefaultScanTime());
 			new BukkitRunnable() {
 				@Override
 				public void run() {

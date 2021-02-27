@@ -130,7 +130,8 @@ public class Game implements Listener{
 	private final BossBar bb = Bukkit.createBossBar(ChatColor.GOLD+"Temps restant"+ChatColor.WHITE+": "+ChatColor.AQUA+DEFAULT_PREPARATION_TIME/60+ChatColor.WHITE+":"+
 			ChatColor.AQUA+DEFAULT_PREPARATION_TIME%60, BarColor.BLUE, BarStyle.SOLID);
 	private BukkitTask ticker;
-	private int scanTime=600;
+	private int scanTime;
+	private int defaultScanTime;
 	private int scanTimer=0;
 	public Game(Vi6Main main, String name) {
 		this.main=main;
@@ -291,7 +292,6 @@ public class Game implements Listener{
 		map.setGame(this);
 		map.enable(main);
 		map.start();
-		scanTime=main.getConfig().getInt("scanDelay", 600);
 		state=GameState.Preparation;
 		new OpenPreparationItem(main, this);
 		for(Entry<Player, PlayerWrapper> playerAndWrapper : playerList.entrySet()) {
@@ -342,7 +342,8 @@ public class Game implements Listener{
 		ticker.cancel();
 		startTime = LocalTime.now().toString();
 		scoreboardSidebar.setDisplaySlot(null);
-		scanTimer=scanTime-20;
+		defaultScanTime=main.getConfig().getInt("scanDelay", 600);
+		scanTime=main.getConfig().getInt("reducedScanDelay", defaultScanTime);
 		for(Entry<Player, PlayerWrapper> playerAndWrapper : playerList.entrySet()) {
 			Player player = playerAndWrapper.getKey();
 			PlayerWrapper wrapper = playerAndWrapper.getValue();
@@ -383,6 +384,18 @@ public class Game implements Listener{
 			scan();
 			scanTimer=0;
 		}
+	}
+	
+	public void setScanTime(int scanTime) {
+		this.scanTime=scanTime;
+	}
+	
+	public int getDefaultScanTime() {
+		return defaultScanTime;
+	}
+	
+	public int getScanTime() {
+		return scanTime;
 	}
 	
 	public void scan() {

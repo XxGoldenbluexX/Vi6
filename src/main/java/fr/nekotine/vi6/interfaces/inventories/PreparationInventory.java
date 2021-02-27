@@ -67,8 +67,8 @@ public class PreparationInventory extends BasePersonalInventory{
 				List<String> lore = new ArrayList<>();
 				for(String l : obj.getInShopLore()) {
 					lore.add(l);
-					lore.add(ChatColor.GOLD+"Coût: "+obj.getCost());
 				}
+				lore.add(ChatColor.GOLD+"Coût: "+obj.getCost());
 				inventory.setItem(index, IsCreator.createObjetItemStack(main, obj.getInShopName(), obj, 1, lore.toArray(String[]::new)));
 				index++;
 				if(index==45) {

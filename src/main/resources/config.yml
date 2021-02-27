@@ -2,6 +2,8 @@
 captureTime: 200
 #scan delay in tick
 scanDelay: 600
+#scan delay in tick when no thief has yet entered
+reducedScanDelay: 200
 #effects clear delay in tick
 effectsClearDelay: 200
 #capture delay when entering in tick
@@ -9,6 +11,6 @@ captureEnteringDelay: 600
 #escape delay when entering in tick
 escapeEnteringDelay: 600
 #default ranked money
-rankedMoney: 1000
+rankedMoney: 10000
 #default preparation time in seconds
 preparationTime: 120
