@@ -172,10 +172,7 @@ public class PlayerWrapper {
 	}
 	
 	public void clearStatusEffects() {
-		Iterator<StatusEffect> ite = statusEffects.iterator();
-		while (ite.hasNext()) {
-			ite.next().remove();
-		}
+		statusEffects.stream().forEach(e->e.remove());
 	}
 	
 	public boolean haveEffect(Effects effect) {
