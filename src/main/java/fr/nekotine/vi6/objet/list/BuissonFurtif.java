@@ -98,6 +98,7 @@ public class BuissonFurtif extends Objet {
 	@Override
 	public void death(Player holder) {
 		player.getInventory().remove(headBush);
+		gameEnd();
 	}
 
 	@Override
