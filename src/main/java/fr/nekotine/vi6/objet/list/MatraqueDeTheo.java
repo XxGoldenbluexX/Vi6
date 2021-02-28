@@ -38,7 +38,11 @@ public class MatraqueDeTheo extends Objet {
 
 	public MatraqueDeTheo(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Player player, Game game) {
 		super(main, objet, skin, MATRAQUE, game, player);
-		player.getInventory().remove(Game.GUARD_SWORD);
+		int slot = player.getInventory().first(Game.GUARD_SWORD);
+		if(slot>=0) {
+			player.getInventory().remove(itemStack);
+			player.getInventory().setItem(slot, itemStack);
+		}
 	}
 
 	@Override
@@ -59,7 +63,12 @@ public class MatraqueDeTheo extends Objet {
 
 	@Override
 	public void sell(Player holder) {
-		holder.getInventory().addItem(Game.GUARD_SWORD);
+		int slot = holder.getInventory().first(itemStack);
+		if(slot==-1) {
+			holder.getInventory().addItem(Game.GUARD_SWORD);
+		}else {
+			holder.getInventory().setItem(slot,Game.GUARD_SWORD);
+		}
 	}
 
 	@Override
@@ -70,6 +79,10 @@ public class MatraqueDeTheo extends Objet {
 	public void drop(Player holder) {
 		Location loc = holder.getLocation();
 		loc.getWorld().playSound(Sound.sound(Key.key("entity.evoker.prepare_wololo"),Sound.Source.VOICE,1f,1.2f), loc.getX(), loc.getY(), loc.getZ());
+	}
+
+	@Override
+	public void cooldownEnded() {
 	}
 
 }

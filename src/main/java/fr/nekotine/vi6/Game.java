@@ -129,7 +129,8 @@ public class Game implements Listener{
 	
 	private final BossBar bb = Bukkit.createBossBar(ChatColor.GOLD+"Temps restant"+ChatColor.WHITE+": "+ChatColor.AQUA+DEFAULT_PREPARATION_TIME/60+ChatColor.WHITE+":"+
 			ChatColor.AQUA+DEFAULT_PREPARATION_TIME%60, BarColor.BLUE, BarStyle.SOLID);
-	private BukkitTask ticker;
+	private BukkitTask bossBarTicker;
+	private BukkitTask gameTicker;
 	private int scanTime;
 	private int defaultScanTime;
 	private int scanTimer=0;
@@ -320,7 +321,7 @@ public class Game implements Listener{
 			}
 			playerAndWrapper.getKey().sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_preparation_start")));
 		}
-		ticker = new BukkitRunnable() {
+		bossBarTicker = new BukkitRunnable() {
 			int seconds = DEFAULT_PREPARATION_TIME;
 			@Override
 			public void run() {
@@ -333,13 +334,19 @@ public class Game implements Listener{
 				}
 			}
 		}.runTaskTimer(main, 0, 20);
+		gameTicker = new BukkitRunnable() {
+			@Override
+			public void run() {
+				ingameTick();
+			}
+		}.runTaskTimer(main, 0, 1);
 		Bukkit.getPluginManager().callEvent(new GameEnterPreparationPhaseEvent(this));
 		return true;
 	}
 	
 	public void enterInGamePhase() {
 		bb.removeAll();
-		ticker.cancel();
+		bossBarTicker.cancel();
 		startTime = LocalTime.now().toString();
 		scoreboardSidebar.setDisplaySlot(null);
 		defaultScanTime=main.getConfig().getInt("scanDelay", 600);
@@ -363,26 +370,22 @@ public class Game implements Listener{
 			Bukkit.getPluginManager().registerEvents(new PlayerGame(name, playerAndWrapper.getKey().getUniqueId(), playerAndWrapper.getValue().getTeam()), main);
 		}
 		state=GameState.Ingame;
-		ticker = new BukkitRunnable() {
-			@Override
-			public void run() {
-				ingameTick();
-			}
-		}.runTaskTimer(main, 0, 1);
 		Bukkit.getPluginManager().callEvent(new GameEnterInGamePhaseEvent(this));
 	}
 	
 	public void ingameTick() {
 		for(Objet obj : objetsList) {
-			obj.tick();
+			obj.ticks();
 		}
-		for(Artefact art : map.getArtefactList()) {
-			art.tick(this);
-		}
-		scanTimer++;
-		if (scanTimer>=scanTime) {
-			scan();
-			scanTimer=0;
+		if(state==GameState.Ingame) {
+			for(Artefact art : map.getArtefactList()) {
+				art.tick(this);
+			}
+			scanTimer++;
+			if (scanTimer>=scanTime) {
+				scan();
+				scanTimer=0;
+			}
 		}
 	}
 	
@@ -518,7 +521,7 @@ public class Game implements Listener{
 			p.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_end"), 
 					new MessageFormater("§n", String.valueOf(totalVole))));
 		}
-		ticker.cancel();
+		gameTicker.cancel();
 		state=GameState.Waiting;
 		Bukkit.getPluginManager().callEvent(new GameEndEvent(this, idPartie));
 		return true;
@@ -606,4 +609,8 @@ public class Game implements Listener{
 		}
 		return false;
 	}
+	/*@EventHandler
+	public void onPlayerDrop(PlayerDropItemEvent e) {
+		if(playerList.keySet().contains(e.getPlayer())) e.setCancelled(true);
+	}*/
 }

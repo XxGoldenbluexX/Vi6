@@ -128,6 +128,7 @@ public class PreparationInventory extends BasePersonalInventory{
 							Objet obj = game.getObjet(item);
 							if(obj!=null) {
 								obj.vendre(player);
+								game.removeObjet(obj);
 								game.getWrapper(player).setMoney(game.getWrapper(player).getMoney()+obj.getObjet().getCost());
 								inventory.setItem(45, IsCreator.createItemStack(Material.GOLD_INGOT,1,ChatColor.GOLD+"Argent: "+game.getWrapper(player).getMoney(),""));
 							}
@@ -201,7 +202,9 @@ public class PreparationInventory extends BasePersonalInventory{
 				if(e.getCurrentItem()!=null) {
 					Objet obj = game.getObjet(e.getCurrentItem());
 					if(obj!=null) {
+						e.setCancelled(true);
 						obj.vendre(player);
+						game.removeObjet(obj);
 						game.getWrapper(player).setMoney(game.getWrapper(player).getMoney()+obj.getObjet().getCost());
 						inventory.setItem(45, IsCreator.createItemStack(Material.GOLD_INGOT,1,ChatColor.GOLD+"Argent: "+game.getWrapper(player).getMoney(),""));
 					}

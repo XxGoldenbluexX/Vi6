@@ -12,8 +12,10 @@ import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.objet.list.BuissonFurtif;
+import fr.nekotine.vi6.objet.list.Cactus;
 import fr.nekotine.vi6.objet.list.Invisneak;
 import fr.nekotine.vi6.objet.list.MatraqueDeTheo;
+import fr.nekotine.vi6.objet.list.Surcharge;
 import fr.nekotine.vi6.objet.utils.Objet;
 
 public enum ObjetsList {
@@ -25,6 +27,20 @@ public enum ObjetsList {
 			ChatColor.GOLD+"Invisible",
 			Material.GLASS_PANE,
 			ChatColor.LIGHT_PURPLE+"Devenez invisible en vous accroupissant"),
+	CACTUS(Cactus.class,
+			Team.GARDE,
+			1000,
+			1,
+			ChatColor.GREEN+"Cactus",
+			Material.CACTUS,
+			ChatColor.LIGHT_PURPLE+"Piquez tous les voleurs quand vous en tapez un"),
+	SURCHARGE(Surcharge.class,
+			Team.GARDE,
+			1000,
+			1,
+			ChatColor.RED+"Surcharge",
+			Material.FIREWORK_ROCKET,
+			ChatColor.LIGHT_PURPLE+"Grand bonus en vitesse et force sur utilisation"),
 	BUISSON_FURTIF(BuissonFurtif.class,Team.VOLEUR,1000,1,
 			ChatColor.GREEN+"Buisson Furtif",Material.OAK_LEAVES,ChatColor.LIGHT_PURPLE+"Devenez invisible et insondable dans les buissons."),
 	MATRAQUE_DE_THEO(MatraqueDeTheo.class,Team.GARDE,1000,1,

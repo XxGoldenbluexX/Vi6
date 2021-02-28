@@ -101,4 +101,8 @@ public class Invisneak extends Objet{
 		}
 		return null;
 	}
+
+	@Override
+	public void cooldownEnded() {
+	}
 }
