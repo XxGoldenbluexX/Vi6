@@ -30,9 +30,9 @@ public class BuissonFurtif extends Objet {
 	private final Player player;
 	private final PlayerWrapper wrapper;
 	private final boolean valid;
-	private final StatusEffect insondable=new StatusEffect(Effects.Insondable);
-	private final StatusEffect invisible=new StatusEffect(Effects.Invisible);
-	private final ItemStack headBush = new ItemStack(Material.OAK_LEAVES);
+	private final static StatusEffect insondable=new StatusEffect(Effects.Insondable);
+	private final static StatusEffect invisible=new StatusEffect(Effects.Invisible);
+	private final static ItemStack headBush = new ItemStack(Material.OAK_LEAVES);
 	private TempBlock bush1_bot;
 	private TempBlock bush1_top;
 	private TempBlock bush2_bot;
