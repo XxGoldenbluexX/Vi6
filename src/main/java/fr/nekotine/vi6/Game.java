@@ -95,7 +95,7 @@ import net.kyori.adventure.util.Ticks;
 public class Game implements Listener{
 	private static int DEFAULT_RANKED_MONEY;
 	private static int DEFAULT_PREPARATION_TIME;
-	
+	private static int DEFAULT_CAPTURE_DELAY;
 	private final Vi6Main main;
 	private int idPartie;
 	private String startTime;
@@ -103,6 +103,8 @@ public class Game implements Listener{
 	private Objective scoreboardSidebar;
 	private final String name;
 	private boolean isRanked=true;
+	private boolean canCapture=true;
+	private int canCaptureRest=0;
 	private GameState state = GameState.Waiting;
 	private final HashMap<Player,PlayerWrapper> playerList = new HashMap<Player,PlayerWrapper>();
 	
@@ -139,6 +141,7 @@ public class Game implements Listener{
 		this.name=name;
 		DEFAULT_RANKED_MONEY = main.getConfig().getInt("rankedMoney",1000);
 		DEFAULT_PREPARATION_TIME = main.getConfig().getInt("preparationTime",2*60);
+		DEFAULT_PREPARATION_TIME = main.getConfig().getInt("delayBetweenCapture",20*30);
 		money=DEFAULT_RANKED_MONEY;
 		new OpenWaitingItem(main, this);
 		settingsInterface = new GameSettingsInventory(main, this);
@@ -378,6 +381,17 @@ public class Game implements Listener{
 			obj.ticks();
 		}
 		if(state==GameState.Ingame) {
+			if(!canCapture) {
+				canCaptureRest--;
+				if(canCaptureRest<=0) {
+					canCapture=true;
+					for(Entry<Player, PlayerWrapper> p : playerList.entrySet()) {
+						if(p.getValue().getTeam()==Team.VOLEUR && p.getValue().isCanCapture()) {
+							p.getKey().sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_player_canCapture")));
+						}
+					}
+				}
+			}
 			for(Artefact art : map.getArtefactList()) {
 				art.tick(this);
 			}
@@ -590,8 +604,6 @@ public class Game implements Listener{
 			playerList.get(e.getEntity()).setState(PlayerState.LEAVED);
 			e.getEntity().setGameMode(GameMode.SPECTATOR);
 			for(Entry<Player, PlayerWrapper> p : playerList.entrySet()) {
-				p.getKey().sendMessage("[Game.class]" + e.getEntity().getName()+" est mort avec "+playerList.get(e.getEntity()).getStealedArtefactList().size()+
-						" artefacts");
 				p.getKey().sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_death"), 
 						new MessageFormater("§p", String.valueOf(e.getEntity().getName())), 
 						new MessageFormater("§n", String.valueOf(playerList.get(e.getEntity()).getStealedArtefactList().size()))));
@@ -609,9 +621,12 @@ public class Game implements Listener{
 		}
 		return false;
 	}
-	public void setCanCaptureDelay() {
-		for(Entry<Player, PlayerWrapper> p : playerList.entrySet()) {
-			if(p.getValue().getTeam()==Team.VOLEUR) p.getValue().setCanCapture(false);
-		}
+	public void capture() {
+		canCaptureRest=DEFAULT_CAPTURE_DELAY;
+		canCapture=false;
+	}
+
+	public boolean isCanCapture() {
+		return canCapture;
 	}
 }
