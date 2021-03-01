@@ -2,21 +2,23 @@ game_join: "[§bVi6§r] §b§p §6a §arejoint §6la partie §r[§b§g§r]"
 #§p = player name, §g = game Name
 game_leave: "[§bVi6§r] §b§p §6a §cquitté §6la partie §r[§b§g§r]"
 #§p = player name, §g = game Name
-game_artefact_steal_guard: "§3Un artéfact a été volé"
-game_artefact_steal_thief: "§p a volé §v"
-game_artefact_stealing: "§6En train de voler §v..."
-game_thiefSpawnPoint_notSelected: "Veillez à sélectionner une entrée!"
+game_artefact_steal_guard: "§cUn §3artéfact §ca été volé !"
+game_artefact_steal_thief: "§b§p §6a §3volé §b§a"
+#§p = player name, §a = artefact name
+game_artefact_stealing: "§6Vole §b§a §6- §b§p§6%"
+#§a = artefact name, §p = percentage
+game_thiefSpawnPoint_notSelected: "§cVeillez à sélectionner une entrée!"
 #§e = thiefSpawnPoint name
 game_thiefSpawnPoint_selected: "§2Entrée §e sélectionnée"
 #§v = artefact's name §p = stealer's name
-game_player_enter_map: "[§bVi6§r] §6Vous §3rentrez dans §r[§b§m§r]"
+game_player_enter_map: "[§bVi6§r] §6Vous §3rentrez §6dans §r[§b§m§r]"
 #§m = map Name
 game_player_canCapture: "[§bVi6§r] §6Vous pouvez désormais §3voler §6les §3Artéfacts"
 game_player_canEscape: "[§bVi6§r] §6Vous pouvez désormais vous §3enfuir"
 game_player_escaped: "[§bVi6§r] §b§p §6s'est échappé avec §b§n §6Artéfacts!"
 #§p = player name, §n = artefact count
 game_preparation_start: "[§bVi6§r] §6Vous entrez en phase de §3préparation...\n§r[§bVi6§r] §aFaites vos achats !"
-game_ingame_start_voleur: "[§bVi6§r] §6Vous entrez en phase de §3capture...\n§r[§bVi6§r] §3Volez §6les §3artéfacts §6et §3évitez §3les §bgardes §6!"
+game_ingame_start_voleur: "[§bVi6§r] §6Vous entrez en phase de §3capture...\n§r[§bVi6§r] §3Volez §6les §3artéfacts §6et §3évitez §6les §bgardes §6!"
 game_ingame_start_garde: "[§bVi6§r] §6Vous entrez en phase de §3défense...\n§r[§bVi6§r] §3Trouvez §6et §3éliminez §6les §cvoleurs §6!"
 game_end: "[§bVi6§r] §6Fin de partie !\n§r[§bVi6§r] §6Total §3artéfacts §6volés: §b§n"
 #§n = artefact count

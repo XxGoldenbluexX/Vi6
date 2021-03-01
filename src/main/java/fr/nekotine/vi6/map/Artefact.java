@@ -129,7 +129,8 @@ public class Artefact implements ConfigurationSerializable,ZoneDetectionListener
 			if (nbGuardInside<=0) {
 				captureLevel+=voleurInside.size();
 				for (Player p : voleurInside) {
-					p.sendActionBar(MessageFormater.formatWithColorCodes('§', DisplayTexts.getMessage("game_artefact_stealing"), new MessageFormater("§v", displayName)));
+					p.sendActionBar(MessageFormater.formatWithColorCodes('§', DisplayTexts.getMessage("game_artefact_stealing"),
+							new MessageFormater("§a", displayName), new MessageFormater("§p", String.valueOf((captureLevel*100/maxCaptureLevel)))));
 				}
 				if (captureLevel>=maxCaptureLevel) {
 					g.showCaptureMessage(this,capture(voleurInside));

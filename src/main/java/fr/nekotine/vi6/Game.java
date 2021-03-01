@@ -199,7 +199,7 @@ public class Game implements Listener{
 	public void showCaptureMessage(Artefact a,PlayerWrapper p) {
 		final TextComponent msgGuard = MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_artefact_steal_guard"));
 		final TextComponent msgVoleur = MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_artefact_steal_thief"),
-				new MessageFormater("§v",a.getDisplayName()),new MessageFormater("§p",p.getPlayer().getName()));
+				new MessageFormater("§a",a.getDisplayName()),new MessageFormater("§p",p.getPlayer().getName()));
 		Times titleTimes = Title.Times.of(Ticks.duration(5), Ticks.duration(20), Ticks.duration(20));
 		Title titleGuard = Title.title(msgGuard, Component.text(""),titleTimes);
 		Title titleVoleur = Title.title(msgVoleur, Component.text(""),titleTimes);
@@ -609,8 +609,9 @@ public class Game implements Listener{
 		}
 		return false;
 	}
-	/*@EventHandler
-	public void onPlayerDrop(PlayerDropItemEvent e) {
-		if(playerList.keySet().contains(e.getPlayer())) e.setCancelled(true);
-	}*/
+	public void setCanCaptureDelay() {
+		for(Entry<Player, PlayerWrapper> p : playerList.entrySet()) {
+			if(p.getValue().getTeam()==Team.VOLEUR) p.getValue().setCanCapture(false);
+		}
+	}
 }
