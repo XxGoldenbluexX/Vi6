@@ -7,6 +7,7 @@ import java.util.List;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
@@ -16,6 +17,7 @@ import fr.nekotine.vi6.objet.list.Cactus;
 import fr.nekotine.vi6.objet.list.Invisneak;
 import fr.nekotine.vi6.objet.list.MatraqueDeTheo;
 import fr.nekotine.vi6.objet.list.Surcharge;
+import fr.nekotine.vi6.objet.list.DoubleSaut;
 import fr.nekotine.vi6.objet.utils.Objet;
 
 public enum ObjetsList {
@@ -43,6 +45,8 @@ public enum ObjetsList {
 			ChatColor.LIGHT_PURPLE+"Grand bonus en vitesse et force sur utilisation"),
 	BUISSON_FURTIF(BuissonFurtif.class,Team.VOLEUR,1000,1,
 			ChatColor.GREEN+"Buisson Furtif",Material.OAK_LEAVES,ChatColor.LIGHT_PURPLE+"Devenez invisible et insondable dans les buissons."),
+	DOUBLE_SAUT(DoubleSaut.class,Team.VOLEUR,1000,1,
+			ChatColor.YELLOW+"Bottes de propultion",Material.GOLDEN_BOOTS,ChatColor.LIGHT_PURPLE+"Vous pouvez effectuer un double saut."),
 	MATRAQUE_DE_THEO(MatraqueDeTheo.class,Team.GARDE,1000,1,
 			ChatColor.DARK_RED+"Matraque de théo",Material.NETHERITE_SWORD,ChatColor.LIGHT_PURPLE+"Tuez en un coup.",ChatColor.GRAY+"Faites rager les amateurs du bain de fumée.");
 	
@@ -90,6 +94,10 @@ public enum ObjetsList {
 	}
 	public Class<?> getObjetClass() {
 		return objetClass;
+	}
+	public ItemStack makeInShopItem() {
+		ItemStack itm = new ItemStack(inShopMaterial);
+		return itm;
 	}
 	
 	////////////////////////////////

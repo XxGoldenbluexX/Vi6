@@ -74,7 +74,7 @@ public class BuissonFurtif extends Objet {
 	private boolean placeBush(Location loc) {
 		Block blockBot=loc.getBlock();
 		Block blockTop=loc.clone().add(0, 1, 0).getBlock();
-		if (nbBush<2 && onGround(player)) {
+		if (nbBush<2 && onGround()) {
 			if (blockBot.getType()==Material.AIR && blockTop.getType()==Material.AIR) {
 				if (nbBush==0) {
 					bush1_top = new TempBlock(blockTop,Bukkit.createBlockData(Material.TALL_GRASS, "[half=upper]")).set();
@@ -113,9 +113,9 @@ public class BuissonFurtif extends Objet {
 	@Override
 	public void drop(Player holder) {
 		if (placeBush(holder.getLocation())) {
-			holder.playSound(Sound.sound(Key.key("block.chorus_flower.grow"),Sound.Source.VOICE,1f,1f));
+			holder.playSound(Sound.sound(Key.key("block.chorus_flower.grow"),Sound.Source.AMBIENT,1f,1f));
 		}else {
-			holder.playSound(Sound.sound(Key.key("entity.villager.no"),Sound.Source.VOICE,1f,1f));
+			holder.playSound(Sound.sound(Key.key("entity.villager.no"),Sound.Source.AMBIENT,1f,1f));
 		}
 	}
 	
@@ -128,8 +128,8 @@ public class BuissonFurtif extends Objet {
 		return false;
 	}
 	
-	private boolean onGround(Player p) {
-		return (!p.isFlying() && p.getLocation().subtract(0, 0.1, 0).getBlock().getType().isSolid());
+	private boolean onGround() {
+		return (!player.isFlying() && player.getLocation().subtract(0, 0.1, 0).getBlock().getType().isSolid());
 	}
 
 	@Override
