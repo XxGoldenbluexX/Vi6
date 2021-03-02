@@ -24,10 +24,12 @@ public class Invisneak extends Objet{
 	private final int DETECTION_RANGE_IN_BLOCKS=3;
 	private StatusEffect effect;
 	private boolean isSneaking;
+	private Player player;
 	public Invisneak(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Player player, Game game) {
 		super(main, objet, skin, IsCreator.createItemStack(
 				ObjetsList.INVISNEAK.getInShopMaterial(), 1, ObjetsList.INVISNEAK.getInShopName(), 
 				ObjetsList.INVISNEAK.getInShopLore()), game, player);
+		this.player=player;
 	}
 
 	@Override
@@ -38,16 +40,16 @@ public class Invisneak extends Objet{
 	@Override
 	public void tick() {
 		if(effect!=null) {
-			if(isGuardNear(getHolder())) {
-				game.getWrapper(getHolder()).removeStatusEffect(effect);
+			if(isGuardNear(player)) {
+				game.getWrapper(player).removeStatusEffect(effect);
 				effect=null;
 			}
 		}else if(isSneaking) {
-			if(isGuardNear(getHolder())) {
-				getHolder().getWorld().playSound(getHolder().getLocation(),Sound.BLOCK_LAVA_EXTINGUISH, SoundCategory.MASTER, 0.1f, 2f);
+			if(isGuardNear(player)) {
+				player.getWorld().playSound(player.getLocation(),Sound.BLOCK_LAVA_EXTINGUISH, SoundCategory.MASTER, 0.1f, 2f);
 			}else{
 				effect = new StatusEffect(Effects.Invisible);
-				game.getWrapper(getHolder()).addStatusEffect(effect);
+				game.getWrapper(player).addStatusEffect(effect);
 			}
 		}
 	}
@@ -78,6 +80,7 @@ public class Invisneak extends Objet{
 	public void onSneakToggle(PlayerToggleSneakEvent e) {
 		if(e.getPlayer().getInventory().contains(itemStack)) {
 			isSneaking=e.isSneaking();
+			player=e.getPlayer();
 			if(isSneaking) {
 				effect = new StatusEffect(Effects.Invisible);
 				game.getWrapper(e.getPlayer()).addStatusEffect(effect);

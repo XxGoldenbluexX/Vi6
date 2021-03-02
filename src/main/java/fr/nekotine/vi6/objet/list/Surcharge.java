@@ -65,7 +65,6 @@ public class Surcharge extends Objet{
 
 	@Override
 	public void cooldownEnded() {
-		System.out.println("COOLDOWN ENDED");
 		updateItem(IsCreator.createItemStack(ObjetsList.SURCHARGE.getInShopMaterial(), 1, ObjetsList.SURCHARGE.getInShopName(),
 				ObjetsList.SURCHARGE.getInShopLore()));
 	}

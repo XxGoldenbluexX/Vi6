@@ -41,7 +41,7 @@ public class Vi6Main extends JavaPlugin {
 	
 	private PluginManager pmanager;
 	private static List<Game> gameList = new ArrayList<Game>(1);
-	
+	public static Vi6Main main;
 	@Override
 	public void onLoad() {
 		super.onLoad();
@@ -77,6 +77,7 @@ public class Vi6Main extends JavaPlugin {
 		createGame("test");
 		CommandAPI.onEnable(this);//enable CommandAPI
 		Vi6commandMaker.makevi6(this).register();//registering commands
+		main=this;
 	}
 	
 	@Override

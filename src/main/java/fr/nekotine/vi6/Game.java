@@ -73,7 +73,6 @@ import fr.nekotine.vi6.events.PlayerLeaveGameEvent;
 import fr.nekotine.vi6.interfaces.inventories.GameMoneyAnvil;
 import fr.nekotine.vi6.interfaces.inventories.GameSettingsInventory;
 import fr.nekotine.vi6.interfaces.inventories.MapSelectionInventory;
-import fr.nekotine.vi6.interfaces.items.BaseInventoryItem;
 import fr.nekotine.vi6.interfaces.items.OpenPreparationItem;
 import fr.nekotine.vi6.interfaces.items.OpenWaitingItem;
 import fr.nekotine.vi6.map.Artefact;
@@ -141,7 +140,7 @@ public class Game implements Listener{
 		this.name=name;
 		DEFAULT_RANKED_MONEY = main.getConfig().getInt("rankedMoney",1000);
 		DEFAULT_PREPARATION_TIME = main.getConfig().getInt("preparationTime",2*60);
-		DEFAULT_PREPARATION_TIME = main.getConfig().getInt("delayBetweenCapture",20*30);
+		DEFAULT_CAPTURE_DELAY = main.getConfig().getInt("delayBetweenCapture",20*30);
 		money=DEFAULT_RANKED_MONEY;
 		new OpenWaitingItem(main, this);
 		settingsInterface = new GameSettingsInventory(main, this);
@@ -513,7 +512,8 @@ public class Game implements Listener{
 			obj.gameEnd();
 		}
 		scoreboardSidebar.setDisplaySlot(DisplaySlot.SIDEBAR);
-		BaseInventoryItem waitingItem = new OpenWaitingItem(main, this);
+		if(bb.getPlayers().size()>0) bb.removeAll();
+		if(main.isEnabled()) new OpenWaitingItem(main, this);
 		int totalVole=0;
 		for(Entry<Player, PlayerWrapper> p : playerList.entrySet()) {
 			p.getKey().setGameMode(GameMode.SPECTATOR);
@@ -524,7 +524,6 @@ public class Game implements Listener{
 			p.getValue().setCanEscape(false);
 			p.getValue().setThiefSpawnPoint(null);
 			p.getKey().getInventory().clear();
-			p.getKey().getInventory().setItem(0, waitingItem.item);
 			if (p.getValue().getTeam()==Team.GARDE) {
 				ItemHider.get().unHideFromPlayer(p.getKey());
 			}else {
@@ -536,6 +535,7 @@ public class Game implements Listener{
 					new MessageFormater("§n", String.valueOf(totalVole))));
 		}
 		gameTicker.cancel();
+		bossBarTicker.cancel();
 		state=GameState.Waiting;
 		Bukkit.getPluginManager().callEvent(new GameEndEvent(this, idPartie));
 		return true;
