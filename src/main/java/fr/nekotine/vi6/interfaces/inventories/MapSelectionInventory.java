@@ -10,7 +10,6 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
@@ -20,6 +19,7 @@ import fr.nekotine.vi6.events.GameEnterPreparationPhaseEvent;
 import fr.nekotine.vi6.map.Carte;
 import fr.nekotine.vi6.utils.IsCreator;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 
 public class MapSelectionInventory extends BaseSharedInventory{
 	private static Enchantment enchant = Enchantment.DURABILITY;
@@ -40,7 +40,7 @@ public class MapSelectionInventory extends BaseSharedInventory{
 			}
 			inventory.setItem(index, IsCreator.createItemStack(Material.PAPER,1,map,""));
 			inventory.getItem(index).addItemFlags(ItemFlag.HIDE_ENCHANTS);
-			if(game.getMapName()==map) {
+			if(map.equals(game.getMapName())) {
 				inventory.getItem(index).addUnsafeEnchantment(enchant, 1);
 			}
 		}
@@ -61,16 +61,16 @@ public class MapSelectionInventory extends BaseSharedInventory{
 			break;
 		case PAPER:
 			for(ItemStack item : inventory.getStorageContents()) {
-				if(item.getType()==Material.PAPER&&item.getItemMeta().displayName().examinableName()==game.getMapName()) {
+				if(item.getType()==Material.PAPER&&((TextComponent)item.getItemMeta().displayName()).content().equals(game.getMapName())) {
 					item.removeEnchantment(enchant);
 					break;
 				}
 			}
 			game.setMapName(itm.getItemMeta().displayName().examinableName());
 			itm.addUnsafeEnchantment(enchant, 1);
-			
 			List<String> lore = new ArrayList<>();
-			lore.add(ChatColor.LIGHT_PURPLE+""+ChatColor.UNDERLINE+itm.getItemMeta().displayName().examinableName());
+			lore.add(ChatColor.LIGHT_PURPLE+""+ChatColor.UNDERLINE+((TextComponent)itm.getItemMeta().displayName()).content());
+			
 			inventory.getItem(18).setLore(lore);
 			break;
 		default:
@@ -81,7 +81,6 @@ public class MapSelectionInventory extends BaseSharedInventory{
 	public void onGameStart(GameEnterPreparationPhaseEvent e) {
 		if(e.getGame().equals(game)) {
 			inventory.getViewers().forEach(HumanEntity::closeInventory);
-			HandlerList.unregisterAll(this);
 		}
 	}
 }

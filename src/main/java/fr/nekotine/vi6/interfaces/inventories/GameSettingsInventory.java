@@ -6,7 +6,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 
 import fr.nekotine.vi6.Game;
@@ -72,7 +71,6 @@ public class GameSettingsInventory extends BaseSharedInventory{
 	public void onGameStart(GameEnterPreparationPhaseEvent e) {
 		if(e.getGame().equals(game)) {
 			inventory.getViewers().forEach(HumanEntity::closeInventory);
-			HandlerList.unregisterAll(this);
 		}
 	}
 }

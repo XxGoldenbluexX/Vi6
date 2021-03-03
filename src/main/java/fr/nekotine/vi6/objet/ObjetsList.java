@@ -12,13 +12,13 @@ import org.bukkit.inventory.ItemStack;
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.enums.Team;
+import fr.nekotine.vi6.objet.list.Bottes7Lieues;
 import fr.nekotine.vi6.objet.list.BuissonFurtif;
 import fr.nekotine.vi6.objet.list.Cactus;
+import fr.nekotine.vi6.objet.list.DoubleSaut;
 import fr.nekotine.vi6.objet.list.Invisneak;
 import fr.nekotine.vi6.objet.list.MatraqueDeTheo;
 import fr.nekotine.vi6.objet.list.Surcharge;
-import fr.nekotine.vi6.objet.list.DoubleSaut;
-import fr.nekotine.vi6.objet.list.Bottes7Lieues;
 import fr.nekotine.vi6.objet.utils.Objet;
 
 public enum ObjetsList {

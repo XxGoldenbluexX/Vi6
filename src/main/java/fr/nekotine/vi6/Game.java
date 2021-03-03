@@ -265,6 +265,8 @@ public class Game implements Listener{
 	public void destroy() {
 		endGame();
 		if (map!=null) {map.unload();map=null;}
+		HandlerList.unregisterAll(mapInterface);
+		HandlerList.unregisterAll(settingsInterface);
 		HandlerList.unregisterAll(this);
 		scoreboardSidebar.unregister();
 		scoreboard=null;
