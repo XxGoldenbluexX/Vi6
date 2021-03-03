@@ -18,6 +18,7 @@ import fr.nekotine.vi6.objet.list.Invisneak;
 import fr.nekotine.vi6.objet.list.MatraqueDeTheo;
 import fr.nekotine.vi6.objet.list.Surcharge;
 import fr.nekotine.vi6.objet.list.DoubleSaut;
+import fr.nekotine.vi6.objet.list.Bottes7Lieues;
 import fr.nekotine.vi6.objet.utils.Objet;
 
 public enum ObjetsList {
@@ -43,6 +44,13 @@ public enum ObjetsList {
 			ChatColor.RED+"Surcharge",
 			Material.FIREWORK_ROCKET,
 			ChatColor.LIGHT_PURPLE+"Grand bonus en vitesse et force sur utilisation"),
+	BOTTES7LIEUES(Bottes7Lieues.class,
+			Team.GARDE,
+			1000,
+			0,
+			ChatColor.GREEN+"Bottes de 7 lieues",
+			Material.LEATHER_BOOTS,
+			ChatColor.LIGHT_PURPLE+"Vitesse accrue de 20%"),
 	BUISSON_FURTIF(BuissonFurtif.class,Team.VOLEUR,1000,1,
 			ChatColor.GREEN+"Buisson Furtif",Material.OAK_LEAVES,ChatColor.LIGHT_PURPLE+"Devenez invisible et insondable dans les buissons."),
 	DOUBLE_SAUT(DoubleSaut.class,Team.VOLEUR,1000,1,

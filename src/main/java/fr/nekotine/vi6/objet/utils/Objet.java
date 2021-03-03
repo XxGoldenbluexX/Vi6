@@ -64,6 +64,7 @@ public abstract class Objet implements Listener{
 			for(Player player : game.getPlayerList()) {
 				player.getInventory().removeItem(itemStack);
 			}
+			game.removeObjet(this);
 			HandlerList.unregisterAll(this);
 		}
 	}
@@ -72,7 +73,6 @@ public abstract class Objet implements Listener{
 		if(e.getEntity().getInventory().contains(itemStack)) {
 			death(e.getEntity());
 			e.getEntity().getInventory().removeItem(itemStack);
-			HandlerList.unregisterAll(this);
 		}
 	}
 	@EventHandler
@@ -169,6 +169,12 @@ public abstract class Objet implements Listener{
 			return is1.equals(is2);
 		}
 		return false;
+	}
+	public void cancelBuy(Player player) {
+		player.getInventory().removeItem(itemStack);
+		game.removeObjet(this);
+		game.getWrapper(player).setMoney(game.getWrapper(player).getMoney()+objet.getCost());
+		HandlerList.unregisterAll(this);
 	}
 }
 	

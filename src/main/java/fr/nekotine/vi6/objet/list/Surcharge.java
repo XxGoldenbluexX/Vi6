@@ -44,7 +44,6 @@ public class Surcharge extends Objet{
 	@Override
 	public void death(Player holder) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override

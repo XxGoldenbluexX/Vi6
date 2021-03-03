@@ -523,6 +523,7 @@ public class Game implements Listener{
 			p.getValue().setCanCapture(false);
 			p.getValue().setCanEscape(false);
 			p.getValue().setThiefSpawnPoint(null);
+			p.getKey().setWalkSpeed(0.2f);
 			p.getKey().getInventory().clear();
 			if (p.getValue().getTeam()==Team.GARDE) {
 				ItemHider.get().unHideFromPlayer(p.getKey());
@@ -550,6 +551,7 @@ public class Game implements Listener{
 				pl.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_join"),
 						new MessageFormater("§p",p.getName()),new MessageFormater("§g",name)));
 			}
+			p.setWalkSpeed(0.2f);
 			p.getInventory().clear();
 			Bukkit.getPluginManager().callEvent(new PlayerJoinGameEvent(this, p));
 			return true;

@@ -171,18 +171,20 @@ public class PreparationInventory extends BasePersonalInventory{
 		if(!game.getWrapper(player).isReady()) {
 			ObjetsList objet = item.getItemMeta().getPersistentDataContainer().get(ObjetsListTagType.getNamespacedKey(main), new ObjetsListTagType());
 			if(objet!=null) {
-				int count=0;
-				for(ItemStack itemstack : player.getInventory().getContents()) {
-					if(itemstack!=null) {
-						Objet obj = game.getObjet(itemstack);
-						if(obj!=null) {
-							if(obj.getObjet()==objet) {
-								count++;
+				if(objet.getLimit()>0) {
+					int count=0;
+					for(ItemStack itemstack : player.getInventory().getContents()) {
+						if(itemstack!=null) {
+							Objet obj = game.getObjet(itemstack);
+							if(obj!=null) {
+								if(obj.getObjet()==objet) {
+									count++;
+								}
 							}
 						}
-					}
-					if(count==objet.getLimit()) {
-						return;
+						if(count==objet.getLimit()) {
+							return;
+						}
 					}
 				}
 				if(game.getWrapper(player).getMoney()>=objet.getCost()) {
