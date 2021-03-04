@@ -7,6 +7,8 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.inventory.ItemStack;
 
+import com.destroystokyo.paper.event.player.PlayerJumpEvent;
+
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.objet.ObjetsList;
@@ -63,6 +65,11 @@ public class DoubleSaut extends Objet {
 
 	@Override
 	public void drop(Player holder) {
+	}
+	
+	@EventHandler
+	public void onPlayerJump(PlayerJumpEvent event) {
+		if (event.getPlayer().equals(player)) player.setAllowFlight(true);
 	}
 	
 	@EventHandler
