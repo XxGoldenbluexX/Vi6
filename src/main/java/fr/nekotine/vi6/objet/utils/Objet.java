@@ -77,7 +77,7 @@ public abstract class Objet implements Listener{
 	}
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent e) {
-		if(e.getItem().isSimilar(itemStack)) {
+		if(e.getItem()!=null && e.getItem().isSimilar(itemStack)) {
 			if(!onCooldown) {
 				if(game.getPlayerTeam(e.getPlayer())==Team.VOLEUR){
 					if(game.getState()==GameState.Ingame) {
