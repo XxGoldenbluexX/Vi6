@@ -11,13 +11,17 @@ public class TempBlock {
 	
 	private static final WeakHashMap<Block,TempBlock> tempBlocks = new WeakHashMap<>();
 	
-	private final BlockData blockD;
+	private BlockData preBlockD;
+	private BlockData postBlockD;
 	private final Block b;
+	private TempBlock relyChainDown;
+	private TempBlock relyChainUp;
 	
 	public TempBlock(Block block,BlockData blockData) {
 		b=block;
-		blockD=b.getBlockData().clone();
-		b.setBlockData(blockData);
+		preBlockD=b.getBlockData().clone();
+		postBlockD=blockData;
+		setBlock();
 	}
 	
 	public TempBlock(Block block,Material mat) {
@@ -34,21 +38,43 @@ public class TempBlock {
 	}
 	
 	private static void set(Block b, TempBlock t) {
-		tempBlocks.put(b, t);
+		if (tempBlocks.containsKey(b)) {
+			tempBlocks.get(b).setSuperior(t);
+		}else {
+			tempBlocks.put(b, t);
+		}
+		t.setBlock();
 	}
 	
-	private Block getBlock() {
-		return b;
+	private void setBlock() {
+		b.setBlockData(postBlockD,false);
 	}
 	
-	private BlockData getBlockData() {
-		return blockD;
+	private void resetBlock() {
+		b.setBlockData(preBlockD,false);
+	}
+	
+	public void setSuperior(TempBlock b) {
+		if (relyChainUp!=null) {
+			relyChainUp.setSuperior(b);
+		}else {
+			relyChainUp=b;
+			relyChainUp.setInferior(this);
+		}
+	}
+	
+	public void setInferior(TempBlock b) {
+		relyChainDown=b;
 	}
 	
 	private static void reset(TempBlock b) {
-		Block bl=b.getBlock();
-		if (b.equals(tempBlocks.get(bl))) {
-			bl.setBlockData(b.getBlockData());
+		b.resetBlock();
+		if (b.relyChainUp!=null) {
+			if (b.relyChainDown==null) {
+				tempBlocks.put(b.b, b.relyChainUp);
+			}else {
+				b.relyChainDown.setSuperior(b.relyChainUp);
+			}
 		}
 	}
 	

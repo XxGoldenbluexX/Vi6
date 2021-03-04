@@ -1,5 +1,6 @@
 package fr.nekotine.vi6.objet.list;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockState;
@@ -16,11 +17,14 @@ import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.utils.IsCreator;
 import fr.nekotine.vi6.utils.TempBlock;
+import net.kyori.adventure.key.Key;
+import net.kyori.adventure.sound.Sound;
 
 public class Teleporteur extends Objet {
 	
 	private boolean placed=false;
 	private TempBlock shulker;
+	private TempBlock dropBlock;
 	private Location portalTp;
 	private final Vi6Main mainref;
 	
@@ -32,6 +36,7 @@ public class Teleporteur extends Objet {
 	@Override
 	public void gameEnd() {
 		if (shulker!=null) shulker.reset();
+		if (dropBlock!=null) dropBlock.reset();
 	}
 
 	@Override
@@ -57,15 +62,17 @@ public class Teleporteur extends Objet {
 
 	@Override
 	public void action(Action action, Player holder) {
-		tryPlace(null);
+		tryPlace(holder);
 	}
 
 	@Override
 	public void drop(Player holder) {
-		tryPlace(null);
+		tryPlace(holder);
 	}
 	
-	private void tryPlace(Location loc) {
+	private void tryPlace(Player player) {
+		if (!onGround(player)) return;
+		Location loc = player.getLocation();
 		if (placed && portalTp!=null) {
 			BlockState st = portalTp.getBlock().getState();
 			if (st instanceof ShulkerBox) {
@@ -75,22 +82,22 @@ public class Teleporteur extends Objet {
 					@Override
 					public void run() {
 						if (shulker!=null) shulker.reset();
-						shulker=new TempBlock(loc.getBlock(),Material.END_GATEWAY).set();
-						BlockState sta = loc.getBlock().getState();
+						shulker=new TempBlock(portalTp.getBlock(),Material.END_GATEWAY).set();
+						BlockState sta = portalTp.getBlock().getState();
 						if (sta instanceof EndGateway) {
 							EndGateway gateway = (EndGateway)sta;
 							gateway.setExactTeleport(true);
 							gateway.setExitLocation(loc);
+							gateway.setAge(200);
+							gateway.update();
+							dropBlock = new TempBlock(loc.subtract(0,1,0).getBlock(),Bukkit.createBlockData(Material.RESPAWN_ANCHOR, "[charges=4]"));
+							portalTp.getWorld().playSound(Sound.sound(Key.key("block.respawn_anchor.deplete"),Sound.Source.VOICE,1f,1.4f),portalTp.getX(),portalTp.getY(),portalTp.getZ());
+							portalTp.getWorld().playSound(Sound.sound(Key.key("block.end_portal.spawn"),Sound.Source.VOICE,0.1f,1.4f),portalTp.getX(),portalTp.getY(),portalTp.getZ());
 						}
 					}
-				}.runTaskLater(mainref, 20);
-			}
-			shulker=new TempBlock(loc.getBlock(),Material.END_GATEWAY).set();
-			st = loc.getBlock().getState();
-			if (st instanceof EndGateway) {
-				EndGateway gateway = (EndGateway)st;
-				gateway.setExactTeleport(true);
-				gateway.setExitLocation(loc);
+				}.runTaskLater(mainref, 13);
+				consume(player);
+				return;
 			}
 		}else {
 			if (!loc.getBlock().isSolid() && !loc.clone().add(0,1,0).getBlock().isSolid()) {
@@ -98,7 +105,14 @@ public class Teleporteur extends Objet {
 				shulker = new TempBlock(loc.getBlock(),Material.LIGHT_GRAY_SHULKER_BOX).set();
 				placed=true;
 				portalTp=loc;
+				portalTp.getWorld().playSound(Sound.sound(Key.key("block.piston.extend"),Sound.Source.VOICE,1f,2f),portalTp.getX(),portalTp.getY(),portalTp.getZ());
+				portalTp.getWorld().playSound(Sound.sound(Key.key("block.iron_trapdoor.open"),Sound.Source.VOICE,1f,0.6f),portalTp.getX(),portalTp.getY(),portalTp.getZ());
 			}
 		}
+		setCooldown(10);
+	}
+	
+	private boolean onGround(Player player) {
+		return (!player.isFlying() && player.getLocation().subtract(0, 0.1, 0).getBlock().getType().isSolid());
 	}
 }

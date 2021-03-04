@@ -36,6 +36,7 @@ public abstract class Objet implements Listener{
 	protected boolean onCooldown = false;
 	protected int cooldownTicksLeft=0;
 	private ItemStack displayedItem;
+	private PlayerDropItemEvent dropE;
 	
 	public Objet(Vi6Main main, ObjetsList objet, ObjetsSkins skin, ItemStack itemStack, Game game, Player player) {
 		this.objet = objet;
@@ -98,29 +99,34 @@ public abstract class Objet implements Listener{
 			if(!onCooldown) {
 				if(game.getPlayerTeam(e.getPlayer())==Team.VOLEUR){
 					if(game.getState()==GameState.Ingame) {
+						dropE=e;
 						drop(e.getPlayer());
+						dropE=null;
 					}
 				}else {
+					dropE=e;
 					drop(e.getPlayer());
+					dropE=null;
 				}
 			}
 		}
 	}
 	@EventHandler
 	public void inventoryClick(InventoryClickEvent e) {
-		if(e.getCurrentItem().isSimilar(itemStack)) {
+		if(e.getCurrentItem()!=null && e.getCurrentItem().isSimilar(itemStack)) {
 			if(onCooldown || e.getWhoClicked().getOpenInventory().getType()!=InventoryType.CRAFTING) e.setCancelled(true);
 		}
 	}
 	public void vendre(Player player) {
 		sell(player);
-		player.getInventory().removeItem(itemStack);
+		player.getInventory().removeItem(displayedItem);
 		game.removeObjet(this);
 		HandlerList.unregisterAll(this);
 	}
 	
 	public void consume(Player player) {
-		player.getInventory().removeItem(itemStack);
+		if (dropE!=null) {dropE.getItemDrop().remove();dropE.setCancelled(false);}
+		player.getInventory().removeItem(displayedItem);
 		game.removeObjet(this);
 		HandlerList.unregisterAll(this);
 	}
@@ -144,6 +150,7 @@ public abstract class Objet implements Listener{
 			cooldownTicksLeft--;
 			if(cooldownTicksLeft<=0) {
 				onCooldown=false;
+				updateItem(itemStack);
 				cooldownEnded();
 			}else {
 				updateItem(IsCreator.createItemStack(Material.BLACK_STAINED_GLASS_PANE, Math.max((cooldownTicksLeft/20)%60,1),
@@ -155,11 +162,11 @@ public abstract class Objet implements Listener{
 	}
 	public void updateItem(ItemStack itm) {
 		for(Player p : game.getPlayerList()) {
-			if(itemStack.isSimilar(p.getInventory().getItemInOffHand())) {
+			if(displayedItem.isSimilar(p.getInventory().getItemInOffHand())) {
 				p.getInventory().setItemInOffHand(itm);
 				break;
 			}else {
-				int slot = p.getInventory().first(itemStack);
+				int slot = p.getInventory().first(displayedItem);
 				if(slot>=0) {
 					p.getInventory().setItem(slot, itm);
 					break;

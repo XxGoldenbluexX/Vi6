@@ -1,5 +1,6 @@
 package fr.nekotine.vi6.objet.list;
 
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -38,7 +39,7 @@ public class DoubleSaut extends Objet {
 
 	@Override
 	public void tick() {
-		if (onGround()) canJump=true;
+		if (onGround() && player.getGameMode()==GameMode.ADVENTURE) {canJump=true;player.setAllowFlight(true);}
 	}
 
 	@Override
@@ -74,13 +75,14 @@ public class DoubleSaut extends Objet {
 	
 	@EventHandler
 	public void tryFly(PlayerToggleFlightEvent event) {
-		if (event.getPlayer().equals(player)) {
+		if (event.getPlayer().equals(player) && player.getGameMode()==GameMode.ADVENTURE) {
 			event.setCancelled(true);
 			if (canJump) {
 				player.setVelocity(player.getVelocity().setY(0.5));
 				player.playSound(Sound.sound(Key.key("item.firecharge.use"),Sound.Source.AMBIENT,0.3f, 1.5f));
 				player.playSound(Sound.sound(Key.key("item.hoe.till"),Sound.Source.AMBIENT,1f, 0.1f));
 				canJump=false;
+				player.setAllowFlight(false);
 			}
 		}
 	}
