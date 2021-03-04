@@ -35,8 +35,8 @@ public class Teleporteur extends Objet {
 
 	@Override
 	public void gameEnd() {
-		if (shulker!=null) {shulker.reset();}else {System.out.println("GROSSE CATIN");}
-		if (dropBlock!=null) {dropBlock.reset();}else {System.out.println("TA MERE LA PUTE");}
+		if (shulker!=null) shulker.reset();
+		if (dropBlock!=null) dropBlock.reset();
 	}
 
 	@Override

@@ -127,7 +127,6 @@ public abstract class Objet implements Listener{
 	public void consume(Player player) {
 		if (dropE!=null) {dropE.getItemDrop().remove();dropE.setCancelled(false);}
 		player.getInventory().removeItem(displayedItem);
-		game.removeObjet(this);
 		HandlerList.unregisterAll(this);
 	}
 

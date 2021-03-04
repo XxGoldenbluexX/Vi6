@@ -42,7 +42,6 @@ public class TempBlock {
 			tempBlocks.get(b).setSuperior(t);
 		}else {
 			tempBlocks.put(b, t);
-			System.out.println("no superior at set "+t.postBlockD.getMaterial());
 		}
 		t.setBlock();
 	}
@@ -67,18 +66,14 @@ public class TempBlock {
 	public void setInferior(TempBlock b) {
 		relyChainDown=b;
 		preBlockD=b.postBlockD;
-		System.out.println("setting inferior "+preBlockD.getMaterial()+" to "+postBlockD);
 	}
 	
 	private static void reset(TempBlock b) {
 		if (b.relyChainUp!=null) {
-			System.out.println("up = "+b.relyChainUp.postBlockD.getMaterial());
 			if (b.relyChainDown==null) {
-				System.out.println("no inferior at reset "+b.postBlockD.getMaterial());
 				tempBlocks.put(b.b, b.relyChainUp);
 				b.relyChainUp.relyChainDown=null;
 			}else {
-				System.out.println("transfere "+b.relyChainUp.postBlockD.getMaterial()+" to "+b.relyChainDown.postBlockD.getMaterial());
 				b.relyChainDown.setSuperior(b.relyChainUp);
 			}
 			b.relyChainUp.setBlock();
@@ -89,5 +84,4 @@ public class TempBlock {
 			}
 		}
 	}
-	
 }
