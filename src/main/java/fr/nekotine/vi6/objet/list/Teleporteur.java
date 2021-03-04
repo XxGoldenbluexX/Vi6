@@ -35,8 +35,8 @@ public class Teleporteur extends Objet {
 
 	@Override
 	public void gameEnd() {
-		if (shulker!=null) shulker.reset();
-		if (dropBlock!=null) dropBlock.reset();
+		if (shulker!=null) {shulker.reset();}else {System.out.println("GROSSE CATIN");}
+		if (dropBlock!=null) {dropBlock.reset();}else {System.out.println("TA MERE LA PUTE");}
 	}
 
 	@Override
@@ -84,13 +84,14 @@ public class Teleporteur extends Objet {
 						if (shulker!=null) shulker.reset();
 						shulker=new TempBlock(portalTp.getBlock(),Material.END_GATEWAY).set();
 						BlockState sta = portalTp.getBlock().getState();
+						
 						if (sta instanceof EndGateway) {
 							EndGateway gateway = (EndGateway)sta;
 							gateway.setExactTeleport(true);
 							gateway.setExitLocation(loc);
 							gateway.setAge(200);
 							gateway.update();
-							dropBlock = new TempBlock(loc.subtract(0,1,0).getBlock(),Bukkit.createBlockData(Material.RESPAWN_ANCHOR, "[charges=4]"));
+							dropBlock = new TempBlock(loc.subtract(0,1,0).getBlock(),Bukkit.createBlockData(Material.RESPAWN_ANCHOR, "[charges=4]")).set();
 							portalTp.getWorld().playSound(Sound.sound(Key.key("block.respawn_anchor.deplete"),Sound.Source.VOICE,1f,1.4f),portalTp.getX(),portalTp.getY(),portalTp.getZ());
 							portalTp.getWorld().playSound(Sound.sound(Key.key("block.end_portal.spawn"),Sound.Source.VOICE,0.1f,1.4f),portalTp.getX(),portalTp.getY(),portalTp.getZ());
 						}
