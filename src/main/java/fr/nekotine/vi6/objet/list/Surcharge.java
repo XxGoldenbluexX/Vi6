@@ -53,8 +53,6 @@ public class Surcharge extends Objet{
 
 	@Override
 	public void cooldownEnded() {
-		updateItem(IsCreator.createItemStack(ObjetsList.SURCHARGE.getInShopMaterial(), 1, ObjetsList.SURCHARGE.getInShopName(),
-				ObjetsList.SURCHARGE.getInShopLore()));
 	}
 	private void cast(Player holder) {
 		holder.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, buffDurationTicks, 9, false, false, true));
