@@ -14,6 +14,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.annotation.Nullable;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -346,6 +348,11 @@ public class Game implements Listener{
 		}.runTaskTimer(main, 0, 1);
 		Bukkit.getPluginManager().callEvent(new GameEnterPreparationPhaseEvent(this));
 		return true;
+	}
+	
+	@Nullable
+	public Carte getMap() {
+		return map;
 	}
 	
 	public void enterInGamePhase() {

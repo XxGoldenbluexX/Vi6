@@ -16,6 +16,7 @@ public class Gateway extends Passage {
 	private Location corner1;
 	private Location corner2;
 	private boolean closed=false;
+	private boolean managed=false;
 
 	public Gateway(String name,String salleA, String salleB, DetectionZone zoneA, DetectionZone zoneB,Location loc1,Location loc2) {
 		super(name,salleA, salleB, zoneA, zoneB);
@@ -107,6 +108,14 @@ public class Gateway extends Passage {
 
 	public void setCorner2(Location corner2) {
 		this.corner2 = corner2;
+	}
+
+	public boolean isManaged() {
+		return managed;
+	}
+
+	public void setManaged(boolean managed) {
+		this.managed = managed;
 	}
 
 }
