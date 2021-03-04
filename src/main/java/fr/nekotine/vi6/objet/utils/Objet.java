@@ -35,6 +35,7 @@ public abstract class Objet implements Listener{
 	protected ItemStack itemStack;
 	protected boolean onCooldown = false;
 	protected int cooldownTicksLeft=0;
+	private ItemStack displayedItem;
 	
 	public Objet(Vi6Main main, ObjetsList objet, ObjetsSkins skin, ItemStack itemStack, Game game, Player player) {
 		this.objet = objet;
@@ -45,6 +46,7 @@ public abstract class Objet implements Listener{
 		meta.getPersistentDataContainer().set(new NamespacedKey(main, game.getName()+"ObjetNBT"), PersistentDataType.INTEGER, game.getNBT());
 		this.itemStack.setItemMeta(meta);
 		player.getInventory().addItem(itemStack);
+		displayedItem=itemStack;
 		Bukkit.getPluginManager().registerEvents(this, main);
 	}
 	
@@ -164,7 +166,7 @@ public abstract class Objet implements Listener{
 				}
 			}
 		}
-		itemStack=itm;
+		displayedItem=itm;
 	}
 	public void cancelBuy(Player player) {
 		player.getInventory().removeItem(itemStack);
