@@ -80,6 +80,7 @@ public class DoubleSaut extends Objet {
 				player.setVelocity(player.getVelocity().setY(0.5));
 				player.playSound(Sound.sound(Key.key("item.firecharge.use"),Sound.Source.AMBIENT,0.3f, 1.5f));
 				player.playSound(Sound.sound(Key.key("item.hoe.till"),Sound.Source.AMBIENT,1f, 0.1f));
+				canJump=false;
 			}
 		}
 	}
