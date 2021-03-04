@@ -26,9 +26,7 @@ public class Invisneak extends Objet{
 	private boolean isSneaking;
 	private Player player;
 	public Invisneak(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Player player, Game game) {
-		super(main, objet, skin, IsCreator.createItemStack(
-				ObjetsList.INVISNEAK.getInShopMaterial(), 1, ObjetsList.INVISNEAK.getInShopName(), 
-				ObjetsList.INVISNEAK.getInShopLore()), game, player);
+		super(main, objet, skin, IsCreator.createObjetItemStack(main,objet,1), game, player);
 		this.player=player;
 	}
 

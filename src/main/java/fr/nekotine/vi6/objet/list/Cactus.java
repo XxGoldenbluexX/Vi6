@@ -20,8 +20,7 @@ import fr.nekotine.vi6.wrappers.PlayerWrapper;
 public class Cactus extends Objet{
 
 	public Cactus(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Player player, Game game) {
-		super(main, objet, skin, IsCreator.createItemStack(ObjetsList.CACTUS.getInShopMaterial(), 1, ObjetsList.CACTUS.getInShopName(),
-				ObjetsList.CACTUS.getInShopLore()), game, player);
+		super(main, objet, skin, IsCreator.createObjetItemStack(main,objet,1), game, player);
 	}
 
 	@Override

@@ -42,9 +42,7 @@ public class BuissonFurtif extends Objet {
 	private static final double DETECTION_RANGE_IN_BLOCKS = 2;
 	
 	public BuissonFurtif(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Player player, Game game) {
-		super(main, objet, skin, IsCreator.createItemStack(
-				ObjetsList.BUISSON_FURTIF.getInShopMaterial(),1,ObjetsList.BUISSON_FURTIF.getInShopName(),
-				ObjetsList.BUISSON_FURTIF.getInShopLore()), game, player);
+		super(main, objet, skin, IsCreator.createObjetItemStack(main,objet,1), game, player);
 		this.player = player;
 		wrapper = main.getPlayerWrapper(player);
 		valid=wrapper!=null;

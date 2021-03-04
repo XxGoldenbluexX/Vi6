@@ -18,38 +18,27 @@ public class Surcharge extends Objet{
 	private static int cooldownTicks=20*20;
 	private static int buffDurationTicks=5*20;
 	public Surcharge(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Player player, Game game) {
-		super(main, objet, skin, IsCreator.createItemStack(ObjetsList.SURCHARGE.getInShopMaterial(), 1, ObjetsList.SURCHARGE.getInShopName(),
-				ObjetsList.SURCHARGE.getInShopLore()), game, player);
-		// TODO Auto-generated constructor stub
+		super(main, objet, skin, IsCreator.createObjetItemStack(main,objet,1), game, player);
 	}
 
 	@Override
 	public void gameEnd() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void tick() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void leaveMap(Player holder) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void death(Player holder) {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public void sell(Player holder) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override

@@ -18,9 +18,7 @@ public class Bottes7Lieues extends Objet{
 	private static int SPEED_INCREASE_PERCENTAGE=20;
 	private final Player boosted;
 	public Bottes7Lieues(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Player player, Game game) {
-		super(main, objet, skin, IsCreator.createItemStack(
-				ObjetsList.BOTTES7LIEUES.getInShopMaterial(),1,ObjetsList.BOTTES7LIEUES.getInShopName(),
-				ObjetsList.BOTTES7LIEUES.getInShopLore()), game, player);
+		super(main, objet, skin, IsCreator.createObjetItemStack(main,objet,1), game, player);
 		boosted=player;
 		float newSpeed = boosted.getWalkSpeed()*(SPEED_INCREASE_PERCENTAGE/100f+1);
 		if(newSpeed<=1) {

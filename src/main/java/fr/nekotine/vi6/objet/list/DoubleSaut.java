@@ -24,9 +24,7 @@ public class DoubleSaut extends Objet {
 	private boolean canJump=false;
 	
 	public DoubleSaut(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Player player, Game game) {
-		super(main, objet, skin, IsCreator.createItemStack(
-				ObjetsList.BUISSON_FURTIF.getInShopMaterial(),1,ObjetsList.BUISSON_FURTIF.getInShopName(),
-				ObjetsList.BUISSON_FURTIF.getInShopLore()), game, player);
+		super(main, objet, skin, IsCreator.createObjetItemStack(main,objet,1), game, player);
 		this.player = player;
 		player.setAllowFlight(true);
 		player.getInventory().setBoots(jumpBoots);
