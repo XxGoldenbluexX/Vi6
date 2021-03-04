@@ -32,14 +32,21 @@ public class Gateway extends Passage {
 		int x2=corner2.getBlockX();
 		int y2=corner2.getBlockY();
 		int z2=corner2.getBlockZ();
+		int xx=Math.max(x1,x2);
+		int yy=Math.max(y1,y2);
+		int zz=Math.max(z1,z2);
+		int x=Math.min(x1,x2);
 		World w = corner1.getWorld();
-		for (int x=x1;x!=x2;x+=(x1<x2?1:-1)) {
-			for (int y=x1;y!=y2;y+=(y1<y2?1:-1)) {
-				for (int z=z1;z!=z2;z+=(z1<z2?1:-1)) {
+		for (;x<=xx;x++) {
+			int y=Math.min(y1,y2);
+			for (;y<=yy;y++) {
+				int z=Math.min(z1,z2);
+				for (;z<=zz;z++) {
 					w.getBlockAt(x, y, z).setType(mat);
 				}
 			}
 		}
+		closed=true;
 		return true;
 	}
 	
@@ -51,14 +58,21 @@ public class Gateway extends Passage {
 		int x2=corner2.getBlockX();
 		int y2=corner2.getBlockY();
 		int z2=corner2.getBlockZ();
+		int xx=Math.max(x1,x2);
+		int yy=Math.max(y1,y2);
+		int zz=Math.max(z1,z2);
+		int x=Math.min(x1,x2);
 		World w = corner1.getWorld();
-		for (int x=x1;x!=x2;x+=(x1<x2?1:-1)) {
-			for (int y=x1;y!=y2;y+=(y1<y2?1:-1)) {
-				for (int z=z1;z!=z2;z+=(z1<z2?1:-1)) {
+		for (;x<=xx;x++) {
+			int y=Math.min(y1,y2);
+			for (;y<=yy;y++) {
+				int z=Math.min(z1,z2);
+				for (;z<=zz;z++) {
 					w.getBlockAt(x, y, z).setType(Material.AIR);
 				}
 			}
 		}
+		closed=false;
 		return true;
 	}
 	
