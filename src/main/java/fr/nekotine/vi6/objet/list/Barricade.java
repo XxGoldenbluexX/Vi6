@@ -70,7 +70,7 @@ public class Barricade extends Objet {
 				loc.getWorld().playSound(Sound.sound(Key.key("item.shield.block"),Sound.Source.VOICE,1f,0f), loc.getX(), loc.getY(), loc.getZ());
 				g.close(Material.BRICKS);
 				g.setManaged(true);
-				vendre(player);
+				consume(player);
 			}
 		}
 	}

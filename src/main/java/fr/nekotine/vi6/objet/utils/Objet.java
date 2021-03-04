@@ -116,6 +116,12 @@ public abstract class Objet implements Listener{
 		game.removeObjet(this);
 		HandlerList.unregisterAll(this);
 	}
+	
+	public void consume(Player player) {
+		player.getInventory().removeItem(itemStack);
+		game.removeObjet(this);
+		HandlerList.unregisterAll(this);
+	}
 
 	public ObjetsList getObjet() {
 		return objet;
