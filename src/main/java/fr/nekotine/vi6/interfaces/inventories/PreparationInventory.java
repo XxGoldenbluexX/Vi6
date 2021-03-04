@@ -69,7 +69,7 @@ public class PreparationInventory extends BasePersonalInventory{
 					lore.add(l);
 				}
 				lore.add(ChatColor.GOLD+"Coût: "+obj.getCost());
-				inventory.setItem(index, IsCreator.createObjetItemStack(main, obj.getInShopName(), obj, 1, lore.toArray(String[]::new)));
+				inventory.setItem(index, IsCreator.createObjetItemStack(main, obj, 1, lore.toArray(String[]::new)));
 				index++;
 				if(index==45) {
 					break;

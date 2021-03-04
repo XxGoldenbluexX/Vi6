@@ -33,12 +33,17 @@ public class IsCreator {
 		item.setItemMeta(meta);
 		return item;
 	}
-	public static ItemStack createObjetItemStack(Vi6Main main, String displayName, ObjetsList objet, int quantity, String... lore) {
+	public static ItemStack createObjetItemStack(Vi6Main main, ObjetsList objet, int quantity, String... additionalLore) {
 		ItemStack item = new ItemStack(objet.getInShopMaterial(),quantity);
 		ItemMeta meta = item.getItemMeta();
-		meta.displayName(Component.text(displayName));
+		meta.displayName(Component.text(objet.getInShopName()));
 		List<Component> loreList = new ArrayList<>(); 
-		for(String line : lore) {
+		for(String line : objet.getInShopLore()) {
+			if(line!="") {
+				loreList.add(Component.text(line));
+			}
+		}
+		for(String line : additionalLore) {
 			if(line!="") {
 				loreList.add(Component.text(line));
 			}
