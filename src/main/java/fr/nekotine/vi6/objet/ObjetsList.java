@@ -28,7 +28,7 @@ public enum ObjetsList {
 			Team.GARDE,
 			1000,
 			1,
-			ChatColor.GREEN+"Cactus",
+			ChatColor.DARK_GREEN+"Cactus",
 			Material.CACTUS,
 			ChatColor.LIGHT_PURPLE+"Piquez tous les voleurs quand vous en tapez un"),
 	SURCHARGE(Surcharge.class,
