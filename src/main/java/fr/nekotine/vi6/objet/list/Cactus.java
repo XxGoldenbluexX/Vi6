@@ -29,6 +29,7 @@ public class Cactus extends Objet{
 	
 	public Cactus(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Player player, Game game) {
 		super(main, objet, skin, IsCreator.createObjetItemStack(main,objet,1), game, player);
+		player.getInventory().setHelmet(CATCUS);
 	}
 
 	@Override
