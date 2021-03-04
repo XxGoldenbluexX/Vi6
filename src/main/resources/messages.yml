@@ -149,3 +149,6 @@ map_passage_toGateway_exist: "§cAucun passage du nom de §p existe dans la cart
 map_passage_toPassage_success: "§aLe cadre de porte §p de la carte §v est devenue un passage."
 #§v = map's name §p = passage's name
 map_passage_toPassage_exist: "§cAucun passage du nom de §p existe dans la carte §v."
+#OBJET
+#§v = current room
+objet_BuissonFurtif_placeBush: "§2Vous avez placé un buisson §v."
