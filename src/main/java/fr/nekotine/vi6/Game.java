@@ -9,6 +9,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -385,8 +386,9 @@ public class Game implements Listener{
 	}
 	
 	public void ingameTick() {
-		for(Objet obj : objetsList) {
-			obj.ticks();
+		Iterator<Objet> ite = objetsList.iterator();
+		while (ite.hasNext()) {
+			ite.next().ticks();
 		}
 		if(state==GameState.Ingame) {
 			if(!canCapture) {
