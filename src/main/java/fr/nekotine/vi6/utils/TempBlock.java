@@ -21,9 +21,7 @@ public class TempBlock {
 	}
 	
 	public TempBlock(Block block,Material mat) {
-		b=block;
-		blockD=b.getBlockData().clone();
-		b.setBlockData(Bukkit.createBlockData(mat),false);
+		this(block,Bukkit.createBlockData(mat));
 	}
 	
 	public TempBlock set() {
