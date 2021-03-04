@@ -77,7 +77,7 @@ public abstract class Objet implements Listener{
 	}
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent e) {
-		if(itemsStacksEquals(itemStack,e.getItem())) {
+		if(e.getItem().isSimilar(itemStack)) {
 			if(!onCooldown) {
 				if(game.getPlayerTeam(e.getPlayer())==Team.VOLEUR){
 					if(game.getState()==GameState.Ingame) {
@@ -91,7 +91,7 @@ public abstract class Objet implements Listener{
 	}
 	@EventHandler
 	public void onPlayerDrop(PlayerDropItemEvent e) {
-		if(itemsStacksEquals(itemStack,e.getItemDrop().getItemStack())) {
+		if(e.getItemDrop().getItemStack().isSimilar(itemStack)) {
 			e.setCancelled(true);
 			if(!onCooldown) {
 				if(game.getPlayerTeam(e.getPlayer())==Team.VOLEUR){
@@ -106,7 +106,7 @@ public abstract class Objet implements Listener{
 	}
 	@EventHandler
 	public void inventoryClick(InventoryClickEvent e) {
-		if(itemsStacksEquals(itemStack,e.getCurrentItem())) {
+		if(e.getCurrentItem().isSimilar(itemStack)) {
 			if(onCooldown || e.getWhoClicked().getOpenInventory().getType()!=InventoryType.CRAFTING) e.setCancelled(true);
 		}
 	}
@@ -147,7 +147,7 @@ public abstract class Objet implements Listener{
 	}
 	public void updateItem(ItemStack itm) {
 		for(Player p : game.getPlayerList()) {
-			if(itemsStacksEquals(itemStack,p.getInventory().getItemInOffHand())) {
+			if(itemStack.isSimilar(p.getInventory().getItemInOffHand())) {
 				p.getInventory().setItemInOffHand(itm);
 				break;
 			}else {
@@ -160,21 +160,15 @@ public abstract class Objet implements Listener{
 		}
 		itemStack=itm;
 	}
-	private boolean itemsStacksEquals(ItemStack is1, ItemStack is2) {
-		if(is1!=null && is2!=null) {
-			is1=is1.clone();
-			is2=is2.clone();
-			is1.setAmount(1);
-			is2.setAmount(1);
-			return is1.equals(is2);
-		}
-		return false;
-	}
 	public void cancelBuy(Player player) {
 		player.getInventory().removeItem(itemStack);
 		game.removeObjet(this);
 		game.getWrapper(player).setMoney(game.getWrapper(player).getMoney()+objet.getCost());
 		HandlerList.unregisterAll(this);
+	}
+	
+	protected void setItemStack(ItemStack itm) {
+		itemStack=itm;
 	}
 }
 	
