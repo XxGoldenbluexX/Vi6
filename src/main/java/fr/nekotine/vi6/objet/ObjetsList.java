@@ -53,6 +53,8 @@ public enum ObjetsList {
 			ChatColor.DARK_PURPLE+"Barricade",Material.BRICKS,ChatColor.LIGHT_PURPLE+"Vous pouvez boucher un passage avec."),
 	TELEPORTEUR(Teleporteur.class,Team.GARDE,100,0,
 			ChatColor.DARK_BLUE+"Téléporteur",Material.LIGHT_GRAY_SHULKER_BOX,ChatColor.LIGHT_PURPLE+"Vous pouvez placer un téléporteur monodirectionel"),
+	CHAMP_DE_FORCE(ChampDeForce.class,Team.GARDE,100,0,
+			ChatColor.DARK_BLUE+"Téléporteur",Material.LIGHT_GRAY_SHULKER_BOX,ChatColor.LIGHT_PURPLE+"Vous pouvez placer un téléporteur monodirectionel"),
 	MATRAQUE_DE_THEO(MatraqueDeTheo.class,Team.GARDE,100,1,
 			ChatColor.DARK_RED+"Matraque de théo",Material.NETHERITE_SWORD,ChatColor.LIGHT_PURPLE+"Tuez en un coup.",ChatColor.GRAY+"Faites rager les amateurs du bain de fumée.");
 	
