@@ -7,6 +7,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
@@ -121,10 +122,14 @@ public class ChampDeForce extends Objet implements ZoneDetectionListener {
 	@Override
 	public boolean playerLeaveZone(Player player, DetectionZone zone, Vi6Main mainref) {
 		if (!guardList.contains(player)) return false;
-		if (nbGardeTriggering>0) {
-			nbGardeTriggering--;
-			if (nbGardeTriggering<=0) gateway.close(mat);
-		}
+		new BukkitRunnable() {
+			public void run() {
+				if (nbGardeTriggering>0) {
+					nbGardeTriggering--;
+					if (nbGardeTriggering<=0) gateway.close(mat);
+				}
+			}
+		}.runTaskLater(mainref, 20);
 		return false;
 	}
 
