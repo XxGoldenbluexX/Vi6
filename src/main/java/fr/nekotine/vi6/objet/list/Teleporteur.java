@@ -71,7 +71,7 @@ public class Teleporteur extends Objet {
 	}
 	
 	private void tryPlace(Player player) {
-		if (!onGround(player)) return;
+		if (!onGround(player)) {player.playSound(Sound.sound(Key.key("entity.villager.no"),Sound.Source.AMBIENT,1f,1f));;return;}
 		Location loc = player.getLocation();
 		if (placed && portalTp!=null) {
 			BlockState st = portalTp.getBlock().getState();
