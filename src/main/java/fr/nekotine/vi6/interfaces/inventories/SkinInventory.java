@@ -51,7 +51,7 @@ public class SkinInventory extends BasePersonalInventory{
 		if(28*(page-1)<skins.size()){
 			byte index=11;
 			for(ObjetsSkins skin : skins.subList(28*(page-1), skins.size())) {
-				inventory.setItem(index, IsCreator.createSkinItemStack(main, game, player, skin, 1, skin.getInShopLore()));
+				inventory.setItem(index, IsCreator.createSkinItemStack(main, game, player, skin, 1));
 				index++;
 				if(index==45) {
 					break;
@@ -66,7 +66,6 @@ public class SkinInventory extends BasePersonalInventory{
 				}
 				inventory.setItem(index, new ItemStack(Material.AIR));
 			}
-			
 		}
 		if(page>1) {
 			inventory.setItem(47, IsCreator.createItemStack(Material.PAPER,1,ChatColor.RED+"Page précédente",""));

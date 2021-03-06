@@ -53,12 +53,12 @@ public class IsCreator {
 		item.setItemMeta(meta);
 		return item;
 	}
-	public static ItemStack createSkinItemStack(Vi6Main main, Game game, Player player, ObjetsSkins skin, int quantity, String... lore) {
+	public static ItemStack createSkinItemStack(Vi6Main main, Game game, Player player, ObjetsSkins skin, int quantity) {
 		ItemStack item = new ItemStack(skin.getInShopMaterial(),quantity);
 		ItemMeta meta = item.getItemMeta();
 		meta.displayName(Component.text(skin.getInShopName()));
 		List<Component> loreList = new ArrayList<>(); 
-		for(String line : lore) {
+		for(String line : skin.getInShopLore()) {
 			if(line!="") {
 				loreList.add(Component.text(line));
 			}
