@@ -387,7 +387,8 @@ public class Game implements Listener{
 	public void ingameTick() {
 		Iterator<Objet> ite = objetsList.iterator();
 		while (ite.hasNext()) {
-			ite.next().ticks();
+			Objet o = ite.next();
+			if (o!=null) o.ticks();
 		}
 		if(state==GameState.Ingame) {
 			if(!canCapture) {
