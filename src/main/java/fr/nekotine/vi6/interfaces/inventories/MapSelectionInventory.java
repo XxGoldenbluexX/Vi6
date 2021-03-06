@@ -53,6 +53,7 @@ public class MapSelectionInventory extends BaseSharedInventory{
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void itemClicked(Player player, ItemStack itm) {
 		switch(itm.getType()) {
@@ -66,7 +67,7 @@ public class MapSelectionInventory extends BaseSharedInventory{
 					break;
 				}
 			}
-			game.setMapName(itm.getItemMeta().displayName().examinableName());
+			game.setMapName(itm.getItemMeta().getDisplayName());
 			itm.addUnsafeEnchantment(enchant, 1);
 			List<String> lore = new ArrayList<>();
 			lore.add(ChatColor.LIGHT_PURPLE+""+ChatColor.UNDERLINE+((TextComponent)itm.getItemMeta().displayName()).content());

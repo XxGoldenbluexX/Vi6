@@ -137,7 +137,7 @@ public class Carte implements ConfigurationSerializable {
 	public Gateway getNearestFreeGateway(Location loc) {
 		Gateway nearest = gateways.get(0);
 		if (nearest.isManaged()) nearest=null;
-		double dist = nearest.getCorner1().distanceSquared(loc);
+		double dist = nearest!=null?nearest.getCorner1().distanceSquared(loc):Double.MAX_VALUE;
 		for (Gateway g : gateways) {
 			double sqred = g.getCorner1().distanceSquared(loc);
 			if (sqred<dist && !g.isManaged()) {

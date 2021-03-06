@@ -65,7 +65,7 @@ public abstract class Objet implements Listener{
 		if(e.getGame().equals(game)) {
 			gameEnd();
 			for(Player player : game.getPlayerList().keySet()) {
-				player.getInventory().removeItem(itemStack);
+				player.getInventory().removeItem(displayedItem);
 			}
 			game.removeObjet(this);
 			HandlerList.unregisterAll(this);
@@ -73,14 +73,14 @@ public abstract class Objet implements Listener{
 	}
 	@EventHandler
 	public void onPlayerDeath(PlayerDeathEvent e) {
-		if(e.getEntity().getInventory().contains(itemStack)) {
+		if(e.getEntity().getInventory().contains(displayedItem)) {
 			death(e.getEntity());
-			e.getEntity().getInventory().removeItem(itemStack);
+			e.getEntity().getInventory().removeItem(displayedItem);
 		}
 	}
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent e) {
-		if(e.getItem()!=null && e.getItem().isSimilar(itemStack)) {
+		if(e.getItem()!=null && e.getItem().isSimilar(displayedItem)) {
 			if(!onCooldown) {
 				if(game.getPlayerTeam(e.getPlayer())==Team.VOLEUR){
 					if(game.getState()==GameState.Ingame) {
@@ -94,7 +94,7 @@ public abstract class Objet implements Listener{
 	}
 	@EventHandler
 	public void onPlayerDrop(PlayerDropItemEvent e) {
-		if(e.getItemDrop().getItemStack().isSimilar(itemStack)) {
+		if(e.getItemDrop().getItemStack().isSimilar(displayedItem)) {
 			e.setCancelled(true);
 			if(!onCooldown) {
 				if(game.getPlayerTeam(e.getPlayer())==Team.VOLEUR){
@@ -113,7 +113,7 @@ public abstract class Objet implements Listener{
 	}
 	@EventHandler
 	public void inventoryClick(InventoryClickEvent e) {
-		if(e.getCurrentItem()!=null && e.getCurrentItem().isSimilar(itemStack)) {
+		if(e.getCurrentItem()!=null && e.getCurrentItem().isSimilar(displayedItem)) {
 			if(onCooldown || e.getWhoClicked().getOpenInventory().getType()!=InventoryType.CRAFTING) e.setCancelled(true);
 		}
 	}
