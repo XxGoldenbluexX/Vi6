@@ -539,6 +539,9 @@ public class Game implements Listener{
 			if (p.getValue().getTeam()==Team.GARDE) {
 				ItemHider.get().unHideFromPlayer(p.getKey());
 			}else {
+				for(Player player : playerList.keySet()) {
+					player.showPlayer(main, p.getKey());
+				}
 				totalVole+=p.getValue().getStealedArtefactList().size();
 			}
 		}
