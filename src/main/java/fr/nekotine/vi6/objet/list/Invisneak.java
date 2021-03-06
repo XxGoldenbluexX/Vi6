@@ -97,7 +97,7 @@ public class Invisneak extends Objet{
 		return false;
 	}
 	private Player getHolder() {
-		for(Player p : game.getPlayerList()) {
+		for(Player p : game.getPlayerList().keySet()) {
 			if(p.getInventory().contains(itemStack)) return p;
 		}
 		return null;

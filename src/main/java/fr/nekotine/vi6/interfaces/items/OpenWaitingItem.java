@@ -25,7 +25,7 @@ public class OpenWaitingItem extends BaseInventoryItem implements Listener{
 	@EventHandler
 	public void onGameStart(GameEnterPreparationPhaseEvent e) {
 		if(e.getGame().equals(game)) {
-			for(Player player : game.getPlayerList()) {
+			for(Player player : game.getPlayerList().keySet()) {
 				player.getInventory().remove(item);
 			}
 			HandlerList.unregisterAll(this);
@@ -45,7 +45,7 @@ public class OpenWaitingItem extends BaseInventoryItem implements Listener{
 	}
 	@Override
 	public void playerInteract(Player player) {
-		if(game.getPlayerList().contains(player)) {
+		if(game.getPlayerList().keySet().contains(player)) {
 			new WaitingInventory(main, player, game);
 		}else {
 			player.getInventory().remove(item);
@@ -54,7 +54,7 @@ public class OpenWaitingItem extends BaseInventoryItem implements Listener{
 	@EventHandler
 	public void gameEndEvent(GameEndEvent e) {
 		if(e.getGame().equals(game)) {
-			for(Player p : game.getPlayerList()) {
+			for(Player p : game.getPlayerList().keySet()) {
 				p.getInventory().setItem(0, item);
 			}
 		}

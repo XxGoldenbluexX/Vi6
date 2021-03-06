@@ -64,7 +64,7 @@ public abstract class Objet implements Listener{
 	public void onGameEnd(GameEndEvent e) {
 		if(e.getGame().equals(game)) {
 			gameEnd();
-			for(Player player : game.getPlayerList()) {
+			for(Player player : game.getPlayerList().keySet()) {
 				player.getInventory().removeItem(itemStack);
 			}
 			game.removeObjet(this);
@@ -160,7 +160,7 @@ public abstract class Objet implements Listener{
 		}
 	}
 	public void updateItem(ItemStack itm) {
-		for(Player p : game.getPlayerList()) {
+		for(Player p : game.getPlayerList().keySet()) {
 			if(displayedItem.isSimilar(p.getInventory().getItemInOffHand())) {
 				p.getInventory().setItemInOffHand(itm);
 				break;
