@@ -108,7 +108,7 @@ public class Vi6commandMaker {
 		return new CommandAPICommand("stop")
 				.withArguments(gameArgument)
 				.executes((sender,args)->{
-					((Game)args[0]).endGame();
+					((Game)args[0]).endGame(true);
 				});
 	}
 	

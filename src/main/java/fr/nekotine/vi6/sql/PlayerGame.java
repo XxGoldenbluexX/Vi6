@@ -45,14 +45,16 @@ public class PlayerGame implements Listener{
 	@EventHandler
 	public void onGameEnd(GameEndEvent e) {
 		if(e.getGame().getName()==gameName) {
-			int idPartieJoueur = SQLInterface.addPartieJoueur(e.getIdPartie(), playerUUID, team, entree, sortie, salleMort, idPartieTueur);
-			for(String artefactName : artefactStolen.keySet()) {
-				SQLInterface.addStealEntry(artefactName, idPartieJoueur, artefactStolen.get(artefactName));
-			}
-			for(String objetName : objectUsed.keySet()) {
-				SQLInterface.addStealEntry(objetName, idPartieJoueur, objectUsed.get(objetName));
-			}
+			if(!e.isForced()) {
+				int idPartieJoueur = SQLInterface.addPartieJoueur(e.getIdPartie(), playerUUID, team, entree, sortie, salleMort, idPartieTueur);
+				for(String artefactName : artefactStolen.keySet()) {
+					SQLInterface.addStealEntry(artefactName, idPartieJoueur, artefactStolen.get(artefactName));
+				}
+				for(String objetName : objectUsed.keySet()) {
+					SQLInterface.addStealEntry(objetName, idPartieJoueur, objectUsed.get(objetName));
+				}
 			HandlerList.unregisterAll(this);
+			}
 		}
 	}
 	@EventHandler

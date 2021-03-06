@@ -95,7 +95,7 @@ public class Sortie implements ConfigurationSerializable,ZoneDetectionListener {
 						new MessageFormater("§p", player.getName()),new MessageFormater("§n", String.valueOf(wrap.getStealedArtefactList().size()))));
 			}
 			if(!wrap.getGame().isThiefLeft()) {
-				wrap.getGame().endGame();
+				wrap.getGame().endGame(false);
 			}
 		}
 		return false;

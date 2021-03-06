@@ -265,7 +265,7 @@ public class Game implements Listener{
 	}
 	
 	public void destroy() {
-		endGame();
+		endGame(true);
 		if (map!=null) {map.unload();map=null;}
 		HandlerList.unregisterAll(mapInterface);
 		HandlerList.unregisterAll(settingsInterface);
@@ -509,9 +509,9 @@ public class Game implements Listener{
 	}
 	
 	
-	public boolean endGame() {
+	public boolean endGame(boolean forced) {
 		if (state==GameState.Waiting) return false;
-		if(state==GameState.Ingame) {
+		if(state==GameState.Ingame && !forced) {
 			try {
 				idPartie = SQLInterface.addPartie(Date.valueOf(LocalDate.now()), new Time(SQLInterface.getTimeFormat().parse(LocalTime.now().toString()).getTime() - SQLInterface.getTimeFormat().parse(startTime).getTime()), money, isRanked, mapName);
 			} catch (ParseException e) {
@@ -549,7 +549,7 @@ public class Game implements Listener{
 		gameTicker.cancel();
 		bossBarTicker.cancel();
 		state=GameState.Waiting;
-		Bukkit.getPluginManager().callEvent(new GameEndEvent(this, idPartie));
+		Bukkit.getPluginManager().callEvent(new GameEndEvent(this, idPartie, forced));
 		return true;
 	}
 	
@@ -572,7 +572,7 @@ public class Game implements Listener{
 	
 	public boolean removePlayer(Player p) {
 		if (playerList.keySet().contains(p)) {
-			endGame();
+			endGame(true);
 			for (Player pl : playerList.keySet()) {
 				pl.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_leave"),
 						new MessageFormater("§p",p.getName()),new MessageFormater("§g",name)));
@@ -622,7 +622,7 @@ public class Game implements Listener{
 						new MessageFormater("§n", String.valueOf(playerList.get(e.getEntity()).getStealedArtefactList().size()))));
 			}
 			if(!isThiefLeft()) {
-				endGame();
+				endGame(false);
 			}
 		}
 	}
