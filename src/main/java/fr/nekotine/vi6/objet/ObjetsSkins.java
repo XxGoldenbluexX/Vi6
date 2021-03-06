@@ -13,7 +13,7 @@ public enum ObjetsSkins {
 			ChatColor.GOLD+"Invisible",
 			Material.GLASS_PANE,
 			new String[]{ChatColor.LIGHT_PURPLE+"C'est un skin pose pas de question"}),
-	CHAMP_DE_FORCE_SLIME(ObjetsList.INVISNEAK,
+	CHAMP_DE_FORCE_SLIME(ObjetsList.CHAMP_DE_FORCE,
 			ChatColor.GOLD+"Slime",
 			Material.SLIME_BLOCK,
 			new String[]{ChatColor.LIGHT_PURPLE+"Un champ de force composé de slime"});
