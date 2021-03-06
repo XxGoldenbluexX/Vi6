@@ -1,6 +1,5 @@
 package fr.nekotine.vi6.interfaces.inventories;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
