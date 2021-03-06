@@ -42,7 +42,7 @@ public class ChampDeForce extends Objet implements ZoneDetectionListener {
 		}
 		mat=Material.LIGHT_GRAY_STAINED_GLASS;
 		guardList.trimToSize();
-		if (skin.getObjet()!=objet) return;
+		if (skin==null || skin.getObjet()!=objet) return;
 		switch (skin) {
 		case CHAMP_DE_FORCE_SLIME:
 			mat=Material.SLIME_BLOCK;

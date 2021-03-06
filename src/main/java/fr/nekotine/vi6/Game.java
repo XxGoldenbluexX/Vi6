@@ -520,7 +520,7 @@ public class Game implements Listener{
 			}
 		}
 		for(Objet obj : objetsList) {
-			obj.gameEnd();
+			if (obj!=null) obj.gameEnd();
 		}
 		scoreboardSidebar.setDisplaySlot(DisplaySlot.SIDEBAR);
 		if(bb.getPlayers().size()>0) bb.removeAll();
