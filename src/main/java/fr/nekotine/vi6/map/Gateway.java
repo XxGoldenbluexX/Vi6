@@ -52,6 +52,11 @@ public class Gateway extends Passage {
 	
 	public boolean open() {
 		if (!closed) return false;
+		forceOpen();
+		return true;
+	}
+	
+	public void forceOpen() {
 		int x1=corner1.getBlockX();
 		int y1=corner1.getBlockY();
 		int z1=corner1.getBlockZ();
@@ -73,7 +78,6 @@ public class Gateway extends Passage {
 			}
 		}
 		closed=false;
-		return true;
 	}
 	
 	@Override
