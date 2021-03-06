@@ -49,7 +49,7 @@ public class Carte implements ConfigurationSerializable {
 	
 	public void start() {
 		for (Artefact a : artefacts) {a.reset();}
-		for (Gateway g : gateways) {g.open();}
+		for (Gateway g : gateways) {g.forceOpen();}
 	}
 	
 	public void unload() {
