@@ -101,8 +101,9 @@ public class Game implements Listener{
 	private final Vi6Main main;
 	private int idPartie;
 	private String startTime;
-	private Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
-	private Objective scoreboardSidebar;
+	private final Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
+	private final Objective scoreboardSidebar;
+	private final org.bukkit.scoreboard.Team noNameTag;
 	private final String name;
 	private boolean isRanked=true;
 	private boolean canCapture=true;
@@ -151,7 +152,10 @@ public class Game implements Listener{
 		nbtCompteur.add(0);
 		Bukkit.getPluginManager().registerEvents(this, main);
 		scoreboardSidebar = scoreboard.registerNewObjective("sidebar", "dummy", Component.text(name).color(NamedTextColor.GOLD));
-		scoreboardSidebar.setDisplaySlot(DisplaySlot.SIDEBAR);	
+		scoreboardSidebar.setDisplaySlot(DisplaySlot.SIDEBAR);
+		noNameTag = scoreboard.registerNewTeam("noNameTag");
+		noNameTag.setCanSeeFriendlyInvisibles(false);
+		noNameTag.setOption(org.bukkit.scoreboard.Team.Option.NAME_TAG_VISIBILITY, org.bukkit.scoreboard.Team.OptionStatus.FOR_OWN_TEAM);
 	}
 	
 	public boolean isRanked() {
@@ -272,7 +276,7 @@ public class Game implements Listener{
 		HandlerList.unregisterAll(settingsInterface);
 		HandlerList.unregisterAll(this);
 		scoreboardSidebar.unregister();
-		scoreboard=null;
+		noNameTag.unregister();
 	}
 	
 	public boolean isEveryoneReady() {
@@ -309,6 +313,7 @@ public class Game implements Listener{
 			player.setGameMode(GameMode.ADVENTURE);
 			player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
 			player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, Integer.MAX_VALUE, 0, false, false, false));
+			noNameTag.addEntry(player.getName());
 			wrapper.setReady(false);
 			wrapper.setMoney(money);
 			wrapper.setState(PlayerState.PREPARATION);
@@ -535,6 +540,7 @@ public class Game implements Listener{
 			p.getValue().setCanCapture(false);
 			p.getValue().setCanEscape(false);
 			p.getValue().setThiefSpawnPoint(null);
+			noNameTag.removeEntry(p.getKey().getName());
 			p.getKey().setWalkSpeed(0.2f);
 			p.getKey().getInventory().clear();
 			if (p.getValue().getTeam()==Team.GARDE) {
