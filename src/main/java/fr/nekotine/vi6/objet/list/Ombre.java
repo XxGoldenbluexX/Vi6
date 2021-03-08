@@ -82,7 +82,7 @@ public class Ombre extends Objet{
 					ombre.remove();
 					ombre=null;
 					holder.damage(holder.getHealth(),ombre);
-					for (Player p : game.getPlayerList()) {
+					for (Player p : game.getPlayerList().keySet()) {
 						p.playSound(p.getLocation(), Sound.ENTITY_WITHER_SPAWN, SoundCategory.MASTER, 0.5f, 1);
 						p.playSound(p.getLocation(), Sound.ENTITY_ZOMBIE_VILLAGER_CURE, SoundCategory.MASTER, 0.5f, 1);
 					}

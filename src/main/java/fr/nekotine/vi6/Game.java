@@ -601,8 +601,8 @@ public class Game implements Listener{
 		return playerList;
 	}
 	
-	public Set<Player> getPlayerList(){
-		return playerList.keySet();
+	public HashMap<Player, PlayerWrapper> getPlayerList(){
+		return playerList;
 	}
 	
 	public Team getPlayerTeam(Player p) {
