@@ -1,9 +1,8 @@
 package fr.nekotine.vi6.objet.list;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Sound;
-import org.bukkit.SoundCategory;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -20,6 +19,8 @@ import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.utils.IsCreator;
+import net.kyori.adventure.key.Key;
+import net.kyori.adventure.sound.Sound;
 
 public class Ombre extends Objet{
 	private ArmorStand ombre;
@@ -83,24 +84,24 @@ public class Ombre extends Objet{
 					ombre=null;
 					holder.damage(holder.getHealth(),ombre);
 					for (Player p : game.getPlayerList().keySet()) {
-						p.playSound(p.getLocation(), Sound.ENTITY_WITHER_SPAWN, SoundCategory.MASTER, 0.5f, 1);
-						p.playSound(p.getLocation(), Sound.ENTITY_ZOMBIE_VILLAGER_CURE, SoundCategory.MASTER, 0.5f, 1);
+						p.playSound(Sound.sound(Key.key("entity.wither.spawn"),Sound.Source.MASTER,0.5f,1));
+						p.playSound(Sound.sound(Key.key("entity.zombie_villager.cure"),Sound.Source.MASTER,0.5f,1));
 					}
-					//ùessage
 				}
 			}
 		}
 	}
 	private void use(Player holder) {
 		if(ombre==null) {
+			if (!onGround()) {holder.playSound(Sound.sound(Key.key("entity.villager.no"),Sound.Source.AMBIENT,1f,1f));return;}
 			this.holder=holder;
 			ombre=(ArmorStand)holder.getWorld().spawnEntity(holder.getLocation(), EntityType.ARMOR_STAND);
 			ombre.getEquipment().setHelmet(new ItemStack(Material.COAL_BLOCK));
 			ombre.setMarker(true);
-			//message
 			setCooldown(2*20);
 		}else {
-			this.holder.getWorld().playSound(this.holder.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, SoundCategory.MASTER, 1, 1);
+			Location loc = this.holder.getLocation();
+			this.holder.getWorld().playSound(Sound.sound(Key.key("entity.enderman.teleport"),Sound.Source.MASTER,1,1),loc.getX(),loc.getY(),loc.getZ());
 			this.holder.teleport(ombre);
 			ombre.remove();
 			ombre=null;
@@ -109,5 +110,9 @@ public class Ombre extends Objet{
 			game.removeObjet(this);
 			HandlerList.unregisterAll(this);
 		}
+	}
+	
+	private boolean onGround() {
+		return (!holder.isFlying() && holder.getLocation().subtract(0, 0.1, 0).getBlock().getType().isSolid());
 	}
 }
