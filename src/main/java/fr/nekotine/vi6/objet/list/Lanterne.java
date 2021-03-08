@@ -117,7 +117,7 @@ public class Lanterne extends Objet {
 	public void onPlayerMove(PlayerMoveEvent event) {
 		if (toShow.contains(event.getPlayer())) {
 			PlayerWrapper wrap = mainref.getPlayerWrapper(owner);
-			if (wrap!=null && wrap.getState()==PlayerState.INSIDE && !=null && event.getTo().distanceSquared(lantern1.getLoc())<=LANTERN_CATCH_SQUARED_DISTANCE) {
+			if (wrap!=null && wrap.getState()==PlayerState.INSIDE && lantern1!=null && event.getTo().distanceSquared(lantern1.getLoc())<=LANTERN_CATCH_SQUARED_DISTANCE) {
 				event.getPlayer().teleport(owner.getLocation());
 				lantern1.destroy();
 				PacketContainer packet = pmanager.createPacket(PacketType.Play.Server.ENTITY_DESTROY);
