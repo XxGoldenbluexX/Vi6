@@ -30,6 +30,7 @@ import com.comphenix.protocol.wrappers.WrappedDataWatcher.WrappedDataWatcherObje
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
+import fr.nekotine.vi6.enums.PlayerState;
 import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
@@ -115,7 +116,8 @@ public class Lanterne extends Objet {
 	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent event) {
 		if (toShow.contains(event.getPlayer())) {
-			if (lantern1!=null && event.getTo().distanceSquared(lantern1.getLoc())<=LANTERN_CATCH_SQUARED_DISTANCE) {
+			PlayerWrapper wrap = mainref.getPlayerWrapper(owner);
+			if (wrap!=null && wrap.getState()==PlayerState.INSIDE && !=null && event.getTo().distanceSquared(lantern1.getLoc())<=LANTERN_CATCH_SQUARED_DISTANCE) {
 				event.getPlayer().teleport(owner.getLocation());
 				lantern1.destroy();
 				PacketContainer packet = pmanager.createPacket(PacketType.Play.Server.ENTITY_DESTROY);
@@ -129,7 +131,7 @@ public class Lanterne extends Objet {
 				}
 				return;
 			}
-			if (lantern2!=null && event.getTo().distanceSquared(lantern2.getLoc())<=LANTERN_CATCH_SQUARED_DISTANCE) {
+			if (wrap!=null && wrap.getState()==PlayerState.INSIDE && lantern2!=null && event.getTo().distanceSquared(lantern2.getLoc())<=LANTERN_CATCH_SQUARED_DISTANCE) {
 				event.getPlayer().teleport(owner.getLocation());
 				lantern2.destroy();
 				PacketContainer packet = pmanager.createPacket(PacketType.Play.Server.ENTITY_DESTROY);
@@ -193,7 +195,6 @@ public class Lanterne extends Objet {
 	}
 	
 	private class Lant{
-		private final Location loc;
 		private final int guardianID;
 		private final FallingBlock block;
 		private final Particle particle;
@@ -201,12 +202,12 @@ public class Lanterne extends Objet {
 			@Override
 			public void run() {
 				block.setTicksLived(1);
+				Location loc = block.getLocation();
 				loc.getWorld().spawnParticle(particle, full, null, loc.getX(), loc.getY()+0.3, loc.getZ(), 5, 0.3, 0, 0.3, 0, null, false);
 			}
 		};
 		
 		private Lant(Location loc, Vi6Main main, BlockData data, Particle particle) {
-			this.loc=loc;
 			guardianID = (int)(Math.random() * Integer.MAX_VALUE);
 			this.particle=particle;
 			//SPAWN LANTERN
@@ -250,7 +251,7 @@ public class Lanterne extends Objet {
 		}
 
 		public Location getLoc() {
-			return loc;
+			return block.getLocation();
 		}
 		
 	}
