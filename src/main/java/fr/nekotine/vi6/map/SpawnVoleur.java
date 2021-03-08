@@ -13,6 +13,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
+import org.bukkit.inventory.EquipmentSlot;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
@@ -88,6 +89,7 @@ public class SpawnVoleur implements ConfigurationSerializable,Listener{
 		armorStand.setInvulnerable(true);
 		armorStand.setGravity(false);
 		armorStand.setFireTicks(Game.getDefaultPreparationSeconds()*20);
+		armorStand.addDisabledSlots(EquipmentSlot.CHEST,EquipmentSlot.FEET,EquipmentSlot.HAND,EquipmentSlot.LEGS,EquipmentSlot.FEET,EquipmentSlot.OFF_HAND);
 		Bukkit.getPluginManager().registerEvents(this, mainref);
 	}
 	@EventHandler

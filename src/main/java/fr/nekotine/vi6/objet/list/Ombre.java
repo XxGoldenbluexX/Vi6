@@ -10,6 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 import fr.nekotine.vi6.Game;
@@ -97,6 +98,7 @@ public class Ombre extends Objet{
 			this.holder=holder;
 			ombre=(ArmorStand)holder.getWorld().spawnEntity(holder.getLocation(), EntityType.ARMOR_STAND);
 			ombre.getEquipment().setHelmet(new ItemStack(Material.COAL_BLOCK));
+			ombre.addDisabledSlots(EquipmentSlot.CHEST,EquipmentSlot.FEET,EquipmentSlot.HAND,EquipmentSlot.LEGS,EquipmentSlot.FEET,EquipmentSlot.OFF_HAND);
 			ombre.setMarker(true);
 			setCooldown(2*20);
 		}else {
