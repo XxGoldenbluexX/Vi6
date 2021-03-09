@@ -37,6 +37,8 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -675,5 +677,9 @@ public class Game implements Listener{
 			PlayerWrapper damaged = playerList.get((Player)e.getEntity());
 			if(damager!=null && damaged!=null && damager.getTeam()==Team.GARDE && damaged.getTeam()==Team.GARDE) e.setCancelled(true);
 		}
+	}
+	@EventHandler
+	public void inventoryClick(InventoryClickEvent e) {
+		if(playerList.keySet().contains(e.getWhoClicked()) && e.getSlotType()==SlotType.ARMOR) e.setCancelled(true);
 	}
 }
