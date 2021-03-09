@@ -530,8 +530,6 @@ public class Game implements Listener{
 	
 	public boolean endGame(boolean forced) {
 		if (state==GameState.Waiting) return false;
-		guardGlow.hideFromEveryone();
-		thiefGlow.hideFromEveryone();
 		if(state==GameState.Ingame && !forced) {
 			try {
 				idPartie = SQLInterface.addPartie(Date.valueOf(LocalDate.now()), new Time(SQLInterface.getTimeFormat().parse(LocalTime.now().toString()).getTime() - SQLInterface.getTimeFormat().parse(startTime).getTime()), money, isRanked, mapName);
@@ -574,6 +572,8 @@ public class Game implements Listener{
 			p.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_end"), 
 					new MessageFormater("§n", String.valueOf(totalVole))));
 		}
+		guardGlow.hideFromEveryone();
+		thiefGlow.hideFromEveryone();
 		gameTicker.cancel();
 		bossBarTicker.cancel();
 		state=GameState.Waiting;

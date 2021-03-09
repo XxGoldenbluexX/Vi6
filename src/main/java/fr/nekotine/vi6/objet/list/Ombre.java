@@ -42,7 +42,8 @@ public class Ombre extends Objet{
 
 	@Override
 	public void cooldownEnded() {
-		updateItem(IsCreator.createItemStack(Material.SKELETON_SKULL, 1, ChatColor.GRAY+"Ombre [Posée]", ChatColor.LIGHT_PURPLE+"Interagissez pour vous téléporter à votre ombre"));
+		itemStack = IsCreator.createItemStack(Material.SKELETON_SKULL, 1, ChatColor.GRAY+"Ombre [Posée]", ChatColor.LIGHT_PURPLE+"Interagissez pour vous téléporter à votre ombre");
+		updateItem();
 	}
 
 	@Override
@@ -94,7 +95,7 @@ public class Ombre extends Objet{
 	}
 	private void use(Player holder) {
 		if(ombre==null) {
-			if (!onGround()) {holder.playSound(Sound.sound(Key.key("entity.villager.no"),Sound.Source.AMBIENT,1f,1f));return;}
+			if (!onGround(holder)) {holder.playSound(Sound.sound(Key.key("entity.villager.no"),Sound.Source.AMBIENT,1f,1f));return;}
 			this.holder=holder;
 			ombre=(ArmorStand)holder.getWorld().spawnEntity(holder.getLocation(), EntityType.ARMOR_STAND);
 			ombre.getEquipment().setHelmet(new ItemStack(Material.COAL_BLOCK));
@@ -114,7 +115,7 @@ public class Ombre extends Objet{
 		}
 	}
 	
-	private boolean onGround() {
+	private boolean onGround(Player holder) {
 		return (!holder.isFlying() && holder.getLocation().subtract(0, 0.1, 0).getBlock().getType().isSolid());
 	}
 }

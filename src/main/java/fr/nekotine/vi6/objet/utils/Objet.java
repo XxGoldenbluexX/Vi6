@@ -174,6 +174,21 @@ public abstract class Objet implements Listener{
 		}
 		displayedItem=itm;
 	}
+	public void updateItem() {
+		displayedItem=itemStack;
+		for(Player p : game.getPlayerList().keySet()) {
+			if(displayedItem.isSimilar(p.getInventory().getItemInOffHand())) {
+				p.getInventory().setItemInOffHand(itemStack);
+				break;
+			}else {
+				int slot = p.getInventory().first(displayedItem);
+				if(slot>=0) {
+					p.getInventory().setItem(slot, itemStack);
+					break;
+				}
+			}
+		}
+	}
 	public void cancelBuy(Player player) {
 		player.getInventory().removeItem(itemStack);
 		game.removeObjet(this);
