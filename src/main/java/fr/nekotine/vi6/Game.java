@@ -35,6 +35,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemFlag;
@@ -118,8 +119,8 @@ public class Game implements Listener{
 	private MapSelectionInventory mapInterface;
 	private GameSettingsInventory settingsInterface;
 	
-	private Glow guardGlow = Glow.builder().animatedColor(ChatColor.BLUE).build();
-	private Glow thiefGlow = Glow.builder().animatedColor(ChatColor.RED).build();
+	private Glow guardGlow = Glow.builder().animatedColor(ChatColor.BLUE).name("guardGlow").build();
+	private Glow thiefGlow = Glow.builder().animatedColor(ChatColor.RED).name("thiefGlow").build();
 	public static final ItemStack GUARD_SWORD = new ItemStack(Material.DIAMOND_SWORD);
 	static{
 		ItemMeta meta = GUARD_SWORD.getItemMeta();
@@ -661,5 +662,13 @@ public class Game implements Listener{
 
 	public boolean isCanCapture() {
 		return canCapture;
+	}
+	@EventHandler
+	public void hitEvent(EntityDamageByEntityEvent e) {
+		if(e.getDamager() instanceof Player && e.getEntity() instanceof Player) {
+			PlayerWrapper damager = playerList.get((Player)e.getDamager());
+			PlayerWrapper damaged = playerList.get((Player)e.getEntity());
+			if(damager!=null && damaged!=null && damager.getTeam()==Team.GARDE && damaged.getTeam()==Team.GARDE) e.setCancelled(true);
+		}
 	}
 }

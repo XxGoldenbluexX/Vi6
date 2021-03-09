@@ -27,7 +27,7 @@ public class Ombre extends Objet{
 	private ArmorStand ombre;
 	private Player holder;
 	public Ombre(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Player player, Game game) {
-		super(main, objet, skin, IsCreator.createItemStack(Material.SKELETON_SKULL, 1, ChatColor.GRAY+"Ombre [Prête]",
+		super(main, objet, skin, IsCreator.createItemStack(Material.WITHER_SKELETON_SKULL, 1, ChatColor.GRAY+"Ombre [Prête]",
 				ChatColor.LIGHT_PURPLE+"Interagissez pour poser votre ombre"), game, player);
 	}
 
