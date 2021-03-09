@@ -216,6 +216,13 @@ public class Lanterne extends Objet {
 			block.setGravity(false);
 			block.setHurtEntities(false);
 			lanternMaintainer.runTaskTimer(main, 0, 20);
+			//PACKET GLOW LANTERN
+			Serializer byteserializer = Registry.get(Byte.class);
+			PacketContainer glowPacket = pmanager.createPacket(PacketType.Play.Server.ENTITY_METADATA);
+			glowPacket.getIntegers().write(0, block.getEntityId());
+			WrappedDataWatcher watcher = new WrappedDataWatcher();
+			watcher.setObject(0, byteserializer,(byte)(0x40));
+			glowPacket.getWatchableCollectionModifier().write(0, watcher.getWatchableObjects());
 			//SPAWN GUARDIAN
 			PacketContainer spawnPacket = pmanager.createPacket(PacketType.Play.Server.SPAWN_ENTITY_LIVING);
 			spawnPacket.getIntegers().write(0, guardianID);
@@ -226,8 +233,7 @@ public class Lanterne extends Objet {
 			spawnPacket.getDoubles().write(2, loc.getZ());
 			PacketContainer metadataPacket = pmanager.createPacket(PacketType.Play.Server.ENTITY_METADATA);
 			metadataPacket.getIntegers().write(0, guardianID);
-			WrappedDataWatcher watcher = new WrappedDataWatcher();
-			Serializer byteserializer = Registry.get(Byte.class);
+			watcher = new WrappedDataWatcher();
 			Serializer chatSerializer = WrappedDataWatcher.Registry.getChatComponentSerializer(true);
 	        Optional<Object> optional = Optional.of(WrappedChatComponent.fromChatMessage("Lanterne de "+owner.getName())[0].getHandle());
 			watcher.setObject(0, byteserializer,(byte)(0x20));
@@ -238,6 +244,7 @@ public class Lanterne extends Objet {
 			metadataPacket.getWatchableCollectionModifier().write(0, watcher.getWatchableObjects());
 			for (Player p : toShow) {
 				try {
+					pmanager.sendServerPacket(p, glowPacket);
 					pmanager.sendServerPacket(p, spawnPacket);
 					pmanager.sendServerPacket(p, metadataPacket);
 				} catch (InvocationTargetException e) {
