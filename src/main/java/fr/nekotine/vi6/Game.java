@@ -312,6 +312,9 @@ public class Game implements Listener{
 		for(Entry<Player, PlayerWrapper> playerAndWrapper : playerList.entrySet()) {
 			Player player = playerAndWrapper.getKey();
 			PlayerWrapper wrapper = playerAndWrapper.getValue();
+			for(PotionEffectType effect : PotionEffectType.values()) {
+				player.removePotionEffect(effect);
+			}
 			player.getInventory().clear();
 			player.setGameMode(GameMode.ADVENTURE);
 			player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
@@ -329,6 +332,7 @@ public class Game implements Listener{
 				guardGlow.addHolders(player);
 				guardGlow.display(player);
 			}else {
+				player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 1000000, 1, false, false, false));
 				player.teleport(map.getMinimapSpawn());
 				for(Entry<Player, PlayerWrapper> p : playerList.entrySet()) {
 					if(p.getValue().getTeam()==Team.GARDE) {
@@ -556,6 +560,7 @@ public class Game implements Listener{
 				guardGlow.removeHolders(p.getKey());
 				ItemHider.get().unHideFromPlayer(p.getKey());
 			}else {
+				p.getKey().removePotionEffect(PotionEffectType.NIGHT_VISION);
 				thiefGlow.removeHolders(p.getKey());
 				for(Player player : playerList.keySet()) {
 					player.showPlayer(main, p.getKey());
