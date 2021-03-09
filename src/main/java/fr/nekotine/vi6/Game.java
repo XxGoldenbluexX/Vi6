@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
@@ -93,6 +92,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.title.Title;
 import net.kyori.adventure.title.Title.Times;
 import net.kyori.adventure.util.Ticks;
+import ru.xezard.glow.data.glow.Glow;
 
 public class Game implements Listener{
 	private static int DEFAULT_RANKED_MONEY;
@@ -118,6 +118,8 @@ public class Game implements Listener{
 	private MapSelectionInventory mapInterface;
 	private GameSettingsInventory settingsInterface;
 	
+	private Glow guardGlow = Glow.builder().animatedColor(ChatColor.BLUE).build();
+	private Glow thiefGlow = Glow.builder().animatedColor(ChatColor.RED).build();
 	public static final ItemStack GUARD_SWORD = new ItemStack(Material.DIAMOND_SWORD);
 	static{
 		ItemMeta meta = GUARD_SWORD.getItemMeta();
@@ -323,6 +325,8 @@ public class Game implements Listener{
 				PlayerInventory inv = player.getInventory();
 				inv.setChestplate(new ItemStack(Material.DIAMOND_CHESTPLATE));
 				inv.setItem(0, GUARD_SWORD);
+				guardGlow.addHolders(player);
+				guardGlow.display(player);
 			}else {
 				player.teleport(map.getMinimapSpawn());
 				for(Entry<Player, PlayerWrapper> p : playerList.entrySet()) {
@@ -374,6 +378,8 @@ public class Game implements Listener{
 			wrapper.clearStatusEffects();
 			wrapper.getStealedArtefactList().clear();
 			if(wrapper.getTeam()==Team.VOLEUR){
+				thiefGlow.addHolders(player);
+				thiefGlow.display(player);
 				wrapper.setState(PlayerState.ENTERING);
 				if(wrapper.getThiefSpawnPoint()==null) wrapper.setThiefSpawnPoint(map.getThiefSpawnsList().get(0).getMapLocation());
 				player.teleport(wrapper.getThiefSpawnPoint());
@@ -517,6 +523,8 @@ public class Game implements Listener{
 	
 	public boolean endGame(boolean forced) {
 		if (state==GameState.Waiting) return false;
+		guardGlow.hideFromEveryone();
+		thiefGlow.hideFromEveryone();
 		if(state==GameState.Ingame && !forced) {
 			try {
 				idPartie = SQLInterface.addPartie(Date.valueOf(LocalDate.now()), new Time(SQLInterface.getTimeFormat().parse(LocalTime.now().toString()).getTime() - SQLInterface.getTimeFormat().parse(startTime).getTime()), money, isRanked, mapName);
@@ -544,8 +552,10 @@ public class Game implements Listener{
 			p.getKey().setWalkSpeed(0.2f);
 			p.getKey().getInventory().clear();
 			if (p.getValue().getTeam()==Team.GARDE) {
+				guardGlow.removeHolders(p.getKey());
 				ItemHider.get().unHideFromPlayer(p.getKey());
 			}else {
+				thiefGlow.removeHolders(p.getKey());
 				for(Player player : playerList.keySet()) {
 					player.showPlayer(main, p.getKey());
 				}
