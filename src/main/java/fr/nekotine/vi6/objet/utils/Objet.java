@@ -107,7 +107,7 @@ public abstract class Objet implements Listener{
 					}
 				}else {
 					dropE=e;
-					drop(e.getPlayer());
+					drop(e.getPlayer());//
 					dropE=null;
 				}
 			}
