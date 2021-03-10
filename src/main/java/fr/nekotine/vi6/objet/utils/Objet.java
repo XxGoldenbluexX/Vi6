@@ -25,48 +25,29 @@ import fr.nekotine.vi6.events.GameEndEvent;
 import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.utils.IsCreator;
-import fr.nekotine.vi6.wrappers.PlayerWrapper;
 import net.md_5.bungee.api.ChatColor;
 
 public abstract class Objet implements Listener{
 	
-<<<<<<< HEAD
-	private final ObjetsList objet;
-	private final ObjetsSkins skin;
-	private final Game game;
-	private Player owner;
-	private PlayerWrapper ownerWrapper;
-	private boolean onCooldown = false;
-	private int cooldownTicksLeft=0;
-	private ItemStack item;
-	private ItemStack displayedItem;
-=======
 	protected final ObjetsList objet;
 	protected final ObjetsSkins skin;
 	protected final Game game;
 	protected ItemStack itemStack;
 	protected boolean onCooldown = false;
 	protected int cooldownTicksLeft=0;
-	protected ItemStack displayedItem;
->>>>>>> branch 'master' of https://github.com/XxGoldenbluexX/Vi6
+	private ItemStack displayedItem;
 	private PlayerDropItemEvent dropE;
 	private Vi6Main main;
-	private int nbt;
 	
-	public Objet(Vi6Main main, ObjetsList objet, ObjetsSkins skin,Game game, Player player) {
+	public Objet(Vi6Main main, ObjetsList objet, ObjetsSkins skin, ItemStack itemStack, Game game, Player player) {
 		this.objet = objet;
 		this.skin=skin;
 		this.game = game;
-		this.item = IsCreator.createObjetItemStack(main, objet, 1);
+		this.itemStack = itemStack;
 		this.main=main;
-<<<<<<< HEAD
-		displayedItem=item;
-=======
-		nbt = game.getNBT();
 		displayedItem=itemStack;
->>>>>>> branch 'master' of https://github.com/XxGoldenbluexX/Vi6
 		ItemMeta meta = displayedItem.getItemMeta();
-		meta.getPersistentDataContainer().set(new NamespacedKey(main, game.getName()+"ObjetNBT"), PersistentDataType.INTEGER, nbt);
+		meta.getPersistentDataContainer().set(new NamespacedKey(main, game.getName()+"ObjetNBT"), PersistentDataType.INTEGER, game.getNBT());
 		displayedItem.setItemMeta(meta);
 		player.getInventory().addItem(displayedItem);
 		Bukkit.getPluginManager().registerEvents(this, main);
@@ -75,11 +56,11 @@ public abstract class Objet implements Listener{
 	public abstract void gameEnd();
 	public abstract void tick();
 	public abstract void cooldownEnded();
-	public abstract void leaveMap();
-	public abstract void death();
-	public abstract void sell();
-	public abstract void action(Action action);
-	public abstract void drop();
+	public abstract void leaveMap(Player holder);
+	public abstract void death(Player holder);
+	public abstract void sell(Player holder);
+	public abstract void action(Action action, Player holder);
+	public abstract void drop(Player holder);
 
 	@EventHandler
 	public void onGameEnd(GameEndEvent e) {
@@ -148,7 +129,6 @@ public abstract class Objet implements Listener{
 	public void consume(Player player) {
 		if (dropE!=null) {dropE.getItemDrop().remove();dropE.setCancelled(false);}
 		player.getInventory().removeItem(displayedItem);
-		game.removeObjet(this);
 		HandlerList.unregisterAll(this);
 	}
 
@@ -158,6 +138,9 @@ public abstract class Objet implements Listener{
 
 	public ObjetsSkins getSkin() {
 		return skin;
+	}
+	public ItemStack getItemStack() {
+		return itemStack;
 	}
 	public ItemStack getDisplayedItem() {
 		return displayedItem;
@@ -171,55 +154,56 @@ public abstract class Objet implements Listener{
 			cooldownTicksLeft--;
 			if(cooldownTicksLeft<=0) {
 				onCooldown=false;
-<<<<<<< HEAD
-=======
-				changeDisplayItem(itemStack);
->>>>>>> branch 'master' of https://github.com/XxGoldenbluexX/Vi6
-				cooldownEnded();
 				updateItem(itemStack);
+				cooldownEnded();
 			}else {
-				changeDisplayItem(IsCreator.createItemStack(Material.BLACK_STAINED_GLASS_PANE, Math.max((cooldownTicksLeft/20)%60,1),
+				updateItem(IsCreator.createItemStack(Material.BLACK_STAINED_GLASS_PANE, Math.max((cooldownTicksLeft/20)%60,1),
 						ChatColor.RED+objet.getInShopName()+": "+Math.round(cooldownTicksLeft/20d*10)/10d+"s", ""));
 			}
 		}else {
 			tick();
 		}
 	}
-	public void changeDisplayItem(ItemStack newStack) {
-		ItemMeta meta = newStack.getItemMeta();
-		meta.getPersistentDataContainer().set(new NamespacedKey(main, game.getName()+"ObjetNBT"), PersistentDataType.INTEGER, nbt);
-		newStack.setItemMeta(meta);
+	public void updateItem(ItemStack itm) {
 		for(Player p : game.getPlayerList().keySet()) {
 			if(displayedItem.isSimilar(p.getInventory().getItemInOffHand())) {
-				p.getInventory().setItemInOffHand(newStack);
+				p.getInventory().setItemInOffHand(itm);
 				break;
 			}else {
 				int slot = p.getInventory().first(displayedItem);
 				if(slot>=0) {
-					p.getInventory().setItem(slot, newStack);
+					p.getInventory().setItem(slot, itm);
 					break;
 				}
 			}
 		}
-		displayedItem=newStack;
+		displayedItem=itm;
 	}
-	public void changeItem(ItemStack newStack) {
-		itemStack=newStack;
+	public void updateItem() {
+		int nbt = displayedItem.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(main, game.getName()+"ObjetNBT"), PersistentDataType.INTEGER);
+		ItemStack displayedItemClone=displayedItem.clone();
+		displayedItem=itemStack.clone();
+		ItemMeta meta = displayedItem.getItemMeta();
+		meta.getPersistentDataContainer().set(new NamespacedKey(main, game.getName()+"ObjetNBT"), PersistentDataType.INTEGER, nbt);
+		displayedItem.setItemMeta(meta);
+		for(Player p : game.getPlayerList().keySet()) {
+			if(displayedItemClone.isSimilar(p.getInventory().getItemInOffHand())) {
+				p.getInventory().setItemInOffHand(displayedItem);
+				break;
+			}else {
+				int slot = p.getInventory().first(displayedItemClone);
+				if(slot>=0) {
+					p.getInventory().setItem(slot, displayedItem);
+					break;
+				}
+			}
+		}
 	}
 	public void cancelBuy(Player player) {
 		player.getInventory().removeItem(displayedItem);
 		game.removeObjet(this);
 		game.getWrapper(player).setMoney(game.getWrapper(player).getMoney()+objet.getCost());
 		HandlerList.unregisterAll(this);
-	}
-	public int getNBT() {
-		return nbt;
-	}
-	protected Player getHolder() {
-		for(Player p : game.getPlayerList().keySet()) {
-			if(p.getInventory().contains(displayedItem)) return p;
-		}
-		return null;
 	}
 }
 	
