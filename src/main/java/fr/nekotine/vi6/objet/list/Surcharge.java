@@ -16,7 +16,7 @@ import fr.nekotine.vi6.utils.IsCreator;
 
 public class Surcharge extends Objet{
 	private static int cooldownTicks=20*20;
-	private static int buffDurationTicks=5*20;
+	private static int buffDurationTicks=2*20;
 	public Surcharge(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Player player, Game game) {
 		super(main, objet, skin, IsCreator.createObjetItemStack(main,objet,1), game, player);
 	}

@@ -21,7 +21,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.attribute.Attribute;
@@ -44,7 +43,6 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -180,14 +178,14 @@ public class Game implements Listener{
 	}
 	
 	public void removeObjet(Objet obj) {
-		nbtCompteur.add(obj.getDisplayedItem().getItemMeta().getPersistentDataContainer().get(new NamespacedKey(main, getName()+"ObjetNBT"), PersistentDataType.INTEGER));
+		nbtCompteur.add(obj.getNBT());
 		Collections.sort(nbtCompteur.subList(1, nbtCompteur.size()));
 		objetsList.remove(obj);
 	}
 	
 	public Objet getObjet(ItemStack item) {
 		for(Objet obj : objetsList) {
-			if(item.equals(obj.getItemStack())) {
+			if(item.equals(obj.getDisplayedItem())) {
 				return obj;
 			}
 		}

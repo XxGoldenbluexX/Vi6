@@ -7,7 +7,6 @@ import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.HandlerList;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -42,8 +41,9 @@ public class Ombre extends Objet{
 
 	@Override
 	public void cooldownEnded() {
-		itemStack = IsCreator.createItemStack(Material.SKELETON_SKULL, 1, ChatColor.GRAY+"Ombre [Posée]", ChatColor.LIGHT_PURPLE+"Interagissez pour vous téléporter à votre ombre");
-		updateItem();
+		changeItem(IsCreator.createItemStack(Material.SKELETON_SKULL, 1, ChatColor.GRAY+"Ombre [Posée]", 
+				ChatColor.LIGHT_PURPLE+"Interagissez pour vous téléporter à votre ombre"));
+		changeDisplayItem(itemStack);
 	}
 
 	@Override
@@ -109,9 +109,7 @@ public class Ombre extends Objet{
 			ombre.remove();
 			ombre=null;
 			//message
-			holder.getInventory().remove(itemStack);
-			game.removeObjet(this);
-			HandlerList.unregisterAll(this);
+			consume(holder);
 		}
 	}
 	

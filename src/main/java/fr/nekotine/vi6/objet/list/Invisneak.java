@@ -76,7 +76,7 @@ public class Invisneak extends Objet{
 	}
 	@EventHandler
 	public void onSneakToggle(PlayerToggleSneakEvent e) {
-		if(e.getPlayer().getInventory().contains(itemStack)) {
+		if(e.getPlayer().getInventory().contains(displayedItem)) {
 			isSneaking=e.isSneaking();
 			player=e.getPlayer();
 			if(isSneaking) {
@@ -95,12 +95,6 @@ public class Invisneak extends Objet{
 			}
 		}
 		return false;
-	}
-	private Player getHolder() {
-		for(Player p : game.getPlayerList().keySet()) {
-			if(p.getInventory().contains(itemStack)) return p;
-		}
-		return null;
 	}
 
 	@Override
