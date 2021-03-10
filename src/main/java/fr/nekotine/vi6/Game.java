@@ -180,7 +180,7 @@ public class Game implements Listener{
 	}
 	
 	public void removeObjet(Objet obj) {
-		nbtCompteur.add(obj.getItemStack().getItemMeta().getPersistentDataContainer().get(new NamespacedKey(main, getName()+"ObjetNBT"), PersistentDataType.INTEGER));
+		nbtCompteur.add(obj.getDisplayedItem().getItemMeta().getPersistentDataContainer().get(new NamespacedKey(main, getName()+"ObjetNBT"), PersistentDataType.INTEGER));
 		Collections.sort(nbtCompteur.subList(1, nbtCompteur.size()));
 		objetsList.remove(obj);
 	}

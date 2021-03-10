@@ -37,17 +37,19 @@ public abstract class Objet implements Listener{
 	protected int cooldownTicksLeft=0;
 	private ItemStack displayedItem;
 	private PlayerDropItemEvent dropE;
+	private Vi6Main main;
 	
 	public Objet(Vi6Main main, ObjetsList objet, ObjetsSkins skin, ItemStack itemStack, Game game, Player player) {
 		this.objet = objet;
 		this.skin=skin;
 		this.game = game;
 		this.itemStack = itemStack;
-		ItemMeta meta = this.itemStack.getItemMeta();
-		meta.getPersistentDataContainer().set(new NamespacedKey(main, game.getName()+"ObjetNBT"), PersistentDataType.INTEGER, game.getNBT());
-		this.itemStack.setItemMeta(meta);
-		player.getInventory().addItem(itemStack);
+		this.main=main;
 		displayedItem=itemStack;
+		ItemMeta meta = displayedItem.getItemMeta();
+		meta.getPersistentDataContainer().set(new NamespacedKey(main, game.getName()+"ObjetNBT"), PersistentDataType.INTEGER, game.getNBT());
+		displayedItem.setItemMeta(meta);
+		player.getInventory().addItem(displayedItem);
 		Bukkit.getPluginManager().registerEvents(this, main);
 	}
 	
@@ -140,6 +142,9 @@ public abstract class Objet implements Listener{
 	public ItemStack getItemStack() {
 		return itemStack;
 	}
+	public ItemStack getDisplayedItem() {
+		return displayedItem;
+	}
 	public void setCooldown(int ticks) {
 		cooldownTicksLeft=ticks;
 		onCooldown=true;
@@ -175,29 +180,30 @@ public abstract class Objet implements Listener{
 		displayedItem=itm;
 	}
 	public void updateItem() {
-		displayedItem=itemStack;
+		int nbt = displayedItem.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(main, game.getName()+"ObjetNBT"), PersistentDataType.INTEGER);
+		ItemStack displayedItemClone=displayedItem.clone();
+		displayedItem=itemStack.clone();
+		ItemMeta meta = displayedItem.getItemMeta();
+		meta.getPersistentDataContainer().set(new NamespacedKey(main, game.getName()+"ObjetNBT"), PersistentDataType.INTEGER, nbt);
+		displayedItem.setItemMeta(meta);
 		for(Player p : game.getPlayerList().keySet()) {
-			if(displayedItem.isSimilar(p.getInventory().getItemInOffHand())) {
-				p.getInventory().setItemInOffHand(itemStack);
+			if(displayedItemClone.isSimilar(p.getInventory().getItemInOffHand())) {
+				p.getInventory().setItemInOffHand(displayedItem);
 				break;
 			}else {
-				int slot = p.getInventory().first(displayedItem);
+				int slot = p.getInventory().first(displayedItemClone);
 				if(slot>=0) {
-					p.getInventory().setItem(slot, itemStack);
+					p.getInventory().setItem(slot, displayedItem);
 					break;
 				}
 			}
 		}
 	}
 	public void cancelBuy(Player player) {
-		player.getInventory().removeItem(itemStack);
+		player.getInventory().removeItem(displayedItem);
 		game.removeObjet(this);
 		game.getWrapper(player).setMoney(game.getWrapper(player).getMoney()+objet.getCost());
 		HandlerList.unregisterAll(this);
-	}
-	
-	protected void setItemStack(ItemStack itm) {
-		itemStack=itm;
 	}
 }
 	
