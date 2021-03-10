@@ -25,27 +25,30 @@ import fr.nekotine.vi6.events.GameEndEvent;
 import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.utils.IsCreator;
+import fr.nekotine.vi6.wrappers.PlayerWrapper;
 import net.md_5.bungee.api.ChatColor;
 
 public abstract class Objet implements Listener{
 	
-	protected final ObjetsList objet;
-	protected final ObjetsSkins skin;
-	protected final Game game;
-	protected ItemStack itemStack;
-	protected boolean onCooldown = false;
-	protected int cooldownTicksLeft=0;
+	private final ObjetsList objet;
+	private final ObjetsSkins skin;
+	private final Game game;
+	private Player owner;
+	private PlayerWrapper ownerWrapper;
+	private boolean onCooldown = false;
+	private int cooldownTicksLeft=0;
+	private ItemStack item;
 	private ItemStack displayedItem;
 	private PlayerDropItemEvent dropE;
 	private Vi6Main main;
 	
-	public Objet(Vi6Main main, ObjetsList objet, ObjetsSkins skin, ItemStack itemStack, Game game, Player player) {
+	public Objet(Vi6Main main, ObjetsList objet, ObjetsSkins skin,Game game, Player player) {
 		this.objet = objet;
 		this.skin=skin;
 		this.game = game;
-		this.itemStack = itemStack;
+		this.item = IsCreator.createObjetItemStack(main, objet, 1);
 		this.main=main;
-		displayedItem=itemStack;
+		displayedItem=item;
 		ItemMeta meta = displayedItem.getItemMeta();
 		meta.getPersistentDataContainer().set(new NamespacedKey(main, game.getName()+"ObjetNBT"), PersistentDataType.INTEGER, game.getNBT());
 		displayedItem.setItemMeta(meta);
@@ -56,11 +59,11 @@ public abstract class Objet implements Listener{
 	public abstract void gameEnd();
 	public abstract void tick();
 	public abstract void cooldownEnded();
-	public abstract void leaveMap(Player holder);
-	public abstract void death(Player holder);
-	public abstract void sell(Player holder);
-	public abstract void action(Action action, Player holder);
-	public abstract void drop(Player holder);
+	public abstract void leaveMap();
+	public abstract void death();
+	public abstract void sell();
+	public abstract void action(Action action);
+	public abstract void drop();
 
 	@EventHandler
 	public void onGameEnd(GameEndEvent e) {
@@ -154,8 +157,8 @@ public abstract class Objet implements Listener{
 			cooldownTicksLeft--;
 			if(cooldownTicksLeft<=0) {
 				onCooldown=false;
-				updateItem(itemStack);
 				cooldownEnded();
+				updateItem(itemStack);
 			}else {
 				updateItem(IsCreator.createItemStack(Material.BLACK_STAINED_GLASS_PANE, Math.max((cooldownTicksLeft/20)%60,1),
 						ChatColor.RED+objet.getInShopName()+": "+Math.round(cooldownTicksLeft/20d*10)/10d+"s", ""));

@@ -51,10 +51,13 @@ public enum ObjetsList {
 			0,
 			ChatColor.GRAY+"Ombre",
 			Material.WITHER_SKELETON_SKULL,
-			ChatColor.LIGHT_PURPLE+"Placez une ombre pour revenir dessus plus tard, et mourrez si un garde la trouve!"),
+			ChatColor.LIGHT_PURPLE+"Placez une ombre pour revenir dessus plus tard"
+			,ChatColor.LIGHT_PURPLE+" et mourrez si un garde la trouve!"),
 	BUISSON_FURTIF(BuissonFurtif.class,Team.VOLEUR,100,1,
 			ChatColor.GREEN+"Buisson Furtif",Material.OAK_LEAVES,ChatColor.LIGHT_PURPLE+"Devenez invisible et insondable dans les buissons."),
 	DOUBLE_SAUT(DoubleSaut.class,Team.VOLEUR,100,1,
+			ChatColor.YELLOW+"Bottes de propultion",Material.GOLDEN_BOOTS,ChatColor.LIGHT_PURPLE+"Vous pouvez effectuer un double saut."),
+	BAIN_DE_FUMEE(DoubleSaut.class,Team.VOLEUR,100,1,
 			ChatColor.YELLOW+"Bottes de propultion",Material.GOLDEN_BOOTS,ChatColor.LIGHT_PURPLE+"Vous pouvez effectuer un double saut."),
 	BARRICADE(Barricade.class,Team.GARDE,0,1,
 			ChatColor.DARK_PURPLE+"Barricade",Material.BRICKS,ChatColor.LIGHT_PURPLE+"Vous pouvez boucher un passage avec."),
@@ -63,7 +66,9 @@ public enum ObjetsList {
 	CHAMP_DE_FORCE(ChampDeForce.class,Team.GARDE,100,0,
 			ChatColor.GRAY+"Champ de force",Material.LIGHT_GRAY_STAINED_GLASS,ChatColor.LIGHT_PURPLE+"Vous pouvez placer une porte ou seul les gardes peuvent passer"),
 	LANTERNE(Lanterne.class,Team.VOLEUR,0,1,
-			ChatColor.GOLD+"Lanterne",Material.LANTERN,ChatColor.LIGHT_PURPLE+"Permet de poser jusqu'a deux lanternes que vos aliés peuvent prendre pour se téléporter a vous."),
+			ChatColor.GOLD+"Lanterne",Material.LANTERN
+			,ChatColor.LIGHT_PURPLE+"Permet de poser jusqu'a deux lanternes"
+			,ChatColor.LIGHT_PURPLE+"que vos aliés peuvent prendre pour se téléporter a vous."),
 	MATRAQUE_DE_THEO(MatraqueDeTheo.class,Team.GARDE,100,1,
 			ChatColor.DARK_RED+"Matraque de théo",Material.NETHERITE_SWORD,ChatColor.LIGHT_PURPLE+"Tuez en un coup.",ChatColor.GRAY+"Faites rager les amateurs du bain de fumée.");
 	
@@ -111,10 +116,6 @@ public enum ObjetsList {
 	}
 	public Class<?> getObjetClass() {
 		return objetClass;
-	}
-	public ItemStack makeInShopItem() {
-		ItemStack itm = new ItemStack(inShopMaterial);
-		return itm;
 	}
 	
 	////////////////////////////////
