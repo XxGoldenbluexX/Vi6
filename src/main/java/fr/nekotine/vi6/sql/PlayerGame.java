@@ -12,6 +12,7 @@ import org.bukkit.event.Listener;
 
 import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.events.GameEndEvent;
+import fr.nekotine.vi6.events.PlayerChangeRoomEvent;
 import fr.nekotine.vi6.events.PlayerEnterMapEvent;
 import fr.nekotine.vi6.events.PlayerStealEvent;
 import fr.nekotine.vi6.events.PlayerUseObjetEvent;
@@ -31,7 +32,7 @@ public class PlayerGame implements Listener{
 	
 	private String entree;
 	private String sortie;
-	private int idPartieTueur;
+	private UUID tueurUUID;
 	private String salleMort;
 	
 	private HashMap<String, Time> artefactStolen = new HashMap<>();
@@ -46,7 +47,7 @@ public class PlayerGame implements Listener{
 	public void onGameEnd(GameEndEvent e) {
 		if(e.getGame().getName()==gameName) {
 			if(!e.isForced()) {
-				int idPartieJoueur = SQLInterface.addPartieJoueur(e.getIdPartie(), playerUUID, team, entree, sortie, salleMort, idPartieTueur);
+				int idPartieJoueur = SQLInterface.addPartieJoueur(e.getIdPartie(), playerUUID, team, entree, sortie, salleMort, tueurUUID);
 				for(String artefactName : artefactStolen.keySet()) {
 					SQLInterface.addStealEntry(artefactName, idPartieJoueur, artefactStolen.get(artefactName));
 				}
@@ -82,5 +83,9 @@ public class PlayerGame implements Listener{
 		if(e.getPlayer().getUniqueId()==playerUUID) {
 			entree=e.getEntreeName();
 		}
+	}
+	@EventHandler
+	public void playerChangeRoom(PlayerChangeRoomEvent e) {
+		if(e.getGame().getName()==gameName && e.getPlayer().getUniqueId().equals(playerUUID)) salleMort=e.getRoom();
 	}
 }
