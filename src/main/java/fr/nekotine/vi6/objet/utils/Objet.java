@@ -195,7 +195,7 @@ public abstract class Objet implements Listener {
 		ItemStack current = displayedItem;
 		if (onCooldown) {
 			displayedItem = IsCreator.createItemStack(Material.BLACK_STAINED_GLASS_PANE,1,
-					ChatColor.RED+objet.getInShopName()+Math.round(cooldownTicksLeft / 20.0D * 10.0D) / 10.0D);
+					ChatColor.RED+objet.getInShopName()+": "+Math.round(cooldownTicksLeft / 20.0D * 10.0D) / 10.0D);
 		} else {
 			displayedItem = item;
 		}
@@ -205,7 +205,7 @@ public abstract class Objet implements Listener {
 		if (slot >= 0) {
 			pinv.setItem(slot, displayedItem);
 		} else {
-			pinv.addItem(new ItemStack[]{displayedItem});
+			pinv.addItem(displayedItem);
 		}
 
 	}

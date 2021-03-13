@@ -70,8 +70,7 @@ public class PreparationInventory extends BasePersonalInventory {
 				"" + ChatColor.DARK_RED + "Tout vendre"));
 		this.inventory.setItem(36, IsCreator.createItemStack(Material.DIAMOND_CHESTPLATE, 1,
 				"" + ChatColor.GOLD + "Apparences"));
-		this.inventory.setItem(45, IsCreator.createItemStack(Material.GOLD_INGOT, 1,
-				"" + ChatColor.GOLD + "Argent: " + ChatColor.GOLD));
+		updateMoneyDisplay(game.getWrapper(player));
 		showObjetPage(page);
 		player.openInventory(this.inventory);
 	}
@@ -81,8 +80,7 @@ public class PreparationInventory extends BasePersonalInventory {
 		if (28 * (page - 1) < objets.size()) {
 			byte index = 11;
 			for (ObjetsList obj : objets.subList(28 * (page - 1), objets.size())) {
-				this.inventory.setItem(index, IsCreator.createObjetItemStack(this.main, obj, 1,
-						new String[]{"" + ChatColor.GOLD + "Coût: " + ChatColor.GOLD}));
+				this.inventory.setItem(index, IsCreator.createObjetItemStack(this.main, obj, 1,ChatColor.GOLD+"Coût: "+obj.getCost()));
 				index = (byte) (index + 1);
 				if (index == 45)
 					break;
@@ -149,8 +147,7 @@ public class PreparationInventory extends BasePersonalInventory {
 									this.game.getWrapper(this.player)
 											.setMoney(this.game.getWrapper(this.player).getMoney()
 													+ obj.getObjetType().getCost());
-									this.inventory.setItem(45, IsCreator.createItemStack(Material.GOLD_INGOT, 1,
-											"" + ChatColor.GOLD + "Argent: " + ChatColor.GOLD));
+									updateMoneyDisplay(game.getWrapper(player));
 								}
 							}
 						}
@@ -209,8 +206,7 @@ public class PreparationInventory extends BasePersonalInventory {
 				}
 				if (wrapper.getMoney() >= objet.getCost()) {
 					wrapper.setMoney(wrapper.getMoney() - objet.getCost());
-					this.inventory.setItem(45, IsCreator.createItemStack(Material.GOLD_INGOT, 1,
-							"" + ChatColor.GOLD + "Argent: " + ChatColor.GOLD));
+					updateMoneyDisplay(wrapper);
 					ObjetsList.createObjet(this.main, objet, this.game, this.player, wrapper);
 				}
 			}
@@ -218,6 +214,10 @@ public class PreparationInventory extends BasePersonalInventory {
 			this.player.sendMessage((Component) MessageFormater.formatWithColorCodes('§',
 					DisplayTexts.getMessage("game_shouldBeUnready"), new MessageFormater[0]));
 		}
+	}
+	
+	private void updateMoneyDisplay(PlayerWrapper w) {
+		inventory.setItem(45, IsCreator.createItemStack(Material.GOLD_INGOT, 1,ChatColor.GOLD + "Argent: "+w.getMoney()));
 	}
 
 	@EventHandler

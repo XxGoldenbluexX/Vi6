@@ -95,8 +95,7 @@ public class PlayerWrapper {
 	public void updateScoreboard() {
 		Scoreboard sc = this.player.getScoreboard();
 		sc.resetScores(this.currentScoreboardName);
-		this.currentScoreboardName = (this.isReady ? READY_PREFIX : NOT_READY_PREFIX)
-				+ (this.isReady ? READY_PREFIX : NOT_READY_PREFIX) + this.team.getChatColor();
+		this.currentScoreboardName = (this.isReady ? READY_PREFIX : NOT_READY_PREFIX)+this.team.getChatColor()+player.getName();
 		sc.getObjective(DisplaySlot.SIDEBAR).getScore(this.currentScoreboardName).setScore(0);
 	}
 

@@ -168,11 +168,12 @@ public class Game implements Listener {
 	}
 
 	public int getNBT() {
-		if (this.nbtCompteur.size() > 1)
-			return ((Integer) this.nbtCompteur.remove(1)).intValue();
-		this.nbtCompteur.set(0, Integer.valueOf(((Integer) this.nbtCompteur.get(0)).intValue() + 1));
-		return ((Integer) this.nbtCompteur.get(0)).intValue();
-	}
+        if(nbtCompteur.size()>1) {
+            return nbtCompteur.remove(1);
+        }
+        nbtCompteur.set(0, nbtCompteur.get(0)+1);
+        return nbtCompteur.get(0);
+    }
 
 	public void addObjet(Objet obj) {
 		this.objetsList.add(obj);
@@ -378,21 +379,19 @@ public class Game implements Listener {
 			((Player) playerAndWrapper.getKey()).sendMessage((Component) MessageFormater.formatWithColorCodes('§',
 					DisplayTexts.getMessage("game_preparation_start"), new MessageFormater[0]));
 		}
-		this
-
-				.bossBarTicker = (new BukkitRunnable() {
-					int seconds = Game.DEFAULT_PREPARATION_TIME;
-
-					public void run() {
-						this.seconds--;
-						Game.this.bb.setProgress(this.seconds / Game.DEFAULT_PREPARATION_TIME);
-						Game.this.bb.setTitle("" + ChatColor.GOLD + "Temps restant" + ChatColor.GOLD + ": "
-								+ ChatColor.WHITE + ChatColor.AQUA + "m" + this.seconds / 60 + ":" + ChatColor.WHITE
-								+ ChatColor.AQUA + "s");
-						if (this.seconds == 0)
-							Game.this.enterInGamePhase();
-					}
-				}).runTaskTimer((Plugin) this.main, 0L, 20L);
+		bossBarTicker = new BukkitRunnable() {
+            int seconds = DEFAULT_PREPARATION_TIME;
+            @Override
+            public void run() {
+                seconds--;
+                bb.setProgress(seconds / (double)DEFAULT_PREPARATION_TIME);
+                bb.setTitle(ChatColor.GOLD+"Temps restant"+ChatColor.WHITE+": "+ChatColor.AQUA+seconds/60+"m"+ChatColor.WHITE+":"+
+                        ChatColor.AQUA+seconds%60+"s");
+                if(seconds==0) {
+                    enterInGamePhase();
+                }
+            }
+        }.runTaskTimer(main, 0, 20);
 		this
 
 				.gameTicker = (new BukkitRunnable() {
