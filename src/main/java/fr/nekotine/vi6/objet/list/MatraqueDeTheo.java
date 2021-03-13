@@ -1,88 +1,91 @@
 package fr.nekotine.vi6.objet.list;
 
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeModifier;
-import org.bukkit.attribute.AttributeModifier.Operation;
-import org.bukkit.entity.Player;
-import org.bukkit.event.block.Action;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.objet.utils.Objet;
+import fr.nekotine.vi6.wrappers.PlayerWrapper;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
+import org.bukkit.entity.Player;
+import org.bukkit.event.block.Action;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.ItemMeta;
 
 public class MatraqueDeTheo extends Objet {
 	
 	private static final ItemStack MATRAQUE = new ItemStack(Material.NETHERITE_SWORD);
-	static{
+
+	static {
 		ItemMeta meta = MATRAQUE.getItemMeta();
-		meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED,new AttributeModifier("pvp_1.8",1000,Operation.ADD_NUMBER));
-		meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE,new AttributeModifier("UltimateSwordDamages",2048,Operation.ADD_NUMBER));
-		meta.addAttributeModifier(Attribute.GENERIC_KNOCKBACK_RESISTANCE,new AttributeModifier("noKnockback",1,Operation.ADD_NUMBER));
-		meta.addAttributeModifier(Attribute.GENERIC_ATTACK_KNOCKBACK,new AttributeModifier("dealKnockback",3,Operation.ADD_NUMBER));
-		meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES,ItemFlag.HIDE_UNBREAKABLE);
+		meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED,
+				new AttributeModifier("pvp_1.8", 1000.0D, AttributeModifier.Operation.ADD_NUMBER));
+		meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE,
+				new AttributeModifier("UltimateSwordDamages", 2048.0D, AttributeModifier.Operation.ADD_NUMBER));
+		meta.addAttributeModifier(Attribute.GENERIC_KNOCKBACK_RESISTANCE,
+				new AttributeModifier("noKnockback", 1.0D, AttributeModifier.Operation.ADD_NUMBER));
+		meta.addAttributeModifier(Attribute.GENERIC_ATTACK_KNOCKBACK,
+				new AttributeModifier("dealKnockback", 3.0D, AttributeModifier.Operation.ADD_NUMBER));
+		meta.addItemFlags(new ItemFlag[]{ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE});
 		meta.setUnbreakable(true);
 		meta.displayName(Component.text("Matraque de théo").color(TextColor.color(255, 0, 0)));
 		MATRAQUE.setItemMeta(meta);
 	}
 
-	public MatraqueDeTheo(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Player player, Game game) {
-		super(main, objet, skin, MATRAQUE, game, player);
-		int slot = player.getInventory().first(Game.GUARD_SWORD);
-		if(slot>=0) {
-			player.getInventory().remove(itemStack);
-			player.getInventory().setItem(slot, itemStack);
+	public MatraqueDeTheo(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Game game, Player player,PlayerWrapper wrapper) {
+		super(main, objet, skin, game, player, wrapper);
+		consume();
+	}
+
+	public void setNewOwner(Player p, PlayerWrapper wrapper) {
+		super.setNewOwner(p, wrapper);
+		PlayerInventory inv = getOwner().getInventory();
+		int slot = inv.first(Game.GUARD_SWORD);
+		if (slot >= 0) {
+			inv.setItem(slot, MATRAQUE);
+		} else {
+			inv.addItem(MATRAQUE);
 		}
 	}
 
-	@Override
-	public void gameEnd() {
-	}
-
-	@Override
-	public void tick() {
-	}
-
-	@Override
-	public void leaveMap(Player holder) {
-	}
-
-	@Override
-	public void death(Player holder) {
-	}
-
-	@Override
-	public void sell(Player holder) {
-		int slot = holder.getInventory().first(itemStack);
-		if(slot==-1) {
-			holder.getInventory().addItem(Game.GUARD_SWORD);
-		}else {
-			holder.getInventory().setItem(slot,Game.GUARD_SWORD);
+	public void disable() {
+		super.disable();
+		PlayerInventory inv = getOwner().getInventory();
+		int slot = inv.first(MATRAQUE);
+		if (slot >= 0) {
+			inv.setItem(slot, Game.GUARD_SWORD);
+		} else {
+			inv.addItem(Game.GUARD_SWORD);
 		}
 	}
 
-	@Override
-	public void action(Action action, Player holder) {
+	public void drop() {
+		Location loc = getOwner().getLocation();
+		loc.getWorld().playSound(Sound.sound(Key.key("entity.evoker.prepare_wololo"), Sound.Source.VOICE, 1.0F, 1.2F),
+				loc.getX(), loc.getY(), loc.getZ());
 	}
 
-	@Override
-	public void drop(Player holder) {
-		Location loc = holder.getLocation();
-		loc.getWorld().playSound(Sound.sound(Key.key("entity.evoker.prepare_wololo"),Sound.Source.VOICE,1f,1.2f), loc.getX(), loc.getY(), loc.getZ());
-	}
-
-	@Override
 	public void cooldownEnded() {
 	}
 
+	public void tick() {
+	}
+
+	public void death() {
+	}
+
+	public void leaveMap() {
+	}
+
+	public void action(Action action) {
+	}
 }
