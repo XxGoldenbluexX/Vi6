@@ -230,8 +230,7 @@ public class PreparationInventory extends BasePersonalInventory {
 				obj.destroy();
 				this.game.getWrapper(this.player)
 						.setMoney(this.game.getWrapper(this.player).getMoney() + obj.getObjetType().getCost());
-				this.inventory.setItem(45, IsCreator.createItemStack(Material.GOLD_INGOT, 1,
-						"" + ChatColor.GOLD + "Argent: " + ChatColor.GOLD));
+				updateMoneyDisplay(game.getWrapper(player));
 			}
 		}
 	}

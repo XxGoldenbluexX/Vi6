@@ -63,11 +63,14 @@ public abstract class Objet implements Listener {
 
 	public abstract void drop();
 
+	public ItemStack getItem() {
+		return item;
+	}
+	
 	public void setItem(ItemStack item) {
 		this.item = item;
 		ItemMeta meta = this.item.getItemMeta();
-		meta.getPersistentDataContainer().set(new NamespacedKey(main, game.getName()),
-				PersistentDataType.INTEGER, game.getNBT());
+		meta.getPersistentDataContainer().set(new NamespacedKey(main, game.getName()+"ObjetNBT"),PersistentDataType.INTEGER, game.getNBT());
 		this.item.setItemMeta(meta);
 		updateItem();
 	}

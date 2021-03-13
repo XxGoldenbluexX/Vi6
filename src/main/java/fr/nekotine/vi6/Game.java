@@ -185,8 +185,8 @@ public class Game implements Listener {
 		} else {
 			this.objetsList.remove(obj);
 		}
-		this.nbtCompteur.add((Integer) obj.getDisplayedItem().getItemMeta().getPersistentDataContainer()
-				.get(new NamespacedKey((Plugin) this.main, getName() + "ObjetNBT"), PersistentDataType.INTEGER));
+		this.nbtCompteur.add((Integer) obj.getItem().getItemMeta().getPersistentDataContainer()
+				.get(new NamespacedKey(main, getName()+"ObjetNBT"), PersistentDataType.INTEGER));
 		Collections.sort(this.nbtCompteur.subList(1, this.nbtCompteur.size()));
 	}
 
@@ -392,13 +392,11 @@ public class Game implements Listener {
                 }
             }
         }.runTaskTimer(main, 0, 20);
-		this
-
-				.gameTicker = (new BukkitRunnable() {
-					public void run() {
-						Game.this.ingameTick();
-					}
-				}).runTaskTimer((Plugin) this.main, 0L, 1L);
+        gameTicker = (new BukkitRunnable() {
+				public void run() {
+					Game.this.ingameTick();
+				}
+			}).runTaskTimer((Plugin) this.main, 0L, 1L);
 		Bukkit.getPluginManager().callEvent(new GameEnterPreparationPhaseEvent(this));
 		return true;
 	}
