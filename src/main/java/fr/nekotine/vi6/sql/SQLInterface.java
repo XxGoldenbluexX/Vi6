@@ -37,7 +37,7 @@ public class SQLInterface {
 				Statement sttmt = c.createStatement();
 				String sql;
 				sql = "CREATE TABLE Partie("
-						+ "Id_Partie INT AUTO_INCREMENT,"
+						+ "Id_Partie INT,"
 						+ "Date_Partie DATE NOT NULL,"
 						+ "Duree TIME,"
 						+ "Argent INT NOT NULL,"
@@ -47,7 +47,7 @@ public class SQLInterface {
 				sttmt.executeUpdate(sql);
 				
 				sql = "CREATE TABLE PartieJoueur("
-						+ "Id_PartieJoueur INT AUTO_INCREMENT,"
+						+ "Id_PartieJoueur INT,"
 						+ "UUID_Tueur CHAR(36),"
 						+ "Nom_Salle_Mort VARCHAR(50),"
 						+ "Id_Partie INT NOT NULL,"
