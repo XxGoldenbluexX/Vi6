@@ -1,5 +1,15 @@
 package fr.nekotine.vi6.objet.list;
 
+import com.destroystokyo.paper.event.player.PlayerJumpEvent;
+import fr.nekotine.vi6.Game;
+import fr.nekotine.vi6.Vi6Main;
+import fr.nekotine.vi6.objet.ObjetsList;
+import fr.nekotine.vi6.objet.ObjetsSkins;
+import fr.nekotine.vi6.objet.utils.Objet;
+import fr.nekotine.vi6.utils.IsCreator;
+import fr.nekotine.vi6.wrappers.PlayerWrapper;
+import net.kyori.adventure.key.Key;
+import net.kyori.adventure.sound.Sound;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -7,88 +17,79 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.inventory.ItemStack;
-
-import com.destroystokyo.paper.event.player.PlayerJumpEvent;
-
-import fr.nekotine.vi6.Game;
-import fr.nekotine.vi6.Vi6Main;
-import fr.nekotine.vi6.objet.ObjetsList;
-import fr.nekotine.vi6.objet.ObjetsSkins;
-import fr.nekotine.vi6.objet.utils.Objet;
-import fr.nekotine.vi6.utils.IsCreator;
-import net.kyori.adventure.key.Key;
-import net.kyori.adventure.sound.Sound;
+import org.bukkit.inventory.PlayerInventory;
 
 public class DoubleSaut extends Objet {
-	
-	private final Player player;
-	private final static ItemStack jumpBoots = new ItemStack(Material.GOLDEN_BOOTS);
-	
-	private boolean canJump=false;
-	
-	public DoubleSaut(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Player player, Game game) {
-		super(main, objet, skin, IsCreator.createObjetItemStack(main,objet,1), game, player);
-		this.player = player;
-		player.setAllowFlight(true);
-		player.getInventory().setBoots(jumpBoots);
+	private static final ItemStack JUMP_BOOTS = IsCreator.createItemStack(Material.GOLDEN_BOOTS, 1,
+			ObjetsList.DOUBLE_SAUT.getInShopName(), ObjetsList.DOUBLE_SAUT.getInShopLore());
+
+	private boolean canJump = false;
+
+	public DoubleSaut(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Game game, Player player,
+			PlayerWrapper wrapper) {
+		super(main, objet, skin, game, player, wrapper);
 	}
 
-	@Override
-	public void gameEnd() {
+	public void setNewOwner(Player p, PlayerWrapper wrapper) {
+		super.setNewOwner(p, wrapper);
+		getOwner().getInventory().setBoots(JUMP_BOOTS);
 	}
 
-	@Override
+	public void disable() {
+		super.disable();
+		PlayerInventory inv = getOwner().getInventory();
+		GameMode gm = getOwner().getGameMode();
+		if (gm==GameMode.SURVIVAL || gm==GameMode.ADVENTURE) getOwner().setAllowFlight(false);
+		if (JUMP_BOOTS.isSimilar(inv.getBoots()))
+			inv.setBoots(null);
+	}
+
 	public void tick() {
-		if (onGround() && player.getGameMode()==GameMode.ADVENTURE) {canJump=true;player.setAllowFlight(true);}
+		if (onGround() && getOwner().getGameMode() == GameMode.ADVENTURE) {
+			canJump = true;
+			getOwner().setAllowFlight(true);
+		}
 	}
 
-	@Override
 	public void cooldownEnded() {
 	}
 
-	@Override
-	public void leaveMap(Player holder) {
+	public void leaveMap() {
+		disable();
 	}
 
-	@Override
-	public void death(Player holder) {
-		player.getInventory().remove(jumpBoots);
+	public void death() {
+		disable();
 	}
 
-	@Override
-	public void sell(Player holder) {
-		player.getInventory().remove(jumpBoots);
+	public void action(Action action) {
 	}
 
-	@Override
-	public void action(Action action, Player holder) {
+	public void drop() {
 	}
 
-	@Override
-	public void drop(Player holder) {
-	}
-	
 	@EventHandler
 	public void onPlayerJump(PlayerJumpEvent event) {
-		if (event.getPlayer().equals(player)) player.setAllowFlight(true);
+		if (event.getPlayer().equals(getOwner()))
+			getOwner().setAllowFlight(true);
 	}
-	
+
 	@EventHandler
 	public void tryFly(PlayerToggleFlightEvent event) {
-		if (event.getPlayer().equals(player) && player.getGameMode()==GameMode.ADVENTURE) {
+		if (event.getPlayer().equals(getOwner()) && getOwner().getGameMode() == GameMode.ADVENTURE) {
 			event.setCancelled(true);
 			if (canJump) {
-				player.setVelocity(player.getVelocity().setY(0.5));
-				player.playSound(Sound.sound(Key.key("item.firecharge.use"),Sound.Source.AMBIENT,0.3f, 1.5f));
-				player.playSound(Sound.sound(Key.key("item.hoe.till"),Sound.Source.AMBIENT,1f, 0.1f));
-				canJump=false;
-				player.setAllowFlight(false);
+				getOwner().setVelocity(getOwner().getVelocity().setY(0.5D));
+				getOwner().playSound(Sound.sound(Key.key("item.firecharge.use"), Sound.Source.AMBIENT, 0.3F, 1.5F));
+				getOwner().playSound(Sound.sound(Key.key("item.hoe.till"), Sound.Source.AMBIENT, 1.0F, 0.1F));
+				canJump = false;
+				getOwner().setAllowFlight(false);
 			}
 		}
 	}
-	
-	private boolean onGround() {
-		return (!player.isFlying() && player.getLocation().subtract(0, 0.1, 0).getBlock().getType().isSolid());
-	}
 
+	private boolean onGround() {
+		return (!getOwner().isFlying()
+				&& getOwner().getLocation().subtract(0.0D, 0.1D, 0.0D).getBlock().getType().isSolid());
+	}
 }
