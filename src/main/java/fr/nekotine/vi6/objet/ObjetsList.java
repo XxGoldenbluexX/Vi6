@@ -11,18 +11,7 @@ import org.bukkit.entity.Player;
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.enums.Team;
-import fr.nekotine.vi6.objet.list.Barricade;
-import fr.nekotine.vi6.objet.list.Bottes7Lieues;
-import fr.nekotine.vi6.objet.list.BuissonFurtif;
-import fr.nekotine.vi6.objet.list.Cactus;
-import fr.nekotine.vi6.objet.list.ChampDeForce;
-import fr.nekotine.vi6.objet.list.DoubleSaut;
-import fr.nekotine.vi6.objet.list.Invisneak;
-import fr.nekotine.vi6.objet.list.Lanterne;
-import fr.nekotine.vi6.objet.list.MatraqueDeTheo;
-import fr.nekotine.vi6.objet.list.Ombre;
-import fr.nekotine.vi6.objet.list.Surcharge;
-import fr.nekotine.vi6.objet.list.Teleporteur;
+import fr.nekotine.vi6.objet.list.*;
 import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 
@@ -68,8 +57,8 @@ public enum ObjetsList {
 			ChatColor.GREEN+"Buisson Furtif",Material.OAK_LEAVES,ChatColor.LIGHT_PURPLE+"Devenez invisible et insondable dans les buissons."),
 	DOUBLE_SAUT(DoubleSaut.class,Team.VOLEUR,100,1,
 			ChatColor.YELLOW+"Bottes de propultion",Material.GOLDEN_BOOTS,ChatColor.LIGHT_PURPLE+"Vous pouvez effectuer un double saut."),
-	BAIN_DE_FUMEE(DoubleSaut.class,Team.VOLEUR,100,1,
-			ChatColor.YELLOW+"Bottes de propultion",Material.GOLDEN_BOOTS,ChatColor.LIGHT_PURPLE+"Vous pouvez effectuer un double saut."),
+	BAIN_DE_FUMEE(BainDeFumee.class,Team.VOLEUR,100,1,
+			ChatColor.GRAY+"Bain de fumée",Material.FIREWORK_STAR,ChatColor.LIGHT_PURPLE+"Vous pouvez faire une flaque de fumé."),
 	BARRICADE(Barricade.class,Team.GARDE,0,1,
 			ChatColor.DARK_PURPLE+"Barricade",Material.BRICKS,ChatColor.LIGHT_PURPLE+"Vous pouvez boucher un passage avec."),
 	TELEPORTEUR(Teleporteur.class,Team.GARDE,100,0,
