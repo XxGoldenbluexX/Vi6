@@ -1,6 +1,5 @@
 package fr.nekotine.vi6.objet.utils;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -14,196 +13,240 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
-import fr.nekotine.vi6.enums.GameState;
+import fr.nekotine.vi6.enums.PlayerState;
 import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.events.GameEndEvent;
 import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.utils.IsCreator;
+import fr.nekotine.vi6.wrappers.PlayerWrapper;
 import net.md_5.bungee.api.ChatColor;
 
-public abstract class Objet implements Listener{
-	
-	protected final ObjetsList objet;
-	protected final ObjetsSkins skin;
-	protected final Game game;
-	protected ItemStack itemStack;
-	protected boolean onCooldown = false;
-	protected int cooldownTicksLeft=0;
+public abstract class Objet implements Listener {
+	private final ObjetsList objet;
+	private final ObjetsSkins skin;
+	private final Game game;
+	private Player owner;
+	private PlayerWrapper ownerWrapper;
+	private boolean onCooldown = false;
+	private int cooldownTicksLeft = 0;
+	private ItemStack item;
 	private ItemStack displayedItem;
 	private PlayerDropItemEvent dropE;
-	private Vi6Main main;
-	
-	public Objet(Vi6Main main, ObjetsList objet, ObjetsSkins skin, ItemStack itemStack, Game game, Player player) {
+	private final Vi6Main main;
+	private boolean tickable = false;
+
+	public Objet(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Game game, Player player, PlayerWrapper wrapper) {
 		this.objet = objet;
-		this.skin=skin;
+		this.skin = skin;
 		this.game = game;
-		this.itemStack = itemStack;
-		this.main=main;
-		displayedItem=itemStack;
-		ItemMeta meta = displayedItem.getItemMeta();
-		meta.getPersistentDataContainer().set(new NamespacedKey(main, game.getName()+"ObjetNBT"), PersistentDataType.INTEGER, game.getNBT());
-		displayedItem.setItemMeta(meta);
-		player.getInventory().addItem(displayedItem);
-		Bukkit.getPluginManager().registerEvents(this, main);
+		this.main = main;
+		setNewOwner(player, wrapper);
+		setItem(IsCreator.createObjetItemStack(main, objet, 1));
 	}
-	
-	public abstract void gameEnd();
+
 	public abstract void tick();
+
 	public abstract void cooldownEnded();
-	public abstract void leaveMap(Player holder);
-	public abstract void death(Player holder);
-	public abstract void sell(Player holder);
-	public abstract void action(Action action, Player holder);
-	public abstract void drop(Player holder);
+
+	public abstract void death();
+
+	public abstract void leaveMap();
+
+	public abstract void action(Action var1);
+
+	public abstract void drop();
+
+	public void setItem(ItemStack item) {
+		this.item = item;
+		ItemMeta meta = this.item.getItemMeta();
+		meta.getPersistentDataContainer().set(new NamespacedKey(main, game.getName()),
+				PersistentDataType.INTEGER, game.getNBT());
+		this.item.setItemMeta(meta);
+		updateItem();
+	}
 
 	@EventHandler
 	public void onGameEnd(GameEndEvent e) {
-		if(e.getGame().equals(game)) {
-			gameEnd();
-			for(Player player : game.getPlayerList().keySet()) {
-				player.getInventory().removeItem(displayedItem);
-			}
-			game.removeObjet(this);
-			HandlerList.unregisterAll(this);
+		if (e.getGame().equals(game)) {
+			disable();
 		}
-	}
-	@EventHandler
-	public void onPlayerDeath(PlayerDeathEvent e) {
-		if(e.getEntity().getInventory().contains(displayedItem)) {
-			death(e.getEntity());
-			e.getEntity().getInventory().removeItem(displayedItem);
-		}
-	}
-	@EventHandler
-	public void onPlayerInteract(PlayerInteractEvent e) {
-		if(e.getItem()!=null && e.getItem().isSimilar(displayedItem)) {
-			if(!onCooldown) {
-				if(game.getPlayerTeam(e.getPlayer())==Team.VOLEUR){
-					if(game.getState()==GameState.Ingame) {
-						action(e.getAction(),e.getPlayer());
-					}
-				}else {
-					action(e.getAction(),e.getPlayer());
-				}
-			}
-		}
-	}
-	@EventHandler
-	public void onPlayerDrop(PlayerDropItemEvent e) {
-		if(e.getItemDrop().getItemStack().isSimilar(displayedItem)) {
-			e.setCancelled(true);
-			if(!onCooldown) {
-				if(game.getPlayerTeam(e.getPlayer())==Team.VOLEUR){
-					if(game.getState()==GameState.Ingame) {
-						dropE=e;
-						drop(e.getPlayer());
-						dropE=null;
-					}
-				}else {
-					dropE=e;
-					drop(e.getPlayer());//
-					dropE=null;
-				}
-			}
-		}
-	}
-	@EventHandler
-	public void inventoryClick(InventoryClickEvent e) {
-		if(e.getCurrentItem()!=null && e.getCurrentItem().isSimilar(displayedItem)) {
-			if(onCooldown || e.getWhoClicked().getOpenInventory().getType()!=InventoryType.CRAFTING) e.setCancelled(true);
-		}
-	}
-	public void vendre(Player player) {
-		sell(player);
-		player.getInventory().removeItem(displayedItem);
-		game.removeObjet(this);
-		HandlerList.unregisterAll(this);
-	}
-	
-	public void consume(Player player) {
-		if (dropE!=null) {dropE.getItemDrop().remove();dropE.setCancelled(false);}
-		player.getInventory().removeItem(displayedItem);
-		HandlerList.unregisterAll(this);
+
 	}
 
-	public ObjetsList getObjet() {
+	@EventHandler
+	public void onPlayerDeath(PlayerDeathEvent e) {
+		if (e.getEntity().equals(owner)) {
+			consume();
+			death();
+		}
+
+	}
+
+	@EventHandler
+	public void onPlayerInteract(PlayerInteractEvent e) {
+		if (!onCooldown && e.getPlayer().equals(owner) && e.getItem() != null
+				&& e.getItem().isSimilar(displayedItem)) {
+			if (ownerWrapper.getTeam() == Team.GARDE) {
+				if (ownerWrapper.getState() == PlayerState.PREPARATION
+						|| ownerWrapper.getState() == PlayerState.INSIDE) {
+					action(e.getAction());
+				}
+			} else if (ownerWrapper.getState() == PlayerState.INSIDE) {
+				action(e.getAction());
+			}
+		}
+
+	}
+
+	@EventHandler
+   public void onPlayerDrop(PlayerDropItemEvent e) {
+      if (e.getPlayer().equals(owner) && e.getItemDrop().getItemStack().isSimilar(displayedItem)) {
+         switch(ownerWrapper.getState()) {
+         case INSIDE:
+            e.setCancelled(true);
+            if (!onCooldown) {
+               if (ownerWrapper.getTeam() == Team.GARDE) {
+                  dropE = e;
+                  drop();
+                  dropE = null;
+               } else {
+                  dropE = e;
+                  drop();
+                  dropE = null;
+               }
+            }
+            break;
+         case LEAVED:
+            e.setCancelled(true);
+            break;
+         default:
+            disable();
+         }
+      }
+
+   }
+
+	@EventHandler
+	public void inventoryClick(InventoryClickEvent e) {
+		if (e.getCurrentItem() != null && e.getCurrentItem().isSimilar(displayedItem)
+				&& (onCooldown || e.getWhoClicked().getOpenInventory().getType() != InventoryType.CRAFTING)) {
+			e.setCancelled(true);
+		}
+
+	}
+
+	public void disable() {
+		HandlerList.unregisterAll(this);
+		tickable = false;
+	}
+
+	public void destroy() {
+		consume();
+		disable();
+		game.removeObjet(this);
+	}
+
+	public void setNewOwner(Player p, PlayerWrapper wrapper) {
+		owner = p;
+		ownerWrapper = wrapper;
+		tickable = true;
+		main.getPmanager().registerEvents(this, main);
+		game.addObjet(this);
+	}
+
+	public void consume() {
+		if (dropE != null) {
+			dropE.getItemDrop().remove();
+			dropE.setCancelled(false);
+		}
+		if (displayedItem != null) {
+			owner.getInventory().removeItem(displayedItem);
+		}
+
+	}
+
+	public void setCooldown(int ticks) {
+		cooldownTicksLeft = ticks;
+		onCooldown = true;
+	}
+
+	public void ticks() {
+		tick();
+		if (onCooldown) {
+			--cooldownTicksLeft;
+			if (cooldownTicksLeft <= 0) {
+				onCooldown = false;
+				cooldownEnded();
+			}
+
+			updateItem();
+		}
+
+	}
+
+	private void updateItem() {
+		ItemStack current = displayedItem;
+		if (onCooldown) {
+			displayedItem = IsCreator.createItemStack(Material.BLACK_STAINED_GLASS_PANE,1,
+					ChatColor.RED+objet.getInShopName()+Math.round(cooldownTicksLeft / 20.0D * 10.0D) / 10.0D);
+		} else {
+			displayedItem = item;
+		}
+
+		PlayerInventory pinv = owner.getInventory();
+		int slot = pinv.first(current);
+		if (slot >= 0) {
+			pinv.setItem(slot, displayedItem);
+		} else {
+			pinv.addItem(new ItemStack[]{displayedItem});
+		}
+
+	}
+
+	public ObjetsList getObjetType() {
 		return objet;
 	}
 
 	public ObjetsSkins getSkin() {
 		return skin;
 	}
-	public ItemStack getItemStack() {
-		return itemStack;
+
+	public Game getGame() {
+		return game;
 	}
+
+	public Player getOwner() {
+		return owner;
+	}
+
+	public PlayerWrapper getOwnerWrapper() {
+		return ownerWrapper;
+	}
+
+	public Vi6Main getMain() {
+		return main;
+	}
+
+	public boolean isOnCooldown() {
+		return onCooldown;
+	}
+
+	public int getCooldownInTick() {
+		return cooldownTicksLeft;
+	}
+
 	public ItemStack getDisplayedItem() {
 		return displayedItem;
 	}
-	public void setCooldown(int ticks) {
-		cooldownTicksLeft=ticks;
-		onCooldown=true;
-	}
-	public void ticks() {
-		if(onCooldown) {
-			cooldownTicksLeft--;
-			if(cooldownTicksLeft<=0) {
-				onCooldown=false;
-				updateItem(itemStack);
-				cooldownEnded();
-			}else {
-				updateItem(IsCreator.createItemStack(Material.BLACK_STAINED_GLASS_PANE, Math.max((cooldownTicksLeft/20)%60,1),
-						ChatColor.RED+objet.getInShopName()+": "+Math.round(cooldownTicksLeft/20d*10)/10d+"s", ""));
-			}
-		}else {
-			tick();
-		}
-	}
-	public void updateItem(ItemStack itm) {
-		for(Player p : game.getPlayerList().keySet()) {
-			if(displayedItem.isSimilar(p.getInventory().getItemInOffHand())) {
-				p.getInventory().setItemInOffHand(itm);
-				break;
-			}else {
-				int slot = p.getInventory().first(displayedItem);
-				if(slot>=0) {
-					p.getInventory().setItem(slot, itm);
-					break;
-				}
-			}
-		}
-		displayedItem=itm;
-	}
-	public void updateItem() {
-		int nbt = displayedItem.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(main, game.getName()+"ObjetNBT"), PersistentDataType.INTEGER);
-		ItemStack displayedItemClone=displayedItem.clone();
-		displayedItem=itemStack.clone();
-		ItemMeta meta = displayedItem.getItemMeta();
-		meta.getPersistentDataContainer().set(new NamespacedKey(main, game.getName()+"ObjetNBT"), PersistentDataType.INTEGER, nbt);
-		displayedItem.setItemMeta(meta);
-		for(Player p : game.getPlayerList().keySet()) {
-			if(displayedItemClone.isSimilar(p.getInventory().getItemInOffHand())) {
-				p.getInventory().setItemInOffHand(displayedItem);
-				break;
-			}else {
-				int slot = p.getInventory().first(displayedItemClone);
-				if(slot>=0) {
-					p.getInventory().setItem(slot, displayedItem);
-					break;
-				}
-			}
-		}
-	}
-	public void cancelBuy(Player player) {
-		player.getInventory().removeItem(displayedItem);
-		game.removeObjet(this);
-		game.getWrapper(player).setMoney(game.getWrapper(player).getMoney()+objet.getCost());
-		HandlerList.unregisterAll(this);
+
+	public boolean isTickable() {
+		return tickable;
 	}
 }
-	

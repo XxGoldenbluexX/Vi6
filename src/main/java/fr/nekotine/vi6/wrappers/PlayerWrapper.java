@@ -1,7 +1,6 @@
 package fr.nekotine.vi6.wrappers;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -20,99 +19,102 @@ import fr.nekotine.vi6.statuseffects.StatusEffect;
 
 public class PlayerWrapper {
 	
-	private static final String READY_PREFIX=ChatColor.GREEN+"☑ ";
-	private static final String NOT_READY_PREFIX=ChatColor.RED+"☐ ";
-	
-	private String currentScoreboardName="";
+	private static final String READY_PREFIX = "" + ChatColor.GREEN + "☑ ";
+	private static final String NOT_READY_PREFIX = "" + ChatColor.RED + "☐ ";
+	private String currentScoreboardName = "";
 	private Team team = Team.GARDE;
-	private boolean isReady=false;
-	private PlayerState state=PlayerState.WAITING;
+	private boolean isReady = false;
+	private PlayerState state = PlayerState.WAITING;
 	private String currentSalle;
 	private int money;
 	private final Player player;
-	private final ArrayList<StatusEffect> statusEffects = new ArrayList<StatusEffect>();
+	private final ArrayList<StatusEffect> statusEffects = new ArrayList<>();
 	private final ArrayList<Artefact> stealedObjects = new ArrayList<>();
 	private Location thiefSpawnPoint;
 	private final Game game;
 	private boolean canCapture = false;
 	private boolean canEscape = false;
 	private ArrayList<ObjetsSkins> selectedSkins = new ArrayList<>();
+
 	public PlayerWrapper(Game game, Player player) {
-		this.game=game;
+		this.game = game;
 		this.player = player;
 		updateScoreboard();
 	}
-	
+
 	public void destroy() {
 		clearStatusEffects();
-		player.getScoreboard().resetScores(currentScoreboardName);
+		this.player.getScoreboard().resetScores(this.currentScoreboardName);
 	}
 
 	public Team getTeam() {
-		return team;
+		return this.team;
 	}
-	
+
 	public void setMoney(int money) {
-		this.money=money;
+		this.money = money;
 	}
-	
+
 	public int getMoney() {
-		return money;
+		return this.money;
 	}
-	
+
 	public boolean isSkinsSelected(ObjetsSkins skin) {
-		return selectedSkins.contains(skin);
+		return this.selectedSkins.contains(skin);
 	}
-	
+
 	public ObjetsSkins getSelectedSkin(ObjetsList obj) {
-		for(ObjetsSkins skin : selectedSkins) {
-			if(skin.getObjet()==obj) return skin;
+		for (ObjetsSkins skin : this.selectedSkins) {
+			if (skin.getObjet() == obj)
+				return skin;
 		}
 		return null;
 	}
-	
+
 	public void clearAllSkinsForObjet(ObjetsList obj) {
-		for(ObjetsSkins skin : selectedSkins) {
-			if(skin.getObjet()==obj) selectedSkins.remove(skin);
+		for (ObjetsSkins skin : this.selectedSkins) {
+			if (skin.getObjet() == obj)
+				this.selectedSkins.remove(skin);
 		}
 	}
-	
+
 	public boolean flipSelected(ObjetsSkins skin) {
-		if(selectedSkins.contains(skin)) {
-			selectedSkins.remove(skin);
+		if (this.selectedSkins.contains(skin)) {
+			this.selectedSkins.remove(skin);
 			return false;
 		}
-		selectedSkins.add(skin);
+		this.selectedSkins.add(skin);
 		return true;
 	}
-	
+
 	public void changeTeam(Team team) {
 		this.team = team;
 		updateScoreboard();
 	}
-	
+
 	public void updateScoreboard() {
-		Scoreboard sc = player.getScoreboard();
-		sc.resetScores(currentScoreboardName);
-		currentScoreboardName=(isReady?READY_PREFIX:NOT_READY_PREFIX)+team.getChatColor()+player.getName();
-		sc.getObjective(DisplaySlot.SIDEBAR).getScore(currentScoreboardName).setScore(0);
+		Scoreboard sc = this.player.getScoreboard();
+		sc.resetScores(this.currentScoreboardName);
+		this.currentScoreboardName = (this.isReady ? READY_PREFIX : NOT_READY_PREFIX)
+				+ (this.isReady ? READY_PREFIX : NOT_READY_PREFIX) + this.team.getChatColor();
+		sc.getObjective(DisplaySlot.SIDEBAR).getScore(this.currentScoreboardName).setScore(0);
 	}
 
 	public Player getPlayer() {
-		return player;
-	};
-	
-	public boolean isReady() {
-		return isReady;
+		return this.player;
 	}
-	
+
+	public boolean isReady() {
+		return this.isReady;
+	}
+
 	public void setReady(boolean ready) {
-		isReady=ready;
+		this.isReady = ready;
 		updateScoreboard();
 	}
 
 	public String getCurrentSalle() {
-		return currentSalle;
+		return this.currentSalle;
 	}
 
 	public void setCurrentSalle(String currentSalle) {
@@ -120,7 +122,7 @@ public class PlayerWrapper {
 	}
 
 	public PlayerState getState() {
-		return state;
+		return this.state;
 	}
 
 	public void setState(PlayerState state) {
@@ -128,11 +130,11 @@ public class PlayerWrapper {
 	}
 
 	public ArrayList<Artefact> getStealedArtefactList() {
-		return stealedObjects;
+		return this.stealedObjects;
 	}
 
 	public Location getThiefSpawnPoint() {
-		return thiefSpawnPoint;
+		return this.thiefSpawnPoint;
 	}
 
 	public void setThiefSpawnPoint(Location thiefSpawnPoint) {
@@ -140,11 +142,11 @@ public class PlayerWrapper {
 	}
 
 	public Game getGame() {
-		return game;
+		return this.game;
 	}
 
 	public boolean isCanCapture() {
-		return canCapture;
+		return this.canCapture;
 	}
 
 	public void setCanCapture(boolean canCapture) {
@@ -152,73 +154,75 @@ public class PlayerWrapper {
 	}
 
 	public boolean isCanEscape() {
-		return canEscape;
+		return this.canEscape;
 	}
 
 	public void setCanEscape(boolean canEscape) {
 		this.canEscape = canEscape;
 	}
-	
-	//STATUS EFFECTS-------------
-	
+
 	public void clearStatusEffect(Effects e) {
-		Iterator<StatusEffect> ite = statusEffects.iterator();
-		while (ite.hasNext()) {
-			StatusEffect ef = ite.next();
-			if (ef.getEffect()==e) {
+		ArrayList<StatusEffect> eff = new ArrayList<>(this.statusEffects);
+		for (StatusEffect ef : eff) {
+			if (ef.getEffect() == e)
 				ef.remove();
-			}
 		}
 	}
-	
+
 	public void clearStatusEffects() {
-		statusEffects.stream().forEach(e->e.remove());
+		ArrayList<StatusEffect> temp = new ArrayList<>(this.statusEffects);
+		for (StatusEffect e : temp)
+			e.remove();
 	}
-	
+
 	public boolean haveEffect(Effects effect) {
-		if (Effects.isCounterable(effect)) {
-			if (haveEffect(Effects.getCounter(effect))) return false;
-		}
-		for (StatusEffect e : statusEffects) {
-			if (e.getEffect()==effect) return true;
+		if (Effects.isCounterable(effect) && haveEffect(Effects.getCounter(effect)))
+			return false;
+		for (StatusEffect e : this.statusEffects) {
+			if (e.getEffect() == effect)
+				return true;
 		}
 		return false;
 	}
-	
+
+	public boolean haveStatusEffect(StatusEffect eff) {
+		return this.statusEffects.contains(eff);
+	}
+
 	public void removeStatusEffect(StatusEffect eff) {
-		statusEffects.remove(eff);
+		this.statusEffects.remove(eff);
 		updateRemoveEffect(eff.getEffect());
 	}
-	
+
 	public void addStatusEffect(StatusEffect eff) {
 		updateAddEffect(eff.getEffect());
-		statusEffects.add(eff);
+		this.statusEffects.add(eff);
+		eff.setWrapper(this);
 	}
-	
-	public void updateRemoveEffect(Effects e) {
-		if (haveEffect(e)) return;
-		if (Effects.isCounterable(e) && haveEffect(Effects.getCounter(e)))return;
-		e.disable(player, this);
-		if (Effects.isCountering(e)){
+
+	private void updateRemoveEffect(Effects e) {
+		if (haveEffect(e))
+			return;
+		if (Effects.isCounterable(e) && haveEffect(Effects.getCounter(e)))
+			return;
+		e.disable(this.player, this);
+		if (Effects.isCountering(e)) {
 			Effects countered = Effects.getCountered(e);
-			if (haveEffect(countered)) {
-				countered.enable(player, this);
-			}
+			if (haveEffect(countered))
+				countered.enable(this.player, this);
 		}
 	}
-	
-	public void updateAddEffect(Effects e) {
-		if (haveEffect(e)) return;
-		if (Effects.isCounterable(e) && haveEffect(Effects.getCounter(e))) return;
-		e.enable(player, this);
-		if (Effects.isCountering(e)){
+
+	private void updateAddEffect(Effects e) {
+		if (haveEffect(e))
+			return;
+		if (Effects.isCounterable(e) && haveEffect(Effects.getCounter(e)))
+			return;
+		e.enable(this.player, this);
+		if (Effects.isCountering(e)) {
 			Effects countered = Effects.getCountered(e);
-			if (haveEffect(countered)) {
-				countered.disable(player, this);
-			}
+			if (haveEffect(countered))
+				countered.disable(this.player, this);
 		}
 	}
-	
-	//---------------------------
-	
 }
