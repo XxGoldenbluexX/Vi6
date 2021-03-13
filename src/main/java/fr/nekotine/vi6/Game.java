@@ -1,67 +1,12 @@
 package fr.nekotine.vi6;
 
-import java.lang.reflect.InvocationTargetException;
-import java.sql.Date;
-import java.sql.Time;
-import java.text.ParseException;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.UUID;
-
-import javax.annotation.Nullable;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Sound;
-import org.bukkit.SoundCategory;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeModifier;
-import org.bukkit.attribute.AttributeModifier.Operation;
-import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarStyle;
-import org.bukkit.boss.BossBar;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryType.SlotType;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Scoreboard;
-
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.EnumWrappers;
-import com.comphenix.protocol.wrappers.EnumWrappers.ItemSlot;
 import com.comphenix.protocol.wrappers.Pair;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
-import com.comphenix.protocol.wrappers.WrappedDataWatcher.Registry;
-import com.comphenix.protocol.wrappers.WrappedDataWatcher.Serializer;
-
 import fr.nekotine.vi6.enums.GameState;
 import fr.nekotine.vi6.enums.PlayerState;
 import fr.nekotine.vi6.enums.Team;
@@ -73,7 +18,6 @@ import fr.nekotine.vi6.events.MapChangeEvent;
 import fr.nekotine.vi6.events.MoneyChangedEvent;
 import fr.nekotine.vi6.events.PlayerJoinGameEvent;
 import fr.nekotine.vi6.events.PlayerLeaveGameEvent;
-import fr.nekotine.vi6.events.PlayerStealEvent;
 import fr.nekotine.vi6.interfaces.inventories.GameMoneyAnvil;
 import fr.nekotine.vi6.interfaces.inventories.GameSettingsInventory;
 import fr.nekotine.vi6.interfaces.inventories.MapSelectionInventory;
@@ -81,6 +25,7 @@ import fr.nekotine.vi6.interfaces.items.OpenPreparationItem;
 import fr.nekotine.vi6.interfaces.items.OpenWaitingItem;
 import fr.nekotine.vi6.map.Artefact;
 import fr.nekotine.vi6.map.Carte;
+import fr.nekotine.vi6.map.SpawnVoleur;
 import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.sql.PlayerGame;
 import fr.nekotine.vi6.sql.SQLInterface;
@@ -88,18 +33,72 @@ import fr.nekotine.vi6.statuseffects.ItemHider;
 import fr.nekotine.vi6.utils.MessageFormater;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 import fr.nekotine.vi6.yml.DisplayTexts;
+import java.lang.reflect.InvocationTargetException;
+import java.sql.Date;
+import java.sql.Time;
+import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import javax.annotation.Nullable;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.title.Title;
-import net.kyori.adventure.title.Title.Times;
 import net.kyori.adventure.util.Ticks;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityPickupItemEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Scoreboard;
 import ru.xezard.glow.data.glow.Glow;
 
-public class Game implements Listener{
+public class Game implements Listener {
+	
 	private static int DEFAULT_RANKED_MONEY;
 	private static int DEFAULT_PREPARATION_TIME;
 	private static int DEFAULT_CAPTURE_DELAY;
+	public static final ItemStack GUARD_SWORD = new ItemStack(Material.DIAMOND_SWORD);
+	
 	private final Vi6Main main;
 	private int idPartie;
 	private String startTime;
@@ -107,506 +106,538 @@ public class Game implements Listener{
 	private final Objective scoreboardSidebar;
 	private final org.bukkit.scoreboard.Team noNameTag;
 	private final String name;
-	private boolean isRanked=true;
-	private boolean canCapture=true;
-	private int canCaptureRest=0;
+	private boolean isRanked = true;
+	private boolean canCapture = true;
+	private int canCaptureRest = 0;
 	private GameState state = GameState.Waiting;
-	private final HashMap<Player,PlayerWrapper> playerList = new HashMap<Player,PlayerWrapper>();
-	
+	private final HashMap<Player, PlayerWrapper> playerList = new HashMap<>();
+	private final ArrayList<Objet> objToRemove = new ArrayList<>();
 	private String mapName;
 	private Carte map;
 	private int money;
-	
 	private MapSelectionInventory mapInterface;
 	private GameSettingsInventory settingsInterface;
-	
-	private Glow guardGlow = Glow.builder().animatedColor(ChatColor.BLUE).name("guardGlow").build();
-	private Glow thiefGlow = Glow.builder().animatedColor(ChatColor.RED).name("thiefGlow").build();
-	public static final ItemStack GUARD_SWORD = new ItemStack(Material.DIAMOND_SWORD);
-	static{
-		ItemMeta meta = GUARD_SWORD.getItemMeta();
-		meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED,new AttributeModifier("pvp_1.8",1000,Operation.ADD_NUMBER));
-		meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE,new AttributeModifier("diamondSwordDamages",7,Operation.ADD_NUMBER));
-		meta.setUnbreakable(true);
-		meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES,ItemFlag.HIDE_UNBREAKABLE);
-		meta.displayName(Component.text("Épée de garde").color(NamedTextColor.GOLD));
-		GUARD_SWORD.setItemMeta(meta);
-	}
-	
+	private Glow guardGlow = Glow.builder().animatedColor(new ChatColor[]{ChatColor.BLUE}).name("guardGlow").build();
+	private Glow thiefGlow = Glow.builder().animatedColor(new ChatColor[]{ChatColor.RED}).name("thiefGlow").build();
 	private final ArrayList<Integer> nbtCompteur = new ArrayList<>();
-	private final ArrayList<Objet> objetsList = new ArrayList<>();
-	
-	private final BossBar bb = Bukkit.createBossBar(ChatColor.GOLD+"Temps restant"+ChatColor.WHITE+": "+ChatColor.AQUA+DEFAULT_PREPARATION_TIME/60+ChatColor.WHITE+":"+
-			ChatColor.AQUA+DEFAULT_PREPARATION_TIME%60, BarColor.BLUE, BarStyle.SOLID);
+	private final BossBar bb = Bukkit.createBossBar(
+			"" + ChatColor.GOLD + "Temps restant" + ChatColor.GOLD + ": " + ChatColor.WHITE + ChatColor.AQUA
+					+ DEFAULT_PREPARATION_TIME / 60 + ":" + ChatColor.WHITE + ChatColor.AQUA,
+			BarColor.BLUE, BarStyle.SOLID, new org.bukkit.boss.BarFlag[0]);
 	private BukkitTask bossBarTicker;
 	private BukkitTask gameTicker;
 	private int scanTime;
 	private int defaultScanTime;
-	private int scanTimer=0;
+	private int scanTimer = 0;
+	private final ArrayList<Objet> objetsList = new ArrayList<>();
+
+	static {
+		ItemMeta meta = GUARD_SWORD.getItemMeta();
+		meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED,
+				new AttributeModifier("pvp_1.8", 1000.0D, AttributeModifier.Operation.ADD_NUMBER));
+		meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE,
+				new AttributeModifier("diamondSwordDamages", 7.0D, AttributeModifier.Operation.ADD_NUMBER));
+		meta.setUnbreakable(true);
+		meta.addItemFlags(new ItemFlag[]{ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE});
+		meta.displayName(Component.text("Épée de garde").color((TextColor) NamedTextColor.GOLD));
+		GUARD_SWORD.setItemMeta(meta);
+	}
+	
 	public Game(Vi6Main main, String name) {
-		this.main=main;
-		this.name=name;
-		DEFAULT_RANKED_MONEY = main.getConfig().getInt("rankedMoney",1000);
-		DEFAULT_PREPARATION_TIME = main.getConfig().getInt("preparationTime",2*60);
-		DEFAULT_CAPTURE_DELAY = main.getConfig().getInt("delayBetweenCapture",20*30);
-		money=DEFAULT_RANKED_MONEY;
+		this.main = main;
+		this.name = name;
+		DEFAULT_RANKED_MONEY = main.getConfig().getInt("rankedMoney", 1000);
+		DEFAULT_PREPARATION_TIME = main.getConfig().getInt("preparationTime", 120);
+		DEFAULT_CAPTURE_DELAY = main.getConfig().getInt("delayBetweenCapture", 600);
+		this.money = DEFAULT_RANKED_MONEY;
 		new OpenWaitingItem(main, this);
-		settingsInterface = new GameSettingsInventory(main, this);
-		mapInterface = new MapSelectionInventory(main, this);
-		nbtCompteur.add(0);
-		Bukkit.getPluginManager().registerEvents(this, main);
-		scoreboardSidebar = scoreboard.registerNewObjective("sidebar", "dummy", Component.text(name).color(NamedTextColor.GOLD));
-		scoreboardSidebar.setDisplaySlot(DisplaySlot.SIDEBAR);
-		noNameTag = scoreboard.registerNewTeam("noNameTag");
-		noNameTag.setCanSeeFriendlyInvisibles(false);
-		noNameTag.setOption(org.bukkit.scoreboard.Team.Option.NAME_TAG_VISIBILITY, org.bukkit.scoreboard.Team.OptionStatus.FOR_OWN_TEAM);
+		this.settingsInterface = new GameSettingsInventory(main, this);
+		this.mapInterface = new MapSelectionInventory(main, this);
+		this.nbtCompteur.add(Integer.valueOf(0));
+		Bukkit.getPluginManager().registerEvents(this, (Plugin) main);
+		this.scoreboardSidebar = this.scoreboard.registerNewObjective("sidebar", "dummy",
+				Component.text(name).color((TextColor) NamedTextColor.GOLD));
+		this.scoreboardSidebar.setDisplaySlot(DisplaySlot.SIDEBAR);
+		this.noNameTag = this.scoreboard.registerNewTeam("noNameTag");
+		this.noNameTag.setCanSeeFriendlyInvisibles(false);
+		this.noNameTag.setOption(org.bukkit.scoreboard.Team.Option.NAME_TAG_VISIBILITY,org.bukkit.scoreboard.Team.OptionStatus.FOR_OTHER_TEAMS);
 	}
-	
+
 	public boolean isRanked() {
-		return isRanked;
+		return this.isRanked;
 	}
-	
+
 	public int getNBT() {
-		if(nbtCompteur.size()>1) {
-			return nbtCompteur.remove(1);
-		}
-		nbtCompteur.set(0, nbtCompteur.get(0)+1);
-		return nbtCompteur.get(0);
+		if (this.nbtCompteur.size() > 1)
+			return ((Integer) this.nbtCompteur.remove(1)).intValue();
+		this.nbtCompteur.set(0, Integer.valueOf(((Integer) this.nbtCompteur.get(0)).intValue() + 1));
+		return ((Integer) this.nbtCompteur.get(0)).intValue();
 	}
-	
+
 	public void addObjet(Objet obj) {
-		objetsList.add(obj);
+		this.objetsList.add(obj);
 	}
-	
+
 	public void removeObjet(Objet obj) {
-		nbtCompteur.add(obj.getNBT());
-		Collections.sort(nbtCompteur.subList(1, nbtCompteur.size()));
-		objetsList.remove(obj);
+		if (obj.isTickable()) {
+			this.objToRemove.add(obj);
+		} else {
+			this.objetsList.remove(obj);
+		}
+		this.nbtCompteur.add((Integer) obj.getDisplayedItem().getItemMeta().getPersistentDataContainer()
+				.get(new NamespacedKey((Plugin) this.main, getName() + "ObjetNBT"), PersistentDataType.INTEGER));
+		Collections.sort(this.nbtCompteur.subList(1, this.nbtCompteur.size()));
 	}
-	
+
 	public Objet getObjet(ItemStack item) {
-		for(Objet obj : objetsList) {
-			if(item.equals(obj.getDisplayedItem())) {
+		for (Objet obj : this.objetsList) {
+			if (item.equals(obj.getDisplayedItem()))
 				return obj;
-			}
 		}
 		return null;
 	}
-	
-	public ArrayList<Objet> getObjets(){
-		return objetsList;
-	}
-	
-	public void openSettings(Player player) {
-		player.openInventory(settingsInterface.inventory);
-	}
-	
-	public GameSettingsInventory getSettingsInterface() {
-		return settingsInterface;
-	}
-	
-	public void openMoney(Player player) {
-		new GameMoneyAnvil(main,this, player);
-	}
-	
-	public void showCaptureMessage(Artefact a,PlayerWrapper p) {
-		final TextComponent msgGuard = MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_artefact_steal_guard"));
-		final TextComponent msgVoleur = MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_artefact_steal_thief"),
-				new MessageFormater("§a",a.getDisplayName()),new MessageFormater("§p",p!=null?p.getPlayer().getName():"inconnu"));
-		Times titleTimes = Title.Times.of(Ticks.duration(5), Ticks.duration(20), Ticks.duration(20));
-		Title titleGuard = Title.title(msgGuard, Component.text(""),titleTimes);
-		Title titleVoleur = Title.title(msgVoleur, Component.text(""),titleTimes);
-		for (PlayerWrapper w : playerList.values()) {
-			if (w.getTeam()==Team.GARDE) {
-				w.getPlayer().showTitle(titleGuard);
-				w.getPlayer().sendMessage(msgGuard);
-			}else {
-				w.getPlayer().showTitle(titleVoleur);
-				w.getPlayer().sendMessage(msgVoleur);
+
+	@EventHandler
+	public void onPlayerPickupItem(EntityPickupItemEvent event) {
+		if (event.getEntity() instanceof Player) {
+			Player p = (Player) event.getEntity();
+			PlayerWrapper w = getWrapper(p);
+			if (w != null) {
+				Objet o = getObjet(event.getItem().getItemStack());
+				if (o != null)
+					o.setNewOwner(p, w);
 			}
 		}
-		Bukkit.getPluginManager().callEvent(new PlayerStealEvent(p.getPlayer(), a));
 	}
-	
+
+	public ArrayList<Objet> getObjets() {
+		return this.objetsList;
+	}
+
+	public void openSettings(Player player) {
+		player.openInventory(this.settingsInterface.inventory);
+	}
+
+	public GameSettingsInventory getSettingsInterface() {
+		return this.settingsInterface;
+	}
+
+	public void openMoney(Player player) {
+		new GameMoneyAnvil(this.main, this, player);
+	}
+
+	public void showCaptureMessage(Artefact a, PlayerWrapper p) {
+		TextComponent msgGuard = MessageFormater.formatWithColorCodes('§',
+				DisplayTexts.getMessage("game_artefact_steal_guard"), new MessageFormater[0]);
+		TextComponent msgVoleur = MessageFormater.formatWithColorCodes('§',
+				DisplayTexts.getMessage("game_artefact_steal_thief"),
+				new MessageFormater[]{new MessageFormater("§a", a.getDisplayName()),
+						new MessageFormater("§p", (p != null) ? p.getPlayer().getName() : "inconnu")});
+		Title.Times titleTimes = Title.Times.of(Ticks.duration(5L), Ticks.duration(20L), Ticks.duration(20L));
+		Title titleGuard = Title.title((Component) msgGuard, (Component) Component.text(""), titleTimes);
+		Title titleVoleur = Title.title((Component) msgVoleur, (Component) Component.text(""), titleTimes);
+		for (PlayerWrapper w : this.playerList.values()) {
+			if (w.getTeam() == Team.GARDE) {
+				w.getPlayer().showTitle(titleGuard);
+				w.getPlayer().sendMessage((Component) msgGuard);
+				continue;
+			}
+			w.getPlayer().showTitle(titleVoleur);
+			w.getPlayer().sendMessage((Component) msgVoleur);
+		}
+	}
+
 	public void openMapSelection(Player player) {
-		player.openInventory(mapInterface.inventory);
+		player.openInventory(this.mapInterface.inventory);
 	}
-	
+
 	public void setRanked(boolean isRanked) {
 		this.isRanked = isRanked;
-		if(isRanked) {
+		if (isRanked)
 			setMoney(DEFAULT_RANKED_MONEY);
-		}
-		Bukkit.getPluginManager().callEvent(new IsRankedChangeEvent(this,isRanked));
+		Bukkit.getPluginManager().callEvent(new IsRankedChangeEvent(this, isRanked));
 	}
 
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	public GameState getState() {
-		return state;
+		return this.state;
 	}
-	
+
 	public int getMoney() {
-		return money;
+		return this.money;
 	}
-	
+
 	public static int getDefaultRankedMoney() {
 		return DEFAULT_RANKED_MONEY;
 	}
-	
+
 	public static int getDefaultPreparationSeconds() {
 		return DEFAULT_PREPARATION_TIME;
 	}
-	
+
 	public void setMoney(int money) {
-		this.money=money;
-		Bukkit.getPluginManager().callEvent(new MoneyChangedEvent(this,money));
+		this.money = money;
+		Bukkit.getPluginManager().callEvent(new MoneyChangedEvent(this, money));
 	}
-	
+
 	public String getMapName() {
-		return mapName;
+		return this.mapName;
 	}
-	
+
 	public void setMapName(String mapName) {
-		this.mapName=mapName;
+		this.mapName = mapName;
 		Bukkit.getPluginManager().callEvent(new MapChangeEvent(mapName, this));
 	}
-	
+
 	public void destroy() {
 		endGame(true);
-		if (map!=null) {map.unload();map=null;}
-		HandlerList.unregisterAll(mapInterface);
-		HandlerList.unregisterAll(settingsInterface);
+		if (this.map != null) {
+			this.map.unload();
+			this.map = null;
+		}
+		HandlerList.unregisterAll(this.mapInterface);
+		HandlerList.unregisterAll(this.settingsInterface);
 		HandlerList.unregisterAll(this);
-		scoreboardSidebar.unregister();
-		noNameTag.unregister();
+		this.noNameTag.unregister();
+		this.scoreboardSidebar.unregister();
 	}
-	
+
 	public boolean isEveryoneReady() {
-		for(PlayerWrapper wrapper : playerList.values()) {
-			if(!wrapper.isReady()) return false;
+		for (PlayerWrapper wrapper : this.playerList.values()) {
+			if (!wrapper.isReady())
+				return false;
 		}
 		return true;
 	}
+
 	public void setReady(Player player, boolean isReady) {
 		PlayerWrapper wrap = getWrapper(player);
-		if(wrap==null) return;
+		if (wrap == null)
+			return;
 		wrap.setReady(isReady);
-		if(isReady && state==GameState.Preparation) {
-			if(isEveryoneReady()) {
-				enterInGamePhase();
-			}
-		}
+		if (isReady && this.state == GameState.Preparation && isEveryoneReady())
+			enterInGamePhase();
 	}
-	
-	public boolean enterPreparationPhase() {//START------------------
-		if(!isEveryoneReady()) return false;
-		if (map!=null) {map.unload();map=null;}
-		map = Carte.load(mapName);
-		if (map==null) return false;
-		map.setGame(this);
-		map.enable(main);
-		map.start();
-		state=GameState.Preparation;
-		new OpenPreparationItem(main, this);
-		for(Entry<Player, PlayerWrapper> playerAndWrapper : playerList.entrySet()) {
+
+	public boolean enterPreparationPhase() {
+		if (!isEveryoneReady())
+			return false;
+		ArrayList<Objet> temp = new ArrayList<>(this.objetsList);
+		for (Objet o : temp)
+			o.destroy();
+		if (this.map == null) {
+			this.map = Carte.load(this.mapName);
+			this.map.setGame(this);
+			this.map.enable(this.main);
+		}
+		if (this.map.getName() != this.mapName) {
+			this.map.unload();
+			this.map = Carte.load(this.mapName);
+			this.map.setGame(this);
+			this.map.enable(this.main);
+		}
+		if (this.map == null)
+			return false;
+		this.map.setGame(this);
+		this.map.start();
+		this.state = GameState.Preparation;
+		new OpenPreparationItem(this.main, this);
+		for (Map.Entry<Player, PlayerWrapper> playerAndWrapper : this.playerList.entrySet()) {
 			Player player = playerAndWrapper.getKey();
 			PlayerWrapper wrapper = playerAndWrapper.getValue();
-			for(PotionEffectType effect : PotionEffectType.values()) {
+			for (PotionEffectType effect : PotionEffectType.values())
 				player.removePotionEffect(effect);
-			}
 			player.getInventory().clear();
 			player.setGameMode(GameMode.ADVENTURE);
 			player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
-			player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, Integer.MAX_VALUE, 0, false, false, false));
-			noNameTag.addEntry(player.getName());
+			player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 2147483647, 0, false, false, false));
+			this.noNameTag.addEntry(player.getName());
 			wrapper.setReady(false);
-			wrapper.setMoney(money);
+			wrapper.setMoney(this.money);
 			wrapper.setState(PlayerState.PREPARATION);
-			bb.addPlayer(playerAndWrapper.getKey());
-			if (wrapper.getTeam()==Team.GARDE) {
-				player.teleport(map.getGuardSpawn());
+			this.bb.addPlayer(playerAndWrapper.getKey());
+			if (wrapper.getTeam() == Team.GARDE) {
+				player.teleport(this.map.getGuardSpawn());
 				PlayerInventory inv = player.getInventory();
 				inv.setChestplate(new ItemStack(Material.DIAMOND_CHESTPLATE));
 				inv.setItem(0, GUARD_SWORD);
-				guardGlow.addHolders(player);
-				guardGlow.display(player);
-			}else {
-				player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 1000000, 1, false, false, false));
-				player.teleport(map.getMinimapSpawn());
-				for(Entry<Player, PlayerWrapper> p : playerList.entrySet()) {
-					if(p.getValue().getTeam()==Team.GARDE) {
-						p.getKey().hidePlayer(main, player);
-					}
+				this.guardGlow.addHolders(new Entity[]{(Entity) player});
+				this.guardGlow.display(new Player[]{player});
+			} else {
+				player.addPotionEffect(
+						new PotionEffect(PotionEffectType.NIGHT_VISION, 1000000, 1, false, false, false));
+				player.teleport(this.map.getMinimapSpawn());
+				for (Map.Entry<Player, PlayerWrapper> p : this.playerList.entrySet()) {
+					if (((PlayerWrapper) p.getValue()).getTeam() == Team.GARDE)
+						((Player) p.getKey()).hidePlayer((Plugin) this.main, player);
 				}
 			}
-			playerAndWrapper.getKey().sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_preparation_start")));
+			((Player) playerAndWrapper.getKey()).sendMessage((Component) MessageFormater.formatWithColorCodes('§',
+					DisplayTexts.getMessage("game_preparation_start"), new MessageFormater[0]));
 		}
-		bossBarTicker = new BukkitRunnable() {
-			int seconds = DEFAULT_PREPARATION_TIME;
-			@Override
-			public void run() {
-				seconds--;
-				bb.setProgress(seconds / (double)DEFAULT_PREPARATION_TIME);
-				bb.setTitle(ChatColor.GOLD+"Temps restant"+ChatColor.WHITE+": "+ChatColor.AQUA+seconds/60+"m"+ChatColor.WHITE+":"+
-						ChatColor.AQUA+seconds%60+"s");
-				if(seconds==0) {
-					enterInGamePhase();
-				}
-			}
-		}.runTaskTimer(main, 0, 20);
-		gameTicker = new BukkitRunnable() {
-			@Override
-			public void run() {
-				ingameTick();
-			}
-		}.runTaskTimer(main, 0, 1);
+		this
+
+				.bossBarTicker = (new BukkitRunnable() {
+					int seconds = Game.DEFAULT_PREPARATION_TIME;
+
+					public void run() {
+						this.seconds--;
+						Game.this.bb.setProgress(this.seconds / Game.DEFAULT_PREPARATION_TIME);
+						Game.this.bb.setTitle("" + ChatColor.GOLD + "Temps restant" + ChatColor.GOLD + ": "
+								+ ChatColor.WHITE + ChatColor.AQUA + "m" + this.seconds / 60 + ":" + ChatColor.WHITE
+								+ ChatColor.AQUA + "s");
+						if (this.seconds == 0)
+							Game.this.enterInGamePhase();
+					}
+				}).runTaskTimer((Plugin) this.main, 0L, 20L);
+		this
+
+				.gameTicker = (new BukkitRunnable() {
+					public void run() {
+						Game.this.ingameTick();
+					}
+				}).runTaskTimer((Plugin) this.main, 0L, 1L);
 		Bukkit.getPluginManager().callEvent(new GameEnterPreparationPhaseEvent(this));
 		return true;
 	}
-	
+
 	@Nullable
 	public Carte getMap() {
-		return map;
+		return this.map;
 	}
-	
+
 	public void enterInGamePhase() {
-		bb.removeAll();
-		bossBarTicker.cancel();
-		startTime = LocalTime.now().toString();
-		scoreboardSidebar.setDisplaySlot(null);
-		defaultScanTime=main.getConfig().getInt("scanDelay", 600);
-		scanTime=main.getConfig().getInt("reducedScanDelay", defaultScanTime);
-		for(Entry<Player, PlayerWrapper> playerAndWrapper : playerList.entrySet()) {
+		this.bb.removeAll();
+		this.bossBarTicker.cancel();
+		this.startTime = LocalTime.now().toString();
+		this.scoreboardSidebar.setDisplaySlot(null);
+		this.defaultScanTime = this.main.getConfig().getInt("scanDelay", 600);
+		this.scanTime = this.main.getConfig().getInt("reducedScanDelay", this.defaultScanTime);
+		for (Map.Entry<Player, PlayerWrapper> playerAndWrapper : this.playerList.entrySet()) {
 			Player player = playerAndWrapper.getKey();
 			PlayerWrapper wrapper = playerAndWrapper.getValue();
 			wrapper.clearStatusEffects();
 			wrapper.getStealedArtefactList().clear();
-			if(wrapper.getTeam()==Team.VOLEUR){
-				thiefGlow.addHolders(player);
-				thiefGlow.display(player);
+			if (wrapper.getTeam() == Team.VOLEUR) {
+				this.thiefGlow.addHolders(new Entity[]{(Entity) player});
+				this.thiefGlow.display(new Player[]{player});
 				wrapper.setState(PlayerState.ENTERING);
-				if(wrapper.getThiefSpawnPoint()==null) wrapper.setThiefSpawnPoint(map.getThiefSpawnsList().get(0).getMapLocation());
+				if (wrapper.getThiefSpawnPoint() == null)
+					wrapper.setThiefSpawnPoint(((SpawnVoleur) this.map.getThiefSpawnsList().get(0)).getMapLocation());
 				player.teleport(wrapper.getThiefSpawnPoint());
-				playerAndWrapper.getKey().sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_ingame_start_voleur")));
-				
-			}else {
+				((Player) playerAndWrapper.getKey()).sendMessage((Component) MessageFormater.formatWithColorCodes('§',
+						DisplayTexts.getMessage("game_ingame_start_voleur"), new MessageFormater[0]));
+			} else {
 				wrapper.setState(PlayerState.INSIDE);
 				ItemHider.get().hideFromPlayer(player);
-				playerAndWrapper.getKey().sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_ingame_start_garde")));
+				((Player) playerAndWrapper.getKey()).sendMessage((Component) MessageFormater.formatWithColorCodes('§',
+						DisplayTexts.getMessage("game_ingame_start_garde"), new MessageFormater[0]));
 			}
-			Bukkit.getPluginManager().registerEvents(new PlayerGame(name, playerAndWrapper.getKey().getUniqueId(), playerAndWrapper.getValue().getTeam()), main);
+			Bukkit.getPluginManager()
+					.registerEvents(new PlayerGame(this.name, ((Player) playerAndWrapper.getKey()).getUniqueId(),
+							((PlayerWrapper) playerAndWrapper.getValue()).getTeam()), (Plugin) this.main);
 		}
-		state=GameState.Ingame;
+		this.state = GameState.Ingame;
 		Bukkit.getPluginManager().callEvent(new GameEnterInGamePhaseEvent(this));
 	}
-	
+
 	public void ingameTick() {
-		Iterator<Objet> ite = objetsList.iterator();
-		while (ite.hasNext()) {
-			Objet o = ite.next();
-			if (o!=null) o.ticks();
+		for (Objet o : this.objToRemove)
+			this.objetsList.remove(o);
+		for (Objet o : this.objetsList) {
+			if (o.isTickable())
+				o.ticks();
 		}
-		if(state==GameState.Ingame) {
-			if(!canCapture) {
-				canCaptureRest--;
-				if(canCaptureRest<=0) {
-					canCapture=true;
-					for(Entry<Player, PlayerWrapper> p : playerList.entrySet()) {
-						if(p.getValue().getTeam()==Team.VOLEUR && p.getValue().isCanCapture()) {
-							p.getKey().sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_player_canCapture")));
-						}
+		if (this.state == GameState.Ingame) {
+			if (!this.canCapture) {
+				this.canCaptureRest--;
+				if (this.canCaptureRest <= 0) {
+					this.canCapture = true;
+					for (Map.Entry<Player, PlayerWrapper> p : this.playerList.entrySet()) {
+						if (((PlayerWrapper) p.getValue()).getTeam() == Team.VOLEUR
+								&& ((PlayerWrapper) p.getValue()).isCanCapture())
+							((Player) p.getKey()).sendMessage((Component) MessageFormater.formatWithColorCodes('§',
+									DisplayTexts.getMessage("game_player_canCapture"), new MessageFormater[0]));
 					}
 				}
 			}
-			for(Artefact art : map.getArtefactList()) {
+			for (Artefact art : this.map.getArtefactList())
 				art.tick(this);
-			}
-			scanTimer++;
-			if (scanTimer>=scanTime) {
+			this.scanTimer++;
+			if (this.scanTimer >= this.scanTime) {
 				scan();
-				scanTimer=0;
+				this.scanTimer = 0;
 			}
 		}
 	}
-	
+
 	public void setScanTime(int scanTime) {
-		this.scanTime=scanTime;
+		this.scanTime = scanTime;
 	}
-	
+
 	public int getDefaultScanTime() {
-		return defaultScanTime;
+		return this.defaultScanTime;
 	}
-	
+
 	public int getScanTime() {
-		return scanTime;
+		return this.scanTime;
 	}
-	
+
 	public void scan() {
-		ProtocolManager pmanager = ProtocolLibrary.getProtocolManager();
-		ArrayList<Integer> idList = new ArrayList<>();
-		for (Player p : playerList.keySet()) {
-			if (playerList.get(p).getTeam()==Team.GARDE) {
-				int entityID = (int)(Math.random() * Integer.MAX_VALUE);
-				idList.add(entityID);
-				///CREATE PACKET
+		final ProtocolManager pmanager = ProtocolLibrary.getProtocolManager();
+		final ArrayList<Integer> idList = new ArrayList<>();
+		for (Player p : this.playerList.keySet()) {
+			if (((PlayerWrapper) this.playerList.get(p)).getTeam() == Team.GARDE) {
+				int entityID = (int) (Math.random() * 2.147483647E9D);
+				idList.add(Integer.valueOf(entityID));
 				Location pLoc = p.getLocation();
 				PacketContainer createPacket = pmanager.createPacket(PacketType.Play.Server.SPAWN_ENTITY);
-				// Entity ID
-				createPacket.getIntegers().write(0, entityID);
+				createPacket.getIntegers().write(0, Integer.valueOf(entityID));
 				createPacket.getEntityTypeModifier().write(0, EntityType.ARMOR_STAND);
-		        // Entity Type
-				createPacket.getIntegers().write(6, 78);
-		        // Set optional velocity (/8000)
-				createPacket.getIntegers().write(1, 0);
-				createPacket.getIntegers().write(2, 0);
-				createPacket.getIntegers().write(3, 0);
-		        // Set yaw pitch
-				createPacket.getIntegers().write(4, (int)pLoc.getPitch());
-				createPacket.getIntegers().write(5, (int)pLoc.getYaw());
-		        // Set object data
-				createPacket.getIntegers().write(6, 0);
-		        // Set location
-				createPacket.getDoubles().write(0, pLoc.getX());
-				createPacket.getDoubles().write(1, pLoc.getY());
-				createPacket.getDoubles().write(2, pLoc.getZ());
-		        // Set UUID
+				createPacket.getIntegers().write(6, Integer.valueOf(78));
+				createPacket.getIntegers().write(1, Integer.valueOf(0));
+				createPacket.getIntegers().write(2, Integer.valueOf(0));
+				createPacket.getIntegers().write(3, Integer.valueOf(0));
+				createPacket.getIntegers().write(4, Integer.valueOf((int) pLoc.getPitch()));
+				createPacket.getIntegers().write(5, Integer.valueOf((int) pLoc.getYaw()));
+				createPacket.getIntegers().write(6, Integer.valueOf(0));
+				createPacket.getDoubles().write(0, Double.valueOf(pLoc.getX()));
+				createPacket.getDoubles().write(1, Double.valueOf(pLoc.getY()));
+				createPacket.getDoubles().write(2, Double.valueOf(pLoc.getZ()));
 				createPacket.getUUIDs().write(0, UUID.randomUUID());
-				///METADATA PACKET
 				PacketContainer metadataPacket = pmanager.createPacket(PacketType.Play.Server.ENTITY_METADATA);
-				//Entity ID
-				metadataPacket.getIntegers().write(0, entityID);
-				//Watcher
+				metadataPacket.getIntegers().write(0, Integer.valueOf(entityID));
 				WrappedDataWatcher watcher = new WrappedDataWatcher();
-				Serializer serializer = Registry.get(Byte.class);
-				watcher.setObject(0, serializer,(byte)(0x40|0x20));
-				watcher.setObject(14, serializer,(byte)(0x08|0x04));
+				WrappedDataWatcher.Serializer serializer = WrappedDataWatcher.Registry.get(Byte.class);
+				watcher.setObject(0, serializer, Byte.valueOf((byte) 96));
+				watcher.setObject(14, serializer, Byte.valueOf((byte) 12));
 				metadataPacket.getWatchableCollectionModifier().write(0, watcher.getWatchableObjects());
-				///EQUIPMENT PACKET
 				PacketContainer equipPacket = pmanager.createPacket(PacketType.Play.Server.ENTITY_EQUIPMENT);
-				equipPacket.getIntegers().write(0, entityID);
-				List<Pair<ItemSlot, ItemStack>> pairList = new ArrayList<>();
+				equipPacket.getIntegers().write(0, Integer.valueOf(entityID));
+				List<Pair<EnumWrappers.ItemSlot, ItemStack>> pairList = new ArrayList<>();
 				pairList.add(new Pair<>(EnumWrappers.ItemSlot.CHEST, new ItemStack(Material.NETHERITE_CHESTPLATE)));
 				equipPacket.getSlotStackPairLists().write(0, pairList);
-				sendPacketToTeam(Team.VOLEUR, createPacket, metadataPacket,equipPacket);
+				sendPacketToTeam(Team.VOLEUR, new PacketContainer[]{createPacket, metadataPacket, equipPacket});
 			}
-			p.playSound(p.getLocation().add(0, 3, 0), Sound.BLOCK_BEACON_POWER_SELECT, SoundCategory.MASTER, 1, 1);
+			p.playSound(p.getLocation().add(0.0D, 3.0D, 0.0D), Sound.BLOCK_BEACON_POWER_SELECT, SoundCategory.MASTER,
+					1.0F, 1.0F);
 		}
-		new BukkitRunnable() {
-			@Override
+		(new BukkitRunnable() {
 			public void run() {
 				PacketContainer packet = pmanager.createPacket(PacketType.Play.Server.ENTITY_DESTROY);
 				packet.getIntegerArrays().write(0, idList.stream().mapToInt(Integer::intValue).toArray());
-				for (Player p : playerList.keySet()) {
-					if (playerList.get(p).getTeam()==Team.VOLEUR) {
+				for (Player p : Game.this.playerList.keySet()) {
+					if (((PlayerWrapper) Game.this.playerList.get(p)).getTeam() == Team.VOLEUR)
 						try {
 							pmanager.sendServerPacket(p, packet);
 						} catch (InvocationTargetException e) {
 							e.printStackTrace();
 						}
-					}
 				}
 			}
-		}.runTaskLater(main, 140);
+		}).runTaskLater((Plugin) this.main, 140L);
 	}
-	
-	private void sendPacketToTeam(Team team,PacketContainer... packet) {
+
+	private void sendPacketToTeam(Team team, PacketContainer... packet) {
 		ProtocolManager pmanager = ProtocolLibrary.getProtocolManager();
-		for (Player pp : playerList.keySet()) {
-			if (playerList.get(pp).getTeam()==team) {
+		for (Map.Entry<Player, PlayerWrapper> pp : this.playerList.entrySet()) {
+			if (((PlayerWrapper) pp.getValue()).getTeam() == team)
 				for (PacketContainer p : packet) {
 					try {
-						pmanager.sendServerPacket(pp, p);
+						pmanager.sendServerPacket(pp.getKey(), p);
 					} catch (InvocationTargetException e) {
 						e.printStackTrace();
 					}
 				}
-			}
 		}
 	}
-	
-	
+
 	public boolean endGame(boolean forced) {
-		if (state==GameState.Waiting) return false;
-		if(state==GameState.Ingame && !forced) {
+		if (this.state == GameState.Waiting)
+			return false;
+		if (this.state == GameState.Ingame && !forced)
 			try {
-				idPartie = SQLInterface.addPartie(Date.valueOf(LocalDate.now()), new Time(SQLInterface.getTimeFormat().parse(LocalTime.now().toString()).getTime() - SQLInterface.getTimeFormat().parse(startTime).getTime()), money, isRanked, mapName);
+				this.idPartie = SQLInterface.addPartie(Date.valueOf(LocalDate.now()),
+						new Time(SQLInterface.getTimeFormat().parse(LocalTime.now().toString()).getTime()
+								- SQLInterface.getTimeFormat().parse(this.startTime).getTime()),
+						this.money, this.isRanked, this.mapName);
 			} catch (ParseException e) {
-				idPartie=-1;
+				this.idPartie = -1;
 				e.printStackTrace();
 			}
-		}
-		for(Objet obj : objetsList) {
-			if (obj!=null) obj.gameEnd();
-		}
-		scoreboardSidebar.setDisplaySlot(DisplaySlot.SIDEBAR);
-		if(bb.getPlayers().size()>0) bb.removeAll();
-		if(main.isEnabled()) new OpenWaitingItem(main, this);
-		int totalVole=0;
-		for(Entry<Player, PlayerWrapper> p : playerList.entrySet()) {
-			p.getKey().setGameMode(GameMode.SPECTATOR);
-			p.getValue().setReady(false);
-			p.getValue().setState(PlayerState.WAITING);
-			p.getValue().clearStatusEffects();
-			p.getValue().setCanCapture(false);
-			p.getValue().setCanEscape(false);
-			p.getValue().setThiefSpawnPoint(null);
-			noNameTag.removeEntry(p.getKey().getName());
-			p.getKey().setWalkSpeed(0.2f);
-			p.getKey().getInventory().clear();
-			if (p.getValue().getTeam()==Team.GARDE) {
-				guardGlow.removeHolders(p.getKey());
+		this.scoreboardSidebar.setDisplaySlot(DisplaySlot.SIDEBAR);
+		if (this.bb.getPlayers().size() > 0)
+			this.bb.removeAll();
+		if (this.main.isEnabled())
+			new OpenWaitingItem(this.main, this);
+		int totalVole = 0;
+		for (Map.Entry<Player, PlayerWrapper> p : this.playerList.entrySet()) {
+			((Player) p.getKey()).setGameMode(GameMode.SPECTATOR);
+			((PlayerWrapper) p.getValue()).setReady(false);
+			((PlayerWrapper) p.getValue()).setState(PlayerState.WAITING);
+			((PlayerWrapper) p.getValue()).clearStatusEffects();
+			((PlayerWrapper) p.getValue()).setCanCapture(false);
+			((PlayerWrapper) p.getValue()).setCanEscape(false);
+			((PlayerWrapper) p.getValue()).setThiefSpawnPoint(null);
+			this.noNameTag.removeEntry(((Player) p.getKey()).getName());
+			((Player) p.getKey()).setWalkSpeed(0.2F);
+			((Player) p.getKey()).getInventory().clear();
+			if (((PlayerWrapper) p.getValue()).getTeam() == Team.GARDE) {
+				this.guardGlow.removeHolders(new Entity[]{(Entity) p.getKey()});
 				ItemHider.get().unHideFromPlayer(p.getKey());
-			}else {
-				p.getKey().removePotionEffect(PotionEffectType.NIGHT_VISION);
-				thiefGlow.removeHolders(p.getKey());
-				for(Player player : playerList.keySet()) {
-					player.showPlayer(main, p.getKey());
-				}
-				totalVole+=p.getValue().getStealedArtefactList().size();
+				continue;
 			}
+			((Player) p.getKey()).removePotionEffect(PotionEffectType.NIGHT_VISION);
+			this.thiefGlow.removeHolders(new Entity[]{(Entity) p.getKey()});
+			for (Player player : this.playerList.keySet())
+				player.showPlayer((Plugin) this.main, p.getKey());
+			totalVole += ((PlayerWrapper) p.getValue()).getStealedArtefactList().size();
 		}
-		for(Player p : playerList.keySet()) {
-			p.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_end"), 
-					new MessageFormater("§n", String.valueOf(totalVole))));
+		for (Player p : this.playerList.keySet()) {
+			p.sendMessage((Component) MessageFormater.formatWithColorCodes('§', DisplayTexts.getMessage("game_end"),
+					new MessageFormater[]{new MessageFormater("§n", String.valueOf(totalVole))}));
 		}
-		guardGlow.hideFromEveryone();
-		thiefGlow.hideFromEveryone();
-		gameTicker.cancel();
-		bossBarTicker.cancel();
-		state=GameState.Waiting;
-		Bukkit.getPluginManager().callEvent(new GameEndEvent(this, idPartie, forced));
+		this.guardGlow.hideFromEveryone();
+		this.thiefGlow.hideFromEveryone();
+		this.gameTicker.cancel();
+		this.bossBarTicker.cancel();
+		this.state = GameState.Waiting;
+		Bukkit.getPluginManager().callEvent(new GameEndEvent(this, this.idPartie, forced));
 		return true;
 	}
-	
+
 	public boolean addPlayer(Player p) {
-		if (main.getPlayerWrapper(p)==null && state==GameState.Waiting && !playerList.keySet().contains(p)) {
-			p.setScoreboard(scoreboard);
-			playerList.put(p, new PlayerWrapper(this, p));
-			playerList.get(p).setState(PlayerState.WAITING);
-			for (Player pl : playerList.keySet()) {
-				pl.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_join"),
-						new MessageFormater("§p",p.getName()),new MessageFormater("§g",name)));
+		if (this.main.getPlayerWrapper(p) == null && this.state == GameState.Waiting
+				&& !this.playerList.keySet().contains(p)) {
+			p.setScoreboard(this.scoreboard);
+			this.playerList.put(p, new PlayerWrapper(this, p));
+			((PlayerWrapper) this.playerList.get(p)).setState(PlayerState.WAITING);
+			for (Player pl : this.playerList.keySet()) {
+				pl.sendMessage((Component) MessageFormater.formatWithColorCodes('§',
+						DisplayTexts.getMessage("game_join"), new MessageFormater[]{
+								new MessageFormater("§p", p.getName()), new MessageFormater("§g", this.name)}));
 			}
-			p.setWalkSpeed(0.2f);
+			p.setWalkSpeed(0.2F);
 			p.getInventory().clear();
 			Bukkit.getPluginManager().callEvent(new PlayerJoinGameEvent(this, p));
 			return true;
 		}
 		return false;
 	}
-	
+
 	public boolean removePlayer(Player p) {
-		if (playerList.keySet().contains(p)) {
+		if (this.playerList.keySet().contains(p)) {
 			endGame(true);
-			for (Player pl : playerList.keySet()) {
-				pl.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_leave"),
-						new MessageFormater("§p",p.getName()),new MessageFormater("§g",name)));
+			for (Player pl : this.playerList.keySet()) {
+				pl.sendMessage((Component) MessageFormater.formatWithColorCodes('§',
+						DisplayTexts.getMessage("game_leave"), new MessageFormater[]{
+								new MessageFormater("§p", p.getName()), new MessageFormater("§g", this.name)}));
 			}
-			playerList.get(p).destroy();
-			playerList.remove(p);
+			((PlayerWrapper) this.playerList.get(p)).destroy();
+			this.playerList.remove(p);
 			p.getInventory().clear();
 			p.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
 			Bukkit.getPluginManager().callEvent(new PlayerLeaveGameEvent(this, p));
@@ -616,70 +647,77 @@ public class Game implements Listener{
 	}
 
 	public HashMap<Player, PlayerWrapper> getPlayerMap() {
-		return playerList;
+		return this.playerList;
 	}
-	
-	public HashMap<Player, PlayerWrapper> getPlayerList(){
-		return playerList;
-	}
-	
+
 	public Team getPlayerTeam(Player p) {
-		PlayerWrapper w = playerList.get(p);
-		if (w!=null) return w.getTeam();
+		PlayerWrapper w = this.playerList.get(p);
+		if (w != null)
+			return w.getTeam();
 		return null;
 	}
-	
+
 	public PlayerWrapper getWrapper(Player p) {
-		return playerList.get(p);
+		return this.playerList.get(p);
 	}
-	
+
 	@EventHandler
 	public void onDisconnect(PlayerQuitEvent e) {
 		removePlayer(e.getPlayer());
 	}
-	
+
 	@EventHandler
 	public void playerDeath(PlayerDeathEvent e) {
-		if(playerList.containsKey(e.getEntity()) && playerList.get(e.getEntity()).getTeam()==Team.VOLEUR 
-				&& playerList.get(e.getEntity()).getState()==PlayerState.INSIDE) {
-			playerList.get(e.getEntity()).setState(PlayerState.LEAVED);
+		if (this.playerList.containsKey(e.getEntity())
+				&& ((PlayerWrapper) this.playerList.get(e.getEntity())).getTeam() == Team.VOLEUR
+				&& ((PlayerWrapper) this.playerList.get(e.getEntity())).getState() == PlayerState.INSIDE) {
+			((PlayerWrapper) this.playerList.get(e.getEntity())).setState(PlayerState.LEAVED);
 			e.getEntity().setGameMode(GameMode.SPECTATOR);
-			for(Entry<Player, PlayerWrapper> p : playerList.entrySet()) {
-				p.getKey().sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_death"), 
-						new MessageFormater("§p", String.valueOf(e.getEntity().getName())), 
-						new MessageFormater("§n", String.valueOf(playerList.get(e.getEntity()).getStealedArtefactList().size()))));
+			for (Map.Entry<Player, PlayerWrapper> p : this.playerList.entrySet()) {
+				((Player) p.getKey()).sendMessage((Component) MessageFormater.formatWithColorCodes('§',
+						DisplayTexts.getMessage("game_death"),
+						new MessageFormater[]{new MessageFormater("§p", String.valueOf(e.getEntity().getName())),
+								new MessageFormater("§n",
+										String.valueOf(((PlayerWrapper) this.playerList.get(e.getEntity()))
+												.getStealedArtefactList().size()))}));
 			}
-			if(!isThiefLeft()) {
+			if (!isThiefLeft())
 				endGame(false);
-			}
 		}
 	}
+
 	public boolean isThiefLeft() {
-		for(PlayerWrapper wrap : playerList.values()) {
-			if(wrap.getTeam()==Team.VOLEUR && (wrap.getState()==PlayerState.ENTERING || wrap.getState()==PlayerState.INSIDE)) {
+		for (PlayerWrapper wrap : this.playerList.values()) {
+			if (wrap.getTeam() == Team.VOLEUR
+					&& (wrap.getState() == PlayerState.ENTERING || wrap.getState() == PlayerState.INSIDE))
 				return true;
-			}
 		}
 		return false;
 	}
+
 	public void capture() {
-		canCaptureRest=DEFAULT_CAPTURE_DELAY;
-		canCapture=false;
+		this.canCaptureRest = DEFAULT_CAPTURE_DELAY;
+		this.canCapture = false;
 	}
 
 	public boolean isCanCapture() {
-		return canCapture;
+		return this.canCapture;
 	}
+
 	@EventHandler
 	public void hitEvent(EntityDamageByEntityEvent e) {
-		if(e.getDamager() instanceof Player && e.getEntity() instanceof Player) {
-			PlayerWrapper damager = playerList.get((Player)e.getDamager());
-			PlayerWrapper damaged = playerList.get((Player)e.getEntity());
-			if(damager!=null && damaged!=null && damager.getTeam()==Team.GARDE && damaged.getTeam()==Team.GARDE) e.setCancelled(true);
+		if (e.getDamager() instanceof Player && e.getEntity() instanceof Player) {
+			PlayerWrapper damager = this.playerList.get(e.getDamager());
+			PlayerWrapper damaged = this.playerList.get(e.getEntity());
+			if (damager != null && damaged != null && damager.getTeam() == Team.GARDE
+					&& damaged.getTeam() == Team.GARDE)
+				e.setCancelled(true);
 		}
 	}
+
 	@EventHandler
 	public void inventoryClick(InventoryClickEvent e) {
-		if(playerList.keySet().contains(e.getWhoClicked()) && e.getSlotType()==SlotType.ARMOR) e.setCancelled(true);
+		if (this.playerList.keySet().contains(e.getWhoClicked()) && e.getSlotType() == InventoryType.SlotType.ARMOR)
+			e.setCancelled(true);
 	}
 }
