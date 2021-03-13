@@ -8,43 +8,29 @@ import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.objet.utils.Objet;
-import fr.nekotine.vi6.utils.IsCreator;
+import fr.nekotine.vi6.wrappers.PlayerWrapper;
 
 public class BainDeFumee extends Objet {
 
-	public BainDeFumee(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Player player, Game game) {
-		super(main, objet, skin, IsCreator.createObjetItemStack(main,objet,1), game, player);
-	}
-	
-	@Override
-	public void gameEnd() {
+	public BainDeFumee(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Game game, Player player,PlayerWrapper wrapper) {
+		super(main, objet, skin, game, player, wrapper);
 	}
 
-	@Override
 	public void tick() {
 	}
 
-	@Override
 	public void cooldownEnded() {
 	}
 
-	@Override
-	public void leaveMap(Player holder) {
+	public void death() {
 	}
 
-	@Override
-	public void death(Player holder) {
+	public void leaveMap() {
 	}
 
-	@Override
-	public void sell(Player holder) {
+	public void action(Action action) {
 	}
 
-	@Override
-	public void action(Action action, Player holder) {
-	}
-
-	@Override
-	public void drop(Player holder) {
+	public void drop() {
 	}
 }
