@@ -1,17 +1,5 @@
 package fr.nekotine.vi6.interfaces.inventories;
 
-import java.util.List;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.HandlerList;
-import org.bukkit.event.inventory.InventoryAction;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
-
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.enums.Team;
@@ -21,197 +9,237 @@ import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.utils.IsCreator;
 import fr.nekotine.vi6.utils.MessageFormater;
 import fr.nekotine.vi6.utils.ObjetsListTagType;
+import fr.nekotine.vi6.wrappers.PlayerWrapper;
 import fr.nekotine.vi6.yml.DisplayTexts;
+import java.util.List;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
 
-public class PreparationInventory extends BasePersonalInventory{
+public class PreparationInventory extends BasePersonalInventory {
 	private int page;
 	public PreparationInventory(Vi6Main main, Game game, Player player, int page) {
 		super(game, main, player);
-		this.page=page;
-		inventory = Bukkit.createInventory(player, 9*6, Component.text("Préparation"));
-		if(game.getWrapper(player).getTeam()==Team.GARDE) {
-			for(byte index=1;index<=1+9*5;index+=9) {
-				inventory.setItem(index, IsCreator.createItemStack(Material.BLUE_STAINED_GLASS_PANE,1," ",""));
+		this.page = page;
+		this.inventory = Bukkit.createInventory((InventoryHolder) player, 54,
+				(Component) Component.text("Préparation"));
+		if (game.getWrapper(player).getTeam() == Team.GARDE) {
+			byte b;
+			for (b = 1; b <= 46; b = (byte) (b + 9)) {
+				this.inventory.setItem(b,
+						IsCreator.createItemStack(Material.BLUE_STAINED_GLASS_PANE, 1, " "));
 			}
-			inventory.setItem(18, IsCreator.createItemStack(Material.BLUE_STAINED_GLASS_PANE,1," ",""));
-			inventory.setItem(27, IsCreator.createItemStack(Material.BLUE_STAINED_GLASS_PANE,1," ",""));
-		}else {
-			for(byte index=1;index<=1+9*5;index+=9) {
-				inventory.setItem(index, IsCreator.createItemStack(Material.RED_STAINED_GLASS_PANE,1," ",""));
+			this.inventory.setItem(18,
+					IsCreator.createItemStack(Material.BLUE_STAINED_GLASS_PANE, 1, " "));
+			this.inventory.setItem(27,
+					IsCreator.createItemStack(Material.BLUE_STAINED_GLASS_PANE, 1, " "));
+		} else {
+			byte b;
+			for (b = 1; b <= 46; b = (byte) (b + 9)) {
+				this.inventory.setItem(b,
+						IsCreator.createItemStack(Material.RED_STAINED_GLASS_PANE, 1, " "));
 			}
-			inventory.setItem(18, IsCreator.createItemStack(Material.RED_STAINED_GLASS_PANE,1," ",""));
-			inventory.setItem(27, IsCreator.createItemStack(Material.RED_STAINED_GLASS_PANE,1," ",""));
+			this.inventory.setItem(18,
+					IsCreator.createItemStack(Material.RED_STAINED_GLASS_PANE, 1, " "));
+			this.inventory.setItem(27,
+					IsCreator.createItemStack(Material.RED_STAINED_GLASS_PANE, 1, " "));
 		}
-		for(byte index=2;index<=8;index++) {
-			inventory.setItem(index, IsCreator.createItemStack(Material.BLACK_STAINED_GLASS_PANE,1," ",""));
-			inventory.setItem(index+45, IsCreator.createItemStack(Material.BLACK_STAINED_GLASS_PANE,1," ",""));
+		byte index;
+		for (index = 2; index <= 8; index = (byte) (index + 1)) {
+			this.inventory.setItem(index,
+					IsCreator.createItemStack(Material.BLACK_STAINED_GLASS_PANE, 1, " "));
+			this.inventory.setItem(index + 45,
+					IsCreator.createItemStack(Material.BLACK_STAINED_GLASS_PANE, 1, " "));
 		}
-		if(game.getWrapper(player).isReady()) {
-			inventory.setItem(0, IsCreator.createItemStack(Material.EMERALD_BLOCK,1,ChatColor.GREEN+"Prêt",""));
-		}else {
-			inventory.setItem(0, IsCreator.createItemStack(Material.REDSTONE_BLOCK,1,ChatColor.RED+"En attente",""));
+		if (game.getWrapper(player).isReady()) {
+			this.inventory.setItem(0, IsCreator.createItemStack(Material.EMERALD_BLOCK, 1,
+					"" + ChatColor.GREEN + "Prêt"));
+		} else {
+			this.inventory.setItem(0, IsCreator.createItemStack(Material.REDSTONE_BLOCK, 1,
+					"" + ChatColor.RED + "En attente"));
 		}
-		inventory.setItem(9, IsCreator.createItemStack(Material.COMPOSTER,1,ChatColor.DARK_RED+"Tout vendre",""));
-		inventory.setItem(36, IsCreator.createItemStack(Material.DIAMOND_CHESTPLATE,1,ChatColor.GOLD+"Apparences",""));
-		inventory.setItem(45, IsCreator.createItemStack(Material.GOLD_INGOT,1,ChatColor.GOLD+"Argent: "+game.getWrapper(player).getMoney(),""));
+		this.inventory.setItem(9, IsCreator.createItemStack(Material.COMPOSTER, 1,
+				"" + ChatColor.DARK_RED + "Tout vendre"));
+		this.inventory.setItem(36, IsCreator.createItemStack(Material.DIAMOND_CHESTPLATE, 1,
+				"" + ChatColor.GOLD + "Apparences"));
+		this.inventory.setItem(45, IsCreator.createItemStack(Material.GOLD_INGOT, 1,
+				"" + ChatColor.GOLD + "Argent: " + ChatColor.GOLD));
 		showObjetPage(page);
-		player.openInventory(inventory);
+		player.openInventory(this.inventory);
 	}
+
 	public void showObjetPage(int page) {
-		List<ObjetsList> objets = ObjetsList.getObjetsForTeam(game.getWrapper(player).getTeam());
-		if(28*(page-1)<objets.size()){
-			byte index=11;
-			for(ObjetsList obj : objets.subList(28*(page-1), objets.size())) {
-				inventory.setItem(index, IsCreator.createObjetItemStack(main, obj, 1, ChatColor.GOLD+"Coût: "+obj.getCost()));
-				index++;
-				if(index==45) {
+		List<ObjetsList> objets = ObjetsList.getObjetsForTeam(this.game.getWrapper(this.player).getTeam());
+		if (28 * (page - 1) < objets.size()) {
+			byte index = 11;
+			for (ObjetsList obj : objets.subList(28 * (page - 1), objets.size())) {
+				this.inventory.setItem(index, IsCreator.createObjetItemStack(this.main, obj, 1,
+						new String[]{"" + ChatColor.GOLD + "Coût: " + ChatColor.GOLD}));
+				index = (byte) (index + 1);
+				if (index == 45)
 					break;
-				}
-				if(index%9==0) {
-					index+=2;
-				}
+				if (index % 9 == 0)
+					index = (byte) (index + 2);
 			}
-			for(index+=0;index<45;index++) {
-				if(index%9==0) {
-					index+=2;
-				}
-				inventory.setItem(index, new ItemStack(Material.AIR));
+			for (index = (byte) (index + 0); index < 45; index = (byte) (index + 1)) {
+				if (index % 9 == 0)
+					index = (byte) (index + 2);
+				this.inventory.setItem(index, new ItemStack(Material.AIR));
 			}
 		}
-		if(page>1) {
-			inventory.setItem(47, IsCreator.createItemStack(Material.PAPER,1,ChatColor.RED+"Page précédente",""));
-		}else {
-			inventory.setItem(47, IsCreator.createItemStack(Material.BLACK_STAINED_GLASS_PANE,1," ",""));
+		if (page > 1) {
+			this.inventory.setItem(47, IsCreator.createItemStack(Material.PAPER, 1,
+					"" + ChatColor.RED + "Page précédente"));
+		} else {
+			this.inventory.setItem(47,
+					IsCreator.createItemStack(Material.BLACK_STAINED_GLASS_PANE, 1, " "));
 		}
-		if(objets.size()>28*(page)) {
-			inventory.setItem(53, IsCreator.createItemStack(Material.PAPER,1,ChatColor.GREEN+"Page suivante",""));
-		}else {
-			inventory.setItem(53, IsCreator.createItemStack(Material.BLACK_STAINED_GLASS_PANE,1," ",""));
+		if (objets.size() > 28 * page) {
+			this.inventory.setItem(53, IsCreator.createItemStack(Material.PAPER, 1,
+					"" + ChatColor.GREEN + "Page suivante"));
+		} else {
+			this.inventory.setItem(53,
+					IsCreator.createItemStack(Material.BLACK_STAINED_GLASS_PANE, 1, " "));
 		}
-		this.page=page;
+		this.page = page;
 	}
-	@Override
+
 	public void itemClicked(ItemStack itm, int slot) {
-		switch(itm.getType()) {
-		case REDSTONE_BLOCK:
-			if(slot==0) {
-				if(game.getWrapper(player).getTeam()==Team.VOLEUR&&game.getWrapper(player).getThiefSpawnPoint()==null) {
-					player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_thiefSpawnPoint_notSelected")));
-					break;
-				}
-				game.setReady(player, true);
-				inventory.setItem(0, IsCreator.createItemStack(Material.EMERALD_BLOCK,1,ChatColor.GREEN+"Prêt",""));
-			}else {
-				createObjet(itm);
-			}
-			break;
-		case EMERALD_BLOCK:
-			if(slot==0) {
-				game.setReady(player, false);
-				inventory.setItem(0, IsCreator.createItemStack(Material.REDSTONE_BLOCK,1,ChatColor.RED+"En attente",""));
-			}else {
-				createObjet(itm);
-			}
-			break;
-		case COMPOSTER:
-			if(slot==9) {
-				if(!game.getWrapper(player).isReady()) {
-					for(ItemStack item : player.getInventory().getContents()) {
-						if(item!=null) {
-							Objet obj = game.getObjet(item);
-							if(obj!=null) {
-								obj.vendre(player);
-								game.removeObjet(obj);
-								game.getWrapper(player).setMoney(game.getWrapper(player).getMoney()+obj.getObjet().getCost());
-								inventory.setItem(45, IsCreator.createItemStack(Material.GOLD_INGOT,1,ChatColor.GOLD+"Argent: "+game.getWrapper(player).getMoney(),""));
-							}
-						}
+		switch (itm.getType()) {
+			case REDSTONE_BLOCK :
+				if (slot == 0) {
+					if (this.game.getWrapper(this.player).getTeam() == Team.VOLEUR
+							&& this.game.getWrapper(this.player).getThiefSpawnPoint() == null) {
+						this.player.sendMessage((Component) MessageFormater.formatWithColorCodes('§',
+								DisplayTexts.getMessage("game_thiefSpawnPoint_notSelected"), new MessageFormater[0]));
+					} else {
+						this.game.setReady(this.player, true);
+						this.inventory.setItem(0, IsCreator.createItemStack(Material.EMERALD_BLOCK, 1,
+								"" + ChatColor.GREEN + "Prêt"));
 					}
-				}else {
-					player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_shouldBeUnready")));
+				} else {
+					createObjet(itm);
 				}
-			}else {
-				createObjet(itm);
-			}
-			break;
-		case DIAMOND_CHESTPLATE:
-			if(slot==36) {
-				new SkinInventory(game, main, player, page);
-			}else {
-				createObjet(itm);
-			}
-			break;
-		case GOLD_INGOT:
-			if(slot!=45) {
-				createObjet(itm);
-			}
-			break;
-		case PAPER:
-			if(slot==47) {
-				showObjetPage(page-1);
-			}else if(slot==53) {
-				showObjetPage(page+1);
-			}else {
-				createObjet(itm);
-			}
-			break;
-		default:
-			createObjet(itm);
-			break;
-		}
-	}
-	public void createObjet(ItemStack item) {
-		if(!game.getWrapper(player).isReady()) {
-			ObjetsList objet = item.getItemMeta().getPersistentDataContainer().get(ObjetsListTagType.getNamespacedKey(main), new ObjetsListTagType());
-			if(objet!=null) {
-				if(objet.getLimit()>0) {
-					int count=0;
-					for(ItemStack itemstack : player.getInventory().getContents()) {
-						if(itemstack!=null) {
-							Objet obj = game.getObjet(itemstack);
-							if(obj!=null) {
-								if(obj.getObjet()==objet) {
-									count++;
+				return;
+			case EMERALD_BLOCK :
+				if (slot == 0) {
+					this.game.setReady(this.player, false);
+					this.inventory.setItem(0, IsCreator.createItemStack(Material.REDSTONE_BLOCK, 1,
+							"" + ChatColor.RED + "En attente"));
+				} else {
+					createObjet(itm);
+				}
+				return;
+			case COMPOSTER :
+				if (slot == 9) {
+					if (!this.game.getWrapper(this.player).isReady()) {
+						for (ItemStack item : this.player.getInventory().getContents()) {
+							if (item != null) {
+								Objet obj = this.game.getObjet(item);
+								if (obj != null) {
+									obj.destroy();
+									this.game.getWrapper(this.player)
+											.setMoney(this.game.getWrapper(this.player).getMoney()
+													+ obj.getObjetType().getCost());
+									this.inventory.setItem(45, IsCreator.createItemStack(Material.GOLD_INGOT, 1,
+											"" + ChatColor.GOLD + "Argent: " + ChatColor.GOLD));
 								}
 							}
 						}
-						if(count==objet.getLimit()) {
-							return;
-						}
+					} else {
+						this.player.sendMessage((Component) MessageFormater.formatWithColorCodes('§',
+								DisplayTexts.getMessage("game_shouldBeUnready"), new MessageFormater[0]));
 					}
+				} else {
+					createObjet(itm);
 				}
-				if(game.getWrapper(player).getMoney()>=objet.getCost()) {
-					game.getWrapper(player).setMoney(game.getWrapper(player).getMoney()-objet.getCost());
-					inventory.setItem(45, IsCreator.createItemStack(Material.GOLD_INGOT,1,ChatColor.GOLD+"Argent: "+game.getWrapper(player).getMoney(),""));
-					game.addObjet(ObjetsList.createObjet(main, objet, player, game));
+				return;
+			case DIAMOND_CHESTPLATE :
+				if (slot == 36) {
+					new SkinInventory(this.game, this.main, this.player, this.page);
+				} else {
+					createObjet(itm);
 				}
-			}
-		}else {
-			player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_shouldBeUnready")));
+				return;
+			case GOLD_INGOT :
+				if (slot != 45)
+					createObjet(itm);
+				return;
+			case PAPER :
+				if (slot == 47) {
+					showObjetPage(this.page - 1);
+				} else if (slot == 53) {
+					showObjetPage(this.page + 1);
+				} else {
+					createObjet(itm);
+				}
+				return;
+			default:
+				createObjet(itm);
 		}
 	}
+
+	public void createObjet(ItemStack item) {
+		PlayerWrapper wrapper = this.game.getWrapper(this.player);
+		if (wrapper == null)
+			return;
+		if (!wrapper.isReady()) {
+			ObjetsList objet = (ObjetsList) item.getItemMeta().getPersistentDataContainer()
+					.get(ObjetsListTagType.getNamespacedKey(this.main), new ObjetsListTagType());
+			if (objet != null) {
+				if (objet.getLimit() > 0) {
+					int count = 0;
+					for (ItemStack itemstack : this.player.getInventory().getContents()) {
+						if (itemstack != null) {
+							Objet obj = this.game.getObjet(itemstack);
+							if (obj != null && obj.getObjetType() == objet)
+								count++;
+						}
+						if (count == objet.getLimit())
+							return;
+					}
+				}
+				if (wrapper.getMoney() >= objet.getCost()) {
+					wrapper.setMoney(wrapper.getMoney() - objet.getCost());
+					this.inventory.setItem(45, IsCreator.createItemStack(Material.GOLD_INGOT, 1,
+							"" + ChatColor.GOLD + "Argent: " + ChatColor.GOLD));
+					ObjetsList.createObjet(this.main, objet, this.game, this.player, wrapper);
+				}
+			}
+		} else {
+			this.player.sendMessage((Component) MessageFormater.formatWithColorCodes('§',
+					DisplayTexts.getMessage("game_shouldBeUnready"), new MessageFormater[0]));
+		}
+	}
+
 	@EventHandler
 	public void inventoryClick(InventoryClickEvent e) {
-		if(player.getInventory().equals(e.getClickedInventory())) {
-			if(e.getAction()==InventoryAction.PICKUP_HALF) {
-				if(e.getCurrentItem()!=null) {
-					Objet obj = game.getObjet(e.getCurrentItem());
-					if(obj!=null) {
-						e.setCancelled(true);
-						obj.vendre(player);
-						game.removeObjet(obj);
-						game.getWrapper(player).setMoney(game.getWrapper(player).getMoney()+obj.getObjet().getCost());
-						inventory.setItem(45, IsCreator.createItemStack(Material.GOLD_INGOT,1,ChatColor.GOLD+"Argent: "+game.getWrapper(player).getMoney(),""));
-					}
-				}
+		if (this.player.getInventory().equals(e.getClickedInventory()) && e.getAction() == InventoryAction.PICKUP_HALF
+				&& e.getCurrentItem() != null) {
+			Objet obj = this.game.getObjet(e.getCurrentItem());
+			if (obj != null) {
+				e.setCancelled(true);
+				obj.destroy();
+				this.game.getWrapper(this.player)
+						.setMoney(this.game.getWrapper(this.player).getMoney() + obj.getObjetType().getCost());
+				this.inventory.setItem(45, IsCreator.createItemStack(Material.GOLD_INGOT, 1,
+						"" + ChatColor.GOLD + "Argent: " + ChatColor.GOLD));
 			}
 		}
 	}
+
 	@EventHandler
 	public void onGameStart(GameEnterInGamePhaseEvent e) {
-		if(e.getGame().equals(game)) {
-			player.closeInventory();
+		if (e.getGame().equals(this.game)) {
+			this.player.closeInventory();
 			HandlerList.unregisterAll(this);
 		}
 	}
