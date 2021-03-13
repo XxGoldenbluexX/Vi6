@@ -18,7 +18,7 @@ import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 
 public class Sonar extends Objet{
-	private static int DELAY_IN_TICKS = 4*20;
+	private static int DELAY_IN_TICKS = 80;
 	private static int SQUARED_BLOCK_RANGE = 36;
 	private int delay=DELAY_IN_TICKS;
 	public Sonar(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Game game, Player player, PlayerWrapper wrapper) {
@@ -28,7 +28,7 @@ public class Sonar extends Objet{
 	@Override
 	public void tick() {
 		delay--;
-		if(delay==0) {
+		if(delay<=0) {
 			delay=DELAY_IN_TICKS;
 			ArrayList<Player> thievesNear = new ArrayList<Player>();
 			for(Entry<Player, PlayerWrapper> player : super.getGame().getPlayerMap().entrySet()) {
@@ -58,12 +58,12 @@ public class Sonar extends Objet{
 
 	@Override
 	public void death() {
-		super.disable();
+		disable();
 	}
 
 	@Override
 	public void leaveMap() {
-		super.disable();
+		disable();
 	}
 
 	@Override
