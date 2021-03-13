@@ -1,74 +1,49 @@
 package fr.nekotine.vi6.objet.list;
 
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryType.SlotType;
-import org.bukkit.event.player.PlayerInteractEvent;
-
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.objet.utils.Objet;
-import fr.nekotine.vi6.utils.IsCreator;
+import fr.nekotine.vi6.wrappers.PlayerWrapper;
+import org.bukkit.entity.Player;
+import org.bukkit.event.block.Action;
 
-public class Bottes7Lieues extends Objet{
-	private static int SPEED_INCREASE_PERCENTAGE=20;
-	private final Player boosted;
-	public Bottes7Lieues(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Player player, Game game) {
-		super(main, objet, skin, IsCreator.createObjetItemStack(main,objet,1), game, player);
-		boosted=player;
-		float newSpeed = boosted.getWalkSpeed()*(SPEED_INCREASE_PERCENTAGE/100f+1);
-		if(newSpeed<=1) {
-			boosted.setWalkSpeed(newSpeed);
-		}else {
-			cancelBuy(boosted);
-		}
+public class Bottes7Lieues extends Objet {
+	private static float SPEED_MULT = 1.2F;
+
+	public Bottes7Lieues(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Game game, Player player,
+			PlayerWrapper wrapper) {
+		super(main, objet, skin, game, player, wrapper);
 	}
 
-	@Override
-	public void gameEnd() {
-		boosted.setWalkSpeed(boosted.getWalkSpeed()/(SPEED_INCREASE_PERCENTAGE/100+1));
-	}
-
-	@Override
 	public void tick() {
 	}
 
-	@Override
 	public void cooldownEnded() {
 	}
 
-	@Override
-	public void leaveMap(Player holder) {
+	public void death() {
+		disable();
 	}
 
-	@Override
-	public void death(Player holder) {
+	public void leaveMap() {
+		disable();
 	}
 
-	@Override
-	public void sell(Player holder) {
-		boosted.setWalkSpeed(boosted.getWalkSpeed()/(SPEED_INCREASE_PERCENTAGE/100f+1));
+	public void action(Action action) {
 	}
 
-	@Override
-	public void action(Action action, Player holder) {
+	public void drop() {
 	}
 
-	@Override
-	public void drop(Player holder) {
+	public void disable() {
+		super.disable();
+		getOwner().setWalkSpeed(0.2F);
 	}
-	@EventHandler
-	public void armorEquip(InventoryClickEvent e) {
-		if(itemStack.equals(e.getCursor()) && e.getSlotType()==SlotType.ARMOR) {
-			e.setCancelled(true);
-		}
-	}
-	@EventHandler
-	public void playerInterractEvent(PlayerInteractEvent e) {
-		if(itemStack.equals(e.getItem()) && (e.getAction()==Action.RIGHT_CLICK_AIR || e.getAction()==Action.RIGHT_CLICK_BLOCK)) e.setCancelled(true);
+
+	public void setNewOwner(Player p, PlayerWrapper wrapper) {
+		super.setNewOwner(p, wrapper);
+		getOwner().setWalkSpeed(getOwner().getWalkSpeed() * SPEED_MULT);
 	}
 }
