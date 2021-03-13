@@ -21,7 +21,7 @@ public class OpenPreparationItem extends BaseInventoryItem{
 	}
 	@Override
 	public void playerInteract(Player player) {
-		if(game.getPlayerList().keySet().contains(player)) {
+		if(game.getPlayerMap().keySet().contains(player)) {
 			new PreparationInventory(main, game, player, 1);
 		}else {
 			player.getInventory().remove(item);
@@ -30,7 +30,7 @@ public class OpenPreparationItem extends BaseInventoryItem{
 	@EventHandler
 	public void onGameStart(GameEnterInGamePhaseEvent e) {
 		if(e.getGame().equals(game)) {
-			for(Player player : game.getPlayerList().keySet()) {
+			for(Player player : game.getPlayerMap().keySet()) {
 				player.getInventory().remove(item);
 			}
 			HandlerList.unregisterAll(this);
@@ -39,7 +39,7 @@ public class OpenPreparationItem extends BaseInventoryItem{
 	@EventHandler
 	public void onGameStart(GameEnterPreparationPhaseEvent e) {
 		if(e.getGame().equals(game)) {
-			for(Player player : game.getPlayerList().keySet()) {
+			for(Player player : game.getPlayerMap().keySet()) {
 				player.getInventory().setItem(8, item);
 			}
 		}
