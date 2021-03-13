@@ -3,12 +3,14 @@ package fr.nekotine.vi6.map;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.entity.Player;
 
 import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.enums.PlayerState;
+import fr.nekotine.vi6.events.PlayerChangeRoomEvent;
 import fr.nekotine.vi6.utils.DetectionZone;
 import fr.nekotine.vi6.utils.ZoneDetectionListener;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
@@ -36,8 +38,14 @@ public class Passage implements ConfigurationSerializable, ZoneDetectionListener
 	public boolean playerEnterZone(Player player,DetectionZone zone,Vi6Main mainref) {
 		PlayerWrapper w = mainref.getPlayerWrapper(player);
 		if (w!=null && (w.getState()==PlayerState.WAITING || w.getState()==PlayerState.INSIDE)) {
-			if (zone.equals(zoneA)) w.setCurrentSalle(salleA);
-			if (zone.equals(zoneB)) w.setCurrentSalle(salleB);
+			if (zone.equals(zoneA)) {
+				w.setCurrentSalle(salleA);
+				mainref.getPmanager().callEvent(new PlayerChangeRoomEvent(player, salleA, w.getGame()));
+			}
+			if (zone.equals(zoneB)) {
+				w.setCurrentSalle(salleB);
+				Bukkit.getPluginManager().callEvent(new PlayerChangeRoomEvent(player, salleB, w.getGame()));
+			}
 		}
 		return false;
 	}

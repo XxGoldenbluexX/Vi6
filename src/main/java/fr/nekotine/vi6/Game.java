@@ -73,6 +73,7 @@ import fr.nekotine.vi6.events.MapChangeEvent;
 import fr.nekotine.vi6.events.MoneyChangedEvent;
 import fr.nekotine.vi6.events.PlayerJoinGameEvent;
 import fr.nekotine.vi6.events.PlayerLeaveGameEvent;
+import fr.nekotine.vi6.events.PlayerStealEvent;
 import fr.nekotine.vi6.interfaces.inventories.GameMoneyAnvil;
 import fr.nekotine.vi6.interfaces.inventories.GameSettingsInventory;
 import fr.nekotine.vi6.interfaces.inventories.MapSelectionInventory;
@@ -224,6 +225,7 @@ public class Game implements Listener{
 				w.getPlayer().sendMessage(msgVoleur);
 			}
 		}
+		Bukkit.getPluginManager().callEvent(new PlayerStealEvent(p.getPlayer(), a));
 	}
 	
 	public void openMapSelection(Player player) {

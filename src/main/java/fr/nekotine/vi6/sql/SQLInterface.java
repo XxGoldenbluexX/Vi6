@@ -12,6 +12,8 @@ import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.UUID;
 
+import org.bukkit.entity.Player;
+
 import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.enums.Team;
 
@@ -46,7 +48,7 @@ public class SQLInterface {
 				
 				sql = "CREATE TABLE PartieJoueur("
 						+ "Id_PartieJoueur INT AUTO_INCREMENT,"
-						+ "Id_PartieTueur INT,"
+						+ "UUID_Tueur CHAR(36),"
 						+ "Nom_Salle_Mort VARCHAR(50),"
 						+ "Id_Partie INT NOT NULL,"
 						+ "UUID_Joueur CHAR(36) NOT NULL,"
@@ -109,7 +111,7 @@ public class SQLInterface {
 			return -1;
 		}
 	}
-	public static int addPartieJoueur(int idPartie, UUID playerUUID, Team team, String entree, String sortie, String salleMort, int idPartieTueur) {
+	public static int addPartieJoueur(int idPartie, UUID playerUUID, Team team, String entree, String sortie, String salleMort, UUID UUID_Tueur) {
 		try {
 			Connection c = DriverManager.getConnection("jdbc:sqlite:"+dataFolderURL+"/Vi6Database.db");
 			String sql = "SELECT MAX(Id_PartieJoueur) FROM PartieJoueur";
@@ -117,11 +119,11 @@ public class SQLInterface {
 			ResultSet rs = sttmt.executeQuery(sql);
 			int result = rs.getInt(1)+1;
 			sttmt.close();
-			sql = "INSERT INTO PartieJoueur (Id_PartieJoueur,Id_PartieTueur,Nom_Salle_Mort,Id_Partie,UUID_Joueur,Nom_Equipe,Nom_Entree,Nom_Sortie) "+
+			sql = "INSERT INTO PartieJoueur (Id_PartieJoueur,UUID_Tueur,Nom_Salle_Mort,Id_Partie,UUID_Joueur,Nom_Equipe,Nom_Entree,Nom_Sortie) "+
 							"VALUES (?,?,?,?,?,?,?,?);";
 			PreparedStatement prepa = c.prepareStatement(sql);
 			prepa.setInt(1, result);
-			prepa.setInt(2, idPartieTueur);
+			prepa.setString(2, UUID_Tueur.toString());
 			prepa.setString(3, salleMort);
 			prepa.setInt(4, idPartie);
 			prepa.setString(5, playerUUID.toString());
@@ -168,5 +170,23 @@ public class SQLInterface {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	public static int getRankedGamesPlayed(Player player) {
+		int number=0;
+		try {
+			Connection c = DriverManager.getConnection("jdbc:sqlite:"+dataFolderURL+"/Vi6Database.db");
+			String sql = "SELECT COUNT(*) FROM PartieJoueur pj "
+					+ "WHERE UUID_Joueur = "+player.getUniqueId().toString()+" "
+					+"JOIN Partie p ON pj.Id_Partie=p.IdPartie "
+					+"WHERE p.IsRanked=1";
+			PreparedStatement prepa = c.prepareStatement(sql);
+			ResultSet rs = prepa.executeQuery();
+			number=rs.getInt(0);
+			prepa.close();
+			c.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return number;
 	}
 }
