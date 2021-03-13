@@ -19,8 +19,8 @@ import fr.nekotine.vi6.statuseffects.StatusEffect;
 
 public class PlayerWrapper {
 	
-	private static final String READY_PREFIX = "" + ChatColor.GREEN + "☑ ";
-	private static final String NOT_READY_PREFIX = "" + ChatColor.RED + "☐ ";
+	private static final String READY_PREFIX = ChatColor.GREEN + "☑ ";
+	private static final String NOT_READY_PREFIX = ChatColor.RED + "☐ ";
 	private String currentScoreboardName = "";
 	private Team team = Team.GARDE;
 	private boolean isReady = false;
