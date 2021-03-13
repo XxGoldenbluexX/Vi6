@@ -20,12 +20,11 @@ import org.bukkit.inventory.ItemStack;
 
 @SerializableAs("Sortie")
 public class Sortie implements ConfigurationSerializable, ZoneDetectionListener {
+	
 	private static final String YAML_PREFIX = "Sortie_";
-
+	
 	private String name;
-
 	private String displayName;
-
 	private DetectionZone zone;
 
 	public Sortie(String name, String displayName, DetectionZone z) {
