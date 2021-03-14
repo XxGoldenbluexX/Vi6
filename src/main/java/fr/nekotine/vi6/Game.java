@@ -299,7 +299,7 @@ public class Game implements Listener {
 			this.map.unload();
 			this.map = null;
 		}
-		for (Objet o : objetsList) {
+		for (Objet o : new ArrayList<>(objetsList)) {
 			o.destroy();
 		}
 		HandlerList.unregisterAll(this.mapInterface);
