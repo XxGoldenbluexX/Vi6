@@ -27,12 +27,10 @@ public class Armure extends Objet{
 
 	@Override
 	public void death() {
-		disable();
 	}
 
 	@Override
 	public void leaveMap() {
-		disable();
 	}
 
 	@Override

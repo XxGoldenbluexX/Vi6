@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
@@ -37,12 +38,10 @@ public class DeadRinger extends Objet{
 
 	@Override
 	public void death() {
-		disable();
 	}
 
 	@Override
 	public void leaveMap() {
-		disable();
 	}
 
 	@Override
@@ -52,10 +51,11 @@ public class DeadRinger extends Objet{
 	@Override
 	public void drop() {
 	}
-	@EventHandler
+	/*@EventHandler
 	public void onDamage(EntityDamageEvent e) {
-		if(getOwner()==e.getEntity() && (
-		getOwner().getInventory().getItemInMainHand()==getDisplayedItem() || getOwner().getInventory().getItemInOffHand()==getDisplayedItem())) {
+		if(getOwner().equals(e.getEntity())
+		&& (getDisplayedItem().equals(getOwner().getInventory().getItemInMainHand()) || getDisplayedItem().equals(getOwner().getInventory().getItemInOffHand())) 
+		&& getOwner().getHealth()-e.getFinalDamage()<=0) {
 			e.setCancelled(true);
 			for (Map.Entry<Player, PlayerWrapper> p : getGame().getPlayerMap().entrySet()) {
 				if(p.getValue().getTeam()==Team.GARDE) {
@@ -64,6 +64,19 @@ public class DeadRinger extends Objet{
 					new MessageFormater("§n", String.valueOf(getOwnerWrapper().getStealedArtefactList().size()))));
 				}
 			}
+			StatusEffect se = new StatusEffect(Effects.Invisible);
+			getOwnerWrapper().addStatusEffect(se);
+			se.autoRemove(getMain(), INVISIBILITY_DURATION_TICK);
+			destroy();
+		}
+	}*/
+	@EventHandler
+	public void onPlayerDeath(PlayerDeathEvent e) {
+		System.out.println("Player ded");
+		if(getOwner().equals(e.getEntity())
+		&& (getDisplayedItem().equals(getOwner().getInventory().getItemInMainHand()) || getDisplayedItem().equals(getOwner().getInventory().getItemInOffHand()))) {
+			System.out.println("He had item");
+			e.setCancelled(true);
 			StatusEffect se = new StatusEffect(Effects.Invisible);
 			getOwnerWrapper().addStatusEffect(se);
 			se.autoRemove(getMain(), INVISIBILITY_DURATION_TICK);

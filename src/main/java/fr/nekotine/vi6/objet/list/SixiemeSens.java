@@ -1,5 +1,7 @@
 package fr.nekotine.vi6.objet.list;
 
+import java.util.Map.Entry;
+
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -20,7 +22,6 @@ public class SixiemeSens extends Objet{
 	private Glow glow = Glow.builder().animatedColor(new ChatColor[]{ChatColor.BLUE}).name("sixiemeSensGlow").build();
 	public SixiemeSens(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Game game, Player player, PlayerWrapper wrapper) {
 		super(main, objet, skin, game, player, wrapper);
-		glow.render(player);
 	}
 
 	@Override
@@ -50,12 +51,28 @@ public class SixiemeSens extends Objet{
 	}
 	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent e) {
-		if(getGame().getPlayerTeam(e.getPlayer())==Team.GARDE) {
-			if(glow.getHolders().contains(e.getPlayer())) {
-				if(getOwner().getLocation().distanceSquared(e.getPlayer().getLocation())>SQUARED_BLOCK_DISTANCE) glow.removeHolders(e.getPlayer());
-			}else {
-				if(getOwner().getLocation().distanceSquared(e.getPlayer().getLocation())<=SQUARED_BLOCK_DISTANCE) glow.addHolders(e.getPlayer());
+		if(getOwner().equals(e.getPlayer())) {
+			for(Entry<Player, PlayerWrapper> p : getGame().getPlayerMap().entrySet()) {
+				if(p.getValue().getTeam()==Team.GARDE) {
+					updateGlow(p.getKey());
+				}
 			}
+		}else if(getGame().getPlayerTeam(e.getPlayer())==Team.GARDE) {
+			updateGlow(e.getPlayer());
 		}
+	}
+	private void updateGlow(Player guard) {
+		if(glow.hasHolder(guard)) {
+			if(getOwner().getLocation().distanceSquared(guard.getLocation())>SQUARED_BLOCK_DISTANCE) {
+				glow.removeHolders(guard);
+			}
+		}else if(getOwner().getLocation().distanceSquared(guard.getLocation())<=SQUARED_BLOCK_DISTANCE) {
+			glow.addHolders(guard);
+		}
+	}
+	public void setNewOwner(Player p, PlayerWrapper wrapper) {
+		super.setNewOwner(p, wrapper);
+		glow.display(p);
+		
 	}
 }

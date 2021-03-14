@@ -17,7 +17,7 @@ public class Campeur extends Objet{
 	private static int DELAY_BEFORE_REGENERATING_TICKS = 100;
 	private static int DELAY_BETWEEN_HEALING_TICKS = 20;
 	private static int  REGENERATION_AMOUNT=1;
-	private int delayBeforeRegeneration=DELAY_BEFORE_REGENERATING_TICKS;
+	private boolean activated=true;
 	private int delayBeforeHealing=DELAY_BETWEEN_HEALING_TICKS;
 	
 	public Campeur(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Game game, Player player, PlayerWrapper wrapper) {
@@ -26,7 +26,7 @@ public class Campeur extends Objet{
 
 	@Override
 	public void tick() {
-		if(delayBeforeRegeneration==0) {
+		if(activated) {
 			delayBeforeHealing--;
 			if(delayBeforeHealing==0) {
 				delayBeforeHealing=DELAY_BETWEEN_HEALING_TICKS;
@@ -34,14 +34,12 @@ public class Campeur extends Objet{
 					getOwner().setHealth(getOwner().getHealth()+REGENERATION_AMOUNT);	
 				}
 			}
-		}else {
-			delayBeforeRegeneration--;
-			getItem().setAmount(Math.floorDiv(delayBeforeRegeneration, 20)+1);
 		}
 	}
 
 	@Override
 	public void cooldownEnded() {
+		activated=true;
 	}
 
 	@Override
@@ -64,7 +62,8 @@ public class Campeur extends Objet{
 	@EventHandler
 	public void onDamage(EntityDamageEvent e) {
 		if(getOwner().equals(e.getEntity())) {
-			delayBeforeRegeneration=DELAY_BEFORE_REGENERATING_TICKS;
+			activated=false;
+			setCooldown(DELAY_BEFORE_REGENERATING_TICKS);
 			delayBeforeHealing=DELAY_BETWEEN_HEALING_TICKS;
 		}
 	}

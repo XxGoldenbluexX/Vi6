@@ -24,11 +24,9 @@ public class Bottes7Lieues extends Objet {
 	}
 
 	public void death() {
-		disable();
 	}
 
 	public void leaveMap() {
-		disable();
 	}
 
 	public void action(Action action) {
