@@ -665,18 +665,16 @@ public class Game implements Listener {
 
 	@EventHandler
 	public void playerDeath(PlayerDeathEvent e) {
+		e.deathMessage(null);
 		if (this.playerList.containsKey(e.getEntity())
 				&& ((PlayerWrapper) this.playerList.get(e.getEntity())).getTeam() == Team.VOLEUR
 				&& ((PlayerWrapper) this.playerList.get(e.getEntity())).getState() == PlayerState.INSIDE) {
 			((PlayerWrapper) this.playerList.get(e.getEntity())).setState(PlayerState.LEAVED);
 			e.getEntity().setGameMode(GameMode.SPECTATOR);
 			for (Map.Entry<Player, PlayerWrapper> p : this.playerList.entrySet()) {
-				((Player) p.getKey()).sendMessage((Component) MessageFormater.formatWithColorCodes('§',
-						DisplayTexts.getMessage("game_death"),
-						new MessageFormater[]{new MessageFormater("§p", String.valueOf(e.getEntity().getName())),
-								new MessageFormater("§n",
-										String.valueOf(((PlayerWrapper) this.playerList.get(e.getEntity()))
-												.getStealedArtefactList().size()))}));
+				p.getKey().sendMessage(MessageFormater.formatWithColorCodes('§', DisplayTexts.getMessage("game_death"),
+						new MessageFormater("§p", String.valueOf(e.getEntity().getName())),
+						new MessageFormater("§n", String.valueOf((this.playerList.get(e.getEntity())).getStealedArtefactList().size()))));
 			}
 			if (!isThiefLeft())
 				endGame(false);
