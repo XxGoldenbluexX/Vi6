@@ -67,7 +67,6 @@ public class SixiemeSens extends Objet{
 				glow.removeHolders(guard);
 			}
 		}else if(getOwner().getLocation().distanceSquared(guard.getLocation())<=SQUARED_BLOCK_DISTANCE) {
-			System.out.println();
 			glow.addHolders(guard);
 		}
 	}
