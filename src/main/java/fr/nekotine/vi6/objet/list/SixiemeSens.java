@@ -19,7 +19,7 @@ import ru.xezard.glow.data.glow.Glow;
 
 public class SixiemeSens extends Objet{
 	private static int SQUARED_BLOCK_DISTANCE=36;
-	private Glow glow = Glow.builder().animatedColor(new ChatColor[]{ChatColor.BLUE}).name("sixiemeSensGlow").build();
+	private Glow glow;
 	public SixiemeSens(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Game game, Player player, PlayerWrapper wrapper) {
 		super(main, objet, skin, game, player, wrapper);
 	}
@@ -67,12 +67,17 @@ public class SixiemeSens extends Objet{
 				glow.removeHolders(guard);
 			}
 		}else if(getOwner().getLocation().distanceSquared(guard.getLocation())<=SQUARED_BLOCK_DISTANCE) {
+			System.out.println();
 			glow.addHolders(guard);
 		}
 	}
 	public void setNewOwner(Player p, PlayerWrapper wrapper) {
-		super.setNewOwner(p, wrapper);
+		glow = Glow.builder().animatedColor(new ChatColor[]{ChatColor.BLUE}).name("sixiemeSensGlow").build();
 		glow.display(p);
-		
+		super.setNewOwner(p, wrapper);
+	}
+	public void disable() {
+		super.disable();
+		glow.destroy();
 	}
 }
