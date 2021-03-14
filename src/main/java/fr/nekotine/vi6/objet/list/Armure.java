@@ -37,6 +37,9 @@ public class Armure extends Objet{
 
 	@Override
 	public void action(Action var1) {
+		if(var1==Action.RIGHT_CLICK_AIR || var1==Action.RIGHT_CLICK_BLOCK) {
+			//empecher d'équiper l'armure
+		}
 	}
 
 	@Override
@@ -44,8 +47,10 @@ public class Armure extends Objet{
 	}
 	public void setNewOwner(Player p, PlayerWrapper wrapper) {
 		super.setNewOwner(p, wrapper);
-		AttributeInstance health = getOwner().getAttribute(Attribute.GENERIC_MAX_HEALTH);
+		AttributeInstance health = p.getAttribute(Attribute.GENERIC_MAX_HEALTH);
 		health.setBaseValue(health.getValue()+4);
+		p.setHealth(health.getBaseValue());
+		
 	}
 	public void disable() {
 		super.disable();

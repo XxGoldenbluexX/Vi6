@@ -14,6 +14,7 @@ import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.events.GameEndEvent;
 import fr.nekotine.vi6.events.PlayerChangeRoomEvent;
 import fr.nekotine.vi6.events.PlayerEnterMapEvent;
+import fr.nekotine.vi6.events.PlayerEscapeEvent;
 import fr.nekotine.vi6.events.PlayerStealEvent;
 import fr.nekotine.vi6.events.PlayerUseObjetEvent;
 
@@ -87,5 +88,9 @@ public class PlayerGame implements Listener{
 	@EventHandler
 	public void playerChangeRoom(PlayerChangeRoomEvent e) {
 		if(e.getGame().getName()==gameName && e.getPlayer().getUniqueId().equals(playerUUID)) salleMort=e.getRoom();
+	}
+	@EventHandler
+	public void playerLeaveMap(PlayerEscapeEvent e) {
+		if(e.getGame().getName()==gameName && e.getPlayer().getUniqueId().equals(playerUUID)) sortie=e.getSortie().getDisplayName();
 	}
 }

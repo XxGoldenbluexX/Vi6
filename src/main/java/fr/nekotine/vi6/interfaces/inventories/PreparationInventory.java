@@ -185,34 +185,36 @@ public class PreparationInventory extends BasePersonalInventory {
 	}
 
 	public void createObjet(ItemStack item) {
-		PlayerWrapper wrapper = this.game.getWrapper(this.player);
-		if (wrapper == null)
-			return;
-		if (!wrapper.isReady()) {
-			ObjetsList objet = (ObjetsList) item.getItemMeta().getPersistentDataContainer()
-					.get(ObjetsListTagType.getNamespacedKey(this.main), new ObjetsListTagType());
-			if (objet != null) {
-				if (objet.getLimit() > 0) {
-					int count = 0;
-					for (ItemStack itemstack : this.player.getInventory().getContents()) {
-						if (itemstack != null) {
-							Objet obj = this.game.getObjet(itemstack);
-							if (obj != null && obj.getObjetType() == objet)
-								count++;
+		if(player.getInventory().firstEmpty()>-1) {
+			PlayerWrapper wrapper = this.game.getWrapper(this.player);
+			if (wrapper == null)
+				return;
+			if (!wrapper.isReady()) {
+				ObjetsList objet = (ObjetsList) item.getItemMeta().getPersistentDataContainer()
+						.get(ObjetsListTagType.getNamespacedKey(this.main), new ObjetsListTagType());
+				if (objet != null) {
+					if (objet.getLimit() > 0) {
+						int count = 0;
+						for (ItemStack itemstack : this.player.getInventory().getContents()) {
+							if (itemstack != null) {
+								Objet obj = this.game.getObjet(itemstack);
+								if (obj != null && obj.getObjetType() == objet)
+									count++;
+							}
+							if (count == objet.getLimit())
+								return;
 						}
-						if (count == objet.getLimit())
-							return;
+					}
+					if (wrapper.getMoney() >= objet.getCost()) {
+						wrapper.setMoney(wrapper.getMoney() - objet.getCost());
+						updateMoneyDisplay(wrapper);
+						ObjetsList.createObjet(this.main, objet, this.game, this.player, wrapper);
 					}
 				}
-				if (wrapper.getMoney() >= objet.getCost()) {
-					wrapper.setMoney(wrapper.getMoney() - objet.getCost());
-					updateMoneyDisplay(wrapper);
-					ObjetsList.createObjet(this.main, objet, this.game, this.player, wrapper);
-				}
+			} else {
+				this.player.sendMessage((Component) MessageFormater.formatWithColorCodes('§',
+						DisplayTexts.getMessage("game_shouldBeUnready"), new MessageFormater[0]));
 			}
-		} else {
-			this.player.sendMessage((Component) MessageFormater.formatWithColorCodes('§',
-					DisplayTexts.getMessage("game_shouldBeUnready"), new MessageFormater[0]));
 		}
 	}
 	

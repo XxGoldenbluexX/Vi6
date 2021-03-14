@@ -55,8 +55,7 @@ public class SQLInterface {
 						+ "Nom_Equipe VARCHAR(50) NOT NULL,"
 						+ "Nom_Entree VARCHAR(50),"
 						+ "Nom_Sortie VARCHAR(50),"
-						+ "PRIMARY KEY(Id_PartieJoueur),"
-						+ "FOREIGN KEY(Id_PartieTueur) REFERENCES PartieJoueur(Id_PartieJoueur));";
+						+ "PRIMARY KEY(Id_PartieJoueur));";
 				sttmt.executeUpdate(sql);
 				
 				sql = "CREATE TABLE Vole("
@@ -123,7 +122,11 @@ public class SQLInterface {
 							"VALUES (?,?,?,?,?,?,?,?);";
 			PreparedStatement prepa = c.prepareStatement(sql);
 			prepa.setInt(1, result);
-			prepa.setString(2, UUID_Tueur.toString());
+			if(UUID_Tueur==null) {
+				prepa.setString(2, null);
+			}else {
+				prepa.setString(2, UUID_Tueur.toString());
+			}
 			prepa.setString(3, salleMort);
 			prepa.setInt(4, idPartie);
 			prepa.setString(5, playerUUID.toString());

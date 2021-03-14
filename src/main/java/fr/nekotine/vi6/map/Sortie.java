@@ -3,6 +3,7 @@ package fr.nekotine.vi6.map;
 import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.enums.PlayerState;
 import fr.nekotine.vi6.enums.Team;
+import fr.nekotine.vi6.events.PlayerEscapeEvent;
 import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.utils.DetectionZone;
 import fr.nekotine.vi6.utils.MessageFormater;
@@ -12,6 +13,8 @@ import fr.nekotine.vi6.yml.DisplayTexts;
 import java.util.HashMap;
 import java.util.Map;
 import net.kyori.adventure.text.Component;
+
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
@@ -80,6 +83,7 @@ public class Sortie implements ConfigurationSerializable, ZoneDetectionListener 
 				&& wrap.isCanEscape()) {
 			wrap.setState(PlayerState.LEAVED);
 			player.setGameMode(GameMode.SPECTATOR);
+			Bukkit.getPluginManager().callEvent(new PlayerEscapeEvent(this, player, wrap.getGame()));
 			for (ItemStack itm : player.getInventory().getContents()) {
 				if (itm != null) {
 					Objet objet = wrap.getGame().getObjet(itm);
