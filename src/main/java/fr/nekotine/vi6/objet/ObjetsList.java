@@ -41,7 +41,7 @@ public enum ObjetsList {
 	BOTTES7LIEUES(Bottes7Lieues.class,
 			Team.GARDE,
 			100,
-			0,
+			8,
 			ChatColor.GREEN+"Bottes de 7 lieues",
 			Material.LEATHER_BOOTS,
 			ChatColor.LIGHT_PURPLE+"Vitesse accrue de 20%"),
