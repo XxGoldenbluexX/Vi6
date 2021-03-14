@@ -43,6 +43,7 @@ public class MatraqueDeTheo extends Objet {
 
 	public MatraqueDeTheo(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Game game, Player player,PlayerWrapper wrapper) {
 		super(main, objet, skin, game, player, wrapper);
+		consume();
 	}
 
 	public void setNewOwner(Player p, PlayerWrapper wrapper) {
