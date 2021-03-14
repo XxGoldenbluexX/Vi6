@@ -197,7 +197,7 @@ public abstract class Objet implements Listener {
 	private void updateItem() {
 		ItemStack current = displayedItem;
 		if (onCooldown) {
-			displayedItem = IsCreator.createItemStack(Material.BLACK_STAINED_GLASS_PANE,1,
+			displayedItem = IsCreator.createItemStack(Material.BLACK_STAINED_GLASS_PANE,cooldownTicksLeft/20,
 					ChatColor.RED+objet.getInShopName()+": "+Math.round(cooldownTicksLeft / 20.0D * 10.0D) / 10.0D);
 		} else {
 			displayedItem = item;

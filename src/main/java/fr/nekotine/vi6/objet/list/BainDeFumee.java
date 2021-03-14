@@ -62,7 +62,7 @@ public class BainDeFumee extends Objet {
 	}
 	
 	private void cast() {
-		pools.add(new SmokePool(Particle.EXPLOSION_NORMAL,getOwner().getLocation()));
+		pools.add(new SmokePool(Particle.SMOKE_NORMAL,getOwner().getLocation()));
 		setCooldown(400);
 	}
 	
@@ -102,7 +102,8 @@ public class BainDeFumee extends Objet {
 				l.setX(loc.getX()+(Math.cos(angle)*point));
 				l.setZ(loc.getZ()+(Math.sin(angle)*point));
 				l.setY(loc.getY()-1);
-				while (true) {
+				double maxy = l.getY()+2;
+				while (l.getY()<maxy) {
 					if (l.getBlock().getBoundingBox().contains(l.toVector())) {
 						l.add(0, 0.1, 0);
 					}else{
