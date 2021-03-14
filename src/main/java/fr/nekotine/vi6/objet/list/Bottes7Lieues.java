@@ -40,8 +40,15 @@ public class Bottes7Lieues extends Objet {
 		getOwner().setWalkSpeed(getOwner().getWalkSpeed() / SPEED_MULT);
 	}
 
+	@Override
 	public void setNewOwner(Player p, PlayerWrapper wrapper) {
 		super.setNewOwner(p, wrapper);
 		getOwner().setWalkSpeed(getOwner().getWalkSpeed() * SPEED_MULT);
+	}
+	
+	@Override
+	public void destroy() {
+		super.destroy();
+		getOwner().setWalkSpeed(0.2f);
 	}
 }
