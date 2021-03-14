@@ -106,7 +106,7 @@ public class BainDeFumee extends Objet {
 					if (l.getBlock().getBoundingBox().contains(l.toVector())) {
 						l.add(0, 0.1, 0);
 					}else{
-						l.getWorld().spawnParticle(particle, l, 1);
+						l.getWorld().spawnParticle(particle, l, 1,0,0,0,0);
 						break;
 					};
 				}
