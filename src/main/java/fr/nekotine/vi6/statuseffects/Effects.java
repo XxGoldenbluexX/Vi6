@@ -24,7 +24,8 @@ public enum Effects {
 		p.removePotionEffect(PotionEffectType.GLOWING);
 	}),
 	InGlowable((p,w)->{},(p,w)->{}),
-	Fantomatique((p,w)->{},(p,w)->{});
+	Fantomatique((p,w)->{},(p,w)->{}),
+	NoDamage((p,w)->{p.setNoDamageTicks(Integer.MAX_VALUE);},(p,w)->{p.setNoDamageTicks(1);});
 	
 	private final StatusEffectUpdate enableLambda;
 	private final StatusEffectUpdate disableLambda;
