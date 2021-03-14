@@ -39,11 +39,16 @@ public class Bottes7Lieues extends Objet {
 
 	public void disable() {
 		super.disable();
-		getOwner().setWalkSpeed(0.2F);
+		getOwner().setWalkSpeed(getOwner().getWalkSpeed() / SPEED_MULT);
 	}
 
 	public void setNewOwner(Player p, PlayerWrapper wrapper) {
 		super.setNewOwner(p, wrapper);
-		getOwner().setWalkSpeed(getOwner().getWalkSpeed() * SPEED_MULT);
+		float newSpeed = getOwner().getWalkSpeed() * SPEED_MULT;
+		if(newSpeed>1) {
+			//revente
+		}else {
+			getOwner().setWalkSpeed(newSpeed);
+		}
 	}
 }
