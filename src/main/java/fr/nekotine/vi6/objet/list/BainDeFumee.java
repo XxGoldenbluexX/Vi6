@@ -90,15 +90,13 @@ public class BainDeFumee extends Objet {
 		
 		private final Particle particle;
 		private final Location loc;
-		private final StatusEffect[] effects;
 		private int life=LIFETIME;
 		private final ArrayList<PlayerWrapper> inside = new ArrayList<>();
 		private final BainDeFumee parent;
 		
-		private SmokePool(BainDeFumee bain, Particle prtcl, Location l, StatusEffect...eff) {
+		private SmokePool(BainDeFumee bain, Particle prtcl, Location l) {
 			particle=prtcl;
 			loc=l;
-			effects=eff;
 			parent=bain;
 		}
 		
@@ -146,11 +144,6 @@ public class BainDeFumee extends Objet {
 					};
 				}
 			}
-		}
-		
-		@SuppressWarnings("unused")
-		private StatusEffect[] getEffects() {
-			return effects;//TODO REMOVE THIS
 		}
 		
 		private void destroy() {
