@@ -9,10 +9,6 @@ import org.bukkit.Material;
 import fr.nekotine.vi6.enums.Team;
 
 public enum ObjetsSkins {
-	INVI_SNEAK_SKIN(ObjetsList.INVISNEAK,
-			ChatColor.GOLD+"Invisible",
-			Material.GLASS_PANE,
-			new String[]{ChatColor.LIGHT_PURPLE+"C'est un skin pose pas de question."}),
 	CHAMP_DE_FORCE_SLIME(ObjetsList.CHAMP_DE_FORCE,
 			ChatColor.GOLD+"Slime",
 			Material.SLIME_BLOCK,
