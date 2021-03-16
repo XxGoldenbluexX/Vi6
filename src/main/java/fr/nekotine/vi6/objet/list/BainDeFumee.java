@@ -30,6 +30,7 @@ public class BainDeFumee extends Objet {
 	public void tick() {
 		for (SmokePool p : toRemove) {
 			pools.remove(p);
+			p.destroy();
 		}
 		toRemove.clear();
 		for (SmokePool p : pools) {
