@@ -25,6 +25,7 @@ import fr.nekotine.vi6.map.SpawnVoleur;
 import fr.nekotine.vi6.sql.SQLInterface;
 import fr.nekotine.vi6.statuseffects.ItemHider;
 import fr.nekotine.vi6.utils.DetectionZone;
+import fr.nekotine.vi6.utils.ExplosionCanceler;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 import fr.nekotine.vi6.yml.DisplayTexts;
 
@@ -62,6 +63,7 @@ public class Vi6Main extends JavaPlugin {
 		ConfigurationSerialization.registerClass(SpawnVoleur.class, "SpawnVoleur");
 		pmanager=Bukkit.getPluginManager();//getting pmanager reference
 		new ItemHider(ProtocolLibrary.getProtocolManager(),this);
+		new ExplosionCanceler(pmanager,this);
 		//File creation
 		saveDefaultConfig();//making config.yml
 		if (getDataFolder().exists()) {//making dataFolder
