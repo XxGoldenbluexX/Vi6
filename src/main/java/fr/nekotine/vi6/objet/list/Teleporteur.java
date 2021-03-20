@@ -1,14 +1,5 @@
 package fr.nekotine.vi6.objet.list;
 
-import fr.nekotine.vi6.Game;
-import fr.nekotine.vi6.Vi6Main;
-import fr.nekotine.vi6.objet.ObjetsList;
-import fr.nekotine.vi6.objet.ObjetsSkins;
-import fr.nekotine.vi6.objet.utils.Objet;
-import fr.nekotine.vi6.utils.TempBlock;
-import fr.nekotine.vi6.wrappers.PlayerWrapper;
-import net.kyori.adventure.key.Key;
-import net.kyori.adventure.sound.Sound;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -19,6 +10,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import fr.nekotine.vi6.Game;
+import fr.nekotine.vi6.Vi6Main;
+import fr.nekotine.vi6.objet.ObjetsList;
+import fr.nekotine.vi6.objet.ObjetsSkins;
+import fr.nekotine.vi6.objet.utils.Objet;
+import fr.nekotine.vi6.utils.TempBlock;
+import fr.nekotine.vi6.wrappers.PlayerWrapper;
+import net.kyori.adventure.key.Key;
+import net.kyori.adventure.sound.Sound;
 
 public class Teleporteur extends Objet {
 	

@@ -1,13 +1,14 @@
 package fr.nekotine.vi6.objet.list;
 
+import org.bukkit.entity.Player;
+import org.bukkit.event.block.Action;
+
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
-import org.bukkit.entity.Player;
-import org.bukkit.event.block.Action;
 
 public class Bottes7Lieues extends Objet {
 	private static float SPEED_MULT = 1.2F;

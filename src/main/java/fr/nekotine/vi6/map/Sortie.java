@@ -1,5 +1,15 @@
 package fr.nekotine.vi6.map;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.configuration.serialization.SerializableAs;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
 import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.enums.PlayerState;
 import fr.nekotine.vi6.enums.Team;
@@ -10,16 +20,7 @@ import fr.nekotine.vi6.utils.MessageFormater;
 import fr.nekotine.vi6.utils.ZoneDetectionListener;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 import fr.nekotine.vi6.yml.DisplayTexts;
-import java.util.HashMap;
-import java.util.Map;
 import net.kyori.adventure.text.Component;
-
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
-import org.bukkit.configuration.serialization.SerializableAs;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 @SerializableAs("Sortie")
 public class Sortie implements ConfigurationSerializable, ZoneDetectionListener {

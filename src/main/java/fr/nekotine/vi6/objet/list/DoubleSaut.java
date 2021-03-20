@@ -1,6 +1,16 @@
 package fr.nekotine.vi6.objet.list;
 
+import org.bukkit.GameMode;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerToggleFlightEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
+
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
+
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.objet.ObjetsList;
@@ -10,14 +20,6 @@ import fr.nekotine.vi6.utils.IsCreator;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerToggleFlightEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 
 public class DoubleSaut extends Objet {
 	private static final ItemStack JUMP_BOOTS = IsCreator.createItemStack(Material.GOLDEN_BOOTS, 1,

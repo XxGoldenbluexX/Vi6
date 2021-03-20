@@ -1,15 +1,5 @@
 package fr.nekotine.vi6.objet.list;
 
-import fr.nekotine.vi6.Game;
-import fr.nekotine.vi6.Vi6Main;
-import fr.nekotine.vi6.objet.ObjetsList;
-import fr.nekotine.vi6.objet.ObjetsSkins;
-import fr.nekotine.vi6.objet.utils.Objet;
-import fr.nekotine.vi6.wrappers.PlayerWrapper;
-import net.kyori.adventure.key.Key;
-import net.kyori.adventure.sound.Sound;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
@@ -20,6 +10,17 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import fr.nekotine.vi6.Game;
+import fr.nekotine.vi6.Vi6Main;
+import fr.nekotine.vi6.objet.ObjetsList;
+import fr.nekotine.vi6.objet.ObjetsSkins;
+import fr.nekotine.vi6.objet.utils.Objet;
+import fr.nekotine.vi6.wrappers.PlayerWrapper;
+import net.kyori.adventure.key.Key;
+import net.kyori.adventure.sound.Sound;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
 
 public class MatraqueDeTheo extends Objet {
 	

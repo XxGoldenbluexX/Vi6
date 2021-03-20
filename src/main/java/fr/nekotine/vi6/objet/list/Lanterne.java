@@ -1,26 +1,11 @@
 package fr.nekotine.vi6.objet.list;
 
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
-import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.wrappers.WrappedChatComponent;
-import com.comphenix.protocol.wrappers.WrappedDataWatcher;
-import fr.nekotine.vi6.Game;
-import fr.nekotine.vi6.Vi6Main;
-import fr.nekotine.vi6.enums.PlayerState;
-import fr.nekotine.vi6.enums.Team;
-import fr.nekotine.vi6.objet.ObjetsList;
-import fr.nekotine.vi6.objet.ObjetsSkins;
-import fr.nekotine.vi6.objet.utils.Objet;
-import fr.nekotine.vi6.wrappers.PlayerWrapper;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-import net.kyori.adventure.key.Key;
-import net.kyori.adventure.sound.Sound;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -33,6 +18,24 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
+import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.wrappers.WrappedChatComponent;
+import com.comphenix.protocol.wrappers.WrappedDataWatcher;
+
+import fr.nekotine.vi6.Game;
+import fr.nekotine.vi6.Vi6Main;
+import fr.nekotine.vi6.enums.PlayerState;
+import fr.nekotine.vi6.enums.Team;
+import fr.nekotine.vi6.objet.ObjetsList;
+import fr.nekotine.vi6.objet.ObjetsSkins;
+import fr.nekotine.vi6.objet.utils.Objet;
+import fr.nekotine.vi6.wrappers.PlayerWrapper;
+import net.kyori.adventure.key.Key;
+import net.kyori.adventure.sound.Sound;
 
 public class Lanterne extends Objet {
 	

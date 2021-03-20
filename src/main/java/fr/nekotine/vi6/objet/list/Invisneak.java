@@ -1,5 +1,12 @@
 package fr.nekotine.vi6.objet.list;
 
+import java.util.Map;
+
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerToggleSneakEvent;
+
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.enums.Team;
@@ -9,11 +16,6 @@ import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.statuseffects.Effects;
 import fr.nekotine.vi6.statuseffects.StatusEffect;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
-import java.util.Map;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerToggleSneakEvent;
 
 public class Invisneak extends Objet {
 	

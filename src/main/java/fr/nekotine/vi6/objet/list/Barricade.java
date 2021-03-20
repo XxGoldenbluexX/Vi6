@@ -1,5 +1,10 @@
 package fr.nekotine.vi6.objet.list;
 
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.block.Action;
+
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.map.Carte;
@@ -10,10 +15,6 @@ import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.event.block.Action;
 
 public class Barricade extends Objet {
 	public Barricade(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Game game, Player player,

@@ -14,9 +14,9 @@ import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 
 public class Campeur extends Objet{
-	private static int DELAY_BEFORE_REGENERATING_TICKS = 100;
-	private static int DELAY_BETWEEN_HEALING_TICKS = 20;
-	private static int  REGENERATION_AMOUNT=1;
+	private final static int DELAY_BEFORE_REGENERATING_TICKS = 100;
+	private final static int DELAY_BETWEEN_HEALING_TICKS = 20;
+	private final static int  REGENERATION_AMOUNT=1;
 	private boolean activated=true;
 	private int delayBeforeHealing=DELAY_BETWEEN_HEALING_TICKS;
 	

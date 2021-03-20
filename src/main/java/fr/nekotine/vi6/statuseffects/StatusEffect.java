@@ -1,8 +1,9 @@
 package fr.nekotine.vi6.statuseffects;
 
-import fr.nekotine.vi6.wrappers.PlayerWrapper;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import fr.nekotine.vi6.wrappers.PlayerWrapper;
 
 public class StatusEffect {
 	private final Effects effect;

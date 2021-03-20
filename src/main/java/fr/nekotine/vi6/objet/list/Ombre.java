@@ -1,15 +1,5 @@
 package fr.nekotine.vi6.objet.list;
 
-import fr.nekotine.vi6.Game;
-import fr.nekotine.vi6.Vi6Main;
-import fr.nekotine.vi6.enums.Team;
-import fr.nekotine.vi6.objet.ObjetsList;
-import fr.nekotine.vi6.objet.ObjetsSkins;
-import fr.nekotine.vi6.objet.utils.Objet;
-import fr.nekotine.vi6.utils.IsCreator;
-import fr.nekotine.vi6.wrappers.PlayerWrapper;
-import net.kyori.adventure.key.Key;
-import net.kyori.adventure.sound.Sound;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -22,6 +12,17 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+
+import fr.nekotine.vi6.Game;
+import fr.nekotine.vi6.Vi6Main;
+import fr.nekotine.vi6.enums.Team;
+import fr.nekotine.vi6.objet.ObjetsList;
+import fr.nekotine.vi6.objet.ObjetsSkins;
+import fr.nekotine.vi6.objet.utils.Objet;
+import fr.nekotine.vi6.utils.IsCreator;
+import fr.nekotine.vi6.wrappers.PlayerWrapper;
+import net.kyori.adventure.key.Key;
+import net.kyori.adventure.sound.Sound;
 
 public class Ombre extends Objet {
 	private ArmorStand ombre;
