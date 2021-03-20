@@ -89,12 +89,12 @@ public class SixiemeSens extends Objet{
 	}
 	private void glowPlayer(Player viewer, Player holder) {
 		PacketContainer packet = pmanager.createPacket(PacketType.Play.Server.ENTITY_METADATA);
-	    packet.getIntegers().write(0, holder.getEntityId()); //Set packet's entity id
-	    WrappedDataWatcher watcher = new WrappedDataWatcher(); //Create data watcher, the Entity Metadata packet requires this
-	    Serializer serializer = Registry.get(Byte.class); //Found this through google, needed for some stupid reason
-	    watcher.setEntity(viewer); //Set the new data watcher's target
-	    watcher.setObject(0, serializer, (byte) (0x40)); //Set status to glowing, found on protocol page
-	    packet.getWatchableCollectionModifier().write(0, watcher.getWatchableObjects()); //Make the packet's datawatcher the one we created
+	    packet.getIntegers().write(0, holder.getEntityId());
+	    WrappedDataWatcher watcher = new WrappedDataWatcher();
+	    Serializer serializer = Registry.get(Byte.class);
+	    watcher.setEntity(viewer);
+	    watcher.setObject(0, serializer, (byte) (0x40));
+	    packet.getWatchableCollectionModifier().write(0, watcher.getWatchableObjects());
 	    try {
 	    	pmanager.sendServerPacket(viewer, packet);
 	    } catch (InvocationTargetException e) {
@@ -103,12 +103,12 @@ public class SixiemeSens extends Objet{
 	}
 	private void unglowPlayer(Player viewer,Player holder) {
 		PacketContainer packet = pmanager.createPacket(PacketType.Play.Server.ENTITY_METADATA);
-	    packet.getIntegers().write(0, holder.getEntityId()); //Set packet's entity id
-	    WrappedDataWatcher watcher = new WrappedDataWatcher(); //Create data watcher, the Entity Metadata packet requires this
-	    Serializer serializer = Registry.get(Byte.class); //Found this through google, needed for some stupid reason
-	    watcher.setEntity(viewer); //Set the new data watcher's target
-	    watcher.setObject(0, serializer, (byte) (0x00)); //Set status to glowing, found on protocol page
-	    packet.getWatchableCollectionModifier().write(0, watcher.getWatchableObjects()); //Make the packet's datawatcher the one we created
+	    packet.getIntegers().write(0, holder.getEntityId());
+	    WrappedDataWatcher watcher = new WrappedDataWatcher();
+	    Serializer serializer = Registry.get(Byte.class);
+	    watcher.setEntity(viewer);
+	    watcher.setObject(0, serializer, (byte) (0x00));
+	    packet.getWatchableCollectionModifier().write(0, watcher.getWatchableObjects());
 	    try {
 	    	pmanager.sendServerPacket(viewer, packet);
 	    } catch (InvocationTargetException e) {
