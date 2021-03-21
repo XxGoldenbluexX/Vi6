@@ -31,6 +31,7 @@ import fr.nekotine.vi6.objet.list.Surcharge;
 import fr.nekotine.vi6.objet.list.Teleporteur;
 import fr.nekotine.vi6.objet.list.Dephasage;
 import fr.nekotine.vi6.objet.list.Pecheur;
+import fr.nekotine.vi6.objet.list.GPS;
 import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 
@@ -103,6 +104,13 @@ public enum ObjetsList {
 			ChatColor.GOLD+"Lanterne",Material.LANTERN
 			,ChatColor.LIGHT_PURPLE+"Permet de poser jusqu'a deux lanternes"
 			,ChatColor.LIGHT_PURPLE+"que vos aliés peuvent prendre pour se téléporter a vous."),
+	GPS(GPS.class,
+		Team.VOLEUR,
+		100,
+		0,
+		ChatColor.GOLD+"Flèche GPS",
+		Material.CROSSBOW,
+		ChatColor.LIGHT_PURPLE+"Tire une flèche, obtenez une boussole qui pointe dans la direction du garde touché"),
 	//----------------------------------------------------------------------------------------------------------------------------------------
 	MATRAQUE_DE_THEO(MatraqueDeTheo.class,Team.GARDE,100,1,
 			ChatColor.DARK_RED+"Matraque de théo",Material.NETHERITE_SWORD,ChatColor.LIGHT_PURPLE+"Tuez en un coup.",ChatColor.GRAY+"Faites rager les amateurs du bain de fumée."),
