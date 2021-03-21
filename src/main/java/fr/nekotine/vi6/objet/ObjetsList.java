@@ -29,6 +29,7 @@ import fr.nekotine.vi6.objet.list.SixiemeSens;
 import fr.nekotine.vi6.objet.list.Sonar;
 import fr.nekotine.vi6.objet.list.Surcharge;
 import fr.nekotine.vi6.objet.list.Teleporteur;
+import fr.nekotine.vi6.objet.list.Dephasage;
 import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 
@@ -106,6 +107,13 @@ public enum ObjetsList {
 			ChatColor.RED+"Dead Ringer",
 			Material.CLOCK,
 			ChatColor.LIGHT_PURPLE+"Quand vous prenez des dégâts, feint votre mort et devenez invisible"),
+	DEPHASAGE(Dephasage.class,
+			Team.VOLEUR,
+			100,
+			1,
+			ChatColor.GOLD+"Déphasage",
+			Material.IRON_NUGGET,
+			ChatColor.LIGHT_PURPLE+"Toutes les 20 secondes gagnez 2 secondes d'invisibilité"),
 	BUISSON_FURTIF(BuissonFurtif.class,Team.VOLEUR,100,1,
 			ChatColor.GREEN+"Buisson Furtif",Material.OAK_LEAVES,ChatColor.LIGHT_PURPLE+"Devenez invisible et insondable dans les buissons."),
 	DOUBLE_SAUT(DoubleSaut.class,Team.VOLEUR,100,1,

@@ -12,9 +12,6 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.wrappers.WrappedDataWatcher;
-import com.comphenix.protocol.wrappers.WrappedDataWatcher.Registry;
-import com.comphenix.protocol.wrappers.WrappedDataWatcher.Serializer;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
@@ -100,11 +97,12 @@ public class DeadRinger extends Objet{
 		System.out.println("Faking death to "+toTrick.getName());
 		PacketContainer packet = pmanager.createPacket(PacketType.Play.Server.ENTITY_STATUS);
 		packet.getIntegers().write(0, getOwner().getEntityId());
-		WrappedDataWatcher watcher = new WrappedDataWatcher();
+		packet.getBytes().write(1, (byte)3);
+		/*WrappedDataWatcher watcher = new WrappedDataWatcher();
 		Serializer serializer = Registry.get(Byte.class);
 		watcher.setEntity(toTrick);
 		watcher.setObject(0, serializer, (byte) 3);
-		packet.getWatchableCollectionModifier().write(0, watcher.getWatchableObjects());
+		packet.getWatchableCollectionModifier().write(0, watcher.getWatchableObjects());*/
 	    try {
 	    	pmanager.sendServerPacket(toTrick, packet);
 	    } catch (InvocationTargetException e) {
