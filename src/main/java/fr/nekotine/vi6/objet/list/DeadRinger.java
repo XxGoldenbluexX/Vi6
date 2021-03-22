@@ -77,32 +77,12 @@ public class DeadRinger extends Objet{
 			destroy();
 		}
 	}
-	/*@EventHandler
-	public void onPlayerDeath(PlayerDeathEvent e) {
-		System.out.println("Player ded");
-		if(getOwner().equals(e.getEntity())
-		&& (getDisplayedItem().isSimilar(getOwner().getInventory().getItemInMainHand()) || getDisplayedItem().isSimilar(getOwner().getInventory().getItemInOffHand()))) {
-			System.out.println("He had item");
-			e.setCancelled(true);
-			for(Entry<Player, PlayerWrapper> player : super.getGame().getPlayerMap().entrySet()) {
-				if(player.getValue().getTeam()==Team.GARDE) fakeDeath(player.getKey());
-			}
-			StatusEffect se = new StatusEffect(Effects.Invisible);
-			getOwnerWrapper().addStatusEffect(se);
-			se.autoRemove(getMain(), INVISIBILITY_DURATION_TICK);
-			destroy();
-		}
-	}*/
+
 	private void fakeDeath(Player toTrick) {
 		System.out.println("Faking death to "+toTrick.getName());
 		PacketContainer packet = pmanager.createPacket(PacketType.Play.Server.ENTITY_STATUS);
 		packet.getIntegers().write(0, getOwner().getEntityId());
-		packet.getBytes().write(1, (byte)3);
-		/*WrappedDataWatcher watcher = new WrappedDataWatcher();
-		Serializer serializer = Registry.get(Byte.class);
-		watcher.setEntity(toTrick);
-		watcher.setObject(0, serializer, (byte) 3);
-		packet.getWatchableCollectionModifier().write(0, watcher.getWatchableObjects());*/
+		packet.getBytes().write(0, (byte)3);
 	    try {
 	    	pmanager.sendServerPacket(toTrick, packet);
 	    } catch (InvocationTargetException e) {
