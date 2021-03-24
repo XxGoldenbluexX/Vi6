@@ -11,6 +11,7 @@ import org.bukkit.event.block.Action;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
+import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.objet.utils.Objet;
@@ -111,7 +112,7 @@ public class BainDeFumee extends Objet {
 		private void manageEffects() {
 			for (Entry<Player, PlayerWrapper> e : parent.getGame().getPlayerMap().entrySet()) {
 				PlayerWrapper w = e.getValue();
-				if (e.getKey().getLocation().distanceSquared(loc)<=25 && Math.abs(e.getKey().getLocation().getY()-loc.getY())<=1) {
+				if (e.getKey().getLocation().distanceSquared(loc)<=25 && Math.abs(e.getKey().getLocation().getY()-loc.getY())<=1 && w.getTeam()==Team.VOLEUR) {
 					if (!inside.contains(w)) {
 						w.addStatusEffect(INVISIBLE);
 						w.addStatusEffect(NODAMAGE);
@@ -119,8 +120,8 @@ public class BainDeFumee extends Objet {
 					}
 				}else {
 					if (inside.contains(w)) {
-						w.addStatusEffect(INVISIBLE);
-						w.addStatusEffect(NODAMAGE);
+						w.removeStatusEffect(INVISIBLE);
+						w.removeStatusEffect(NODAMAGE);
 						inside.remove(w);
 					}
 				}
