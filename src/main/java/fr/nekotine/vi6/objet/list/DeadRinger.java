@@ -1,17 +1,13 @@
 package fr.nekotine.vi6.objet.list;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageEvent;
-
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
-import com.comphenix.protocol.events.PacketContainer;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
@@ -24,10 +20,12 @@ import fr.nekotine.vi6.statuseffects.StatusEffect;
 import fr.nekotine.vi6.utils.MessageFormater;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 import fr.nekotine.vi6.yml.DisplayTexts;
+import net.kyori.adventure.key.Key;
+import net.kyori.adventure.sound.Sound;
 
 public class DeadRinger extends Objet{
-	private static int INVISIBILITY_DURATION_TICK=60;
-	private ProtocolManager pmanager = ProtocolLibrary.getProtocolManager();
+	public static final int INVISIBILITY_DURATION_TICK=60;
+	private final StatusEffect Invisible = new StatusEffect(Effects.Invisible);
 	public DeadRinger(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Game game, Player player,
 			PlayerWrapper wrapper) {
 		super(main, objet, skin, game, player, wrapper);
@@ -59,34 +57,30 @@ public class DeadRinger extends Objet{
 	}
 	@EventHandler
 	public void onDamage(EntityDamageEvent e) {
-		if(getOwner().equals(e.getEntity())
-		&& (getDisplayedItem().equals(getOwner().getInventory().getItemInMainHand()) || getDisplayedItem().equals(getOwner().getInventory().getItemInOffHand())) 
-		/*&& getOwner().getHealth()-e.getFinalDamage()<=0*/) {
-			e.setCancelled(true);
+		if(getOwner().equals(e.getEntity()) && (getOwner().getInventory().contains(getDisplayedItem())) 
+		&& getOwner().getHealth()-e.getFinalDamage()<=0) {
+			consume();
+			e.setDamage(0.01);
+			getOwnerWrapper().addStatusEffect(Invisible);
 			for (Map.Entry<Player, PlayerWrapper> p : getGame().getPlayerMap().entrySet()) {
 				if(p.getValue().getTeam()==Team.GARDE) {
-					fakeDeath(p.getKey());
 					p.getKey().sendMessage(MessageFormater.formatWithColorCodes('§', DisplayTexts.getMessage("game_death"),
 					new MessageFormater("§p", String.valueOf(getOwner().getName())),
 					new MessageFormater("§n", String.valueOf(getOwnerWrapper().getStealedArtefactList().size()))));
+				}else {
+					p.getKey().sendMessage(MessageFormater.formatWithColorCodes('§', DisplayTexts.getMessage("game_fake_death"),
+							new MessageFormater("§p", String.valueOf(getOwner().getName()))));
 				}
 			}
-			StatusEffect se = new StatusEffect(Effects.Invisible);
-			getOwnerWrapper().addStatusEffect(se);
-			se.autoRemove(getMain(), INVISIBILITY_DURATION_TICK);
-			destroy();
+			new BukkitRunnable() {
+				@Override
+				public void run() {
+					getOwnerWrapper().removeStatusEffect(Invisible);
+					Location loc = getOwner().getLocation();
+					loc.getWorld().playSound(Sound.sound(Key.key("minecraft:entity.evoker.prepare_summon"), Sound.Source.MASTER, 1.0F, 1.7F));
+					loc.getWorld().playSound(Sound.sound(Key.key("minecraft:entity.witch.celebrate"), Sound.Source.MASTER, 1.0F, 0.7F));
+				}
+			}.runTaskLater(getMain(), INVISIBILITY_DURATION_TICK);
 		}
-	}
-
-	private void fakeDeath(Player toTrick) {
-		System.out.println("Faking death to "+toTrick.getName());
-		PacketContainer packet = pmanager.createPacket(PacketType.Play.Server.ENTITY_STATUS);
-		packet.getIntegers().write(0, getOwner().getEntityId());
-		packet.getBytes().write(0, (byte)3);
-	    try {
-	    	pmanager.sendServerPacket(toTrick, packet);
-	    } catch (InvocationTargetException e) {
-	        e.printStackTrace();
-	    }
 	}
 }

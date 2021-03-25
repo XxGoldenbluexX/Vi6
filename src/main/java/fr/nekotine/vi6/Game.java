@@ -81,6 +81,7 @@ import fr.nekotine.vi6.interfaces.items.OpenWaitingItem;
 import fr.nekotine.vi6.map.Artefact;
 import fr.nekotine.vi6.map.Carte;
 import fr.nekotine.vi6.map.SpawnVoleur;
+import fr.nekotine.vi6.objet.list.DeadRinger;
 import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.sql.PlayerGame;
 import fr.nekotine.vi6.sql.SQLInterface;
@@ -683,8 +684,12 @@ public class Game implements Listener {
 						new MessageFormater("§p", String.valueOf(e.getEntity().getName())),
 						new MessageFormater("§n", String.valueOf((this.playerList.get(e.getEntity())).getStealedArtefactList().size()))));
 			}
-			if (!isThiefLeft())
-				endGame(false);
+			new BukkitRunnable() {
+				@Override
+				public void run() {
+					if (!isThiefLeft()) endGame(false);
+				}
+			}.runTaskLater(main, DeadRinger.INVISIBILITY_DURATION_TICK);
 		}
 	}
 
