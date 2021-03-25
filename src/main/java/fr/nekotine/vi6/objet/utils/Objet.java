@@ -252,4 +252,8 @@ public abstract class Objet implements Listener {
 	public boolean isTickable() {
 		return tickable;
 	}
+	
+	public void setDisplayedItem(ItemStack item) {
+		displayedItem=item;
+	}
 }

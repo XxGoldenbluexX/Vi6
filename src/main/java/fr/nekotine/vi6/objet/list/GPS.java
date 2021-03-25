@@ -2,6 +2,7 @@ package fr.nekotine.vi6.objet.list;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Pig;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
@@ -9,6 +10,7 @@ import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.CrossbowMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
@@ -59,21 +61,20 @@ public class GPS extends Objet{
 	@EventHandler
 	public void shoot(EntityShootBowEvent e) {
 		if(super.getDisplayedItem().isSimilar(e.getBow())) {
-			getOwner().sendMessage("Shoot!");
-			if(getOwner().getInventory().getItemInMainHand().getType()==Material.CROSSBOW) {
-				getOwner().getInventory().setItemInMainHand(new ItemStack(Material.AIR));
-				getOwner().sendMessage("Main!");
-			}else {
-				getOwner().getInventory().setItemInOffHand(new ItemStack(Material.AIR));
-				getOwner().sendMessage("Off!");
-			}
+			super.setDisplayedItem(e.getBow());
+			new BukkitRunnable() {
+	            @Override
+	            public void run() {
+	            	consume();
+	            }
+	        }.runTaskLater(getMain(), 0);
 			arrow = e.getProjectile();
 		}
 	}
 	@EventHandler
 	public void arrowHit(ProjectileHitEvent e) {
 		if(e.getEntity().equals(arrow)) {
-			if(e.getHitEntity() instanceof Player) {
+			if(e.getHitEntity() instanceof Pig) {
 				Player hit = (Player)e.getHitEntity();
 				if(super.getGame().getPlayerTeam(hit)==Team.GARDE) {
 					arrow.remove();
