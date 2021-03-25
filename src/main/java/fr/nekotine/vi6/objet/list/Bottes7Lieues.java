@@ -11,7 +11,7 @@ import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 
 public class Bottes7Lieues extends Objet {
-	private static float SPEED_MULT = 1.2F;
+	private static final float SPEED_MULT = 1.2F;
 
 	public Bottes7Lieues(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Game game, Player player,
 			PlayerWrapper wrapper) {
@@ -48,5 +48,10 @@ public class Bottes7Lieues extends Objet {
 	}
 	public static float getSpeedMultiplier() {
 		return SPEED_MULT;
+	}
+	
+	public void destroy() {
+		super.destroy();
+		getOwner().setWalkSpeed(0.2f);
 	}
 }
