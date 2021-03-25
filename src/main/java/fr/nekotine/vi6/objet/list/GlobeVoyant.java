@@ -10,43 +10,39 @@ import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 
-public class Bottes7Lieues extends Objet {
-	private static float SPEED_MULT = 1.2F;
-
-	public Bottes7Lieues(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Game game, Player player,
+public class GlobeVoyant extends Objet{
+	private static final int MESSAGE_DELAY_TICKS=100;
+	public GlobeVoyant(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Game game, Player player,
 			PlayerWrapper wrapper) {
 		super(main, objet, skin, game, player, wrapper);
 	}
 
+	@Override
 	public void tick() {
 	}
 
+	@Override
 	public void cooldownEnded() {
 	}
 
+	@Override
 	public void death() {
 	}
 
+	@Override
 	public void leaveMap() {
 	}
 
-	public void action(Action action) {
-	}
-
-	public void drop() {
-	}
-
-	public void disable() {
-		super.disable();
-		getOwner().setWalkSpeed(getOwner().getWalkSpeed() / SPEED_MULT);
+	@Override
+	public void action(Action var1) {
 	}
 
 	@Override
-	public void setNewOwner(Player p, PlayerWrapper wrapper) {
-		super.setNewOwner(p, wrapper);
-		getOwner().setWalkSpeed(getOwner().getWalkSpeed() * SPEED_MULT);
+	public void drop() {
 	}
-	public static float getSpeedMultiplier() {
-		return SPEED_MULT;
+
+	public static int getMessageDelayTicks() {
+		return MESSAGE_DELAY_TICKS;
 	}
+
 }

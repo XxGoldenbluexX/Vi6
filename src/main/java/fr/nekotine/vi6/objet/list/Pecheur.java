@@ -25,7 +25,7 @@ import fr.nekotine.vi6.wrappers.PlayerWrapper;
 public class Pecheur extends Objet{
 	private static final int MIN_WAIT_TIME_TICKS = 100;
 	private static final int MAX_WAIT_TIME_TICKS = 600;
-	private static final int FAIL_PERCENTAGE=60;
+	private static final int FAIL_PERCENTAGE=50;
 	private static final ObjetsList[] THIEF_FISHABLE = {ObjetsList.OMBRE, ObjetsList.GPS};
 	private static final ObjetsList[] GUARD_FISHABLE = {ObjetsList.CHAMP_DE_FORCE,ObjetsList.TELEPORTEUR};
 	
