@@ -20,6 +20,8 @@ import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.utils.IsCreator;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
+import net.kyori.adventure.key.Key;
+import net.kyori.adventure.sound.Sound;
 
 public class GPS extends Objet{
 	private Entity arrow;
@@ -77,12 +79,16 @@ public class GPS extends Objet{
 			if(e.getHitEntity() instanceof Pig) {
 				Player hit = (Player)e.getHitEntity();
 				if(super.getGame().getPlayerTeam(hit)==Team.GARDE) {
+					super.getOwner().playSound(Sound.sound(Key.key("block.note_block.iron_xylophone"), Sound.Source.VOICE, 1, 1));
+					super.getOwner().playSound(Sound.sound(Key.key("block.note_block.iron_xylophone"), Sound.Source.VOICE, 1, 2));
 					arrow.remove();
 					tracked=hit;
 					setItem(IsCreator.createItemStack(Material.COMPASS, 1, "", ""));
 					return;
 				}
 			}
+			super.getOwner().playSound(Sound.sound(Key.key("block.note_block.iron_xylophone"), Sound.Source.VOICE, 1, 1));
+			super.getOwner().playSound(Sound.sound(Key.key("block.note_block.iron_xylophone"), Sound.Source.VOICE, 1, 0));
 			e.setCancelled(true);
 			destroy();
 		}

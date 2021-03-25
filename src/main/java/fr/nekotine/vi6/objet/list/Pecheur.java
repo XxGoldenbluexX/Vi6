@@ -21,6 +21,8 @@ import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.utils.IsCreator;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
+import net.kyori.adventure.key.Key;
+import net.kyori.adventure.sound.Sound;
 
 public class Pecheur extends Objet{
 	private static final int MIN_WAIT_TIME_TICKS = 100;
@@ -84,6 +86,8 @@ public class Pecheur extends Objet{
 				e.setCancelled(true);
 				e.getHook().remove();
 				if(Math.random()*100>FAIL_PERCENTAGE) {
+					super.getOwner().playSound(Sound.sound(Key.key("block.note_block.iron_xylophone"), Sound.Source.VOICE, 1, 1));
+					super.getOwner().playSound(Sound.sound(Key.key("block.note_block.iron_xylophone"), Sound.Source.VOICE, 1, 2));
 					ObjetsList objet;
 					if(super.getOwnerWrapper().getTeam()==Team.GARDE) {
 						objet = GUARD_FISHABLE[(int)Math.floor(Math.random()*GUARD_FISHABLE.length)];
@@ -92,7 +96,8 @@ public class Pecheur extends Objet{
 					}
 					ObjetsList.createObjet(super.getMain(), objet, super.getGame(), super.getOwner(), super.getOwnerWrapper());
 				}else {
-					//fail
+					super.getOwner().playSound(Sound.sound(Key.key("block.note_block.iron_xylophone"), Sound.Source.VOICE, 1, 1));
+					super.getOwner().playSound(Sound.sound(Key.key("block.note_block.iron_xylophone"), Sound.Source.VOICE, 1, 0));
 				}
 				break;
 			case CAUGHT_ENTITY:
