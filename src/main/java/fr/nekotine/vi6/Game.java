@@ -708,12 +708,11 @@ public class Game implements Listener {
 
 	@EventHandler
 	public void hitEvent(EntityDamageByEntityEvent e) {
-		if (e.getDamager() instanceof Player && e.getEntity() instanceof Player) {
-			PlayerWrapper damager = this.playerList.get(e.getDamager());
+		if (e.getEntity() instanceof Player) {
 			PlayerWrapper damaged = this.playerList.get(e.getEntity());
-			if (damager != null && damaged != null && damager.getTeam() == Team.GARDE
-					&& damaged.getTeam() == Team.GARDE)
-				e.setCancelled(true);
+			if (damaged != null && damaged.getTeam() == Team.GARDE) {
+				e.setDamage(0.01);
+			}
 		}
 	}
 

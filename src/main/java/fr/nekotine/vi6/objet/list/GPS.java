@@ -1,8 +1,8 @@
 package fr.nekotine.vi6.objet.list;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Pig;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
@@ -24,6 +24,8 @@ import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 
 public class GPS extends Objet{
+	private static int UPDATE_DELAY_TICKS=20;
+	private int delay=UPDATE_DELAY_TICKS;
 	private Entity arrow;
 	private Player tracked;
 	public GPS(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Game game, Player player, PlayerWrapper wrapper) {
@@ -38,7 +40,17 @@ public class GPS extends Objet{
 
 	@Override
 	public void tick() {
-		if(tracked!=null) getOwner().setCompassTarget(tracked.getLocation()); 
+		if(tracked!=null) {
+			delay--;
+			if(delay==0) {
+				delay=UPDATE_DELAY_TICKS;
+				getOwner().setCompassTarget(tracked.getLocation());
+				setItem(IsCreator.createItemStack(Material.COMPASS, 1, ChatColor.RED+"Distance: "+
+				ChatColor.AQUA+Math.round(getOwner().getLocation().distance(tracked.getLocation()))+
+				ChatColor.RED+"m", ObjetsList.GPS.getInShopLore()));
+				
+			}
+		}
 	}
 
 	@Override
@@ -76,20 +88,23 @@ public class GPS extends Objet{
 	@EventHandler
 	public void arrowHit(ProjectileHitEvent e) {
 		if(e.getEntity().equals(arrow)) {
-			if(e.getHitEntity() instanceof Pig) {
+			e.setCancelled(true);
+			if(e.getHitEntity() instanceof Player) {
 				Player hit = (Player)e.getHitEntity();
 				if(super.getGame().getPlayerTeam(hit)==Team.GARDE) {
 					super.getOwner().playSound(Sound.sound(Key.key("block.note_block.iron_xylophone"), Sound.Source.VOICE, 1, 1));
 					super.getOwner().playSound(Sound.sound(Key.key("block.note_block.iron_xylophone"), Sound.Source.VOICE, 1, 2));
 					arrow.remove();
+					hit.damage(0.01f);
 					tracked=hit;
-					setItem(IsCreator.createItemStack(Material.COMPASS, 1, "", ""));
+					setItem(IsCreator.createItemStack(Material.COMPASS, 1, ChatColor.RED+"Distance: "+
+					ChatColor.AQUA+Math.round(getOwner().getLocation().distance(hit.getLocation()))+
+					ChatColor.RED+"m", ObjetsList.GPS.getInShopLore()));
 					return;
 				}
 			}
 			super.getOwner().playSound(Sound.sound(Key.key("block.note_block.iron_xylophone"), Sound.Source.VOICE, 1, 1));
 			super.getOwner().playSound(Sound.sound(Key.key("block.note_block.iron_xylophone"), Sound.Source.VOICE, 1, 0));
-			e.setCancelled(true);
 			destroy();
 		}
 	}
