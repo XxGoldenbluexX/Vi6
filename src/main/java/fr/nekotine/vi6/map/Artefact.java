@@ -16,6 +16,7 @@ import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.enums.PlayerState;
 import fr.nekotine.vi6.enums.Team;
+import fr.nekotine.vi6.events.PlayerStealEvent;
 import fr.nekotine.vi6.utils.DetectionZone;
 import fr.nekotine.vi6.utils.MessageFormater;
 import fr.nekotine.vi6.utils.ZoneDetectionListener;
@@ -149,6 +150,7 @@ public class Artefact implements ConfigurationSerializable,ZoneDetectionListener
 				status=CaptureState.CARRIED;
 				blockLoc.getBlock().setBlockData(Bukkit.createBlockData(Material.AIR));
 				w.getGame().capture();
+				Bukkit.getPluginManager().callEvent(new PlayerStealEvent(p, this,w.getGame()));
 				return w;
 			}
 		}

@@ -32,6 +32,7 @@ import fr.nekotine.vi6.objet.list.Teleporteur;
 import fr.nekotine.vi6.objet.list.Dephasage;
 import fr.nekotine.vi6.objet.list.Pecheur;
 import fr.nekotine.vi6.objet.list.GPS;
+import fr.nekotine.vi6.objet.list.GlobeVoyant;
 import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 
@@ -65,7 +66,7 @@ public enum ObjetsList {
 			0,
 			ChatColor.WHITE+"Armure",
 			Material.IRON_CHESTPLATE,
-			ChatColor.LIGHT_PURPLE+"Obtenez deux cœurs supplémentaires"),
+			ChatColor.LIGHT_PURPLE+"Obtenez "+Armure.getHealthBonus()/2+" cœurs supplémentaires"),
 	CAMPEUR(Campeur.class,
 			Team.VOLEUR,
 			100,
@@ -86,7 +87,7 @@ public enum ObjetsList {
 			1,
 			ChatColor.GOLD+"Déphasage",
 			Material.IRON_NUGGET,
-			ChatColor.LIGHT_PURPLE+"Toutes les 20 secondes gagnez 2 secondes d'invisibilité"),
+			ChatColor.LIGHT_PURPLE+"Toutes les "+Math.round(Dephasage.getDelay()/20)+" secondes gagnez "+Math.round(Dephasage.getDuration()/20)+" secondes d'invisibilité"),
 	PECHEUR_VOLEUR(Pecheur.class,
 			Team.VOLEUR,
 			100,
@@ -126,7 +127,7 @@ public enum ObjetsList {
 			1,
 			ChatColor.GOLD+"Sonar",
 			Material.CLOCK,
-			ChatColor.LIGHT_PURPLE+"Emet un "+ChatColor.AQUA+ChatColor.ITALIC+"BIP"+ChatColor.LIGHT_PURPLE+" toutes les 4 secondes",
+			ChatColor.LIGHT_PURPLE+"Emet un "+ChatColor.AQUA+ChatColor.ITALIC+"BIP"+ChatColor.LIGHT_PURPLE+" toutes les "+Math.round(Sonar.getDelay()/20)+" secondes",
 			ChatColor.LIGHT_PURPLE+"Le son est aigu si un voleur est près de vous"),
 	BOTTES7LIEUES(Bottes7Lieues.class,
 			Team.GARDE,
@@ -134,7 +135,7 @@ public enum ObjetsList {
 			8,
 			ChatColor.GREEN+"Bottes de 7 lieues",
 			Material.LEATHER_BOOTS,
-			ChatColor.LIGHT_PURPLE+"Vitesse accrue de 20%"),
+			ChatColor.LIGHT_PURPLE+"Vitesse accrue de "+(Bottes7Lieues.getSpeedMultiplier()-1)*100+"%"),
 	CACTUS(Cactus.class,
 			Team.GARDE,
 			100,
@@ -155,7 +156,15 @@ public enum ObjetsList {
 			0,
 			ChatColor.AQUA+"Pêcheur",
 			Material.FISHING_ROD,
-			ChatColor.LIGHT_PURPLE+"Pêchez des objets avec cette canne à pêche révolutionnaire!");
+			ChatColor.LIGHT_PURPLE+"Pêchez des objets avec cette canne à pêche révolutionnaire!"),
+	GLOBE_VOYANT(GlobeVoyant.class,
+			Team.GARDE,
+			100,
+			0,
+			ChatColor.GREEN+"Globe Voyant",
+			Material.ENDER_EYE,
+			ChatColor.LIGHT_PURPLE+"S'attache au plus proche artéfacts, Indique quand celui-ci est volé",
+			ChatColor.WHITE+"Délai du message: "+Math.round(GlobeVoyant.getMessageDelayTicks()/20)+"s");
 	private final Class<?> objetClass;
 
 	private final Team team;

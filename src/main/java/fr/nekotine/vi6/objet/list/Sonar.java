@@ -73,5 +73,7 @@ public class Sonar extends Objet{
 	@Override
 	public void drop() {
 	}
-
+	public static int getDelay() {
+		return DELAY_IN_TICKS;
+	}
 }

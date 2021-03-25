@@ -13,6 +13,7 @@ import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 
 public class Armure extends Objet{
+	private static final int HEALTH_BONUS=4;
 	public Armure(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Game game, Player player, PlayerWrapper wrapper) {
 		super(main, objet, skin, game, player, wrapper);
 	}
@@ -46,13 +47,18 @@ public class Armure extends Objet{
 	public void setNewOwner(Player p, PlayerWrapper wrapper) {
 		super.setNewOwner(p, wrapper);
 		AttributeInstance health = p.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-		health.setBaseValue(health.getValue()+4);
+		health.setBaseValue(health.getValue()+HEALTH_BONUS);
 		p.setHealth(health.getBaseValue());
 		
 	}
 	public void disable() {
 		super.disable();
 		AttributeInstance health = getOwner().getAttribute(Attribute.GENERIC_MAX_HEALTH);
-		health.setBaseValue(health.getValue()-4);
+		health.setBaseValue(health.getValue()-HEALTH_BONUS);
 	}
+
+	public static int getHealthBonus() {
+		return HEALTH_BONUS;
+	}
+
 }

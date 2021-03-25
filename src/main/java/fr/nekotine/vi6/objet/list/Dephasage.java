@@ -14,8 +14,8 @@ import fr.nekotine.vi6.statuseffects.StatusEffect;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 
 public class Dephasage extends Objet{
-	private final int DELAY_BETWEEN_INVISIBILITY_TICKS=400;
-	private final int INVISIBILITY_DURATION_TICKS=40;
+	private static final int DELAY_BETWEEN_INVISIBILITY_TICKS=400;
+	private static final int INVISIBILITY_DURATION_TICKS=40;
 	private int delayBetweenInvisibility=DELAY_BETWEEN_INVISIBILITY_TICKS;
 	private StatusEffect invisibilityEffect = new StatusEffect(Effects.Invisible);
 	public Dephasage(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Game game, Player player,
@@ -57,5 +57,10 @@ public class Dephasage extends Objet{
 	@Override
 	public void drop() {
 	}
-
+	public static int getDelay() {
+		return DELAY_BETWEEN_INVISIBILITY_TICKS;
+	}
+	public static int getDuration() {
+		return INVISIBILITY_DURATION_TICKS;
+	}
 }
