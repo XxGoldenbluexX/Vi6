@@ -26,10 +26,8 @@ import net.kyori.adventure.sound.Sound;
 public class DeadRinger extends Objet{
 	public static final int INVISIBILITY_DURATION_TICK=60;
 	private final StatusEffect Invisible = new StatusEffect(Effects.Invisible);
-	public DeadRinger(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Game game, Player player,
-			PlayerWrapper wrapper) {
+	public DeadRinger(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Game game, Player player,PlayerWrapper wrapper) {
 		super(main, objet, skin, game, player, wrapper);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
