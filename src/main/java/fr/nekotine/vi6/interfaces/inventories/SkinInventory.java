@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
@@ -115,16 +116,17 @@ public class SkinInventory extends BasePersonalInventory{
 	private void flipSelected(ItemStack item) {
 		ObjetsSkins objetSkin = item.getItemMeta().getPersistentDataContainer().get(ObjetsSkinsTagType.getNamespacedKey(main), new ObjetsSkinsTagType());
 		if(objetSkin!=null) {
+			ItemMeta meta = item.getItemMeta();
+			List<Component> lore = meta.lore();
 			if(game.getWrapper(player).flipSelected(objetSkin)) {
 				item.addUnsafeEnchantment(IsCreator.enchant, 1);
-				List<String> lore = item.getLore();
-				lore.add(ChatColor.GREEN+"[SÉLECTIONNÉE]");
-				item.setLore(lore);
+				lore.add(Component.text(ChatColor.GREEN+"[SÉLECTIONNÉE]"));
+				meta.lore(lore);
 			}else {
 				item.removeEnchantment(IsCreator.enchant);
-				List<String> lore = item.getLore().subList(0, item.getLore().size()-1);
-				item.setLore(lore);
+				meta.lore(lore.subList(0, lore.size()-1));
 			}
+			item.setItemMeta(meta);
 		}
 	}
 }

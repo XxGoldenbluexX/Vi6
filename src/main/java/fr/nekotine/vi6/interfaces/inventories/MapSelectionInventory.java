@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
@@ -68,10 +69,11 @@ public class MapSelectionInventory extends BaseSharedInventory{
 			}
 			game.setMapName(((TextComponent)itm.getItemMeta().displayName()).content());
 			itm.addUnsafeEnchantment(enchant, 1);
-			List<String> lore = new ArrayList<>();
-			lore.add(ChatColor.LIGHT_PURPLE+""+ChatColor.UNDERLINE+((TextComponent)itm.getItemMeta().displayName()).content());
-			
-			inventory.getItem(18).setLore(lore);
+			List<Component> lore = new ArrayList<>();
+			lore.add(Component.text(ChatColor.LIGHT_PURPLE+""+ChatColor.UNDERLINE+((TextComponent)itm.getItemMeta().displayName()).content()));
+			ItemMeta meta = inventory.getItem(18).getItemMeta();
+			meta.lore(lore);
+			inventory.getItem(18).setItemMeta(meta);
 			break;
 		default:
 			break;
