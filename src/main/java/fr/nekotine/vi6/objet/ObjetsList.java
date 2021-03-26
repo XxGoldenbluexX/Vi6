@@ -112,7 +112,8 @@ public enum ObjetsList {
 		0,
 		ChatColor.GOLD+"Flèche GPS",
 		Material.CROSSBOW,
-		ChatColor.LIGHT_PURPLE+"Tire une flèche, obtenez une boussole qui pointe dans la direction du garde touché"),
+		ChatColor.LIGHT_PURPLE+"Tire une flèche.",
+		ChatColor.LIGHT_PURPLE+"Obtenez une boussole qui pointe dans la direction du garde touché"),
 	//----------------------------------------------------------------------------------------------------------------------------------------
 	MATRAQUE_DE_THEO(MatraqueDeTheo.class,Team.GARDE,100,1,
 			ChatColor.DARK_RED+"Matraque de théo",Material.NETHERITE_SWORD,ChatColor.LIGHT_PURPLE+"Tuez en un coup.",ChatColor.GRAY+"Faites rager les amateurs du bain de fumée."),
