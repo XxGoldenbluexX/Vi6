@@ -33,6 +33,7 @@ import fr.nekotine.vi6.objet.list.Dephasage;
 import fr.nekotine.vi6.objet.list.Pecheur;
 import fr.nekotine.vi6.objet.list.GPS;
 import fr.nekotine.vi6.objet.list.GlobeVoyant;
+import fr.nekotine.vi6.objet.list.PiegeADents;
 import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 
@@ -116,7 +117,9 @@ public enum ObjetsList {
 	MATRAQUE_DE_THEO(MatraqueDeTheo.class,Team.GARDE,100,1,
 			ChatColor.DARK_RED+"Matraque de théo",Material.NETHERITE_SWORD,ChatColor.LIGHT_PURPLE+"Tuez en un coup.",ChatColor.GRAY+"Faites rager les amateurs du bain de fumée."),
 	CHAMP_DE_FORCE(ChampDeForce.class,Team.GARDE,100,0,
-			ChatColor.GRAY+"Champ de force",Material.LIGHT_GRAY_STAINED_GLASS,ChatColor.LIGHT_PURPLE+"Vous pouvez placer une porte ou seul les gardes peuvent passer"),
+			ChatColor.GRAY+"Champ de force",Material.LIGHT_GRAY_STAINED_GLASS,
+			ChatColor.LIGHT_PURPLE+"Vous pouvez placer une porte où",
+			ChatColor.LIGHT_PURPLE+"seul les gardes peuvent passer"),
 	BARRICADE(Barricade.class,Team.GARDE,0,1,
 			ChatColor.DARK_PURPLE+"Barricade",Material.BRICKS,ChatColor.LIGHT_PURPLE+"Vous pouvez boucher un passage avec."),
 	TELEPORTEUR(Teleporteur.class,Team.GARDE,100,0,
@@ -157,7 +160,7 @@ public enum ObjetsList {
 			ChatColor.AQUA+"Pêcheur",
 			Material.FISHING_ROD,
 			ChatColor.LIGHT_PURPLE+"Pêchez des objets avec cette canne à pêche révolutionnaire!"),
-	PIEGE_A_DENTS(Teleporteur.class,Team.GARDE,100,0,
+	PIEGE_A_DENTS(PiegeADents.class,Team.GARDE,100,0,
 			ChatColor.DARK_GRAY+"Piège à dents",Material.DRAGON_HEAD,
 			ChatColor.LIGHT_PURPLE+"Vous pouvez placer un piège a dents",
 			ChatColor.LIGHT_PURPLE+"Il inflige "+ChatColor.RED+"3❤"+ChatColor.LIGHT_PURPLE+" de dégats."),
@@ -167,7 +170,7 @@ public enum ObjetsList {
 			0,
 			ChatColor.GREEN+"Globe Voyant",
 			Material.ENDER_EYE,
-			ChatColor.LIGHT_PURPLE+"S'attache au plus proche artéfacts, Indique quand celui-ci est volé",
+			ChatColor.LIGHT_PURPLE+"S'attache au plus proche artéfacts.",ChatColor.LIGHT_PURPLE+"Indique quand celui-ci est volé",
 			ChatColor.WHITE+"Délai du message: "+Math.round(GlobeVoyant.getMessageDelayTicks()/20)+"s");
 	private final Class<?> objetClass;
 

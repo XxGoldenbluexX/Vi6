@@ -38,10 +38,12 @@ public class PiegeADents extends Objet {
 
 	@Override
 	public void action(Action var1) {
+		cast();
 	}
 
 	@Override
 	public void drop() {
+		cast();
 	}
 	
 	private void cast() {
