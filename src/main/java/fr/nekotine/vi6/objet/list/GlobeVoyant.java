@@ -1,11 +1,21 @@
 package fr.nekotine.vi6.objet.list;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Map.Entry;
 
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
+
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.events.PacketContainer;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
@@ -16,7 +26,9 @@ import fr.nekotine.vi6.map.Artefact.CaptureState;
 import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.objet.utils.Objet;
+import fr.nekotine.vi6.utils.MessageFormater;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
+import fr.nekotine.vi6.yml.DisplayTexts;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 
@@ -25,6 +37,7 @@ public class GlobeVoyant extends Objet{
 	private int delay=MESSAGE_DELAY_TICKS;
 	private Artefact attached;
 	private boolean stolen=false;
+	private Item eye;
 	public GlobeVoyant(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Game game, Player player,
 			PlayerWrapper wrapper) {
 		super(main, objet, skin, game, player, wrapper);
@@ -38,9 +51,11 @@ public class GlobeVoyant extends Objet{
 				for(Entry<Player, PlayerWrapper> player : getGame().getPlayerMap().entrySet()) {
 					if(player.getValue().getTeam()==Team.GARDE) {
 						player.getKey().playSound(Sound.sound(Key.key("entity.vindicator.celebrate"), Sound.Source.VOICE, 0.5f, 1.5f));
+						player.getKey().sendMessage(MessageFormater.formatWithColorCodes('§',
+						DisplayTexts.getMessage("objet_globe_triggered"), new MessageFormater("§a", attached.getDisplayName())));
 					}
 				}
-				//message
+				eye.remove();
 				disable();
 			}
 		}
@@ -83,9 +98,14 @@ public class GlobeVoyant extends Objet{
 				attached=nearestA;
 				super.getOwner().getWorld().playSound(attached.getBlockLoc(), "entity.slime.jump", 1, 2);
 				super.getOwner().getWorld().playSound(attached.getBlockLoc(), "entity.shulker_bullet.hit", 0.5f, 2);
-				//message
+				super.getOwner().playSound(Sound.sound(Key.key("entity.slime.jump"), Sound.Source.VOICE, 1, 2));
+				super.getOwner().playSound(Sound.sound(Key.key("entity.shulker_bullet.hit"), Sound.Source.VOICE, 0.5f, 2));
+				summonItem();
+				getOwner().sendMessage(MessageFormater.formatWithColorCodes('§',
+				DisplayTexts.getMessage("objet_globe_placed"), new MessageFormater("§an", attached.getDisplayName())));
 			}else {
-				//message tout est pris ou pas aurtefact
+				getOwner().sendMessage(MessageFormater.formatWithColorCodes('§',
+				DisplayTexts.getMessage("objet_globe_noArtefact")));
 			}
 			consume();
 		}
@@ -104,5 +124,31 @@ public class GlobeVoyant extends Objet{
 	}
 	public Artefact getAttached() {
 		return attached;
+	}
+	private void summonItem() {
+		Location spawnLoc = attached.getBlockLoc().clone();
+		spawnLoc.add(0.5, 1, 0.5);
+		eye = spawnLoc.getWorld().dropItem(spawnLoc, new ItemStack(Material.ENDER_EYE));
+		eye.setCanMobPickup(false);
+		eye.setCanPlayerPickup(false);
+		eye.setGravity(false);
+		eye.setInvulnerable(true);
+		eye.setPersistent(true);
+		eye.setVelocity(new Vector(0, 0, 0));
+		for(Entry<Player, PlayerWrapper> player : getGame().getPlayerMap().entrySet()) {
+			if(player.getValue().getTeam()==Team.VOLEUR) {
+				PacketContainer packet = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.ENTITY_DESTROY);
+				packet.getIntegerArrays().write(0, new int[] {eye.getEntityId()});
+			    try {
+			    	ProtocolLibrary.getProtocolManager().sendServerPacket(player.getKey(), packet);
+			    } catch (InvocationTargetException e) {
+			        e.printStackTrace();
+			    }
+			}
+		}
+	}
+	public void disable() {
+		super.disable();
+		if(eye!=null) eye.remove();
 	}
 }

@@ -26,6 +26,14 @@ game_shouldBeUnready: "[§bVi6§r] §6Vous devez être §c'En attente' §6pour �
 game_death: "[§bVi6§r] §b§p §cest mort avec §b§n §cartéfacts !"
 game_fake_death: "[§bVi6§r] §b§p §ca feinté la mort !"
 #§p = player name, §n = artefact count
+
+##OBJETS MESSAGES
+objet_globe_triggered: "[§bGlobe Voyant§r] §6L'artéfact §b§n§a§6 a été §cvolé !"
+#§a = artefact name
+objet_globe_noArtefact: "[§bGlobe Voyant§r] §cIl n'y a plus d'artéfacts disponibles !"
+objet_globe_placed: "[§bGlobe Voyant§r] §aGlobe posé sur §b§an"
+#§an = artefactName
+
 ##MAP EDITION
 map_list: "Voici la liste des cartes présentes dans le fichier \"Maps\":"
 #§v = map's name
