@@ -41,7 +41,7 @@ public class GlobeVoyant extends Objet{
 					}
 				}
 				//message
-				destroy();
+				disable();
 			}
 		}
 	}
