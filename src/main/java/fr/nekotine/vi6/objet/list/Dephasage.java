@@ -32,24 +32,33 @@ public class Dephasage extends Objet{
 		ItemStack item = super.getDisplayedItem().clone();
 		item.setAmount(delayBetweenInvisibility/20+1);
 		setItem(item);
-		if(delayBetweenInvisibility+INVISIBILITY_DURATION_TICKS==DELAY_BETWEEN_INVISIBILITY_TICKS+DELAY_BETWEEN_WARNING_SOUND*2) {
+		switch(delayBetweenInvisibility) {
+		case -INVISIBILITY_DURATION_TICKS+DELAY_BETWEEN_INVISIBILITY_TICKS+DELAY_BETWEEN_WARNING_SOUND*2:
 			super.getOwner().playSound(Sound.sound(Key.key("block.note_block.chime"), Sound.Source.VOICE, 1, 2));
-		}else if(delayBetweenInvisibility+INVISIBILITY_DURATION_TICKS==DELAY_BETWEEN_INVISIBILITY_TICKS+DELAY_BETWEEN_WARNING_SOUND) {
+			break;
+		case -INVISIBILITY_DURATION_TICKS+DELAY_BETWEEN_INVISIBILITY_TICKS+DELAY_BETWEEN_WARNING_SOUND:
 			super.getOwner().playSound(Sound.sound(Key.key("block.note_block.chime"), Sound.Source.VOICE, 1, 1.5f));
-		}else if(delayBetweenInvisibility+INVISIBILITY_DURATION_TICKS==DELAY_BETWEEN_INVISIBILITY_TICKS) {
+			break;
+		case -INVISIBILITY_DURATION_TICKS+DELAY_BETWEEN_INVISIBILITY_TICKS:
 			super.getOwner().playSound(Sound.sound(Key.key("block.note_block.chime"), Sound.Source.VOICE, 1, 1));
 			super.getOwner().playSound(Sound.sound(Key.key("block.beacon.deactivate"), Sound.Source.VOICE, 1, 1.5f));
-		}else if(delayBetweenInvisibility==DELAY_BETWEEN_WARNING_SOUND*2) {
+			break;
+		case DELAY_BETWEEN_WARNING_SOUND*2:
 			super.getOwner().playSound(Sound.sound(Key.key("block.note_block.chime"), Sound.Source.VOICE, 1, 1));
-		}else if(delayBetweenInvisibility==DELAY_BETWEEN_WARNING_SOUND) {
+			break;
+		case DELAY_BETWEEN_WARNING_SOUND:
 			super.getOwner().playSound(Sound.sound(Key.key("block.note_block.chime"), Sound.Source.VOICE, 1, 1.5f));
-		}else if(delayBetweenInvisibility==0) {
+			break;
+		case 0:
 			super.getOwner().playSound(Sound.sound(Key.key("block.note_block.chime"), Sound.Source.VOICE, 1, 2));
 			super.getOwner().playSound(Sound.sound(Key.key("block.beacon.activate"), Sound.Source.VOICE, 1, 1.5f));
 			super.getOwner().playSound(Sound.sound(Key.key("entity.illusioner.prepare_blindness"), Sound.Source.VOICE, 1, 1));
 			delayBetweenInvisibility=DELAY_BETWEEN_INVISIBILITY_TICKS;
 			getOwnerWrapper().addStatusEffect(invisibilityEffect);
 			invisibilityEffect.autoRemove(super.getMain(), INVISIBILITY_DURATION_TICKS);
+			break;
+		default:
+			break;
 		}
 	}
 

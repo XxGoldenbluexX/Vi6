@@ -34,6 +34,7 @@ import fr.nekotine.vi6.objet.list.Pecheur;
 import fr.nekotine.vi6.objet.list.GPS;
 import fr.nekotine.vi6.objet.list.GlobeVoyant;
 import fr.nekotine.vi6.objet.list.PiegeADents;
+import fr.nekotine.vi6.objet.list.BrouilleurRadio;
 import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 
@@ -114,6 +115,13 @@ public enum ObjetsList {
 		Material.CROSSBOW,
 		ChatColor.LIGHT_PURPLE+"Tire une flèche.",
 		ChatColor.LIGHT_PURPLE+"Obtenez une boussole qui pointe dans la direction du garde touché"),
+	BROUILLEUR_RADIO(BrouilleurRadio.class,
+			Team.VOLEUR,
+			100,
+			0,
+			ChatColor.GRAY+"Brouilleur Radio",
+			Material.JUKEBOX,
+			ChatColor.LIGHT_PURPLE+"Assourdissez l'ensemble des gardes pendant une courte durée"),
 	//----------------------------------------------------------------------------------------------------------------------------------------
 	MATRAQUE_DE_THEO(MatraqueDeTheo.class,Team.GARDE,100,1,
 			ChatColor.DARK_RED+"Matraque de théo",Material.NETHERITE_SWORD,ChatColor.LIGHT_PURPLE+"Tuez en un coup.",ChatColor.GRAY+"Faites rager les amateurs du bain de fumée."),

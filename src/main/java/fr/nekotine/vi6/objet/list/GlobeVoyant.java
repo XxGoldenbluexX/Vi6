@@ -75,44 +75,14 @@ public class GlobeVoyant extends Objet{
 
 	@Override
 	public void action(Action var1) {
-		if(var1!=Action.PHYSICAL) {
-			ArrayList<Artefact> artefactList = getGame().getMap().getArtefactList();
-			for(Objet obj : super.getGame().getObjets()) {
-				if(obj instanceof GlobeVoyant) {
-					GlobeVoyant gv = (GlobeVoyant)obj;
-					if(gv.getAttached()!=null) artefactList.remove(gv.getAttached());
-				}
-			}
-			double nearestD = 0;
-			Artefact nearestA = null;
-			for(Artefact artefact : artefactList) {
-				if(artefact.getStatus()==CaptureState.STEALABLE) {
-					double distance = getOwner().getLocation().distanceSquared(artefact.getBlockLoc());
-					if(nearestA==null || distance<nearestD) {
-						nearestA=artefact;
-						nearestD=distance;
-					}
-				}
-			}
-			if(nearestA!=null) {
-				attached=nearestA;
-				super.getOwner().getWorld().playSound(attached.getBlockLoc(), "entity.slime.jump", 1, 2);
-				super.getOwner().getWorld().playSound(attached.getBlockLoc(), "entity.shulker_bullet.hit", 0.5f, 2);
-				super.getOwner().playSound(Sound.sound(Key.key("entity.slime.jump"), Sound.Source.VOICE, 1, 2));
-				super.getOwner().playSound(Sound.sound(Key.key("entity.shulker_bullet.hit"), Sound.Source.VOICE, 0.5f, 2));
-				summonItem();
-				getOwner().sendMessage(MessageFormater.formatWithColorCodes('§',
-				DisplayTexts.getMessage("objet_globe_placed"), new MessageFormater("§an", attached.getDisplayName())));
-			}else {
-				getOwner().sendMessage(MessageFormater.formatWithColorCodes('§',
-				DisplayTexts.getMessage("objet_globe_noArtefact")));
-			}
-			consume();
+		if(var1==Action.RIGHT_CLICK_AIR || var1==Action.RIGHT_CLICK_BLOCK) {
+			use();
 		}
 	}
 
 	@Override
 	public void drop() {
+		use();
 	}
 
 	public static int getMessageDelayTicks() {
@@ -150,5 +120,39 @@ public class GlobeVoyant extends Objet{
 	public void disable() {
 		super.disable();
 		if(eye!=null) eye.remove();
+	}
+	private void use() {
+		ArrayList<Artefact> artefactList = getGame().getMap().getArtefactList();
+		for(Objet obj : super.getGame().getObjets()) {
+			if(obj instanceof GlobeVoyant) {
+				GlobeVoyant gv = (GlobeVoyant)obj;
+				if(gv.getAttached()!=null) artefactList.remove(gv.getAttached());
+			}
+		}
+		double nearestD = 0;
+		Artefact nearestA = null;
+		for(Artefact artefact : artefactList) {
+			if(artefact.getStatus()==CaptureState.STEALABLE) {
+				double distance = getOwner().getLocation().distanceSquared(artefact.getBlockLoc());
+				if(nearestA==null || distance<nearestD) {
+					nearestA=artefact;
+					nearestD=distance;
+				}
+			}
+		}
+		if(nearestA!=null) {
+			attached=nearestA;
+			super.getOwner().getWorld().playSound(attached.getBlockLoc(), "entity.slime.jump", 1, 2);
+			super.getOwner().getWorld().playSound(attached.getBlockLoc(), "entity.shulker_bullet.hit", 0.5f, 2);
+			super.getOwner().playSound(Sound.sound(Key.key("entity.slime.jump"), Sound.Source.VOICE, 1, 2));
+			super.getOwner().playSound(Sound.sound(Key.key("entity.shulker_bullet.hit"), Sound.Source.VOICE, 0.5f, 2));
+			summonItem();
+			getOwner().sendMessage(MessageFormater.formatWithColorCodes('§',
+			DisplayTexts.getMessage("objet_globe_placed"), new MessageFormater("§an", attached.getDisplayName())));
+		}else {
+			getOwner().sendMessage(MessageFormater.formatWithColorCodes('§',
+			DisplayTexts.getMessage("objet_globe_noArtefact")));
+		}
+		consume();
 	}
 }
