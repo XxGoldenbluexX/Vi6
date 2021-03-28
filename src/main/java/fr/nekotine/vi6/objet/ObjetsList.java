@@ -35,6 +35,7 @@ import fr.nekotine.vi6.objet.list.GPS;
 import fr.nekotine.vi6.objet.list.GlobeVoyant;
 import fr.nekotine.vi6.objet.list.PiegeADents;
 import fr.nekotine.vi6.objet.list.BrouilleurRadio;
+import fr.nekotine.vi6.objet.list.OmniCapteur;
 import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 
@@ -180,7 +181,15 @@ public enum ObjetsList {
 			ChatColor.GREEN+"Globe Voyant",
 			Material.ENDER_EYE,
 			ChatColor.LIGHT_PURPLE+"S'attache au plus proche artéfacts.",ChatColor.LIGHT_PURPLE+"Indique quand celui-ci est volé",
-			ChatColor.WHITE+"Délai du message: "+Math.round(GlobeVoyant.getMessageDelayTicks()/20)+"s");
+			ChatColor.WHITE+"Délai du message: "+Math.round(GlobeVoyant.getMessageDelayTicks()/20)+"s"),
+	OMNICAPTEUR(OmniCapteur.class,
+			Team.GARDE,
+			100,
+			0,
+			ChatColor.RED+"OmniCapteur",
+			Material.REDSTONE_TORCH,
+			ChatColor.LIGHT_PURPLE+"Pose une balise qui affiche en surbrillance les voleurs à proximité",
+			ChatColor.LIGHT_PURPLE+"Portée: "+ChatColor.AQUA+Math.sqrt(OmniCapteur.getSquaredBlockRange())+ChatColor.LIGHT_PURPLE+" blocks");
 	private final Class<?> objetClass;
 
 	private final Team team;

@@ -28,8 +28,9 @@ public class Pecheur extends Objet{
 	private static final int MIN_WAIT_TIME_TICKS = 100;
 	private static final int MAX_WAIT_TIME_TICKS = 600;
 	private static final int FAIL_PERCENTAGE=50;
-	private static final ObjetsList[] THIEF_FISHABLE = {ObjetsList.OMBRE, ObjetsList.GPS};
-	private static final ObjetsList[] GUARD_FISHABLE = {ObjetsList.CHAMP_DE_FORCE,ObjetsList.TELEPORTEUR};
+	private static final ObjetsList[] THIEF_FISHABLE = {ObjetsList.OMBRE, ObjetsList.GPS,ObjetsList.BROUILLEUR_RADIO};
+	private static final ObjetsList[] GUARD_FISHABLE = {ObjetsList.CHAMP_DE_FORCE,ObjetsList.TELEPORTEUR,ObjetsList.OMNICAPTEUR,ObjetsList.PIEGE_A_DENTS,
+														ObjetsList.GLOBE_VOYANT};
 	
 	public Pecheur(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Game game, Player player, PlayerWrapper wrapper) {
 		super(main, objet, skin, game, player, wrapper);
