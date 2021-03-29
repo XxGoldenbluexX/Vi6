@@ -33,6 +33,8 @@ objet_globe_triggered: "[§bGlobe Voyant§r] §6L'artéfact §b§n§a§6 a été
 objet_globe_noArtefact: "[§bGlobe Voyant§r] §cIl n'y a plus d'artéfacts disponibles !"
 objet_globe_placed: "[§bGlobe Voyant§r] §aGlobe posé sur §b§an"
 #§an = artefactName
+objet_omni_selfDetected: "[§bOmniCaptuer§r] §6Une balise vous a §c§nrepéré!"
+objet_omni_thiefDetected: "§cVoleur §6§nrepéré!"
 
 ##MAP EDITION
 map_list: "Voici la liste des cartes présentes dans le fichier \"Maps\":"

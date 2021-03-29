@@ -19,7 +19,9 @@ import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.statuseffects.Effects;
 import fr.nekotine.vi6.statuseffects.StatusEffect;
+import fr.nekotine.vi6.utils.MessageFormater;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
+import fr.nekotine.vi6.yml.DisplayTexts;
 
 public class OmniCapteur extends Objet{
 	private static final float SQUARED_BLOCK_RANGE=16;
@@ -56,26 +58,40 @@ public class OmniCapteur extends Objet{
 		use();
 	}
 	private void use() {
-		omni = (ArmorStand)getOwner().getWorld().spawnEntity(getOwner().getLocation(), EntityType.ARMOR_STAND);
-		omni.setArms(true);
-		omni.setMarker(true);
-		omni.setBasePlate(false);
-		omni.setSmall(true);
-		omni.getEquipment().setHelmet(new ItemStack(Material.REDSTONE_BLOCK));
-		getOwner().getWorld().playSound(getOwner().getLocation(), "entity.vex.hurt", 1, 0.1f);
-		getOwner().getWorld().playSound(getOwner().getLocation(), "item.flintandsteel.use", 1, 0.1f);
-		consume();
+		if(getOwner().getLocation().subtract(0, 1, 0).getBlock().getType().isSolid()) {
+			omni = (ArmorStand)getOwner().getWorld().spawnEntity(getOwner().getLocation(), EntityType.ARMOR_STAND);
+			omni.setArms(true);
+			omni.setMarker(true);
+			omni.setBasePlate(false);
+			omni.setSmall(true);
+			omni.getEquipment().setHelmet(new ItemStack(Material.REDSTONE_BLOCK));
+			getOwner().getWorld().playSound(getOwner().getLocation(), "entity.vex.hurt", 2, 0.1f);
+			getOwner().getWorld().playSound(getOwner().getLocation(), "item.flintandsteel.use", 2, 0.1f);
+			consume();
+		}
 	}
 	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent e) {
 		if(omni!=null) {
-			if(getGame().getPlayerTeam(e.getPlayer())==Team.GARDE) {
+			if(getGame().getPlayerTeam(e.getPlayer())==Team.VOLEUR) {
 				boolean isInRange = omni.getLocation().distanceSquared(e.getTo())<=SQUARED_BLOCK_RANGE;
 				if(glowed.contains(e.getPlayer())) {
 					if(!isInRange) getGame().getWrapper(e.getPlayer()).removeStatusEffect(glowEffect);
 					glowed.remove(e.getPlayer());
 				}else {
-					if(isInRange) getGame().getWrapper(e.getPlayer()).addStatusEffect(glowEffect);
+					if(isInRange) {
+						PlayerWrapper thief = getGame().getWrapper(e.getPlayer());
+						thief.addStatusEffect(glowEffect);
+						if(!thief.haveEffect(Effects.InGlowable)) {
+							getOwner().getWorld().playSound(getOwner().getLocation(), "block.note_block.bell", 0.3f, 0.1f);
+							getOwner().getWorld().playSound(getOwner().getLocation(), "block.note_block.cow_bell", 2, 0.5f);
+							getOwner().getWorld().playSound(getOwner().getLocation(), "block.note_block.bass", 2, 0.1f);
+							getOwner().sendActionBar(MessageFormater.formatWithColorCodes('§',
+							DisplayTexts.getMessage("objet_omni_thiefDetected")));
+							e.getPlayer().sendMessage(MessageFormater.formatWithColorCodes('§',
+							DisplayTexts.getMessage("objet_omni_selfDetected")));
+						}
+					}
 					glowed.add(e.getPlayer());
 				}
 			}
