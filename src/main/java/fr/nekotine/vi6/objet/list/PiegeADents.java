@@ -135,6 +135,7 @@ public class PiegeADents extends Objet {
 				event.setCancelled(true);
 				victime.setNoDamageTicks(0);
 				victime.damage(BITE_DAMAGES, attacker);
+				victime.setNoDamageTicks(0);
 				return;
 			}
 		}
