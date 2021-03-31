@@ -24,6 +24,8 @@ import fr.nekotine.vi6.utils.MessageFormater;
 import fr.nekotine.vi6.utils.ObjetsListTagType;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 import fr.nekotine.vi6.yml.DisplayTexts;
+import net.kyori.adventure.key.Key;
+import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
 
 public class PreparationInventory extends BasePersonalInventory {
@@ -118,6 +120,8 @@ public class PreparationInventory extends BasePersonalInventory {
 				if (slot == 0) {
 					if (this.game.getWrapper(this.player).getTeam() == Team.VOLEUR
 							&& this.game.getWrapper(this.player).getThiefSpawnPoint() == null) {
+						player.playSound(Sound.sound(Key.key("block.note_block.iron_xylophone"), Sound.Source.VOICE, 1, 1));
+						player.playSound(Sound.sound(Key.key("block.note_block.iron_xylophone"), Sound.Source.VOICE, 1, 0));
 						this.player.sendMessage((Component) MessageFormater.formatWithColorCodes('§',
 								DisplayTexts.getMessage("game_thiefSpawnPoint_notSelected"), new MessageFormater[0]));
 					} else {

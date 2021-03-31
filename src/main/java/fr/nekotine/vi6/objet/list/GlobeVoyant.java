@@ -149,10 +149,12 @@ public class GlobeVoyant extends Objet{
 			summonItem();
 			getOwner().sendMessage(MessageFormater.formatWithColorCodes('§',
 			DisplayTexts.getMessage("objet_globe_placed"), new MessageFormater("§an", attached.getDisplayName())));
+			consume();
 		}else {
+			super.getOwner().playSound(Sound.sound(Key.key("block.note_block.iron_xylophone"), Sound.Source.VOICE, 1, 1));
+			super.getOwner().playSound(Sound.sound(Key.key("block.note_block.iron_xylophone"), Sound.Source.VOICE, 1, 0));
 			getOwner().sendMessage(MessageFormater.formatWithColorCodes('§',
 			DisplayTexts.getMessage("objet_globe_noArtefact")));
 		}
-		consume();
 	}
 }

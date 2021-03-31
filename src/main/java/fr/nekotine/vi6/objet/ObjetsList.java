@@ -37,6 +37,7 @@ import fr.nekotine.vi6.objet.list.PiegeADents;
 import fr.nekotine.vi6.objet.list.BrouilleurRadio;
 import fr.nekotine.vi6.objet.list.OmniCapteur;
 import fr.nekotine.vi6.objet.list.Tazer;
+import fr.nekotine.vi6.objet.list.PiegeCapteur;
 import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 
@@ -198,7 +199,14 @@ public enum ObjetsList {
 			ChatColor.AQUA+"Tazer",
 			Material.SHEARS,
 			ChatColor.LIGHT_PURPLE+"Tire un projectile qui paralyse le voleur touché",
-			ChatColor.LIGHT_PURPLE+"Temps de recharge: "+ChatColor.AQUA+Math.round(Tazer.getCooldown()/20)+ChatColor.LIGHT_PURPLE+" secondes");
+			ChatColor.LIGHT_PURPLE+"Temps de recharge: "+ChatColor.AQUA+Math.round(Tazer.getCooldown()/20)+ChatColor.LIGHT_PURPLE+" secondes"),
+	PIEGE_CAPTEUR(PiegeCapteur.class,
+			Team.GARDE,
+			100,
+			0,
+			ChatColor.GOLD+"Piège capteur",
+			Material.HEAVY_WEIGHTED_PRESSURE_PLATE,
+			ChatColor.LIGHT_PURPLE+"Un piège visible qui envoie un signal quand activé");
 	private final Class<?> objetClass;
 
 	private final Team team;

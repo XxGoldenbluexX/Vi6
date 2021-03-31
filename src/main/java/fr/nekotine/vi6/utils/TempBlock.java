@@ -84,4 +84,8 @@ public class TempBlock {
 			}
 		}
 	}
+	
+	public Block getBlock() {
+		return b;
+	}
 }

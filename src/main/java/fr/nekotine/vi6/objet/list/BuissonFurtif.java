@@ -113,17 +113,11 @@ public class BuissonFurtif extends Objet {
 	}
 
 	public void action(Action action) {
+		if(action==Action.RIGHT_CLICK_AIR || action==Action.RIGHT_CLICK_BLOCK) use();
 	}
 
 	public void drop() {
-		if (placeBush(getOwner().getLocation())) {
-			getOwner().playSound(Sound.sound(Key.key("block.chorus_flower.grow"), Sound.Source.AMBIENT, 1.0F, 1.0F));
-			getOwner().sendMessage((Component) MessageFormater.formatWithColorCodes('§',
-					DisplayTexts.getMessage("objet_BuissonFurtif_placeBush"),
-					new MessageFormater[]{new MessageFormater("§v", getOwnerWrapper().getCurrentSalle())}));
-		} else {
-			getOwner().playSound(Sound.sound(Key.key("entity.villager.no"), Sound.Source.AMBIENT, 1.0F, 1.0F));
-		}
+		use();
 	}
 
 	private boolean isGuardNear(Player holder) {
@@ -157,5 +151,15 @@ public class BuissonFurtif extends Objet {
 	public void setNewOwner(Player p, PlayerWrapper wrapper) {
 		super.setNewOwner(p, wrapper);
 		getOwner().getInventory().setHelmet(HEADBUSH);
+	}
+	private void use() {
+		if (placeBush(getOwner().getLocation())) {
+			getOwner().playSound(Sound.sound(Key.key("block.chorus_flower.grow"), Sound.Source.AMBIENT, 1.0F, 1.0F));
+			getOwner().sendMessage((Component) MessageFormater.formatWithColorCodes('§',
+					DisplayTexts.getMessage("objet_BuissonFurtif_placeBush"),
+					new MessageFormater[]{new MessageFormater("§v", getOwnerWrapper().getCurrentSalle())}));
+		} else {
+			getOwner().playSound(Sound.sound(Key.key("entity.villager.no"), Sound.Source.AMBIENT, 1.0F, 1.0F));
+		}
 	}
 }
