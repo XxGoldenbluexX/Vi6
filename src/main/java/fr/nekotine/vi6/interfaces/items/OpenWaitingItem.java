@@ -3,16 +3,10 @@ package fr.nekotine.vi6.interfaces.items;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
-import fr.nekotine.vi6.events.GameEndEvent;
-import fr.nekotine.vi6.events.GameEnterPreparationPhaseEvent;
-import fr.nekotine.vi6.events.PlayerJoinGameEvent;
-import fr.nekotine.vi6.events.PlayerLeaveGameEvent;
 import fr.nekotine.vi6.interfaces.inventories.WaitingInventory;
 import fr.nekotine.vi6.utils.IsCreator;
 
@@ -22,27 +16,6 @@ public class OpenWaitingItem extends BaseInventoryItem implements Listener{
 		super(main, IsCreator.createItemStack(Material.BEACON, 1, ChatColor.GOLD+game.getName(), ChatColor.LIGHT_PURPLE+"Intéragir pour ouvrir la partie"));
 		this.game=game;
 	}
-	@EventHandler
-	public void onGameStart(GameEnterPreparationPhaseEvent e) {
-		if(e.getGame().equals(game)) {
-			for(Player player : game.getPlayerMap().keySet()) {
-				player.getInventory().remove(item);
-			}
-			HandlerList.unregisterAll(this);
-		}
-	}
-	@EventHandler
-	public void playerJoin(PlayerJoinGameEvent e) {
-		if(e.getGame().equals(game)) {
-			e.getPlayer().getInventory().setItem(0, item);
-		}
-	}
-	@EventHandler
-	public void playerLeave(PlayerLeaveGameEvent e) {
-		if(e.getGame().equals(game)) {
-			e.getPlayer().getInventory().remove(item);
-		}
-	}
 	@Override
 	public void playerInteract(Player player) {
 		if(game.getPlayerMap().keySet().contains(player)) {
@@ -51,12 +24,20 @@ public class OpenWaitingItem extends BaseInventoryItem implements Listener{
 			player.getInventory().remove(item);
 		}
 	}
-	@EventHandler
-	public void gameEndEvent(GameEndEvent e) {
-		if(e.getGame().equals(game)) {
-			for(Player p : game.getPlayerMap().keySet()) {
-				p.getInventory().setItem(0, item);
-			}
+	public void destroy() {
+		for(Player player : game.getPlayerMap().keySet()) {
+			player.getInventory().remove(item);
+		}
+	}
+	public void remove(Player player ) {
+		player.getInventory().remove(item);
+	}
+	public void add(Player player) {
+		player.getInventory().setItem(0, item);
+	}
+	public void give() {
+		for(Player player : game.getPlayerMap().keySet()) {
+			player.getInventory().setItem(0, item);
 		}
 	}
 }

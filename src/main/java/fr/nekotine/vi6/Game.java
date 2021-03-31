@@ -69,7 +69,6 @@ import fr.nekotine.vi6.events.GameEnterPreparationPhaseEvent;
 import fr.nekotine.vi6.events.IsRankedChangeEvent;
 import fr.nekotine.vi6.events.MapChangeEvent;
 import fr.nekotine.vi6.events.MoneyChangedEvent;
-import fr.nekotine.vi6.events.PlayerJoinGameEvent;
 import fr.nekotine.vi6.events.PlayerLeaveGameEvent;
 import fr.nekotine.vi6.interfaces.inventories.GameMoneyAnvil;
 import fr.nekotine.vi6.interfaces.inventories.GameSettingsInventory;
@@ -133,6 +132,8 @@ public class Game implements Listener {
 	private int scanTime;
 	private int defaultScanTime;
 	private int scanTimer = 0;
+	OpenWaitingItem waitingItem;
+	OpenPreparationItem prepItem;
 	private final ArrayList<Objet> objetsList = new ArrayList<>();
 
 	static {
@@ -154,7 +155,8 @@ public class Game implements Listener {
 		DEFAULT_PREPARATION_TIME = main.getConfig().getInt("preparationTime", 120);
 		DEFAULT_CAPTURE_DELAY = main.getConfig().getInt("delayBetweenCapture", 600);
 		this.money = DEFAULT_RANKED_MONEY;
-		new OpenWaitingItem(main, this);
+		waitingItem = new OpenWaitingItem(main, this);
+		prepItem = new OpenPreparationItem(main, this);
 		this.settingsInterface = new GameSettingsInventory(main, this);
 		this.mapInterface = new MapSelectionInventory(main, this);
 		this.nbtCompteur.add(Integer.valueOf(0));
@@ -352,7 +354,7 @@ public class Game implements Listener {
 		this.map.setGame(this);
 		this.map.start();
 		this.state = GameState.Preparation;
-		new OpenPreparationItem(this.main, this);
+		waitingItem.destroy();
 		for (Map.Entry<Player, PlayerWrapper> playerAndWrapper : this.playerList.entrySet()) {
 			Player player = playerAndWrapper.getKey();
 			PlayerWrapper wrapper = playerAndWrapper.getValue();
@@ -383,6 +385,7 @@ public class Game implements Listener {
 						((Player) p.getKey()).hidePlayer((Plugin) this.main, player);
 				}
 			}
+			prepItem.give();
 			((Player) playerAndWrapper.getKey()).sendMessage((Component) MessageFormater.formatWithColorCodes('§',
 					DisplayTexts.getMessage("game_preparation_start"), new MessageFormater[0]));
 		}
@@ -415,6 +418,7 @@ public class Game implements Listener {
 
 	public void enterInGamePhase() {
 		this.bb.removeAll();
+		prepItem.destroy();
 		this.bossBarTicker.cancel();
 		this.startTime = LocalTime.now().toString();
 		this.scoreboardSidebar.setDisplaySlot(null);
@@ -574,8 +578,9 @@ public class Game implements Listener {
 		this.scoreboardSidebar.setDisplaySlot(DisplaySlot.SIDEBAR);
 		if (this.bb.getPlayers().size() > 0)
 			this.bb.removeAll();
-		if (this.main.isEnabled())
-			new OpenWaitingItem(this.main, this);
+		if (this.main.isEnabled()) {
+			waitingItem.give();
+		}
 		int totalVole = 0;
 		for (Map.Entry<Player, PlayerWrapper> p : this.playerList.entrySet()) {
 			((Player) p.getKey()).setGameMode(GameMode.SPECTATOR);
@@ -625,7 +630,7 @@ public class Game implements Listener {
 			}
 			p.setWalkSpeed(0.2F);
 			p.getInventory().clear();
-			Bukkit.getPluginManager().callEvent(new PlayerJoinGameEvent(this, p));
+			waitingItem.add(p);
 			return true;
 		}
 		return false;
@@ -639,6 +644,7 @@ public class Game implements Listener {
 						DisplayTexts.getMessage("game_leave"), new MessageFormater[]{
 								new MessageFormater("§p", p.getName()), new MessageFormater("§g", this.name)}));
 			}
+			waitingItem.remove(p);
 			((PlayerWrapper) this.playerList.get(p)).destroy();
 			this.playerList.remove(p);
 			p.getInventory().clear();
