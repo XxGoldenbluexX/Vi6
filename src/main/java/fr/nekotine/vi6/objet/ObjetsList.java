@@ -36,6 +36,7 @@ import fr.nekotine.vi6.objet.list.GlobeVoyant;
 import fr.nekotine.vi6.objet.list.PiegeADents;
 import fr.nekotine.vi6.objet.list.BrouilleurRadio;
 import fr.nekotine.vi6.objet.list.OmniCapteur;
+import fr.nekotine.vi6.objet.list.Tazer;
 import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 
@@ -189,7 +190,15 @@ public enum ObjetsList {
 			ChatColor.RED+"OmniCapteur",
 			Material.REDSTONE_TORCH,
 			ChatColor.LIGHT_PURPLE+"Pose une balise qui affiche en surbrillance les voleurs à proximité",
-			ChatColor.LIGHT_PURPLE+"Portée: "+ChatColor.AQUA+Math.sqrt(OmniCapteur.getSquaredBlockRange())+ChatColor.LIGHT_PURPLE+" blocks");
+			ChatColor.LIGHT_PURPLE+"Portée: "+ChatColor.AQUA+Math.sqrt(OmniCapteur.getSquaredBlockRange())+ChatColor.LIGHT_PURPLE+" blocks"),
+	TAZER(Tazer.class,
+			Team.GARDE,
+			100,
+			0,
+			ChatColor.AQUA+"Tazer",
+			Material.SHEARS,
+			ChatColor.LIGHT_PURPLE+"Tire un projectile qui paralyse le voleur touché",
+			ChatColor.LIGHT_PURPLE+"Temps de recharge: "+ChatColor.AQUA+Math.round(Tazer.getCooldown()/20)+ChatColor.LIGHT_PURPLE+" secondes");
 	private final Class<?> objetClass;
 
 	private final Team team;

@@ -60,7 +60,7 @@ public class OmniCapteur extends Objet{
 	private void use() {
 		if(getOwner().getLocation().subtract(0, 1, 0).getBlock().getType().isSolid()) {
 			omni = (ArmorStand)getOwner().getWorld().spawnEntity(getOwner().getLocation(), EntityType.ARMOR_STAND);
-			omni.setArms(true);
+			omni.setArms(false);
 			omni.setMarker(true);
 			omni.setBasePlate(false);
 			omni.setSmall(true);
@@ -76,21 +76,21 @@ public class OmniCapteur extends Objet{
 			if(getGame().getPlayerTeam(e.getPlayer())==Team.VOLEUR) {
 				boolean isInRange = omni.getLocation().distanceSquared(e.getTo())<=SQUARED_BLOCK_RANGE;
 				if(glowed.contains(e.getPlayer())) {
-					if(!isInRange) getGame().getWrapper(e.getPlayer()).removeStatusEffect(glowEffect);
-					glowed.remove(e.getPlayer());
-				}else {
-					if(isInRange) {
-						PlayerWrapper thief = getGame().getWrapper(e.getPlayer());
-						thief.addStatusEffect(glowEffect);
-						if(!thief.haveEffect(Effects.InGlowable)) {
-							getOwner().getWorld().playSound(getOwner().getLocation(), "block.note_block.bell", 0.3f, 0.1f);
-							getOwner().getWorld().playSound(getOwner().getLocation(), "block.note_block.cow_bell", 2, 0.5f);
-							getOwner().getWorld().playSound(getOwner().getLocation(), "block.note_block.bass", 2, 0.1f);
-							getOwner().sendActionBar(MessageFormater.formatWithColorCodes('§',
-							DisplayTexts.getMessage("objet_omni_thiefDetected")));
-							e.getPlayer().sendMessage(MessageFormater.formatWithColorCodes('§',
-							DisplayTexts.getMessage("objet_omni_selfDetected")));
-						}
+					if(!isInRange) {
+						getGame().getWrapper(e.getPlayer()).removeStatusEffect(glowEffect);
+						glowed.remove(e.getPlayer());
+					}
+				}else if(isInRange){
+					PlayerWrapper thief = getGame().getWrapper(e.getPlayer());
+					thief.addStatusEffect(glowEffect);
+					if(!thief.haveEffect(Effects.InGlowable)) {
+						getOwner().getWorld().playSound(getOwner().getLocation(), "block.note_block.bell", 0.3f, 0.1f);
+						getOwner().getWorld().playSound(getOwner().getLocation(), "block.note_block.cow_bell", 2, 0.5f);
+						getOwner().getWorld().playSound(getOwner().getLocation(), "block.note_block.bass", 2, 0.1f);
+						getOwner().sendActionBar(MessageFormater.formatWithColorCodes('§',
+						DisplayTexts.getMessage("objet_omni_thiefDetected")));
+						e.getPlayer().sendMessage(MessageFormater.formatWithColorCodes('§',
+						DisplayTexts.getMessage("objet_omni_selfDetected")));
 					}
 					glowed.add(e.getPlayer());
 				}
@@ -101,7 +101,7 @@ public class OmniCapteur extends Objet{
 	public static float getSquaredBlockRange() {
 		return SQUARED_BLOCK_RANGE;
 	}
-	public void disable() {
+	public void destroy() {
 		super.disable();
 		if(omni!=null) omni.remove();
 		for(Player guard : glowed) {
