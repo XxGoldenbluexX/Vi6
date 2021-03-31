@@ -1,7 +1,6 @@
 package fr.nekotine.vi6.objet.list;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
@@ -20,9 +19,8 @@ import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.utils.IsCreator;
+import fr.nekotine.vi6.utils.Vi6Sound;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
-import net.kyori.adventure.key.Key;
-import net.kyori.adventure.sound.Sound;
 
 public class Ombre extends Objet {
 	private ArmorStand ombre;
@@ -68,8 +66,7 @@ public class Ombre extends Objet {
 			getOwner().damage(getOwner().getHealth(), (Entity) e.getPlayer());
 			disable();
 			for (Player p : getGame().getPlayerMap().keySet()) {
-				p.playSound(Sound.sound(Key.key("entity.wither.spawn"), Sound.Source.MASTER, 0.5F, 1.0F));
-				p.playSound(Sound.sound(Key.key("entity.zombie_villager.cure"), Sound.Source.MASTER, 0.5F, 1.0F));
+				Vi6Sound.OMBRE_KILL.playForPlayer(p);
 			}
 		}
 	}
@@ -77,7 +74,7 @@ public class Ombre extends Objet {
 	private void use() {
 		if (this.ombre == null) {
 			if (!onGround()) {
-				getOwner().playSound(Sound.sound(Key.key("entity.villager.no"), Sound.Source.AMBIENT, 1.0F, 1.0F));
+				Vi6Sound.NO.playForPlayer(getOwner());
 				return;
 			}
 			this.ombre = (ArmorStand) getOwner().getWorld().spawnEntity(getOwner().getLocation(),
@@ -90,10 +87,7 @@ public class Ombre extends Objet {
 			this.ombre.setMarker(true);
 			setCooldown(40);
 		} else {
-			Location loc = getOwner().getLocation();
-			getOwner().getWorld().playSound(
-					Sound.sound(Key.key("entity.enderman.teleport"), Sound.Source.MASTER, 1.0F, 1.0F), loc.getX(),
-					loc.getY(), loc.getZ());
+			Vi6Sound.OMBRE_TELEPORT.playAtLocation(getOwner().getLocation());
 			getOwner().teleport((Entity) this.ombre);
 			this.ombre.remove();
 			this.ombre = null;

@@ -18,10 +18,9 @@ import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.statuseffects.Effects;
 import fr.nekotine.vi6.statuseffects.StatusEffect;
 import fr.nekotine.vi6.utils.MessageFormater;
+import fr.nekotine.vi6.utils.Vi6Sound;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 import fr.nekotine.vi6.yml.DisplayTexts;
-import net.kyori.adventure.key.Key;
-import net.kyori.adventure.sound.Sound;
 
 public class DeadRinger extends Objet{
 	public static final int INVISIBILITY_DURATION_TICK=60;
@@ -75,8 +74,7 @@ public class DeadRinger extends Objet{
 				public void run() {
 					getOwnerWrapper().removeStatusEffect(Invisible);
 					Location loc = getOwner().getLocation();
-					loc.getWorld().playSound(Sound.sound(Key.key("minecraft:entity.evoker.prepare_summon"), Sound.Source.MASTER, 1.0F, 1.7F));
-					loc.getWorld().playSound(Sound.sound(Key.key("minecraft:entity.witch.celebrate"), Sound.Source.MASTER, 1.0F, 0.7F));
+					Vi6Sound.DEAD_RINGER.playAtLocation(loc);
 				}
 			}.runTaskLater(getMain(), INVISIBILITY_DURATION_TICK);
 		}

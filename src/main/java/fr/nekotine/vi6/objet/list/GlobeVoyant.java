@@ -27,10 +27,9 @@ import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.utils.MessageFormater;
+import fr.nekotine.vi6.utils.Vi6Sound;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 import fr.nekotine.vi6.yml.DisplayTexts;
-import net.kyori.adventure.key.Key;
-import net.kyori.adventure.sound.Sound;
 
 public class GlobeVoyant extends Objet{
 	private static final int MESSAGE_DELAY_TICKS=100;
@@ -50,7 +49,7 @@ public class GlobeVoyant extends Objet{
 			if(delay==0) {
 				for(Entry<Player, PlayerWrapper> player : getGame().getPlayerMap().entrySet()) {
 					if(player.getValue().getTeam()==Team.GARDE) {
-						player.getKey().playSound(Sound.sound(Key.key("entity.vindicator.celebrate"), Sound.Source.VOICE, 0.5f, 1.5f));
+						Vi6Sound.GLOBE_VOYANT_TRIGGER.playForPlayer(getOwner());
 						player.getKey().sendMessage(MessageFormater.formatWithColorCodes('§',
 						DisplayTexts.getMessage("objet_globe_triggered"), new MessageFormater("§a", attached.getDisplayName())));
 					}
@@ -142,17 +141,14 @@ public class GlobeVoyant extends Objet{
 		}
 		if(nearestA!=null) {
 			attached=nearestA;
-			super.getOwner().getWorld().playSound(attached.getBlockLoc(), "entity.slime.jump", 1, 2);
-			super.getOwner().getWorld().playSound(attached.getBlockLoc(), "entity.shulker_bullet.hit", 0.5f, 2);
-			super.getOwner().playSound(Sound.sound(Key.key("entity.slime.jump"), Sound.Source.VOICE, 1, 2));
-			super.getOwner().playSound(Sound.sound(Key.key("entity.shulker_bullet.hit"), Sound.Source.VOICE, 0.5f, 2));
+			Vi6Sound.GLOBE_VOYANT_POSE.playForPlayer(getOwner());
+			Vi6Sound.GLOBE_VOYANT_POSE.playAtLocation(attached.getBlockLoc());
 			summonItem();
 			getOwner().sendMessage(MessageFormater.formatWithColorCodes('§',
 			DisplayTexts.getMessage("objet_globe_placed"), new MessageFormater("§an", attached.getDisplayName())));
 			consume();
 		}else {
-			super.getOwner().playSound(Sound.sound(Key.key("block.note_block.iron_xylophone"), Sound.Source.VOICE, 1, 1));
-			super.getOwner().playSound(Sound.sound(Key.key("block.note_block.iron_xylophone"), Sound.Source.VOICE, 1, 0));
+			Vi6Sound.ERROR.playForPlayer(getOwner());
 			getOwner().sendMessage(MessageFormater.formatWithColorCodes('§',
 			DisplayTexts.getMessage("objet_globe_noArtefact")));
 		}

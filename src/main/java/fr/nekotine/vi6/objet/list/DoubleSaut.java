@@ -17,9 +17,8 @@ import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.utils.IsCreator;
+import fr.nekotine.vi6.utils.Vi6Sound;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
-import net.kyori.adventure.key.Key;
-import net.kyori.adventure.sound.Sound;
 
 public class DoubleSaut extends Objet {
 	private static final ItemStack JUMP_BOOTS = IsCreator.createItemStack(Material.GOLDEN_BOOTS, 1,
@@ -82,8 +81,7 @@ public class DoubleSaut extends Objet {
 			event.setCancelled(true);
 			if (canJump) {
 				getOwner().setVelocity(getOwner().getVelocity().setY(0.5D));
-				getOwner().playSound(Sound.sound(Key.key("item.firecharge.use"), Sound.Source.AMBIENT, 0.3F, 1.5F));
-				getOwner().playSound(Sound.sound(Key.key("item.hoe.till"), Sound.Source.AMBIENT, 1.0F, 0.1F));
+				Vi6Sound.DOUBLE_SAUT.playForPlayer(getOwner());
 				canJump = false;
 				getOwner().setAllowFlight(false);
 			}

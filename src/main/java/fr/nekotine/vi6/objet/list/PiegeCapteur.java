@@ -14,6 +14,7 @@ import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.utils.TempBlock;
+import fr.nekotine.vi6.utils.Vi6Sound;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 
 public class PiegeCapteur extends Objet{
@@ -51,7 +52,7 @@ public class PiegeCapteur extends Objet{
 	private void use() {
 		if(getOwner().getLocation().getBlock().isEmpty() && getOwner().getLocation().subtract(0, 1, 0).getBlock().isSolid()) {
 			pressure = new TempBlock(getOwner().getLocation().getBlock(), Material.HEAVY_WEIGHTED_PRESSURE_PLATE);
-			super.getOwner().getWorld().playSound(getOwner().getLocation(), "item.flintandsteel.use", 2, 0);
+			Vi6Sound.PIEGECAPTEUR_POSE.playAtLocation(getOwner().getLocation());
 			consume();
 		}
 	}
@@ -67,8 +68,7 @@ public class PiegeCapteur extends Objet{
 				PlayerWrapper wrap = getGame().getWrapper(e.getPlayer());
 				if(wrap!=null && wrap.getTeam()==Team.VOLEUR && wrap.getState()==PlayerState.INSIDE) {
 					//message
-					pressure.getBlock().getWorld().playSound(pressure.getBlock().getLocation(), "entity.stray.death", 0.5f, 0);
-					pressure.getBlock().getWorld().playSound(pressure.getBlock().getLocation(), "block.shulker_box.open", 1, 2);
+					Vi6Sound.PIEGECAPTEUR_TRIGGER.playAtLocation(pressure.getBlock().getLocation());
 					destroy();
 				}
 			}

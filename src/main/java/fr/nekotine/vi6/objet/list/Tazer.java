@@ -2,8 +2,6 @@ package fr.nekotine.vi6.objet.list;
 
 import java.util.ArrayList;
 
-import org.bukkit.Sound;
-import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
@@ -20,6 +18,7 @@ import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.objet.utils.Objet;
+import fr.nekotine.vi6.utils.Vi6Sound;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 
 public class Tazer extends Objet{
@@ -78,7 +77,7 @@ public class Tazer extends Objet{
 						hit.setNoDamageTicks(0);
 						hit.damage(0.001);
 						if (nbHit<20) {
-							hit.getWorld().playSound(hit.getLocation(), Sound.BLOCK_BEEHIVE_WORK, SoundCategory.MASTER, 2,0.1f);
+							Vi6Sound.TAZER_SHOCKING.playAtLocation(hit.getLocation());
 						}
 						if (nbHit>30) {
 							this.cancel();

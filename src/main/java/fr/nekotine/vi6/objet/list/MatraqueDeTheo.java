@@ -1,6 +1,5 @@
 package fr.nekotine.vi6.objet.list;
 
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
@@ -16,9 +15,8 @@ import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.objet.utils.Objet;
+import fr.nekotine.vi6.utils.Vi6Sound;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
-import net.kyori.adventure.key.Key;
-import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 
@@ -65,9 +63,7 @@ public class MatraqueDeTheo extends Objet {
 	}
 
 	public void drop() {
-		Location loc = getOwner().getLocation();
-		loc.getWorld().playSound(Sound.sound(Key.key("entity.evoker.prepare_wololo"), Sound.Source.VOICE, 1.0F, 1.2F),
-				loc.getX(), loc.getY(), loc.getZ());
+		Vi6Sound.WOLOLO.playAtLocation(getOwner().getLocation());
 	}
 
 	public void cooldownEnded() {

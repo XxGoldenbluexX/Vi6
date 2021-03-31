@@ -21,8 +21,6 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.Sound;
-import org.bukkit.SoundCategory;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.boss.BarColor;
@@ -87,6 +85,7 @@ import fr.nekotine.vi6.sql.PlayerGame;
 import fr.nekotine.vi6.sql.SQLInterface;
 import fr.nekotine.vi6.statuseffects.ItemHider;
 import fr.nekotine.vi6.utils.MessageFormater;
+import fr.nekotine.vi6.utils.Vi6Sound;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 import fr.nekotine.vi6.yml.DisplayTexts;
 import net.kyori.adventure.text.Component;
@@ -527,8 +526,7 @@ public class Game implements Listener {
 				equipPacket.getSlotStackPairLists().write(0, pairList);
 				sendPacketToTeam(Team.VOLEUR, new PacketContainer[]{createPacket, metadataPacket, equipPacket});
 			}
-			p.playSound(p.getLocation().add(0.0D, 3.0D, 0.0D), Sound.BLOCK_BEACON_POWER_SELECT, SoundCategory.MASTER,
-					1.0F, 1.0F);
+			Vi6Sound.SCAN.playForPlayer(p, p.getLocation().add(0, 3, 0));
 		}
 		(new BukkitRunnable() {
 			public void run() {

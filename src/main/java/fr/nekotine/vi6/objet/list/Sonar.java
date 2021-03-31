@@ -13,9 +13,8 @@ import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.statuseffects.Effects;
+import fr.nekotine.vi6.utils.Vi6Sound;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
-import net.kyori.adventure.key.Key;
-import net.kyori.adventure.sound.Sound;
 
 public class Sonar extends Objet{
 	private static int DELAY_IN_TICKS = 80;
@@ -39,15 +38,12 @@ public class Sonar extends Objet{
 				}
 			}
 			if(thievesNear.size()>0) {
-				super.getOwner().playSound(Sound.sound(Key.key("block.note_block.bit"), Sound.Source.VOICE, 1, 2));
-				super.getOwner().playSound(Sound.sound(Key.key("block.note_block.bit"), Sound.Source.VOICE, 2, 1));
+				Vi6Sound.SONAR_DETECT.playForPlayer(getOwner());
 				for(Player thief : thievesNear) {
-					thief.playSound(Sound.sound(Key.key("block.note_block.bit"), Sound.Source.VOICE, 1, 2));
-					thief.playSound(Sound.sound(Key.key("block.note_block.bit"), Sound.Source.VOICE, 2, 1));
+					Vi6Sound.SONAR_DETECT.playForPlayer(thief);
 				}
 			}else {
-				super.getOwner().playSound(Sound.sound(Key.key("block.note_block.bit"), Sound.Source.VOICE, 1, 0.5f));
-				super.getOwner().playSound(Sound.sound(Key.key("block.note_block.bit"), Sound.Source.VOICE, 2, 0));
+				Vi6Sound.SONAR_NOBODY.playForPlayer(getOwner());
 			}
 		}
 	}

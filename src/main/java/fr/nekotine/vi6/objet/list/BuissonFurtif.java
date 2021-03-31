@@ -24,10 +24,9 @@ import fr.nekotine.vi6.statuseffects.StatusEffect;
 import fr.nekotine.vi6.utils.IsCreator;
 import fr.nekotine.vi6.utils.MessageFormater;
 import fr.nekotine.vi6.utils.TempBlock;
+import fr.nekotine.vi6.utils.Vi6Sound;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 import fr.nekotine.vi6.yml.DisplayTexts;
-import net.kyori.adventure.key.Key;
-import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
 
 public class BuissonFurtif extends Objet {
@@ -154,12 +153,12 @@ public class BuissonFurtif extends Objet {
 	}
 	private void use() {
 		if (placeBush(getOwner().getLocation())) {
-			getOwner().playSound(Sound.sound(Key.key("block.chorus_flower.grow"), Sound.Source.AMBIENT, 1.0F, 1.0F));
+			Vi6Sound.BUISSON.playForPlayer(getOwner());
 			getOwner().sendMessage((Component) MessageFormater.formatWithColorCodes('§',
 					DisplayTexts.getMessage("objet_BuissonFurtif_placeBush"),
 					new MessageFormater[]{new MessageFormater("§v", getOwnerWrapper().getCurrentSalle())}));
 		} else {
-			getOwner().playSound(Sound.sound(Key.key("entity.villager.no"), Sound.Source.AMBIENT, 1.0F, 1.0F));
+			Vi6Sound.NO.playForPlayer(getOwner());
 		}
 	}
 }

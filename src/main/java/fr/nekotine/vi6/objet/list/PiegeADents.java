@@ -23,9 +23,8 @@ import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.objet.utils.Objet;
+import fr.nekotine.vi6.utils.Vi6Sound;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
-import net.kyori.adventure.key.Key;
-import net.kyori.adventure.sound.Sound;
 
 public class PiegeADents extends Objet {
 
@@ -78,7 +77,7 @@ public class PiegeADents extends Objet {
 	
 	private void cast() {
 		if (!onGround()) {
-			getOwner().playSound(Sound.sound(Key.key("entity.villager.no"), Sound.Source.AMBIENT, 1.0F, 1.0F));
+			Vi6Sound.NO.playForPlayer(getOwner());
 			return;
 		}else {
 			loc = getOwner().getLocation();

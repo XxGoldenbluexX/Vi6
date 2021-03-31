@@ -17,9 +17,8 @@ import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.utils.TempBlock;
+import fr.nekotine.vi6.utils.Vi6Sound;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
-import net.kyori.adventure.key.Key;
-import net.kyori.adventure.sound.Sound;
 
 public class Teleporteur extends Objet {
 	
@@ -65,7 +64,7 @@ public class Teleporteur extends Objet {
 
 	private void tryPlace() {
 		if (!onGround()) {
-			getOwner().playSound(Sound.sound(Key.key("entity.villager.no"), Sound.Source.AMBIENT, 1.0F, 1.0F));
+			Vi6Sound.NO.playForPlayer(getOwner());
 			return;
 		}
 		final Location loc = getOwner().getLocation();
@@ -89,15 +88,7 @@ public class Teleporteur extends Objet {
 							gateway.update();
 							Teleporteur.this.dropBlock = (new TempBlock(loc.subtract(0.0D, 1.0D, 0.0D).getBlock(),
 									Bukkit.createBlockData(Material.RESPAWN_ANCHOR, "[charges=4]"))).set();
-							Teleporteur.this.portalTp.getWorld().playSound(
-									Sound.sound(Key.key("block.respawn_anchor.deplete"), Sound.Source.VOICE, 1.0F,
-											1.4F),
-									Teleporteur.this.portalTp.getX(), Teleporteur.this.portalTp.getY(),
-									Teleporteur.this.portalTp.getZ());
-							Teleporteur.this.portalTp.getWorld().playSound(
-									Sound.sound(Key.key("block.end_portal.spawn"), Sound.Source.VOICE, 0.1F, 1.4F),
-									Teleporteur.this.portalTp.getX(), Teleporteur.this.portalTp.getY(),
-									Teleporteur.this.portalTp.getZ());
+							Vi6Sound.TELEPORTEUR_CREATE_PORTAL.playAtLocation(portalTp);
 						}
 					}
 				}).runTaskLater((Plugin) getMain(), 13L);
@@ -110,12 +101,7 @@ public class Teleporteur extends Objet {
 			this.shulker = (new TempBlock(loc.getBlock(), Material.LIGHT_GRAY_SHULKER_BOX)).set();
 			this.placed = true;
 			this.portalTp = loc;
-			this.portalTp.getWorld().playSound(
-					Sound.sound(Key.key("block.piston.extend"), Sound.Source.VOICE, 1.0F, 2.0F), this.portalTp.getX(),
-					this.portalTp.getY(), this.portalTp.getZ());
-			this.portalTp.getWorld().playSound(
-					Sound.sound(Key.key("block.iron_trapdoor.open"), Sound.Source.VOICE, 1.0F, 0.6F),
-					this.portalTp.getX(), this.portalTp.getY(), this.portalTp.getZ());
+			Vi6Sound.TELEPORTEUR_PLACE.playAtLocation(portalTp);
 		}
 		setCooldown(10);
 	}

@@ -21,9 +21,8 @@ import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.utils.IsCreator;
+import fr.nekotine.vi6.utils.Vi6Sound;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
-import net.kyori.adventure.key.Key;
-import net.kyori.adventure.sound.Sound;
 
 public class GPS extends Objet{
 	private static int UPDATE_DELAY_TICKS=20;
@@ -94,8 +93,7 @@ public class GPS extends Objet{
 			if(e.getHitEntity() instanceof Player) {
 				Player hit = (Player)e.getHitEntity();
 				if(super.getGame().getPlayerTeam(hit)==Team.GARDE) {
-					super.getOwner().playSound(Sound.sound(Key.key("block.note_block.iron_xylophone"), Sound.Source.VOICE, 1, 1));
-					super.getOwner().playSound(Sound.sound(Key.key("block.note_block.iron_xylophone"), Sound.Source.VOICE, 1, 2));
+					Vi6Sound.SUCCESS.playForPlayer(getOwner());
 					arrow.remove();
 					hit.damage(0.01f);
 					tracked=hit;
@@ -105,8 +103,7 @@ public class GPS extends Objet{
 					return;
 				}
 			}
-			super.getOwner().playSound(Sound.sound(Key.key("block.note_block.iron_xylophone"), Sound.Source.VOICE, 1, 1));
-			super.getOwner().playSound(Sound.sound(Key.key("block.note_block.iron_xylophone"), Sound.Source.VOICE, 1, 0));
+			Vi6Sound.ERROR.playForPlayer(getOwner());
 			destroy();
 		}
 	}

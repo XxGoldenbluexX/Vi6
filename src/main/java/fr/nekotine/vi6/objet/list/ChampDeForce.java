@@ -18,10 +18,9 @@ import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.utils.DetectionZone;
+import fr.nekotine.vi6.utils.Vi6Sound;
 import fr.nekotine.vi6.utils.ZoneDetectionListener;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
-import net.kyori.adventure.key.Key;
-import net.kyori.adventure.sound.Sound;
 
 public class ChampDeForce extends Objet implements ZoneDetectionListener {
 	private Gateway gateway;
@@ -67,13 +66,10 @@ public class ChampDeForce extends Objet implements ZoneDetectionListener {
 	private void tryPlaceWall() {
 		Gateway g = getGame().getMap().getNearestFreeGateway(getOwner().getLocation());
 		if (g == null) {
-			getOwner().playSound(Sound.sound(Key.key("entity.villager.no"), Sound.Source.AMBIENT, 1.0F, 1.0F));
+			Vi6Sound.NO.playForPlayer(getOwner());
 		} else {
 			Location loc = g.getCorner1();
-			loc.getWorld().playSound(Sound.sound(Key.key("block.barrel.close"), Sound.Source.VOICE, 1.0F, 0.0F),
-					loc.getX(), loc.getY(), loc.getZ());
-			loc.getWorld().playSound(Sound.sound(Key.key("item.shield.block"), Sound.Source.VOICE, 1.0F, 0.0F),
-					loc.getX(), loc.getY(), loc.getZ());
+			Vi6Sound.CHAMP_DE_FORCE.playAtLocation(loc);
 			g.close(this.mat);
 			g.setManaged(true);
 			consume();

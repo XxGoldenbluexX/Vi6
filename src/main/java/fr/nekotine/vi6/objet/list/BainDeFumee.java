@@ -17,9 +17,8 @@ import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.statuseffects.Effects;
 import fr.nekotine.vi6.statuseffects.StatusEffect;
+import fr.nekotine.vi6.utils.Vi6Sound;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
-import net.kyori.adventure.key.Key;
-import net.kyori.adventure.sound.Sound;
 
 public class BainDeFumee extends Objet {
 	
@@ -76,7 +75,7 @@ public class BainDeFumee extends Objet {
 	private void cast() {
 		pools.add(new SmokePool(this,Particle.SMOKE_NORMAL,getOwner().getLocation()));
 		Location loc = getOwner().getLocation();
-		loc.getWorld().playSound(Sound.sound(Key.key("minecraft:block.fire.extinguish"), Sound.Source.AMBIENT, 1.0F, 0.0F));
+		Vi6Sound.SMOKEPOOL.playAtLocation(loc);
 		setCooldown(400);
 	}
 	

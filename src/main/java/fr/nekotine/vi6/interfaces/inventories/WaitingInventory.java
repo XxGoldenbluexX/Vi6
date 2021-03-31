@@ -14,6 +14,7 @@ import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.events.GameEnterPreparationPhaseEvent;
 import fr.nekotine.vi6.utils.IsCreator;
 import fr.nekotine.vi6.utils.MessageFormater;
+import fr.nekotine.vi6.utils.Vi6Sound;
 import fr.nekotine.vi6.yml.DisplayTexts;
 import net.kyori.adventure.text.Component;
 
@@ -71,6 +72,7 @@ public class WaitingInventory extends BasePersonalInventory{
 					inventory.setItem(index, IsCreator.createItemStack(Material.RED_STAINED_GLASS_PANE, 1, " ", ""));
 				}
 			}else {
+				Vi6Sound.ERROR.playForPlayer(player);
 				player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_shouldBeUnready")));
 			}
 			break;

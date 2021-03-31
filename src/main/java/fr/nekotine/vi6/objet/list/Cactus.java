@@ -19,9 +19,8 @@ import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.utils.IsCreator;
+import fr.nekotine.vi6.utils.Vi6Sound;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
-import net.kyori.adventure.key.Key;
-import net.kyori.adventure.sound.Sound;
 
 public class Cactus extends Objet {
 	
@@ -42,7 +41,7 @@ public class Cactus extends Objet {
 					Player p = player.getKey();
 					p.damage(0.01D);
 					Location loc = p.getLocation();
-					loc.getWorld().playSound(Sound.sound(Key.key("entity.bee.sting"), Sound.Source.AMBIENT, 1.0F, 1.0F),loc.getX(), loc.getY(), loc.getZ());
+					Vi6Sound.CACTUS.playAtLocation(loc);
 				}
 			}
 	}

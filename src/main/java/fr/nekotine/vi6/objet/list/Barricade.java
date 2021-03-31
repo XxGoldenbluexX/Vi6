@@ -12,9 +12,8 @@ import fr.nekotine.vi6.map.Gateway;
 import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.objet.utils.Objet;
+import fr.nekotine.vi6.utils.Vi6Sound;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
-import net.kyori.adventure.key.Key;
-import net.kyori.adventure.sound.Sound;
 
 public class Barricade extends Objet {
 	public Barricade(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Game game, Player player,
@@ -35,13 +34,10 @@ public class Barricade extends Objet {
 		if (map != null) {
 			Gateway g = map.getNearestFreeGateway(getOwner().getLocation());
 			if (g == null) {
-				getOwner().playSound(Sound.sound(Key.key("entity.villager.no"), Sound.Source.AMBIENT, 1.0F, 1.0F));
+				Vi6Sound.NO.playForPlayer(getOwner());
 			} else {
 				Location loc = g.getCorner1();
-				loc.getWorld().playSound(Sound.sound(Key.key("block.barrel.close"), Sound.Source.VOICE, 1.0F, 0.0F),
-						loc.getX(), loc.getY(), loc.getZ());
-				loc.getWorld().playSound(Sound.sound(Key.key("item.shield.block"), Sound.Source.VOICE, 1.0F, 0.0F),
-						loc.getX(), loc.getY(), loc.getZ());
+				Vi6Sound.BARRICADE.playAtLocation(loc);
 				g.close(Material.BRICKS);
 				g.setManaged(true);
 				consume();

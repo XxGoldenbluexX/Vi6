@@ -13,9 +13,8 @@ import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.objet.utils.Objet;
+import fr.nekotine.vi6.utils.Vi6Sound;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
-import net.kyori.adventure.key.Key;
-import net.kyori.adventure.sound.Sound;
 
 public class BrouilleurRadio extends Objet{
 	public BrouilleurRadio(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Game game, Player player,
@@ -51,14 +50,12 @@ public class BrouilleurRadio extends Objet{
 		use();
 	}
 	private void use() {
-		super.getOwner().playSound(Sound.sound(Key.key("block.note_block.iron_xylophone"), Sound.Source.VOICE, 1, 1));
-		super.getOwner().playSound(Sound.sound(Key.key("block.note_block.iron_xylophone"), Sound.Source.VOICE, 1, 2));
+		Vi6Sound.SUCCESS.playForPlayer(getOwner());
 		ArrayList<Player> guards = new ArrayList<>();
 		for(Entry<Player, PlayerWrapper> player : getGame().getPlayerMap().entrySet()) {
 			if(player.getValue().getTeam()==Team.GARDE) {
 				guards.add(player.getKey());
-				player.getKey().playSound(Sound.sound(Key.key("entity.creeper.primed"), Sound.Source.VOICE, 1, 2));
-				player.getKey().playSound(Sound.sound(Key.key("entity.generic.extinguish_fire"), Sound.Source.VOICE, 1, 0));
+				Vi6Sound.BROUILLEUR_0.playForPlayer(player.getKey());
 			}
 		}
 		new BukkitRunnable() {
@@ -67,13 +64,13 @@ public class BrouilleurRadio extends Objet{
 			public void run() {
 				switch(repeatCount) {
 				case 0:
-					guards.forEach((p)-> p.playSound(Sound.sound(Key.key("entity.generic.extinguish_fire"), Sound.Source.VOICE, 1, 0.5f)));
+					guards.forEach((p)-> Vi6Sound.BROUILLEUR_1.playForPlayer(p));
 					break;
 				case 1:
-					guards.forEach((p)-> p.playSound(Sound.sound(Key.key("entity.creeper.primed"), Sound.Source.VOICE, 1, 2)));
+					guards.forEach((p)-> Vi6Sound.BROUILLEUR_2.playForPlayer(p));
 					break;
 				case 2:
-					guards.forEach((p)-> p.playSound(Sound.sound(Key.key("entity.generic.extinguish_fire"), Sound.Source.VOICE, 1, 1.5f)));
+					guards.forEach((p)-> Vi6Sound.BROUILLEUR_3.playForPlayer(p));
 					break;
 				case 3:
 					this.cancel();
