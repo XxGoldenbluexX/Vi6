@@ -96,6 +96,7 @@ public abstract class Objet implements Listener {
 	public void onPlayerInteract(PlayerInteractEvent e) {
 		if (!onCooldown && e.getPlayer().equals(owner) && e.getItem() != null
 				&& e.getItem().isSimilar(displayedItem)) {
+			e.setCancelled(true);
 			if (ownerWrapper.getTeam() == Team.GARDE) {
 				if (ownerWrapper.getState() == PlayerState.PREPARATION
 						|| ownerWrapper.getState() == PlayerState.INSIDE) {

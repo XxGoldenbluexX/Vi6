@@ -132,8 +132,8 @@ public class Game implements Listener {
 	private int scanTime;
 	private int defaultScanTime;
 	private int scanTimer = 0;
-	OpenWaitingItem waitingItem;
-	OpenPreparationItem prepItem;
+	private OpenWaitingItem waitingItem;
+	private OpenPreparationItem prepItem;
 	private final ArrayList<Objet> objetsList = new ArrayList<>();
 
 	static {
@@ -578,9 +578,6 @@ public class Game implements Listener {
 		this.scoreboardSidebar.setDisplaySlot(DisplaySlot.SIDEBAR);
 		if (this.bb.getPlayers().size() > 0)
 			this.bb.removeAll();
-		if (this.main.isEnabled()) {
-			waitingItem.give();
-		}
 		int totalVole = 0;
 		for (Map.Entry<Player, PlayerWrapper> p : this.playerList.entrySet()) {
 			((Player) p.getKey()).setGameMode(GameMode.SPECTATOR);
@@ -613,6 +610,9 @@ public class Game implements Listener {
 		this.gameTicker.cancel();
 		this.bossBarTicker.cancel();
 		this.state = GameState.Waiting;
+		if (this.main.isEnabled()) {
+			waitingItem.give();
+		}
 		Bukkit.getPluginManager().callEvent(new GameEndEvent(this, this.idPartie, forced));
 		return true;
 	}

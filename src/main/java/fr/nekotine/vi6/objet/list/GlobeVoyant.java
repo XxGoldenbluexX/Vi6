@@ -74,6 +74,7 @@ public class GlobeVoyant extends Objet{
 
 	@Override
 	public void action(Action var1) {
+		if(var1==Action.RIGHT_CLICK_AIR || var1==Action.RIGHT_CLICK_BLOCK) use();
 	}
 
 	@Override
@@ -97,7 +98,6 @@ public class GlobeVoyant extends Objet{
 		eye = spawnLoc.getWorld().dropItem(spawnLoc, new ItemStack(Material.ENDER_EYE));
 		eye.setCanMobPickup(false);
 		eye.setCanPlayerPickup(false);
-		eye.setGravity(false);
 		eye.setInvulnerable(true);
 		eye.setPersistent(true);
 		eye.setVelocity(new Vector(0, 0, 0));
