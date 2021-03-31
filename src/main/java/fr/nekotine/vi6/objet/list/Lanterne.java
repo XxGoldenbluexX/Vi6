@@ -114,7 +114,10 @@ public class Lanterne extends Objet {
 			PlayerWrapper wrap = getMain().getPlayerWrapper(getOwner());
 			if (wrap != null && wrap.getState() == PlayerState.INSIDE && this.lantern1 != null
 					&& event.getTo().distanceSquared(this.lantern1.getLoc()) <= LANTERN_CATCH_SQUARED_DISTANCE) {
+				Vi6Sound.LANTERNE_PRE_TELEPORT.playForPlayer(event.getPlayer());
 				event.getPlayer().teleport(getOwner().getLocation());
+				Vi6Sound.LANTERNE_POST_TELEPORT.playForPlayer(event.getPlayer());
+				Vi6Sound.LANTERNE_POST_TELEPORT.playForPlayer(getOwner());
 				this.lantern1.destroy();
 				PacketContainer packet = this.pmanager.createPacket(PacketType.Play.Server.ENTITY_DESTROY);
 				packet.getIntegerArrays().write(0, new int[]{this.lantern1.guardianID});
@@ -176,11 +179,13 @@ public class Lanterne extends Objet {
 				this.lantern1 = new Lant(getOwner().getLocation(), getMain(), this.lanternType,
 						this.lanternParticleType);
 				setCooldown(10);
+				Vi6Sound.LANTERNE_POSE.playForPlayer(getOwner());
 				return;
 			}
 			if (this.lantern2 == null) {
 				this.lantern2 = new Lant(getOwner().getLocation(), getMain(), this.lanternType,
 						this.lanternParticleType);
+				Vi6Sound.LANTERNE_POSE.playForPlayer(getOwner());
 				setCooldown(10);
 				return;
 			}

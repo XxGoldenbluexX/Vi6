@@ -67,14 +67,14 @@ public enum Vi6Sound{
 		OMNICAPTEUR_DETECT(new Sound[] {
 		Sound.sound(Key.key("block.note_block.bell"), Sound.Source.MASTER, 0.3f, 0.1F),
 		Sound.sound(Key.key("block.note_block.cow_bell"), Sound.Source.MASTER, 2, 0.5F),
-		Sound.sound(Key.key("block.note_block.bass"), Sound.Source.MASTER, 2, 0.1F),
+		Sound.sound(Key.key("block.note_block.bass"), Sound.Source.MASTER, 2, 0.1F)
 		}),
 		PIEGECAPTEUR_POSE(new Sound[] {
 		Sound.sound(Key.key("item.flintandsteel.use"), Sound.Source.MASTER, 2, 0),
 		}),
 		PIEGECAPTEUR_TRIGGER(new Sound[] {
 		Sound.sound(Key.key("entity.stray.death"), Sound.Source.MASTER, 0.5f, 0),
-		Sound.sound(Key.key("block.shulker_box.open"), Sound.Source.MASTER, 1, 2),
+		Sound.sound(Key.key("block.shulker_box.open"), Sound.Source.MASTER, 1, 2)
 		}),
 		SONAR_NOBODY(new Sound[] {
 		Sound.sound(Key.key("block.note_block.bit"), Sound.Source.VOICE, 1, 0.5f),
@@ -85,7 +85,7 @@ public enum Vi6Sound{
 		Sound.sound(Key.key("block.note_block.bit"), Sound.Source.VOICE, 2, 1)
 		}),
 		SURCHARGE(new Sound[] {
-		Sound.sound(Key.key("entity.polar_bear.warning"), Sound.Source.MASTER, 0.5f, 0.5f),
+		Sound.sound(Key.key("entity.polar_bear.warning"), Sound.Source.MASTER, 0.5f, 0.5f)
 		}),
 		TAZER_SHOCKING(new Sound[] {
 		Sound.sound(Key.key("block.beehive.work"), Sound.Source.MASTER, 2, 0.1f),		
@@ -133,11 +133,22 @@ public enum Vi6Sound{
 		Sound.sound(Key.key("block.beacon.deactivate"), Sound.Source.VOICE, 1, 1.5f)
 		}),
 		SCAN(new Sound[] {
-		Sound.sound(Key.key("block.beacon.power_select"), Sound.Source.MASTER, 1, 1),
+		Sound.sound(Key.key("block.beacon.power_select"), Sound.Source.MASTER, 1, 1)
 		}),
-		/*COPY(new Sound[] {
-				
-		}),*/
+		LANTERNE_POSE(new Sound[] {
+		Sound.sound(Key.key("block.anvil.place"), Sound.Source.MASTER, 1, 2)
+		}),
+		LANTERNE_PRE_TELEPORT(new Sound[] {
+		Sound.sound(Key.key("block.anvil.use"), Sound.Source.MASTER, 1, 1.6f)
+		}),
+		LANTERNE_POST_TELEPORT(new Sound[] {
+		Sound.sound(Key.key("block.anvil.use"), Sound.Source.MASTER, 1, 1.6f),
+		Sound.sound(Key.key("entity.shulker.shoot"), Sound.Source.MASTER, 2, 0.1f),
+		Sound.sound(Key.key("entity.player.levelup"), Sound.Source.MASTER, 1, 1.5f)
+		}),
+		INVISNEAK(new Sound[] {
+		Sound.sound(Key.key("block.lava.extinguish"), Sound.Source.MASTER, 0.1f, 2)
+		}),
 		;
 		public Sound[] getSounds() {
 			return sounds;
@@ -146,20 +157,19 @@ public enum Vi6Sound{
 		private Vi6Sound(Sound[] sounds) {
 			this.sounds=sounds;
 		}
-	
-	public void playAtLocation(Location location) {
-		for(Sound advSound : sounds) {
-			location.getWorld().playSound(advSound, location.getX(), location.getY(), location.getZ());
+		public void playAtLocation(Location location) {
+			for(Sound advSound : sounds) {
+				location.getWorld().playSound(advSound, location.getX(), location.getY(), location.getZ());
+			}
 		}
-	}
-	public void playForPlayer(Player player) {
-		for(Sound advSound : sounds) {
-			player.playSound(advSound);
+		public void playForPlayer(Player player) {
+			for(Sound advSound : sounds) {
+				player.playSound(advSound);
+			}
 		}
-	}
-	public void playForPlayer(Player player, Location location) {
-		for(Sound advSound : sounds) {
-			player.playSound(advSound, location.getX(), location.getY(), location.getZ());
+		public void playForPlayer(Player player, Location location) {
+			for(Sound advSound : sounds) {
+				player.playSound(advSound, location.getX(), location.getY(), location.getZ());
+			}
 		}
-	}
 	}
