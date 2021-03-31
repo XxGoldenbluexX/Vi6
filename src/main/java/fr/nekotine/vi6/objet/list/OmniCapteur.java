@@ -102,6 +102,9 @@ public class OmniCapteur extends Objet{
 	public void destroy() {
 		super.disable();
 		if(omni!=null) omni.remove();
+	}
+	public void disable() {
+		super.disable();
 		for(Player guard : glowed) {
 			getGame().getWrapper(guard).removeStatusEffect(glowEffect);
 		}
