@@ -3,13 +3,10 @@ package fr.nekotine.vi6.interfaces.items;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
-import fr.nekotine.vi6.events.GameEnterInGamePhaseEvent;
-import fr.nekotine.vi6.events.GameEnterPreparationPhaseEvent;
 import fr.nekotine.vi6.interfaces.inventories.PreparationInventory;
 import fr.nekotine.vi6.utils.IsCreator;
 
@@ -27,21 +24,15 @@ public class OpenPreparationItem extends BaseInventoryItem{
 			player.getInventory().remove(item);
 		}
 	}
-	@EventHandler
-	public void onGameStart(GameEnterInGamePhaseEvent e) {
-		if(e.getGame().equals(game)) {
-			for(Player player : game.getPlayerMap().keySet()) {
-				player.getInventory().remove(item);
-			}
-			HandlerList.unregisterAll(this);
+	public void destroy() {
+		for(Player player : game.getPlayerMap().keySet()) {
+			player.getInventory().remove(item);
 		}
+		HandlerList.unregisterAll(this);
 	}
-	@EventHandler
-	public void onGameStart(GameEnterPreparationPhaseEvent e) {
-		if(e.getGame().equals(game)) {
-			for(Player player : game.getPlayerMap().keySet()) {
-				player.getInventory().setItem(8, item);
-			}
+	public void give() {
+		for(Player player : game.getPlayerMap().keySet()) {
+			player.getInventory().setItem(8, item);
 		}
 	}
 }
