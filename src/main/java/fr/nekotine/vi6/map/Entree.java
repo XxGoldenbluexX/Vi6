@@ -84,35 +84,40 @@ public class Entree implements ConfigurationSerializable,ZoneDetectionListener{
 	@Override
 	public boolean playerEnterZone(Player player,DetectionZone zone,Vi6Main mainref) {
 		PlayerWrapper wrap = mainref.getPlayerWrapper(player);
-		if(wrap!=null && wrap.getTeam()==Team.VOLEUR && wrap.getState()==PlayerState.ENTERING) {
-			for(Entry<Player, PlayerWrapper> gamePlayer : wrap.getGame().getPlayerMap().entrySet()) {
-				if(gamePlayer.getValue().getTeam()==Team.GARDE) gamePlayer.getKey().showPlayer(mainref, player);
+		if(wrap!=null) {
+			if (wrap.getTeam()==Team.VOLEUR) {
+				if (!(wrap.getState()==PlayerState.ENTERING)) return false;
+				for(Entry<Player, PlayerWrapper> gamePlayer : wrap.getGame().getPlayerMap().entrySet()) {
+					if(gamePlayer.getValue().getTeam()==Team.GARDE) gamePlayer.getKey().showPlayer(mainref, player);
+				}
+				wrap.setState(PlayerState.INSIDE);
+				StatusEffect fantom = new StatusEffect(Effects.Fantomatique);
+				StatusEffect insond = new StatusEffect(Effects.Insondable);
+				wrap.addStatusEffect(fantom);
+				wrap.addStatusEffect(insond);
+				fantom.autoRemove(mainref,  DELAY_BEFORE_STATUS_CLEAR);
+				insond.autoRemove(mainref,  DELAY_BEFORE_STATUS_CLEAR);
+				player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_player_enter_map"),
+						new MessageFormater("§m", wrap.getGame().getMapName())));
+				if(wrap.getGame().getScanTime()!=wrap.getGame().getDefaultScanTime()) wrap.getGame().setScanTime(wrap.getGame().getDefaultScanTime());
+				new BukkitRunnable() {
+					@Override
+					public void run() {
+						wrap.setCanCapture(true);
+						player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_player_canCapture")));
+					}
+				}.runTaskLater(mainref, DELAY_BEFORE_CAPTURE);
+				new BukkitRunnable() {
+					@Override
+					public void run() {
+						wrap.setCanEscape(true);
+						player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_player_canEscape")));
+					}
+				}.runTaskLater(mainref, DELAY_BEFORE_ESCAPE);
+				Bukkit.getPluginManager().callEvent(new PlayerEnterMapEvent(player, wrap.getGame(), name));
+			}else {
+				return true;
 			}
-			wrap.setState(PlayerState.INSIDE);
-			StatusEffect fantom = new StatusEffect(Effects.Fantomatique);
-			StatusEffect insond = new StatusEffect(Effects.Insondable);
-			wrap.addStatusEffect(fantom);
-			wrap.addStatusEffect(insond);
-			fantom.autoRemove(mainref,  DELAY_BEFORE_STATUS_CLEAR);
-			insond.autoRemove(mainref,  DELAY_BEFORE_STATUS_CLEAR);
-			player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_player_enter_map"),
-					new MessageFormater("§m", wrap.getGame().getMapName())));
-			if(wrap.getGame().getScanTime()!=wrap.getGame().getDefaultScanTime()) wrap.getGame().setScanTime(wrap.getGame().getDefaultScanTime());
-			new BukkitRunnable() {
-				@Override
-				public void run() {
-					wrap.setCanCapture(true);
-					player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_player_canCapture")));
-				}
-			}.runTaskLater(mainref, DELAY_BEFORE_CAPTURE);
-			new BukkitRunnable() {
-				@Override
-				public void run() {
-					wrap.setCanEscape(true);
-					player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_player_canEscape")));
-				}
-			}.runTaskLater(mainref, DELAY_BEFORE_ESCAPE);
-			Bukkit.getPluginManager().callEvent(new PlayerEnterMapEvent(player, wrap.getGame(), name));
 		}
 		return false;
 	}
