@@ -129,10 +129,7 @@ public class PiegeADents extends Objet {
 		LivingEntity victime = (LivingEntity) event.getEntity();
 		Entity attacker = event.getDamager();
 		if (victime.equals(victim) && attacker.equals(fang)) {
-			System.out.println("valid 1");
-			System.out.println(event.getCause());
 			if (event.getCause()==DamageCause.MAGIC) {
-				System.out.println("valid 2");
 				event.setCancelled(true);
 				victime.setNoDamageTicks(0);
 				victime.damage(BITE_DAMAGES, attacker);
