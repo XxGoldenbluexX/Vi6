@@ -377,6 +377,7 @@ public class Game implements Listener {
 				this.guardGlow.addHolders(new Entity[]{(Entity) player});
 				this.guardGlow.display(new Player[]{player});
 			} else {
+				player.setAllowFlight(true);
 				player.addPotionEffect(
 						new PotionEffect(PotionEffectType.NIGHT_VISION, 1000000, 1, false, false, false));
 				player.teleport(this.map.getMinimapSpawn());
@@ -430,6 +431,7 @@ public class Game implements Listener {
 			wrapper.clearStatusEffects();
 			wrapper.getStealedArtefactList().clear();
 			if (wrapper.getTeam() == Team.VOLEUR) {
+				player.setAllowFlight(false);
 				this.thiefGlow.addHolders(new Entity[]{(Entity) player});
 				this.thiefGlow.display(new Player[]{player});
 				wrapper.setState(PlayerState.ENTERING);
