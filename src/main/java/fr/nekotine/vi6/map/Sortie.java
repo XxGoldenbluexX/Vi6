@@ -80,26 +80,31 @@ public class Sortie implements ConfigurationSerializable, ZoneDetectionListener 
 
 	public boolean playerEnterZone(Player player, DetectionZone zone, Vi6Main mainref) {
 		PlayerWrapper wrap = mainref.getPlayerWrapper(player);
-		if (wrap != null && wrap.getTeam() == Team.VOLEUR && wrap.getState() == PlayerState.INSIDE
-				&& wrap.isCanEscape()) {
-			wrap.setState(PlayerState.LEAVED);
-			player.setGameMode(GameMode.SPECTATOR);
-			Bukkit.getPluginManager().callEvent(new PlayerEscapeEvent(this, player, wrap.getGame()));
-			for (ItemStack itm : player.getInventory().getContents()) {
-				if (itm != null) {
-					Objet objet = wrap.getGame().getObjet(itm);
-					if (objet != null)
-						objet.leaveMap();
+		if (wrap != null) {
+			if (wrap.getTeam() == Team.VOLEUR) {
+				if (wrap.getState() == PlayerState.INSIDE && wrap.isCanEscape()) {
+					wrap.setState(PlayerState.LEAVED);
+					player.setGameMode(GameMode.SPECTATOR);
+					Bukkit.getPluginManager().callEvent(new PlayerEscapeEvent(this, player, wrap.getGame()));
+					for (ItemStack itm : player.getInventory().getContents()) {
+						if (itm != null) {
+							Objet objet = wrap.getGame().getObjet(itm);
+							if (objet != null)
+								objet.leaveMap();
+						}
+					}
+					for (Map.Entry<Player, PlayerWrapper> p : wrap.getGame().getPlayerMap().entrySet()) {
+						((Player) p.getKey()).sendMessage((Component) MessageFormater.formatWithColorCodes('§',
+								DisplayTexts.getMessage("game_player_escaped"),
+								new MessageFormater[]{new MessageFormater("§p", player.getName()),
+										new MessageFormater("§n", String.valueOf(wrap.getStealedArtefactList().size()))}));
+					}
+					if (!wrap.getGame().isThiefLeft())
+						wrap.getGame().endGame(false);
 				}
+			}else {
+				return true;
 			}
-			for (Map.Entry<Player, PlayerWrapper> p : wrap.getGame().getPlayerMap().entrySet()) {
-				((Player) p.getKey()).sendMessage((Component) MessageFormater.formatWithColorCodes('§',
-						DisplayTexts.getMessage("game_player_escaped"),
-						new MessageFormater[]{new MessageFormater("§p", player.getName()),
-								new MessageFormater("§n", String.valueOf(wrap.getStealedArtefactList().size()))}));
-			}
-			if (!wrap.getGame().isThiefLeft())
-				wrap.getGame().endGame(false);
 		}
 		return false;
 	}
