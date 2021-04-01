@@ -3,7 +3,6 @@ package fr.nekotine.vi6.interfaces.items;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.HandlerList;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
@@ -28,7 +27,6 @@ public class OpenPreparationItem extends BaseInventoryItem{
 		for(Player player : game.getPlayerMap().keySet()) {
 			player.getInventory().remove(item);
 		}
-		HandlerList.unregisterAll(this);
 	}
 	public void give() {
 		for(Player player : game.getPlayerMap().keySet()) {
