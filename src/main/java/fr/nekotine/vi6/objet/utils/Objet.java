@@ -24,6 +24,7 @@ import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.events.GameEndEvent;
 import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
+import fr.nekotine.vi6.statuseffects.Effects;
 import fr.nekotine.vi6.utils.IsCreator;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 import net.md_5.bungee.api.ChatColor;
@@ -97,6 +98,7 @@ public abstract class Objet implements Listener {
 		if (!onCooldown && e.getPlayer().equals(owner) && e.getItem() != null
 				&& e.getItem().isSimilar(displayedItem)) {
 			e.setCancelled(true);
+			if (ownerWrapper.haveEffect(Effects.Jammed)) return;
 			if (ownerWrapper.getTeam() == Team.GARDE) {
 				if (ownerWrapper.getState() == PlayerState.PREPARATION
 						|| ownerWrapper.getState() == PlayerState.INSIDE) {
@@ -115,16 +117,10 @@ public abstract class Objet implements Listener {
          switch(ownerWrapper.getState()) {
          case INSIDE:
             e.setCancelled(true);
-            if (!onCooldown) {
-               if (ownerWrapper.getTeam() == Team.GARDE) {
-                  dropE = e;
-                  drop();
-                  dropE = null;
-               } else {
-                  dropE = e;
-                  drop();
-                  dropE = null;
-               }
+            if (!onCooldown && !ownerWrapper.haveEffect(Effects.Jammed)) {
+              dropE = e;
+              drop();
+              dropE = null;
             }
             break;
          case LEAVED:
@@ -182,17 +178,17 @@ public abstract class Objet implements Listener {
 	}
 
 	public void ticks() {
-		tick();
-		if (onCooldown) {
-			--cooldownTicksLeft;
-			if (cooldownTicksLeft <= 0) {
-				onCooldown = false;
-				cooldownEnded();
+		if (!ownerWrapper.haveEffect(Effects.Jammed)) {
+			tick();
+			if (onCooldown) {
+				--cooldownTicksLeft;
+				if (cooldownTicksLeft <= 0) {
+					onCooldown = false;
+					cooldownEnded();
+				}
+				updateItem();
 			}
-
-			updateItem();
 		}
-
 	}
 
 	private void updateItem() {
