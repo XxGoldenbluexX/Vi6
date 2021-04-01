@@ -16,7 +16,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.enums.GameState;
-import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.objet.utils.Objet;
@@ -92,16 +91,14 @@ public class GPS extends Objet{
 			e.setCancelled(true);
 			if(e.getHitEntity() instanceof Player) {
 				Player hit = (Player)e.getHitEntity();
-				if(super.getGame().getPlayerTeam(hit)==Team.GARDE) {
-					Vi6Sound.SUCCESS.playForPlayer(getOwner());
-					arrow.remove();
-					hit.damage(0.01f);
-					tracked=hit;
-					setItem(IsCreator.createItemStack(Material.COMPASS, 1, ChatColor.RED+"Distance: "+
-					ChatColor.AQUA+Math.round(getOwner().getLocation().distance(hit.getLocation()))+
-					ChatColor.RED+"m", ObjetsList.GPS.getInShopLore()));
-					return;
-				}
+				Vi6Sound.SUCCESS.playForPlayer(getOwner());
+				arrow.remove();
+				hit.damage(0.01f);
+				tracked=hit;
+				setItem(IsCreator.createItemStack(Material.COMPASS, 1, ChatColor.RED+"Distance: "+
+				ChatColor.AQUA+Math.round(getOwner().getLocation().distance(hit.getLocation()))+
+				ChatColor.RED+"m", ObjetsList.GPS.getInShopLore()));
+				return;
 			}
 			Vi6Sound.ERROR.playForPlayer(getOwner());
 			destroy();

@@ -37,6 +37,7 @@ public class BuissonFurtif extends Objet {
 	
 	private final StatusEffect INSONDABLE = new StatusEffect(Effects.Insondable);
 	private final StatusEffect INVISIBLE = new StatusEffect(Effects.Invisible);
+	private final StatusEffect DECOUVERT = new StatusEffect(Effects.Decouvert);
 	
 	private TempBlock bush1_bot;
 	private TempBlock bush1_top;
@@ -45,6 +46,7 @@ public class BuissonFurtif extends Objet {
 	private byte nbBush = 0;
 	private boolean invisibleAdded = false;
 	private boolean insondableAdded = false;
+	private boolean decouvertAdded = false;
 
 	public BuissonFurtif(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Game game, Player player,
 			PlayerWrapper wrapper) {
@@ -64,8 +66,7 @@ public class BuissonFurtif extends Objet {
 	}
 
 	public void tick() {
-		if (Arrays.<Material>stream(BUSHTYPE).anyMatch(e -> (e == getOwner().getLocation().getBlock().getType()))
-				&& !isGuardNear(getOwner())) {
+		if (Arrays.<Material>stream(BUSHTYPE).anyMatch(e -> (e == getOwner().getLocation().getBlock().getType()))) {
 			if (!this.insondableAdded) {
 				getOwnerWrapper().addStatusEffect(this.INSONDABLE);
 				this.insondableAdded = true;
@@ -79,6 +80,15 @@ public class BuissonFurtif extends Objet {
 			this.INVISIBLE.remove();
 			this.insondableAdded = false;
 			this.invisibleAdded = false;
+		}
+		if (isGuardNear(getOwner())) {
+			if (!this.decouvertAdded) {
+				getOwnerWrapper().addStatusEffect(this.DECOUVERT);
+				this.decouvertAdded = true;
+			}
+		}else {
+			DECOUVERT.remove();
+			decouvertAdded=false;
 		}
 	}
 
@@ -143,6 +153,8 @@ public class BuissonFurtif extends Objet {
 		if (HEADBUSH.isSimilar(inv.getHelmet()))inv.setHelmet(null);
 		this.INSONDABLE.remove();
 		this.INVISIBLE.remove();
+		DECOUVERT.remove();
+		decouvertAdded=false;
 		this.insondableAdded = false;
 		this.invisibleAdded = false;
 	}

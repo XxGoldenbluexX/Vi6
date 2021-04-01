@@ -22,7 +22,7 @@ public class Invisneak extends Objet {
 	private static final int DETECTION_RANGE_SQUARED = 9;
 
 	private final StatusEffect INVISIBLE = new StatusEffect(Effects.Invisible);
-	private boolean isSneaking = false;
+	private final StatusEffect DECOUVERT = new StatusEffect(Effects.Decouvert);
 
 	public Invisneak(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Game game, Player player,
 			PlayerWrapper wrapper) {
@@ -30,11 +30,10 @@ public class Invisneak extends Objet {
 	}
 
 	public void tick() {
-		if (INVISIBLE.isSet()) {
-			if (isGuardNear() || !isSneaking)
-				INVISIBLE.remove();
-		} else if (!isGuardNear() && isSneaking) {
-			getOwnerWrapper().addStatusEffect(INVISIBLE);
+		if (DECOUVERT.isSet()) {
+			if (!isGuardNear()) DECOUVERT.remove();
+		} else if(isGuardNear()) {
+			getOwnerWrapper().addStatusEffect(DECOUVERT);
 		}
 	}
 
@@ -55,7 +54,11 @@ public class Invisneak extends Objet {
 	@EventHandler
 	public void onSneakToggle(PlayerToggleSneakEvent e) {
 		if (e.getPlayer().equals(getOwner()))
-			this.isSneaking = e.isSneaking();
+			if (e.isSneaking()) {
+				getOwnerWrapper().addStatusEffect(INVISIBLE);
+			}else {
+				getOwnerWrapper().removeStatusEffect(INVISIBLE);
+			}
 	}
 
 	private boolean isGuardNear() {
@@ -70,6 +73,7 @@ public class Invisneak extends Objet {
 	public void disable() {
 		super.disable();
 		this.INVISIBLE.remove();
+		DECOUVERT.remove();
 	}
 
 	public void cooldownEnded() {

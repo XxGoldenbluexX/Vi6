@@ -4,7 +4,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import fr.nekotine.vi6.utils.MessageFormater;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
+import fr.nekotine.vi6.yml.DisplayTexts;
 
 public enum Effects {
 	
@@ -15,16 +17,15 @@ public enum Effects {
 		p.removePotionEffect(PotionEffectType.INVISIBILITY);
 		ItemHider.get().unHidePlayer(p);
 	}),
-	Decouvert((p,w)->{},(p,w)->{}),
-	Sondé((p,w)->{},(p,w)->{}),
+	Decouvert((p,w)->{p.sendActionBar(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("effect_decouvert")));},(p,w)->{}),
 	Insondable((p,w)->{},(p,w)->{}),
 	Glow((p,w)->{
 		p.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, Integer.MAX_VALUE, 0, false, false, true));
 	},(p,w)->{
 		p.removePotionEffect(PotionEffectType.GLOWING);
 	}),
-	InGlowable((p,w)->{},(p,w)->{}),
 	Fantomatique((p,w)->{},(p,w)->{}),
+	Jammed((p,w)->{},(p,w)->{}),
 	NoDamage((p,w)->{p.setNoDamageTicks(Integer.MAX_VALUE);},(p,w)->{p.setNoDamageTicks(1);});
 	
 	private final StatusEffectUpdate enableLambda;
@@ -47,10 +48,6 @@ public enum Effects {
 		switch(e) {
 		case Invisible:
 			return Decouvert;
-		case Sondé:
-			return Insondable;
-		case Glow:
-			return InGlowable;
 		default: return null;
 		}
 	}
@@ -59,10 +56,6 @@ public enum Effects {
 		switch(e) {
 		case Decouvert:
 			return Invisible;
-		case Insondable:
-			return Sondé;
-		case InGlowable:
-			return Glow;
 		default: return null;
 		}
 	}

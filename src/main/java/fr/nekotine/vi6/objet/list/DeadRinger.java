@@ -25,6 +25,7 @@ import fr.nekotine.vi6.yml.DisplayTexts;
 public class DeadRinger extends Objet{
 	public static final int INVISIBILITY_DURATION_TICK=60;
 	private final StatusEffect Invisible = new StatusEffect(Effects.Invisible);
+	private final StatusEffect NoDamage = new StatusEffect(Effects.NoDamage);
 	public DeadRinger(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Game game, Player player,PlayerWrapper wrapper) {
 		super(main, objet, skin, game, player, wrapper);
 	}
@@ -52,6 +53,14 @@ public class DeadRinger extends Objet{
 	@Override
 	public void drop() {
 	}
+	
+	@Override
+	public void disable() {
+		super.disable();
+		getOwnerWrapper().removeStatusEffect(Invisible);
+		getOwnerWrapper().removeStatusEffect(NoDamage);
+	}
+	
 	@EventHandler
 	public void onDamage(EntityDamageEvent e) {
 		if(getOwner().equals(e.getEntity()) && (getOwner().getInventory().contains(getDisplayedItem())) 
@@ -59,6 +68,7 @@ public class DeadRinger extends Objet{
 			consume();
 			e.setDamage(0.01);
 			getOwnerWrapper().addStatusEffect(Invisible);
+			getOwnerWrapper().addStatusEffect(NoDamage);
 			for (Map.Entry<Player, PlayerWrapper> p : getGame().getPlayerMap().entrySet()) {
 				if(p.getValue().getTeam()==Team.GARDE) {
 					p.getKey().sendMessage(MessageFormater.formatWithColorCodes('§', DisplayTexts.getMessage("game_death"),
@@ -73,6 +83,7 @@ public class DeadRinger extends Objet{
 				@Override
 				public void run() {
 					getOwnerWrapper().removeStatusEffect(Invisible);
+					getOwnerWrapper().removeStatusEffect(NoDamage);
 					Location loc = getOwner().getLocation();
 					Vi6Sound.DEAD_RINGER.playAtLocation(loc);
 				}
