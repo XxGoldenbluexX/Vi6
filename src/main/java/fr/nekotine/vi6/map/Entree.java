@@ -85,8 +85,7 @@ public class Entree implements ConfigurationSerializable,ZoneDetectionListener{
 	public boolean playerEnterZone(Player player,DetectionZone zone,Vi6Main mainref) {
 		PlayerWrapper wrap = mainref.getPlayerWrapper(player);
 		if(wrap!=null) {
-			if (wrap.getTeam()==Team.VOLEUR) {
-				if (!(wrap.getState()==PlayerState.ENTERING)) return false;
+			if (wrap.getTeam()==Team.VOLEUR && wrap.getState()==PlayerState.ENTERING) {
 				for(Entry<Player, PlayerWrapper> gamePlayer : wrap.getGame().getPlayerMap().entrySet()) {
 					if(gamePlayer.getValue().getTeam()==Team.GARDE) gamePlayer.getKey().showPlayer(mainref, player);
 				}
@@ -115,8 +114,6 @@ public class Entree implements ConfigurationSerializable,ZoneDetectionListener{
 					}
 				}.runTaskLater(mainref, DELAY_BEFORE_ESCAPE);
 				Bukkit.getPluginManager().callEvent(new PlayerEnterMapEvent(player, wrap.getGame(), name));
-			}else {
-				return true;
 			}
 		}
 		return false;
