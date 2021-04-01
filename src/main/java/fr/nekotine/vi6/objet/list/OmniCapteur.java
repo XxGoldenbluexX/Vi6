@@ -72,24 +72,23 @@ public class OmniCapteur extends Objet{
 	}
 	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent e) {
-		if(omni!=null) {
+		PlayerWrapper w = getGame().getWrapper(e.getPlayer());
+		if(omni!=null && w!=null) {
 			if(getGame().getPlayerTeam(e.getPlayer())==Team.VOLEUR) {
-				boolean isInRange = omni.getLocation().distanceSquared(e.getTo())<=SQUARED_BLOCK_RANGE;
+				boolean glowable = omni.getLocation().distanceSquared(e.getTo())<=SQUARED_BLOCK_RANGE && !w.haveEffect(Effects.Fantomatique);
 				if(glowed.contains(e.getPlayer())) {
-					if(!isInRange) {
+					if(!glowable) {
 						getGame().getWrapper(e.getPlayer()).removeStatusEffect(glowEffect);
 						glowed.remove(e.getPlayer());
 					}
-				}else if(isInRange){
+				}else if(glowable){
 					PlayerWrapper thief = getGame().getWrapper(e.getPlayer());
 					thief.addStatusEffect(glowEffect);
-					if(!thief.haveEffect(Effects.InGlowable)) {
-						Vi6Sound.OMNICAPTEUR_DETECT.playAtLocation(getOwner().getLocation());
-						getOwner().sendActionBar(MessageFormater.formatWithColorCodes('§',
-						DisplayTexts.getMessage("objet_omni_thiefDetected")));
-						e.getPlayer().sendMessage(MessageFormater.formatWithColorCodes('§',
-						DisplayTexts.getMessage("objet_omni_selfDetected")));
-					}
+					Vi6Sound.OMNICAPTEUR_DETECT.playAtLocation(getOwner().getLocation());
+					getOwner().sendActionBar(MessageFormater.formatWithColorCodes('§',
+					DisplayTexts.getMessage("objet_omni_thiefDetected")));
+					e.getPlayer().sendMessage(MessageFormater.formatWithColorCodes('§',
+					DisplayTexts.getMessage("objet_omni_selfDetected")));
 					glowed.add(e.getPlayer());
 				}
 			}

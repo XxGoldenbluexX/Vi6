@@ -23,6 +23,7 @@ import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.objet.utils.Objet;
+import fr.nekotine.vi6.statuseffects.Effects;
 import fr.nekotine.vi6.utils.Vi6Sound;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 
@@ -98,7 +99,7 @@ public class PiegeADents extends Objet {
 				@Override
 				public boolean test(Entry<Player, PlayerWrapper> t) {
 					PlayerWrapper w = t.getValue();
-					return t.getKey().equals(event.getPlayer()) && w.getTeam()==Team.VOLEUR && w.getState()==PlayerState.INSIDE;
+					return t.getKey().equals(event.getPlayer()) && w.getTeam()==Team.VOLEUR && w.getState()==PlayerState.INSIDE && !w.haveEffect(Effects.Fantomatique);
 				}
 			}
 			)) {
