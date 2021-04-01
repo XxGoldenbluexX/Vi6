@@ -81,22 +81,22 @@ public class DetectionZone implements ConfigurationSerializable,Listener {
 	public void onPlayerMove(PlayerMoveEvent evt) {
 		Player p = evt.getPlayer();
 		if (isLocInside(evt.getTo()) && !playersInside.contains(p)) {
-			playersInside.add(p);
 			for (ZoneDetectionListener l : listeners) {
 				if (l.playerEnterZone(p,this,mainref)) {
 					evt.setCancelled(true);
 					return;
 				};
 			}
+			playersInside.add(p);
 		}
 		if (!isLocInside(evt.getTo()) && playersInside.contains(p)) {
-			playersInside.remove(p);
 			for (ZoneDetectionListener l : listeners) {
 				if (l.playerLeaveZone(p,this,mainref)) {
 					evt.setCancelled(true);
 					return;
 				};
 			}
+			playersInside.remove(p);
 		}
 	}
 	
