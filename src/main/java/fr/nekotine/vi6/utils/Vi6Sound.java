@@ -151,7 +151,11 @@ public enum Vi6Sound{
 		}),
 		GPS_SHOOT(new Sound[] {
 		Sound.sound(Key.key("item.crossbow.shoot"), Sound.Source.MASTER, 1, 1)
-		})
+		}),
+		IEM(new Sound[] {
+		Sound.sound(Key.key("block.respawn_anchor.set_spawn"), Sound.Source.MASTER, 0.5f, 2),
+		Sound.sound(Key.key("entity.lightning_bolt.thunder"), Sound.Source.MASTER, 0.5f, 1.8f)
+		}),
 		;
 		public Sound[] getSounds() {
 			return sounds;

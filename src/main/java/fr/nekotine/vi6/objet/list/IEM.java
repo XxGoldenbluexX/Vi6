@@ -12,6 +12,7 @@ import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.statuseffects.Effects;
 import fr.nekotine.vi6.statuseffects.StatusEffect;
 import fr.nekotine.vi6.utils.MessageFormater;
+import fr.nekotine.vi6.utils.Vi6Sound;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 import fr.nekotine.vi6.yml.DisplayTexts;
 
@@ -51,12 +52,11 @@ public class IEM extends Objet{
 		return JAM_DURATION_TICKS;
 	}
 	private void use() {
-		getOwner().sendMessage(MessageFormater.formatWithColorCodes('§',
-		DisplayTexts.getMessage("objet_iem_jammed")));
-		
+		Vi6Sound.IEM.playForPlayer(getOwner());
 		StatusEffect jam = new StatusEffect(Effects.Jammed);
 		for(PlayerWrapper wrapper : getGame().getPlayerMap().values()) {
 			if(wrapper.getTeam()==Team.GARDE) {
+				Vi6Sound.IEM.playForPlayer(wrapper.getPlayer());
 				wrapper.getPlayer().sendMessage(MessageFormater.formatWithColorCodes('§',
 				DisplayTexts.getMessage("objet_iem_jammed")));
 				wrapper.addStatusEffect(jam);
