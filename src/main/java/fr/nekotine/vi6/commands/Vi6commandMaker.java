@@ -77,6 +77,7 @@ public class Vi6commandMaker {
 				.withSubcommand(gameRemove(main,gameArgument))
 				.withSubcommand(gameJoinPlayer(main,gameArgument))
 				.withSubcommand(gameStop(gameArgument))
+				.withSubcommand(gameLeavePlayer(gameArgument))
 				.executes(gameHelp);
 	}
 	
@@ -125,6 +126,15 @@ public class Vi6commandMaker {
 				.withArguments(gameArgument)
 				.executesPlayer((sender,args)->{
 					((Game)args[0]).removePlayer(sender);
+				});
+	}
+	
+	private static CommandAPICommand gameLeavePlayer(Argument gameArgument) {
+		return new CommandAPICommand("leave")
+				.withArguments(gameArgument,
+				new PlayerArgument("player").safeOverrideSuggestions((sender,args)->{return ((Game)args[0]).getPlayerMap().keySet().toArray(Player[]::new);}))
+				.executesPlayer((sender,args)->{
+					((Game)args[0]).removePlayer((Player)args[1]);
 				});
 	}
 	
