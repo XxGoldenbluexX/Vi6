@@ -8,11 +8,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.enums.PlayerState;
 import fr.nekotine.vi6.enums.Team;
+import fr.nekotine.vi6.events.GameEndEvent;
 import fr.nekotine.vi6.events.PlayerEnterMapEvent;
 import fr.nekotine.vi6.statuseffects.Effects;
 import fr.nekotine.vi6.statuseffects.StatusEffect;
@@ -26,9 +29,6 @@ import fr.nekotine.vi6.yml.DisplayTexts;
 public class Entree implements ConfigurationSerializable,ZoneDetectionListener{
 
 	private static final String yamlPrefix = "Entree_";
-	private static int DELAY_BEFORE_STATUS_CLEAR;
-	private static int DELAY_BEFORE_CAPTURE;
-	private static int DELAY_BEFORE_ESCAPE;
 	private String name;
 	private String displayName;
 	private DetectionZone zone;
@@ -40,9 +40,6 @@ public class Entree implements ConfigurationSerializable,ZoneDetectionListener{
 	}
 	
 	public void enable(Vi6Main mainref) {
-		DELAY_BEFORE_STATUS_CLEAR=mainref.getConfig().getInt("effectsClearDelay", 10*20);
-		DELAY_BEFORE_CAPTURE=mainref.getConfig().getInt("captureEnteringDelay", 60*20);
-		DELAY_BEFORE_ESCAPE=mainref.getConfig().getInt("escapeEnteringDelay", 60*20);
 		zone.enable(mainref);
 		this.zone.addListener(this);
 	}
@@ -94,25 +91,33 @@ public class Entree implements ConfigurationSerializable,ZoneDetectionListener{
 				StatusEffect insond = new StatusEffect(Effects.Insondable);
 				wrap.addStatusEffect(fantom);
 				wrap.addStatusEffect(insond);
-				fantom.autoRemove(mainref,  DELAY_BEFORE_STATUS_CLEAR);
-				insond.autoRemove(mainref,  DELAY_BEFORE_STATUS_CLEAR);
+				fantom.autoRemove(mainref,  Game.getDELAY_BEFORE_STATUS_CLEAR());
+				insond.autoRemove(mainref,  Game.getDELAY_BEFORE_STATUS_CLEAR());
 				player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_player_enter_map"),
 						new MessageFormater("§m", wrap.getGame().getMapName())));
 				if(wrap.getGame().getScanTime()!=wrap.getGame().getDefaultScanTime()) wrap.getGame().setScanTime(wrap.getGame().getDefaultScanTime());
 				new BukkitRunnable() {
+					@EventHandler
+					public void gameEndEvent(GameEndEvent e) {
+						if(e.getGame().equals(wrap.getGame())) this.cancel();
+					}
 					@Override
 					public void run() {
 						wrap.setCanCapture(true);
 						player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_player_canCapture")));
 					}
-				}.runTaskLater(mainref, DELAY_BEFORE_CAPTURE);
+				}.runTaskLater(mainref, Game.getDELAY_BEFORE_CAPTURE());
 				new BukkitRunnable() {
+					@EventHandler
+					public void gameEndEvent(GameEndEvent e) {
+						if(e.getGame().equals(wrap.getGame())) this.cancel();
+					}
 					@Override
 					public void run() {
 						wrap.setCanEscape(true);
 						player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_player_canEscape")));
 					}
-				}.runTaskLater(mainref, DELAY_BEFORE_ESCAPE);
+				}.runTaskLater(mainref, Game.getDELAY_BEFORE_ESCAPE());
 				Bukkit.getPluginManager().callEvent(new PlayerEnterMapEvent(player, wrap.getGame(), name));
 			}
 		}
@@ -134,10 +139,6 @@ public class Entree implements ConfigurationSerializable,ZoneDetectionListener{
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public static int getDelayBeforeEscapeSeconds() {
-		return DELAY_BEFORE_ESCAPE;
 	}
 
 }

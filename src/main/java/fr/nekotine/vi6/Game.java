@@ -135,7 +135,9 @@ public class Game implements Listener {
 	private OpenWaitingItem waitingItem;
 	private OpenPreparationItem prepItem;
 	private final ArrayList<Objet> objetsList = new ArrayList<>();
-
+	private static int DELAY_BEFORE_STATUS_CLEAR;
+	private static int DELAY_BEFORE_CAPTURE;
+	private static int DELAY_BEFORE_ESCAPE;
 	static {
 		ItemMeta meta = GUARD_SWORD.getItemMeta();
 		meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED,
@@ -154,6 +156,9 @@ public class Game implements Listener {
 		DEFAULT_RANKED_MONEY = main.getConfig().getInt("rankedMoney", 1000);
 		DEFAULT_PREPARATION_TIME = main.getConfig().getInt("preparationTime", 120);
 		DEFAULT_CAPTURE_DELAY = main.getConfig().getInt("delayBetweenCapture", 600);
+		DELAY_BEFORE_STATUS_CLEAR=main.getConfig().getInt("effectsClearDelay", 10*20);
+		DELAY_BEFORE_CAPTURE = main.getConfig().getInt("captureEnteringDelay", 60*20);
+		DELAY_BEFORE_ESCAPE=main.getConfig().getInt("escapeEnteringDelay", 60*20);
 		this.money = DEFAULT_RANKED_MONEY;
 		waitingItem = new OpenWaitingItem(main, this);
 		prepItem = new OpenPreparationItem(main, this);
@@ -732,4 +737,17 @@ public class Game implements Listener {
 		if (this.playerList.keySet().contains(e.getWhoClicked()) && e.getSlotType() == InventoryType.SlotType.ARMOR)
 			e.setCancelled(true);
 	}
+
+	public static int getDELAY_BEFORE_STATUS_CLEAR() {
+		return DELAY_BEFORE_STATUS_CLEAR;
+	}
+
+	public static int getDELAY_BEFORE_CAPTURE() {
+		return DELAY_BEFORE_CAPTURE;
+	}
+
+	public static int getDELAY_BEFORE_ESCAPE() {
+		return DELAY_BEFORE_ESCAPE;
+	}
+	
 }

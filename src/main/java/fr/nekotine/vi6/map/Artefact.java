@@ -11,11 +11,14 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.enums.PlayerState;
 import fr.nekotine.vi6.enums.Team;
+import fr.nekotine.vi6.events.GameEndEvent;
 import fr.nekotine.vi6.events.PlayerStealEvent;
 import fr.nekotine.vi6.utils.DetectionZone;
 import fr.nekotine.vi6.utils.MessageFormater;
@@ -124,7 +127,7 @@ public class Artefact implements ConfigurationSerializable,ZoneDetectionListener
 	}
 	
 	public void tick(Game g) {
-		if (status!=CaptureState.STEALABLE) return;
+		if (status!=CaptureState.STEALABLE || !g.isCanCapture()) return;
 		ArrayList<Player> voleurInside = voleurInsideList();
 		if (voleurInside.size()>0) {
 			if (nbGuardInside<=0) {
@@ -147,9 +150,21 @@ public class Artefact implements ConfigurationSerializable,ZoneDetectionListener
 			PlayerWrapper w = mainref.getPlayerWrapper(p);
 			if (w!=null && w.getGame().isCanCapture() && w.getTeam()==Team.VOLEUR && w.getState()==PlayerState.INSIDE && w.isCanCapture()) {
 				w.getStealedArtefactList().add(this);
+				w.setCanEscape(false);
 				status=CaptureState.CARRIED;
 				blockLoc.getBlock().setBlockData(Bukkit.createBlockData(Material.AIR));
 				w.getGame().capture();
+				new BukkitRunnable() {
+					@EventHandler
+					public void gameEndEvent(GameEndEvent e) {
+						if(e.getGame().equals(w.getGame())) this.cancel();
+					}
+					@Override
+					public void run() {
+						w.setCanEscape(true);
+						p.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_player_canEscape")));
+					}
+				}.runTaskLater(mainref, Game.getDELAY_BEFORE_ESCAPE());
 				Bukkit.getPluginManager().callEvent(new PlayerStealEvent(p, this,w.getGame()));
 				return w;
 			}
