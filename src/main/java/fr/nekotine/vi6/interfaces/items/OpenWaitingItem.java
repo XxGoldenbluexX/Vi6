@@ -3,6 +3,7 @@ package fr.nekotine.vi6.interfaces.items;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 
 import fr.nekotine.vi6.Game;
@@ -39,5 +40,9 @@ public class OpenWaitingItem extends BaseInventoryItem implements Listener{
 		for(Player player : game.getPlayerMap().keySet()) {
 			player.getInventory().setItem(0, item);
 		}
+	}
+	public void delete() {
+		destroy();
+		HandlerList.unregisterAll(this);
 	}
 }

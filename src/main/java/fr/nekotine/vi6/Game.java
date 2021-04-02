@@ -313,6 +313,8 @@ public class Game implements Listener {
 		for (Objet o : new ArrayList<>(objetsList)) {
 			o.destroy();
 		}
+		waitingItem.delete();
+		prepItem.delete();
 		HandlerList.unregisterAll(this.mapInterface);
 		HandlerList.unregisterAll(this.settingsInterface);
 		HandlerList.unregisterAll(this);
