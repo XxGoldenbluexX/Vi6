@@ -38,6 +38,7 @@ import fr.nekotine.vi6.objet.list.BrouilleurRadio;
 import fr.nekotine.vi6.objet.list.OmniCapteur;
 import fr.nekotine.vi6.objet.list.Tazer;
 import fr.nekotine.vi6.objet.list.PiegeCapteur;
+import fr.nekotine.vi6.objet.list.IEM;
 import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 
@@ -119,12 +120,20 @@ public enum ObjetsList {
 		ChatColor.LIGHT_PURPLE+"Tire une flèche.",
 		ChatColor.LIGHT_PURPLE+"Obtenez une boussole qui pointe dans la direction du garde touché"),
 	BROUILLEUR_RADIO(BrouilleurRadio.class,
-			Team.VOLEUR,
-			100,
-			0,
-			ChatColor.GRAY+"Brouilleur Radio",
-			Material.JUKEBOX,
-			ChatColor.LIGHT_PURPLE+"Assourdissez l'ensemble des gardes pendant une courte durée"),
+		Team.VOLEUR,
+		100,
+		0,
+		ChatColor.GRAY+"Brouilleur Radio",
+		Material.JUKEBOX,
+		ChatColor.LIGHT_PURPLE+"Assourdissez l'ensemble des gardes pendant une courte durée"),
+	IEM_(IEM.class,
+		Team.VOLEUR,
+		100,
+		0,
+		ChatColor.AQUA+"IEM",
+		Material.BEACON,
+		ChatColor.LIGHT_PURPLE+"Désactive temporairement les objets des gardes",
+		ChatColor.LIGHT_PURPLE+"Durée: "+ChatColor.AQUA+Math.round(IEM.getJamDurationTicks()/20)+ChatColor.LIGHT_PURPLE+" secondes"),
 	//----------------------------------------------------------------------------------------------------------------------------------------
 	MATRAQUE_DE_THEO(MatraqueDeTheo.class,Team.GARDE,100,1,
 			ChatColor.DARK_RED+"Matraque de théo",Material.NETHERITE_SWORD,ChatColor.LIGHT_PURPLE+"Tuez en un coup.",ChatColor.GRAY+"Faites rager les amateurs du bain de fumée."),

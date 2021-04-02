@@ -35,6 +35,7 @@ objet_globe_placed: "[§bGlobe Voyant§r] §aGlobe posé sur §b§an"
 #§an = artefactName
 objet_omni_selfDetected: "[§bOmniCaptuer§r] §6Une balise vous a §c§nrepéré!"
 objet_omni_thiefDetected: "§cVoleur §6§nrepéré!"
+objet_iem_jammed: "[§b§kIEM§r] §cVou§ks§c êt§ke§cs §nbr§ko§cuillé !"
 
 ##MAP EDITION
 map_list: "Voici la liste des cartes présentes dans le fichier \"Maps\":"

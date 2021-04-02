@@ -2,20 +2,17 @@ package fr.nekotine.vi6.objet.list;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.CrossbowMeta;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
-import fr.nekotine.vi6.enums.GameState;
 import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.objet.utils.Objet;
@@ -67,23 +64,16 @@ public class GPS extends Objet{
 
 	@Override
 	public void action(Action var1) {
+		if(var1==Action.RIGHT_CLICK_AIR || var1==Action.RIGHT_CLICK_BLOCK) {
+			arrow = getOwner().launchProjectile(Arrow.class, getOwner().getEyeLocation().getDirection());
+			arrow.setVelocity(arrow.getVelocity().multiply(3));
+			Vi6Sound.GPS_SHOOT.playForPlayer(getOwner());
+			consume();
+		}
 	}
 
 	@Override
 	public void drop() {
-	}
-	@EventHandler
-	public void shoot(EntityShootBowEvent e) {
-		if(super.getDisplayedItem().isSimilar(e.getBow())) {
-			super.setDisplayedItem(e.getBow());
-			new BukkitRunnable() {
-	            @Override
-	            public void run() {
-	            	consume();
-	            }
-	        }.runTaskLater(getMain(), 0);
-			arrow = e.getProjectile();
-		}
 	}
 	@EventHandler
 	public void arrowHit(ProjectileHitEvent e) {
@@ -103,10 +93,5 @@ public class GPS extends Objet{
 			Vi6Sound.ERROR.playForPlayer(getOwner());
 			destroy();
 		}
-	}
-	@EventHandler
-	public void interactEvent(PlayerInteractEvent e) {
-		if(e.getPlayer().equals(getOwner()) && e.getItem().isSimilar(getDisplayedItem())
-		&& e.getAction()!=Action.PHYSICAL && getGame().getState()!=GameState.Ingame) e.setCancelled(true);
 	}
 }

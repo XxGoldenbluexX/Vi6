@@ -149,6 +149,9 @@ public enum Vi6Sound{
 		INVISNEAK(new Sound[] {
 		Sound.sound(Key.key("block.lava.extinguish"), Sound.Source.MASTER, 0.1f, 2)
 		}),
+		GPS_SHOOT(new Sound[] {
+		Sound.sound(Key.key("item.crossbow.shoot"), Sound.Source.MASTER, 1, 1)
+		})
 		;
 		public Sound[] getSounds() {
 			return sounds;
