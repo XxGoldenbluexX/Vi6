@@ -13,6 +13,7 @@ import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
+import fr.nekotine.vi6.enums.GameState;
 import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.objet.utils.Objet;
@@ -40,15 +41,17 @@ public class DoubleSaut extends Objet {
 		super.disable();
 		PlayerInventory inv = getOwner().getInventory();
 		GameMode gm = getOwner().getGameMode();
-		if (gm==GameMode.SURVIVAL || gm==GameMode.ADVENTURE) getOwner().setAllowFlight(false);
+		if (getGame().getState()!=GameState.Preparation && (gm==GameMode.SURVIVAL || gm==GameMode.ADVENTURE)) getOwner().setAllowFlight(false);
 		if (JUMP_BOOTS.isSimilar(inv.getBoots()))
 			inv.setBoots(null);
 	}
 
 	public void tick() {
-		if (onGround() && getOwner().getGameMode() == GameMode.ADVENTURE) {
-			canJump = true;
-			getOwner().setAllowFlight(true);
+		if(getGame().getState()!=GameState.Preparation) {
+			if (onGround() && getOwner().getGameMode() == GameMode.ADVENTURE) {
+				canJump = true;
+				getOwner().setAllowFlight(true);
+			}
 		}
 	}
 
@@ -71,19 +74,23 @@ public class DoubleSaut extends Objet {
 
 	@EventHandler
 	public void onPlayerJump(PlayerJumpEvent event) {
-		if (event.getPlayer().equals(getOwner()))
-			getOwner().setAllowFlight(true);
+		if(getGame().getState()!=GameState.Preparation) {
+			if (event.getPlayer().equals(getOwner()))
+				getOwner().setAllowFlight(true);
+			}
 	}
 
 	@EventHandler
 	public void tryFly(PlayerToggleFlightEvent event) {
-		if (event.getPlayer().equals(getOwner()) && getOwner().getGameMode() == GameMode.ADVENTURE) {
-			event.setCancelled(true);
-			if (canJump) {
-				getOwner().setVelocity(getOwner().getVelocity().setY(0.5D));
-				Vi6Sound.DOUBLE_SAUT.playForPlayer(getOwner());
-				canJump = false;
-				getOwner().setAllowFlight(false);
+		if(getGame().getState()!=GameState.Preparation) {
+			if (event.getPlayer().equals(getOwner()) && getOwner().getGameMode() == GameMode.ADVENTURE) {
+				event.setCancelled(true);
+				if (canJump) {
+					getOwner().setVelocity(getOwner().getVelocity().setY(0.5D));
+					Vi6Sound.DOUBLE_SAUT.playForPlayer(getOwner());
+					canJump = false;
+					getOwner().setAllowFlight(false);
+				}
 			}
 		}
 	}
