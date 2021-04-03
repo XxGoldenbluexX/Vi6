@@ -10,6 +10,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
@@ -121,8 +122,8 @@ public class BuissonFurtif extends Objet {
 		disable();
 	}
 
-	public void action(Action action) {
-		if(action==Action.RIGHT_CLICK_AIR || action==Action.RIGHT_CLICK_BLOCK) use();
+	public void action(PlayerInteractEvent e) {
+		if(e.getAction()==Action.RIGHT_CLICK_AIR || e.getAction()==Action.RIGHT_CLICK_BLOCK) use();
 	}
 
 	public void drop() {

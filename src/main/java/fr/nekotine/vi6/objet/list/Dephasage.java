@@ -1,7 +1,7 @@
 package fr.nekotine.vi6.objet.list;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import fr.nekotine.vi6.Game;
@@ -80,7 +80,7 @@ public class Dephasage extends Objet{
 	}
 
 	@Override
-	public void action(Action var1) {
+	public void action(PlayerInteractEvent e) {
 	}
 
 	@Override

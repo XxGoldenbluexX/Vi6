@@ -1,7 +1,7 @@
 package fr.nekotine.vi6.objet.list;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEvent;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
@@ -30,7 +30,7 @@ public class Bottes7Lieues extends Objet {
 	public void leaveMap() {
 	}
 
-	public void action(Action action) {
+	public void action(PlayerInteractEvent e) {
 	}
 
 	public void drop() {

@@ -3,7 +3,7 @@ package fr.nekotine.vi6.objet.list;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEvent;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
@@ -21,7 +21,7 @@ public class Barricade extends Objet {
 		super(main, objet, skin, game, player, wrapper);
 	}
 
-	public void action(Action action) {
+	public void action(PlayerInteractEvent e) {
 		tryPlaceWall();
 	}
 

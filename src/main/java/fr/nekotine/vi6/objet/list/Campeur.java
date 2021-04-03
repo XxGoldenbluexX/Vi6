@@ -3,8 +3,8 @@ package fr.nekotine.vi6.objet.list;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
@@ -53,7 +53,7 @@ public class Campeur extends Objet{
 	}
 
 	@Override
-	public void action(Action var1) {
+	public void action(PlayerInteractEvent e) {
 	}
 
 	@Override

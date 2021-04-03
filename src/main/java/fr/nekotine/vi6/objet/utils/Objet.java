@@ -6,7 +6,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -60,7 +59,7 @@ public abstract class Objet implements Listener {
 
 	public abstract void leaveMap();
 
-	public abstract void action(Action var1);
+	public abstract void action(PlayerInteractEvent e);
 
 	public abstract void drop();
 
@@ -97,15 +96,14 @@ public abstract class Objet implements Listener {
 	public void onPlayerInteract(PlayerInteractEvent e) {
 		if (!onCooldown && e.getPlayer().equals(owner) && e.getItem() != null
 				&& e.getItem().isSimilar(displayedItem)) {
-			e.setCancelled(true);
 			if (ownerWrapper.haveEffect(Effects.Jammed)) return;
 			if (ownerWrapper.getTeam() == Team.GARDE) {
 				if (ownerWrapper.getState() == PlayerState.PREPARATION
 						|| ownerWrapper.getState() == PlayerState.INSIDE) {
-					action(e.getAction());
+					action(e);
 				}
 			} else if (ownerWrapper.getState() == PlayerState.INSIDE) {
-				action(e.getAction());
+				action(e);
 			}
 		}
 

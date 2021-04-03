@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.Map.Entry;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEvent;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
+import fr.nekotine.vi6.enums.PlayerState;
 import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
@@ -33,6 +34,7 @@ public class Sonar extends Objet{
 			for(Entry<Player, PlayerWrapper> player : super.getGame().getPlayerMap().entrySet()) {
 				if(player.getValue().getTeam()==Team.VOLEUR 
 					&& !player.getValue().haveEffect(Effects.Insondable)
+					&& player.getValue().getState()==PlayerState.INSIDE
 					&& super.getOwner().getLocation().distanceSquared(player.getKey().getLocation())<=SQUARED_BLOCK_RANGE){
 					thievesNear.add(player.getKey());
 				}
@@ -63,7 +65,7 @@ public class Sonar extends Objet{
 	}
 
 	@Override
-	public void action(Action var1) {
+	public void action(PlayerInteractEvent e) {
 	}
 
 	@Override

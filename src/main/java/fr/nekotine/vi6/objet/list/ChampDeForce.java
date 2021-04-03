@@ -6,7 +6,7 @@ import java.util.Map;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -55,7 +55,7 @@ public class ChampDeForce extends Objet implements ZoneDetectionListener {
 		}
 	}
 
-	public void action(Action action) {
+	public void action(PlayerInteractEvent e) {
 		tryPlaceWall();
 	}
 

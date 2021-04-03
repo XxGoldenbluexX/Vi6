@@ -6,7 +6,7 @@ import java.util.Map.Entry;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 import com.comphenix.protocol.PacketType;
@@ -52,7 +52,7 @@ public class SixiemeSens extends Objet{
 	}
 
 	@Override
-	public void action(Action var1) {
+	public void action(PlayerInteractEvent e) {
 	}
 
 	@Override

@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.CrossbowMeta;
 
@@ -63,8 +64,9 @@ public class GPS extends Objet{
 	}
 
 	@Override
-	public void action(Action var1) {
-		if(var1==Action.RIGHT_CLICK_AIR || var1==Action.RIGHT_CLICK_BLOCK) {
+	public void action(PlayerInteractEvent e) {
+		if(e.getAction()==Action.RIGHT_CLICK_AIR || e.getAction()==Action.RIGHT_CLICK_BLOCK) {
+			e.setCancelled(true);
 			arrow = getOwner().launchProjectile(Arrow.class, getOwner().getEyeLocation().getDirection());
 			arrow.setVelocity(arrow.getVelocity().multiply(3));
 			Vi6Sound.GPS_SHOOT.playForPlayer(getOwner());

@@ -4,7 +4,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -66,7 +66,7 @@ public class DoubleSaut extends Objet {
 		disable();
 	}
 
-	public void action(Action action) {
+	public void action(PlayerInteractEvent e) {
 	}
 
 	public void drop() {

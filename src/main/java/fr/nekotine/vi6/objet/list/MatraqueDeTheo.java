@@ -4,7 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Player;
-import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -78,6 +78,6 @@ public class MatraqueDeTheo extends Objet {
 	public void leaveMap() {
 	}
 
-	public void action(Action action) {
+	public void action(PlayerInteractEvent e) {
 	}
 }

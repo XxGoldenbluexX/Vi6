@@ -41,8 +41,8 @@ public class PiegeCapteur extends Objet{
 	}
 
 	@Override
-	public void action(Action var1) {
-		if(var1==Action.RIGHT_CLICK_AIR || var1==Action.RIGHT_CLICK_BLOCK) use();
+	public void action(PlayerInteractEvent e) {
+		if(e.getAction()==Action.RIGHT_CLICK_AIR || e.getAction()==Action.RIGHT_CLICK_BLOCK) use();
 	}
 
 	@Override

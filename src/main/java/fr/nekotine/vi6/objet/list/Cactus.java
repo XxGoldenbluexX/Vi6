@@ -7,8 +7,8 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import fr.nekotine.vi6.Game;
@@ -65,7 +65,7 @@ public class Cactus extends Objet {
 		disable();
 	}
 
-	public void action(Action action) {
+	public void action(PlayerInteractEvent e) {
 	}
 
 	public void drop() {

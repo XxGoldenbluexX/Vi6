@@ -5,8 +5,8 @@ import java.util.Map;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.nekotine.vi6.Game;
@@ -47,7 +47,7 @@ public class DeadRinger extends Objet{
 	}
 
 	@Override
-	public void action(Action var1) {
+	public void action(PlayerInteractEvent e) {
 	}
 
 	@Override

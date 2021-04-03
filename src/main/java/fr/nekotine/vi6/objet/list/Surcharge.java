@@ -2,6 +2,7 @@ package fr.nekotine.vi6.objet.list;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -22,8 +23,8 @@ public class Surcharge extends Objet {
 		super(main, objet, skin, game, player, wrapper);
 	}
 
-	public void action(Action action) {
-		if (action != Action.PHYSICAL) cast();
+	public void action(PlayerInteractEvent e) {
+		if (e.getAction() != Action.PHYSICAL) cast();
 	}
 
 	public void drop() {

@@ -7,6 +7,7 @@ import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -45,8 +46,8 @@ public class Tazer extends Objet{
 	}
 
 	@Override
-	public void action(Action var1) {
-		if(var1==Action.RIGHT_CLICK_AIR || var1==Action.RIGHT_CLICK_BLOCK) {
+	public void action(PlayerInteractEvent e) {
+		if(e.getAction()==Action.RIGHT_CLICK_AIR || e.getAction()==Action.RIGHT_CLICK_BLOCK) {
 			Snowball projectile = getOwner().launchProjectile(Snowball.class, getOwner().getEyeLocation().getDirection());
 			projectile.setVelocity(projectile.getVelocity().multiply(5));
 			projectileList.add(projectile);

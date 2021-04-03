@@ -4,7 +4,7 @@ import java.util.Map;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 
 import fr.nekotine.vi6.Game;
@@ -45,7 +45,7 @@ public class Invisneak extends Objet {
 		disable();
 	}
 
-	public void action(Action action) {
+	public void action(PlayerInteractEvent e) {
 	}
 
 	public void drop() {

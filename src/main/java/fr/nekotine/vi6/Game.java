@@ -389,8 +389,8 @@ public class Game implements Listener {
 				PlayerInventory inv = player.getInventory();
 				inv.setChestplate(new ItemStack(Material.DIAMOND_CHESTPLATE));
 				inv.setItem(0, GUARD_SWORD);
-				this.guardGlow.addHolders(new Entity[]{(Entity) player});
-				this.guardGlow.display(new Player[]{player});
+				//this.guardGlow.addHolders(new Entity[]{(Entity) player});
+				//this.guardGlow.display(new Player[]{player});
 			} else {
 				player.setAllowFlight(true);
 				player.addPotionEffect(
@@ -450,8 +450,8 @@ public class Game implements Listener {
 			wrapper.getStealedArtefactList().clear();
 			if (wrapper.getTeam() == Team.VOLEUR) {
 				player.setAllowFlight(false);
-				this.thiefGlow.addHolders(new Entity[]{(Entity) player});
-				this.thiefGlow.display(new Player[]{player});
+				//this.thiefGlow.addHolders(new Entity[]{(Entity) player});
+				//this.thiefGlow.display(new Player[]{player});
 				wrapper.setState(PlayerState.ENTERING);
 				if (wrapper.getThiefSpawnPoint() == null)
 					wrapper.setThiefSpawnPoint(((SpawnVoleur) this.map.getThiefSpawnsList().get(0)).getMapLocation());
