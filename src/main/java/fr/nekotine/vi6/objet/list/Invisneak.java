@@ -31,7 +31,7 @@ public class Invisneak extends Objet {
 
 	public void tick() {
 		if (DECOUVERT.isSet()) {
-			if (!isGuardNear()) DECOUVERT.remove();
+			if (!isGuardNear()) getOwnerWrapper().removeStatusEffect(DECOUVERT);
 		} else if(isGuardNear()) {
 			getOwnerWrapper().addStatusEffect(DECOUVERT);
 		}
@@ -63,8 +63,8 @@ public class Invisneak extends Objet {
 
 	private boolean isGuardNear() {
 		for (Map.Entry<Player, PlayerWrapper> p : getGame().getPlayerMap().entrySet()) {
-			if (((PlayerWrapper) p.getValue()).getTeam() == Team.GARDE
-					&& getOwner().getLocation().distanceSquared(((Player) p.getKey()).getLocation()) <= DETECTION_RANGE_SQUARED)
+			if (p.getValue().getTeam() == Team.GARDE
+					&& getOwner().getLocation().distanceSquared(p.getKey().getLocation()) <= DETECTION_RANGE_SQUARED)
 				return true;
 		}
 		return false;
@@ -72,8 +72,8 @@ public class Invisneak extends Objet {
 
 	public void disable() {
 		super.disable();
-		this.INVISIBLE.remove();
-		DECOUVERT.remove();
+		getOwnerWrapper().removeStatusEffect(INVISIBLE);
+		getOwnerWrapper().removeStatusEffect(DECOUVERT);
 	}
 
 	public void cooldownEnded() {
