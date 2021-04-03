@@ -55,7 +55,7 @@ public class MapSelectionInventory extends BaseSharedInventory{
 	}
 
 	@Override
-	public void itemClicked(Player player, ItemStack itm) {
+	public void itemClicked(Player player, ItemStack itm, int slot) {
 		switch(itm.getType()) {
 		case BARRIER:
 			game.openSettings(player);
