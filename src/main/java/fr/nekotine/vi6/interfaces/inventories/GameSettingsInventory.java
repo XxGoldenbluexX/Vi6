@@ -34,7 +34,7 @@ public class GameSettingsInventory extends BaseSharedInventory{
 		inventory.setItem(15, IsCreator.createItemStack(Material.PAPER,1,ChatColor.WHITE+"Carte",ChatColor.LIGHT_PURPLE+""+ChatColor.UNDERLINE+game.getMapName()));
 	}
 	@Override
-	public void itemClicked(Player player, ItemStack itm) {
+	public void itemClicked(Player player, ItemStack itm, int slot) {
 		switch(itm.getType()) {
 		case BARRIER:
 			new WaitingInventory(main, player, game);

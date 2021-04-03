@@ -70,9 +70,12 @@ import fr.nekotine.vi6.events.IsRankedChangeEvent;
 import fr.nekotine.vi6.events.MapChangeEvent;
 import fr.nekotine.vi6.events.MoneyChangedEvent;
 import fr.nekotine.vi6.events.PlayerLeaveGameEvent;
+import fr.nekotine.vi6.interfaces.inventories.CheckListGuardInventory;
+import fr.nekotine.vi6.interfaces.inventories.CheckListThiefInventory;
 import fr.nekotine.vi6.interfaces.inventories.GameMoneyAnvil;
 import fr.nekotine.vi6.interfaces.inventories.GameSettingsInventory;
 import fr.nekotine.vi6.interfaces.inventories.MapSelectionInventory;
+import fr.nekotine.vi6.interfaces.items.OpenCheckListItem;
 import fr.nekotine.vi6.interfaces.items.OpenPreparationItem;
 import fr.nekotine.vi6.interfaces.items.OpenWaitingItem;
 import fr.nekotine.vi6.map.Artefact;
@@ -132,12 +135,15 @@ public class Game implements Listener {
 	private int scanTime;
 	private int defaultScanTime;
 	private int scanTimer = 0;
-	private OpenWaitingItem waitingItem;
-	private OpenPreparationItem prepItem;
+	private final OpenWaitingItem waitingItem;
+	private final OpenPreparationItem prepItem;
 	private final ArrayList<Objet> objetsList = new ArrayList<>();
 	private static int DELAY_BEFORE_STATUS_CLEAR;
 	private static int DELAY_BEFORE_CAPTURE;
 	private static int DELAY_BEFORE_ESCAPE;
+	private CheckListGuardInventory checkListGuard;
+	private CheckListThiefInventory checkListThief;
+	private final OpenCheckListItem checkListItem;
 	static {
 		ItemMeta meta = GUARD_SWORD.getItemMeta();
 		meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED,
@@ -162,6 +168,7 @@ public class Game implements Listener {
 		this.money = DEFAULT_RANKED_MONEY;
 		waitingItem = new OpenWaitingItem(main, this);
 		prepItem = new OpenPreparationItem(main, this);
+		checkListItem = new OpenCheckListItem(main,this);
 		this.settingsInterface = new GameSettingsInventory(main, this);
 		this.mapInterface = new MapSelectionInventory(main, this);
 		this.nbtCompteur.add(Integer.valueOf(0));
@@ -315,6 +322,7 @@ public class Game implements Listener {
 		}
 		waitingItem.delete();
 		prepItem.delete();
+		checkListItem.delete();
 		HandlerList.unregisterAll(this.mapInterface);
 		HandlerList.unregisterAll(this.settingsInterface);
 		HandlerList.unregisterAll(this);
@@ -427,6 +435,9 @@ public class Game implements Listener {
 	public void enterInGamePhase() {
 		this.bb.removeAll();
 		prepItem.destroy();
+		checkListGuard = new CheckListGuardInventory(this, main);
+		checkListThief = new CheckListThiefInventory(this, main);
+		checkListItem.give();
 		this.bossBarTicker.cancel();
 		this.startTime = LocalTime.now().toString();
 		this.scoreboardSidebar.setDisplaySlot(null);
@@ -618,6 +629,9 @@ public class Game implements Listener {
 		this.thiefGlow.hideFromEveryone();
 		this.gameTicker.cancel();
 		this.bossBarTicker.cancel();
+		checkListItem.destroy();
+		if(checkListGuard!=null) checkListGuard.destroy();
+		if(checkListThief!=null) checkListThief.destroy();
 		this.state = GameState.Waiting;
 		if (this.main.isEnabled()) {
 			waitingItem.give();
@@ -750,6 +764,14 @@ public class Game implements Listener {
 
 	public static int getDELAY_BEFORE_ESCAPE() {
 		return DELAY_BEFORE_ESCAPE;
+	}
+
+	public CheckListGuardInventory getCheckListGuard() {
+		return checkListGuard;
+	}
+	
+	public CheckListThiefInventory getCheckListThief() {
+		return checkListThief;
 	}
 	
 }
