@@ -174,7 +174,7 @@ public class Game implements Listener {
 		this.scoreboardSidebar.setDisplaySlot(DisplaySlot.SIDEBAR);
 		this.noNameTag = this.scoreboard.registerNewTeam("noNameTag");
 		this.noNameTag.setCanSeeFriendlyInvisibles(false);
-		this.noNameTag.setOption(org.bukkit.scoreboard.Team.Option.NAME_TAG_VISIBILITY,org.bukkit.scoreboard.Team.OptionStatus.FOR_OTHER_TEAMS);
+		this.noNameTag.setOption(org.bukkit.scoreboard.Team.Option.NAME_TAG_VISIBILITY,org.bukkit.scoreboard.Team.OptionStatus.FOR_OWN_TEAM);
 	}
 
 	public boolean isRanked() {
