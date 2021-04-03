@@ -8,6 +8,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
@@ -59,6 +61,7 @@ public class PiegeCollant extends Objet {
 		if (onGround() && !placed) {
 			placed=true;
 			loc = getOwner().getLocation().clone();
+			consume();
 		}
 	}
 	
@@ -79,7 +82,13 @@ public class PiegeCollant extends Objet {
 			}
 			)) {
 				if (event.getFrom().distanceSquared(loc)<=SQUARED_TRIGGER_RANGE) {
-					//TRIGGERED
+					Player p = event.getPlayer();
+					int amplitude=0;
+					PotionEffect e = p.getPotionEffect(PotionEffectType.SLOW);
+					if (e!=null) amplitude = e.getAmplifier()+1;
+					p.removePotionEffect(PotionEffectType.SLOW);
+					p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW,Integer.MAX_VALUE,amplitude,false,false,true));
+					placed=false;
 				}
 			}
 		}
