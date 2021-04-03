@@ -190,6 +190,7 @@ public class PlayerWrapper {
 
 	public void removeStatusEffect(StatusEffect eff) {
 		this.statusEffects.remove(eff);
+		eff.setWrapper(null);
 		updateRemoveEffect(eff.getEffect());
 	}
 
