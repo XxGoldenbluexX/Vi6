@@ -26,7 +26,6 @@ import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -96,7 +95,6 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.title.Title;
 import net.kyori.adventure.util.Ticks;
-import ru.xezard.glow.data.glow.Glow;
 
 public class Game implements Listener {
 	
@@ -123,8 +121,6 @@ public class Game implements Listener {
 	private int money;
 	private MapSelectionInventory mapInterface;
 	private GameSettingsInventory settingsInterface;
-	private Glow guardGlow = Glow.builder().animatedColor(new ChatColor[]{ChatColor.BLUE}).name("guardGlow").build();
-	private Glow thiefGlow = Glow.builder().animatedColor(new ChatColor[]{ChatColor.RED}).name("thiefGlow").build();
 	private final ArrayList<Integer> nbtCompteur = new ArrayList<>();
 	private final BossBar bb = Bukkit.createBossBar(
 			"" + ChatColor.GOLD + "Temps restant" + ChatColor.GOLD + ": " + ChatColor.WHITE + ChatColor.AQUA
@@ -178,7 +174,7 @@ public class Game implements Listener {
 		this.scoreboardSidebar.setDisplaySlot(DisplaySlot.SIDEBAR);
 		this.noNameTag = this.scoreboard.registerNewTeam("noNameTag");
 		this.noNameTag.setCanSeeFriendlyInvisibles(false);
-		this.noNameTag.setOption(org.bukkit.scoreboard.Team.Option.NAME_TAG_VISIBILITY,org.bukkit.scoreboard.Team.OptionStatus.FOR_OTHER_TEAMS);
+		this.noNameTag.setOption(org.bukkit.scoreboard.Team.Option.NAME_TAG_VISIBILITY,org.bukkit.scoreboard.Team.OptionStatus.FOR_OWN_TEAM);
 	}
 
 	public boolean isRanked() {
@@ -389,8 +385,6 @@ public class Game implements Listener {
 				PlayerInventory inv = player.getInventory();
 				inv.setChestplate(new ItemStack(Material.DIAMOND_CHESTPLATE));
 				inv.setItem(0, GUARD_SWORD);
-				//this.guardGlow.addHolders(new Entity[]{(Entity) player});
-				//this.guardGlow.display(new Player[]{player});
 			} else {
 				player.setAllowFlight(true);
 				player.addPotionEffect(
@@ -450,8 +444,6 @@ public class Game implements Listener {
 			wrapper.getStealedArtefactList().clear();
 			if (wrapper.getTeam() == Team.VOLEUR) {
 				player.setAllowFlight(false);
-				//this.thiefGlow.addHolders(new Entity[]{(Entity) player});
-				//this.thiefGlow.display(new Player[]{player});
 				wrapper.setState(PlayerState.ENTERING);
 				if (wrapper.getThiefSpawnPoint() == null)
 					wrapper.setThiefSpawnPoint(((SpawnVoleur) this.map.getThiefSpawnsList().get(0)).getMapLocation());
@@ -611,12 +603,10 @@ public class Game implements Listener {
 			((Player) p.getKey()).setWalkSpeed(0.2F);
 			((Player) p.getKey()).getInventory().clear();
 			if (((PlayerWrapper) p.getValue()).getTeam() == Team.GARDE) {
-				this.guardGlow.removeHolders(new Entity[]{(Entity) p.getKey()});
 				ItemHider.get().unHideFromPlayer(p.getKey());
 				continue;
 			}
 			((Player) p.getKey()).removePotionEffect(PotionEffectType.NIGHT_VISION);
-			this.thiefGlow.removeHolders(new Entity[]{(Entity) p.getKey()});
 			for (Player player : this.playerList.keySet())
 				player.showPlayer((Plugin) this.main, p.getKey());
 			totalVole += ((PlayerWrapper) p.getValue()).getStealedArtefactList().size();
@@ -625,8 +615,6 @@ public class Game implements Listener {
 			p.sendMessage((Component) MessageFormater.formatWithColorCodes('§', DisplayTexts.getMessage("game_end"),
 					new MessageFormater[]{new MessageFormater("§n", String.valueOf(totalVole))}));
 		}
-		this.guardGlow.hideFromEveryone();
-		this.thiefGlow.hideFromEveryone();
 		this.gameTicker.cancel();
 		this.bossBarTicker.cancel();
 		checkListItem.destroy();
