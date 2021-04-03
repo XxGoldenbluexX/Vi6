@@ -29,7 +29,7 @@ public class Pecheur extends Objet{
 	private static final int FAIL_PERCENTAGE=50;
 	private static final ObjetsList[] THIEF_FISHABLE = {ObjetsList.OMBRE, ObjetsList.GPS,ObjetsList.BROUILLEUR_RADIO,ObjetsList.IEM_,ObjetsList.DEADRINGER};
 	private static final ObjetsList[] GUARD_FISHABLE = {ObjetsList.CHAMP_DE_FORCE,ObjetsList.TELEPORTEUR,ObjetsList.OMNICAPTEUR,ObjetsList.PIEGE_A_DENTS,
-														ObjetsList.GLOBE_VOYANT,ObjetsList.PIEGE_CAPTEUR};
+														ObjetsList.GLOBE_VOYANT,ObjetsList.PIEGE_CAPTEUR,ObjetsList.PIEGE_COLLANT};
 	
 	public Pecheur(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Game game, Player player, PlayerWrapper wrapper) {
 		super(main, objet, skin, game, player, wrapper);
