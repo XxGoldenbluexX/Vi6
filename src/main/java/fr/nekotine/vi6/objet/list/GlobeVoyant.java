@@ -53,6 +53,7 @@ public class GlobeVoyant extends Objet{
 						Vi6Sound.GLOBE_VOYANT_TRIGGER.playForPlayer(getOwner());
 						player.getKey().sendMessage(MessageFormater.formatWithColorCodes('§',
 						DisplayTexts.getMessage("objet_globe_triggered"), new MessageFormater("§a", attached.getDisplayName())));
+						getGame().getCheckListGuard().change(attached, false);
 					}
 				}
 				eye.remove();

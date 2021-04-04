@@ -151,6 +151,7 @@ public class Artefact implements ConfigurationSerializable,ZoneDetectionListener
 			if (w!=null && w.getGame().isCanCapture() && w.getTeam()==Team.VOLEUR && w.getState()==PlayerState.INSIDE && w.isCanCapture()) {
 				w.getStealedArtefactList().add(this);
 				w.setCanEscape(false);
+				w.getGame().getCheckListThief().change(this, true);
 				status=CaptureState.CARRIED;
 				blockLoc.getBlock().setBlockData(Bukkit.createBlockData(Material.AIR));
 				w.getGame().capture();
