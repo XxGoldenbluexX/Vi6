@@ -58,6 +58,8 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.comphenix.protocol.wrappers.Pair;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
+import com.comphenix.protocol.wrappers.WrappedDataWatcher.Registry;
+import com.comphenix.protocol.wrappers.WrappedDataWatcher.Serializer;
 
 import fr.nekotine.vi6.enums.GameState;
 import fr.nekotine.vi6.enums.PlayerState;
@@ -108,7 +110,8 @@ public class Game implements Listener {
 	private String startTime;
 	private final Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
 	private final Objective scoreboardSidebar;
-	private final org.bukkit.scoreboard.Team noNameTag;
+	private final org.bukkit.scoreboard.Team thiefTeam;
+	private final org.bukkit.scoreboard.Team guardTeam;
 	private final String name;
 	private boolean isRanked = true;
 	private boolean canCapture = true;
@@ -172,9 +175,16 @@ public class Game implements Listener {
 		this.scoreboardSidebar = this.scoreboard.registerNewObjective("sidebar", "dummy",
 				Component.text(name).color((TextColor) NamedTextColor.GOLD));
 		this.scoreboardSidebar.setDisplaySlot(DisplaySlot.SIDEBAR);
-		this.noNameTag = this.scoreboard.registerNewTeam("noNameTag");
-		this.noNameTag.setCanSeeFriendlyInvisibles(false);
-		this.noNameTag.setOption(org.bukkit.scoreboard.Team.Option.NAME_TAG_VISIBILITY,org.bukkit.scoreboard.Team.OptionStatus.FOR_OWN_TEAM);
+		this.thiefTeam = this.scoreboard.registerNewTeam("thief");
+		this.guardTeam = this.scoreboard.registerNewTeam("guard");
+		this.thiefTeam.setCanSeeFriendlyInvisibles(true);
+		this.guardTeam.setCanSeeFriendlyInvisibles(true);
+		this.thiefTeam.setOption(org.bukkit.scoreboard.Team.Option.NAME_TAG_VISIBILITY,org.bukkit.scoreboard.Team.OptionStatus.NEVER);
+		this.guardTeam.setOption(org.bukkit.scoreboard.Team.Option.NAME_TAG_VISIBILITY,org.bukkit.scoreboard.Team.OptionStatus.NEVER);
+		//thiefTeam.color(NamedTextColor.RED);
+		//guardTeam.color(NamedTextColor.BLUE);
+
+		
 	}
 
 	public boolean isRanked() {
@@ -322,7 +332,8 @@ public class Game implements Listener {
 		HandlerList.unregisterAll(this.mapInterface);
 		HandlerList.unregisterAll(this.settingsInterface);
 		HandlerList.unregisterAll(this);
-		this.noNameTag.unregister();
+		thiefTeam.unregister();
+		guardTeam.unregister();
 		this.scoreboardSidebar.unregister();
 	}
 
@@ -375,17 +386,20 @@ public class Game implements Listener {
 			player.setGameMode(GameMode.ADVENTURE);
 			player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
 			player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 2147483647, 0, false, false, false));
-			this.noNameTag.addEntry(player.getName());
+			
 			wrapper.setReady(false);
 			wrapper.setMoney(this.money);
 			wrapper.setState(PlayerState.PREPARATION);
 			this.bb.addPlayer(playerAndWrapper.getKey());
 			if (wrapper.getTeam() == Team.GARDE) {
+				guardTeam.addEntry(player.getName());
+				sendPacketToTeam(Team.GARDE, getGlowPacket(player));
 				player.teleport(this.map.getGuardSpawn());
 				PlayerInventory inv = player.getInventory();
 				inv.setChestplate(new ItemStack(Material.DIAMOND_CHESTPLATE));
 				inv.setItem(0, GUARD_SWORD);
 			} else {
+				thiefTeam.addEntry(player.getName());
 				player.setAllowFlight(true);
 				player.addPotionEffect(
 						new PotionEffect(PotionEffectType.NIGHT_VISION, 1000000, 1, false, false, false));
@@ -443,6 +457,7 @@ public class Game implements Listener {
 			wrapper.clearStatusEffects();
 			wrapper.getStealedArtefactList().clear();
 			if (wrapper.getTeam() == Team.VOLEUR) {
+				sendPacketToTeam(Team.VOLEUR, getGlowPacket(player));
 				player.setAllowFlight(false);
 				wrapper.setState(PlayerState.ENTERING);
 				if (wrapper.getThiefSpawnPoint() == null)
@@ -599,12 +614,17 @@ public class Game implements Listener {
 			((PlayerWrapper) p.getValue()).setCanCapture(false);
 			((PlayerWrapper) p.getValue()).setCanEscape(false);
 			((PlayerWrapper) p.getValue()).setThiefSpawnPoint(null);
-			this.noNameTag.removeEntry(((Player) p.getKey()).getName());
+			
 			((Player) p.getKey()).setWalkSpeed(0.2F);
 			((Player) p.getKey()).getInventory().clear();
 			if (((PlayerWrapper) p.getValue()).getTeam() == Team.GARDE) {
+				guardTeam.removeEntry(((Player) p.getKey()).getName());
+				sendPacketToTeam(Team.GARDE, getUnglowPacket(p.getKey()));
 				ItemHider.get().unHideFromPlayer(p.getKey());
 				continue;
+			}else {
+				thiefTeam.removeEntry(((Player) p.getKey()).getName());
+				sendPacketToTeam(Team.VOLEUR, getUnglowPacket(p.getKey()));
 			}
 			((Player) p.getKey()).removePotionEffect(PotionEffectType.NIGHT_VISION);
 			for (Player player : this.playerList.keySet())
@@ -762,4 +782,51 @@ public class Game implements Listener {
 		return checkListThief;
 	}
 	
+	private PacketContainer getGlowPacket(Player holder) {
+		PacketContainer packet = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.ENTITY_METADATA);
+	    packet.getIntegers().write(0, holder.getEntityId());
+	    WrappedDataWatcher watcher = new WrappedDataWatcher();
+	    Serializer serializer = Registry.get(Byte.class);
+	    watcher.setObject(0, serializer, (byte) (0x40));
+	    packet.getWatchableCollectionModifier().write(0, watcher.getWatchableObjects());
+	    return packet;
+	}
+	private PacketContainer getUnglowPacket(Player holder) {
+		PacketContainer packet =  ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.ENTITY_METADATA);
+	    packet.getIntegers().write(0, holder.getEntityId());
+	    WrappedDataWatcher watcher = new WrappedDataWatcher();
+	    Serializer serializer = Registry.get(Byte.class);
+	    watcher.setObject(0, serializer, (byte) (0x00));
+	    packet.getWatchableCollectionModifier().write(0, watcher.getWatchableObjects());
+	    return packet;
+	}
+	public void glowPlayer(Player viewer, Player holder) {
+		ProtocolManager pmanager = ProtocolLibrary.getProtocolManager();
+		PacketContainer packet = pmanager.createPacket(PacketType.Play.Server.ENTITY_METADATA);
+	    packet.getIntegers().write(0, holder.getEntityId());
+	    WrappedDataWatcher watcher = new WrappedDataWatcher();
+	    Serializer serializer = Registry.get(Byte.class);
+	    watcher.setObject(0, serializer, (byte) (0x40));
+	    packet.getWatchableCollectionModifier().write(0, watcher.getWatchableObjects());
+	    try {
+	    	pmanager.sendServerPacket(viewer, packet);
+	    } catch (InvocationTargetException e) {
+	        e.printStackTrace();
+	    }
+	}
+	
+	public void unglowPlayer(Player viewer,Player holder) {
+		ProtocolManager pmanager = ProtocolLibrary.getProtocolManager();
+		PacketContainer packet = pmanager.createPacket(PacketType.Play.Server.ENTITY_METADATA);
+	    packet.getIntegers().write(0, holder.getEntityId());
+	    WrappedDataWatcher watcher = new WrappedDataWatcher();
+	    Serializer serializer = Registry.get(Byte.class);
+	    watcher.setObject(0, serializer, (byte) (0x00));
+	    packet.getWatchableCollectionModifier().write(0, watcher.getWatchableObjects());
+	    try {
+	    	pmanager.sendServerPacket(viewer, packet);
+	    } catch (InvocationTargetException e) {
+	        e.printStackTrace();
+	    }
+	}
 }
