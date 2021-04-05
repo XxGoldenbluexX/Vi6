@@ -181,8 +181,8 @@ public class Game implements Listener {
 		this.guardTeam.setCanSeeFriendlyInvisibles(true);
 		this.thiefTeam.setOption(org.bukkit.scoreboard.Team.Option.NAME_TAG_VISIBILITY,org.bukkit.scoreboard.Team.OptionStatus.NEVER);
 		this.guardTeam.setOption(org.bukkit.scoreboard.Team.Option.NAME_TAG_VISIBILITY,org.bukkit.scoreboard.Team.OptionStatus.NEVER);
-		//thiefTeam.color(NamedTextColor.RED);
-		//guardTeam.color(NamedTextColor.BLUE);
+		thiefTeam.color(NamedTextColor.RED);
+		guardTeam.color(NamedTextColor.BLUE);
 
 		
 	}
@@ -408,6 +408,15 @@ public class Game implements Listener {
 					if (((PlayerWrapper) p.getValue()).getTeam() == Team.GARDE)
 						((Player) p.getKey()).hidePlayer((Plugin) this.main, player);
 				}
+			}
+			try {
+				for(int x=3;x<=18;x++) {
+					sendPacketToTeam(Team.GARDE, getGuardScoreboardPacket(x));
+					sendPacketToTeam(Team.VOLEUR, getThiefScoreboardPacket(x));
+				}
+			
+			} catch(Exception e) {
+				System.out.println(e.getMessage());
 			}
 			prepItem.give();
 			((Player) playerAndWrapper.getKey()).sendMessage((Component) MessageFormater.formatWithColorCodes('§',
@@ -828,5 +837,18 @@ public class Game implements Listener {
 	    } catch (InvocationTargetException e) {
 	        e.printStackTrace();
 	    }
+	}
+	
+	public PacketContainer getGuardScoreboardPacket(int n) {
+		PacketContainer packetGuard =  ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.SCOREBOARD_OBJECTIVE);
+		packetGuard.getIntegers().write(0, n);
+		packetGuard.getStrings().write(0, NamedTextColor.GOLD+name);
+		return packetGuard;
+	}
+	public PacketContainer getThiefScoreboardPacket(int n) {
+		PacketContainer packetThief =  ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.SCOREBOARD_DISPLAY_OBJECTIVE);
+		packetThief.getIntegers().write(0, n);
+		packetThief.getStrings().write(0, NamedTextColor.GOLD+name);
+		return packetThief;
 	}
 }
