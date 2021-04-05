@@ -1,6 +1,7 @@
 package fr.nekotine.vi6.interfaces.inventories;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -21,6 +22,7 @@ public abstract class CheckListInventory extends BaseSharedInventory{
 	private int page=1;
 	private final Team team;
 	private HashMap<Artefact, Boolean> artefacts = new HashMap<>();
+	
 	public abstract void itemClicked(ItemStack itm, int slot);
 	public CheckListInventory(Game game, Vi6Main main, Team team) {
 		super(game, main);
@@ -36,11 +38,12 @@ public abstract class CheckListInventory extends BaseSharedInventory{
 			inventory.setItem(x+45, IsCreator.createItemStack(Material.BLACK_STAINED_GLASS_PANE,1," ",""));
 		}
 		List<Artefact> artefactsList = new ArrayList<>(artefacts.keySet());
+		artefactsList.sort(new ArtefactComparator());
 		if(page>1) inventory.setItem(45, IsCreator.createItemStack(Material.PAPER, 1,"" + ChatColor.RED + "Page précédente"));
 		if (artefacts.size() > 18 * page) inventory.setItem(53, IsCreator.createItemStack(Material.PAPER, 1,"" + ChatColor.GREEN + "Page suivante"));
 		for(int x=18*(page-1);x<Math.min(artefacts.size(), 18*page);x++) {
-			int index=x;
-			if (x>8) index+=18;
+			int index=x%18;
+			if (index>8) index+=18;
 			Artefact artefact = artefactsList.get(x);
 			inventory.setItem(index, IsCreator.createItemStack(artefact.getBlockData().getMaterial(),1,artefact.getName(),""));
 			if(artefacts.get(artefact)) {
@@ -78,7 +81,8 @@ public abstract class CheckListInventory extends BaseSharedInventory{
 		}
 	}
 	private void loadHash(Game game, Team team) {
-		for(Artefact artefact : game.getMap().getArtefactList()) artefacts.put(artefact, team==Team.GARDE);
+		ArrayList<Artefact> artefactList =  game.getMap().getArtefactList();
+		for(Artefact artefact :artefactList) artefacts.put(artefact, team==Team.GARDE);
 	}
 	public HashMap<Artefact, Boolean> getMap(){
 		return artefacts;
@@ -86,6 +90,7 @@ public abstract class CheckListInventory extends BaseSharedInventory{
 	public void change(Artefact artefact, boolean value) {
 		artefacts.replace(artefact, value);
 		List<Artefact> artefactsList = new ArrayList<>(artefacts.keySet());
+		artefactsList.sort(new ArtefactComparator());
 		int index = artefactsList.indexOf(artefact);
 		if(18*(page-1)<= index && 18*page>index) {
 			index = index%18;
@@ -106,4 +111,12 @@ public abstract class CheckListInventory extends BaseSharedInventory{
 			}
 		}
 	}
+	private class ArtefactComparator implements Comparator<Artefact>{
+		@Override
+		public int compare(Artefact o1, Artefact o2) {
+			return o1.getName().compareTo(o2.getName());
+		}
+		
+	}
 }
+
