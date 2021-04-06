@@ -6,7 +6,6 @@ import org.bukkit.inventory.ItemStack;
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.enums.Team;
-import net.kyori.adventure.text.TextComponent;
 
 public class CheckListGuardInventory extends CheckListInventory{
 
@@ -16,11 +15,7 @@ public class CheckListGuardInventory extends CheckListInventory{
 
 	@Override
 	public void itemClicked(ItemStack itm, int slot) {
-		int quotient = Math.floorDiv(slot, 9);
-		if(quotient==1 || quotient==4) {
-			super.change(super.game.getMap().getArtefact(((TextComponent)super.inventory.getItem(slot-9).getItemMeta().displayName()).content()),
-			itm.getType()==Material.REDSTONE_BLOCK);
-		}
+		super.change(slot, itm.getType()==Material.REDSTONE_BLOCK);
 	}
 
 }

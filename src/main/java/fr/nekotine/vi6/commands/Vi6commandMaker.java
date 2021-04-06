@@ -27,6 +27,7 @@ import fr.nekotine.vi6.map.Sortie;
 import fr.nekotine.vi6.map.SpawnVoleur;
 import fr.nekotine.vi6.utils.DetectionZone;
 import fr.nekotine.vi6.utils.MessageFormater;
+import fr.nekotine.vi6.wrappers.PlayerWrapper;
 import fr.nekotine.vi6.yml.DisplayTexts;
 
 public class Vi6commandMaker {
@@ -73,7 +74,7 @@ public class Vi6commandMaker {
 				.withSubcommand(makeHelp(gameHelp))
 				.withSubcommand(gameCreate(main))
 				.withSubcommand(gameJoin(gameArgument))
-				.withSubcommand(gameLeave(gameArgument))
+				.withSubcommand(gameLeave(main))
 				.withSubcommand(gameRemove(main,gameArgument))
 				.withSubcommand(gameJoinPlayer(main,gameArgument))
 				.withSubcommand(gameStop(gameArgument))
@@ -121,11 +122,11 @@ public class Vi6commandMaker {
 				});
 	}
 	
-	private static CommandAPICommand gameLeave(Argument gameArgument) {
+	private static CommandAPICommand gameLeave(Vi6Main main) {
 		return new CommandAPICommand("leave")
-				.withArguments(gameArgument)
 				.executesPlayer((sender,args)->{
-					((Game)args[0]).removePlayer(sender);
+					PlayerWrapper wrap = main.getPlayerWrapper(sender);
+					if(wrap!=null) wrap.getGame().removePlayer(sender);
 				});
 	}
 	

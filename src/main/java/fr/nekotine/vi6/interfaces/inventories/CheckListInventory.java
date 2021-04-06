@@ -45,7 +45,7 @@ public abstract class CheckListInventory extends BaseSharedInventory{
 			int index=x%18;
 			if (index>8) index+=18;
 			Artefact artefact = artefactsList.get(x);
-			inventory.setItem(index, IsCreator.createItemStack(artefact.getBlockData().getMaterial(),1,artefact.getName(),""));
+			inventory.setItem(index, IsCreator.createItemStack(artefact.getBlockData().getMaterial(),1,artefact.getDisplayName(),""));
 			if(artefacts.get(artefact)) {
 				if(team==Team.GARDE) {
 					inventory.setItem(index+9, IsCreator.createItemStack(Material.EMERALD_BLOCK, 1, ChatColor.GREEN+"En sécurité", ""));
@@ -111,10 +111,24 @@ public abstract class CheckListInventory extends BaseSharedInventory{
 			}
 		}
 	}
+	public void change(int slot, boolean value) {
+		int quotient = Math.floorDiv(slot, 9);
+		if(quotient==1 || quotient==4) {
+			List<Artefact> artefactsList = new ArrayList<>(artefacts.keySet());
+			artefactsList.sort(new ArtefactComparator());
+			Artefact artefact;
+			if(quotient==1) {
+				artefact = artefactsList.get(18*(page-1)+slot-9);
+			}else {
+				artefact = artefactsList.get(18*(page-1)+slot-27);
+			}
+			change(artefact, value);
+		}
+	}
 	private class ArtefactComparator implements Comparator<Artefact>{
 		@Override
 		public int compare(Artefact o1, Artefact o2) {
-			return o1.getName().compareTo(o2.getName());
+			return o1.getDisplayName().compareTo(o2.getDisplayName());
 		}
 		
 	}

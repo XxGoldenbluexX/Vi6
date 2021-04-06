@@ -63,12 +63,13 @@ public class SixiemeSens extends Objet{
 	private void updateGlow(Player guard) {
 		if(glowed.contains(guard)) {
 			if(getOwner().getLocation().distanceSquared(guard.getLocation())>SQUARED_BLOCK_DISTANCE) {
-				getGame().unglowPlayer(getOwner(), guard);
 				glowed.remove(guard);
+				getGame().unglowPlayer(getOwner(), guard);
 			}
 		}else if(getOwner().getLocation().distanceSquared(guard.getLocation())<=SQUARED_BLOCK_DISTANCE) {
-			getGame().glowPlayer(getOwner(), guard);
 			glowed.add(guard);
+			getGame().glowPlayer(getOwner(), guard);
+			
 		}
 	}
 	public void setNewOwner(Player p, PlayerWrapper wrapper) {
