@@ -1,5 +1,6 @@
 package fr.nekotine.vi6.interfaces.inventories;
 
+import java.util.Comparator;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -80,6 +81,7 @@ public class PreparationInventory extends BasePersonalInventory {
 
 	public void showObjetPage(int page) {
 		List<ObjetsList> objets = ObjetsList.getObjetsForTeam(this.game.getWrapper(this.player).getTeam());
+		objets.sort(new ObjetComparator());
 		if (28 * (page - 1) < objets.size()) {
 			byte index = 11;
 			for (ObjetsList obj : objets.subList(28 * (page - 1), objets.size())) {
@@ -249,5 +251,12 @@ public class PreparationInventory extends BasePersonalInventory {
 			this.player.closeInventory();
 			HandlerList.unregisterAll(this);
 		}
+	}
+	private class ObjetComparator implements Comparator<ObjetsList>{
+		@Override
+		public int compare(ObjetsList o1, ObjetsList o2) {
+			return Integer.compare(o2.getCost(), o1.getCost());
+		}
+		
 	}
 }

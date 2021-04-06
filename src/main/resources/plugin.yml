@@ -2,4 +2,4 @@ name: Vi6
 version: 1.0
 main: fr.nekotine.vi6.Vi6Main
 api-version: 1.16
-depend: [CommandAPI,ProtocolLib,XGlow]
+depend: [CommandAPI,ProtocolLib]
