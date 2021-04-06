@@ -13,6 +13,6 @@ escapeEnteringDelay: 600
 #default ranked money
 rankedMoney: 10000
 #default preparation time in seconds
-preparationTime: 120
+preparationTime: 240
 #capture delay between captures in tick
 delayBetweenCapture : 600
