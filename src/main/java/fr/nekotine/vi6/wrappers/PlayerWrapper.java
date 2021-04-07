@@ -175,8 +175,6 @@ public class PlayerWrapper {
 	}
 
 	public boolean haveEffect(Effects effect) {
-		if (Effects.isCounterable(effect) && haveEffect(Effects.getCounter(effect)))
-			return false;
 		for (StatusEffect e : this.statusEffects) {
 			if (e.getEffect() == effect)
 				return true;

@@ -23,6 +23,7 @@ public class Invisneak extends Objet {
 
 	private final StatusEffect INVISIBLE = new StatusEffect(Effects.Invisible);
 	private final StatusEffect DECOUVERT = new StatusEffect(Effects.Decouvert);
+	private boolean decouvertAdded = false;
 
 	public Invisneak(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Game game, Player player,
 			PlayerWrapper wrapper) {
@@ -30,10 +31,14 @@ public class Invisneak extends Objet {
 	}
 
 	public void tick() {
-		if (DECOUVERT.isSet()) {
-			if (!isGuardNear()) getOwnerWrapper().removeStatusEffect(DECOUVERT);
-		} else if(isGuardNear()) {
-			getOwnerWrapper().addStatusEffect(DECOUVERT);
+		if (isGuardNear()) {
+			if (!this.decouvertAdded) {
+				getOwnerWrapper().addStatusEffect(this.DECOUVERT);
+				this.decouvertAdded = true;
+			}
+		}else {
+			DECOUVERT.remove();
+			decouvertAdded=false;
 		}
 	}
 
@@ -57,7 +62,7 @@ public class Invisneak extends Objet {
 			if (e.isSneaking()) {
 				getOwnerWrapper().addStatusEffect(INVISIBLE);
 			}else {
-				getOwnerWrapper().removeStatusEffect(INVISIBLE);
+				INVISIBLE.remove();
 			}
 	}
 
