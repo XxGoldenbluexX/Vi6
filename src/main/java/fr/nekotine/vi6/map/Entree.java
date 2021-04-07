@@ -91,8 +91,13 @@ public class Entree implements ConfigurationSerializable,ZoneDetectionListener{
 				StatusEffect insond = new StatusEffect(Effects.Insondable);
 				wrap.addStatusEffect(fantom);
 				wrap.addStatusEffect(insond);
-				fantom.autoRemove(mainref,  Game.getDELAY_BEFORE_STATUS_CLEAR());
-				insond.autoRemove(mainref,  Game.getDELAY_BEFORE_STATUS_CLEAR());
+				new BukkitRunnable() {
+					@Override
+					public void run() {
+						wrap.removeStatusEffect(fantom);
+						wrap.removeStatusEffect(insond);
+					}
+				}.runTaskLater(mainref, Game.getDELAY_BEFORE_STATUS_CLEAR());
 				player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("game_player_enter_map"),
 						new MessageFormater("§m", wrap.getGame().getMapName())));
 				if(wrap.getGame().getScanTime()!=wrap.getGame().getDefaultScanTime()) wrap.getGame().setScanTime(wrap.getGame().getDefaultScanTime());

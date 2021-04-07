@@ -3,6 +3,7 @@ package fr.nekotine.vi6.objet.list;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
@@ -63,7 +64,16 @@ public class IEM extends Objet{
 				wrapper.addStatusEffect(jam);
 			}
 		}
-		jam.autoRemove(getMain(), JAM_DURATION_TICKS);
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				for(PlayerWrapper wrapper : getGame().getPlayerMap().values()) {
+					if(wrapper.getTeam()==Team.GARDE) {
+						getOwnerWrapper().removeStatusEffect(jam);
+					}
+				}
+			}
+		}.runTaskLater(getMain(), JAM_DURATION_TICKS);
 		destroy();
 	}
 }

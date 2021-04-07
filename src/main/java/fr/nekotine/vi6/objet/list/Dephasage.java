@@ -3,6 +3,7 @@ package fr.nekotine.vi6.objet.list;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
@@ -57,7 +58,12 @@ public class Dephasage extends Objet{
 				super.getOwner().playSound(Sound.sound(Key.key("entity.illusioner.prepare_blindness"), Sound.Source.VOICE, 1, 1));
 				delayBetweenInvisibility=DELAY_BETWEEN_INVISIBILITY_TICKS;
 				getOwnerWrapper().addStatusEffect(invisibilityEffect);
-				invisibilityEffect.autoRemove(super.getMain(), INVISIBILITY_DURATION_TICKS);
+				new BukkitRunnable() {
+					@Override
+					public void run() {
+						getOwnerWrapper().removeStatusEffect(invisibilityEffect);
+					}
+				}.runTaskLater(getMain(), INVISIBILITY_DURATION_TICKS);
 				break;
 			default:
 				break;

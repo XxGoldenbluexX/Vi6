@@ -119,17 +119,13 @@ public class BainDeFumee extends Objet {
 					if (!inside.contains(w)) {
 						w.addStatusEffect(INVISIBLE);
 						w.addStatusEffect(NODAMAGE);
-						INVISIBLE.forceSetWrapper(null);
-						NODAMAGE.forceSetWrapper(null);
 						inside.add(w);
-						System.out.println("added "+w.getPlayer().getName());
 					}
 				}else {
 					if (inside.contains(w)) {
 						w.removeStatusEffect(INVISIBLE);
 						w.removeStatusEffect(NODAMAGE);
 						inside.remove(w);
-						System.out.println("removed "+w.getPlayer().getName());
 					}
 				}
 			}

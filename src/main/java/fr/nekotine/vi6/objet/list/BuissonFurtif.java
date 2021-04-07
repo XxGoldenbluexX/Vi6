@@ -77,18 +77,18 @@ public class BuissonFurtif extends Objet {
 				this.invisibleAdded = true;
 			}
 		} else {
-			this.INSONDABLE.remove();
-			this.INVISIBLE.remove();
+			getOwnerWrapper().removeStatusEffect(INSONDABLE);
+			getOwnerWrapper().removeStatusEffect(INVISIBLE);
 			this.insondableAdded = false;
 			this.invisibleAdded = false;
 		}
 		if (isGuardNear(getOwner())) {
 			if (!this.decouvertAdded) {
-				getOwnerWrapper().addStatusEffect(this.DECOUVERT);
+				getOwnerWrapper().addStatusEffect(DECOUVERT);
 				this.decouvertAdded = true;
 			}
 		}else {
-			DECOUVERT.remove();
+			getOwnerWrapper().removeStatusEffect(DECOUVERT);
 			decouvertAdded=false;
 		}
 	}
@@ -152,9 +152,9 @@ public class BuissonFurtif extends Objet {
 		super.disable();
 		PlayerInventory inv = getOwner().getInventory();
 		if (HEADBUSH.isSimilar(inv.getHelmet()))inv.setHelmet(null);
-		this.INSONDABLE.remove();
-		this.INVISIBLE.remove();
-		DECOUVERT.remove();
+		getOwnerWrapper().removeStatusEffect(INSONDABLE);
+		getOwnerWrapper().removeStatusEffect(INVISIBLE);
+		getOwnerWrapper().removeStatusEffect(DECOUVERT);
 		decouvertAdded=false;
 		this.insondableAdded = false;
 		this.invisibleAdded = false;

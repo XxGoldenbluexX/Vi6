@@ -164,14 +164,14 @@ public class PlayerWrapper {
 		ArrayList<StatusEffect> eff = new ArrayList<>(this.statusEffects);
 		for (StatusEffect ef : eff) {
 			if (ef.getEffect() == e)
-				ef.remove();
+				statusEffects.remove(ef);
 		}
 	}
 
 	public void clearStatusEffects() {
 		ArrayList<StatusEffect> temp = new ArrayList<>(this.statusEffects);
 		for (StatusEffect e : temp)
-			e.remove();
+			statusEffects.remove(e);
 	}
 
 	public boolean haveEffect(Effects effect) {
@@ -194,7 +194,6 @@ public class PlayerWrapper {
 	public void addStatusEffect(StatusEffect eff) {
 		updateAddEffect(eff.getEffect());
 		this.statusEffects.add(eff);
-		eff.setWrapper(this);
 	}
 
 	private void updateRemoveEffect(Effects e) {

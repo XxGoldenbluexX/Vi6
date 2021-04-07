@@ -38,7 +38,7 @@ public class Invisneak extends Objet {
 				this.decouvertAdded = true;
 			}
 		}else {
-			DECOUVERT.remove();
+			getOwnerWrapper().removeStatusEffect(this.DECOUVERT);
 			decouvertAdded=false;
 		}
 	}
@@ -64,7 +64,7 @@ public class Invisneak extends Objet {
 				getOwnerWrapper().addStatusEffect(INVISIBLE);
 				invisibleAdded=true;
 			}else {
-				INVISIBLE.remove();
+				getOwnerWrapper().removeStatusEffect(INVISIBLE);
 				invisibleAdded = false;
 			}
 	}
