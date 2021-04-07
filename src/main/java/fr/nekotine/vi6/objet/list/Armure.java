@@ -3,7 +3,6 @@ package fr.nekotine.vi6.objet.list;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Player;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import fr.nekotine.vi6.Game;
@@ -37,9 +36,6 @@ public class Armure extends Objet{
 
 	@Override
 	public void action(PlayerInteractEvent e) {
-		if(e.getAction()==Action.RIGHT_CLICK_AIR || e.getAction()==Action.RIGHT_CLICK_BLOCK) {
-			//empecher d'équiper l'armure
-		}
 	}
 
 	@Override
@@ -52,14 +48,14 @@ public class Armure extends Objet{
 		p.setHealth(health.getBaseValue());
 		
 	}
-	public void disable() {
-		super.disable();
-		AttributeInstance health = getOwner().getAttribute(Attribute.GENERIC_MAX_HEALTH);
-		health.setBaseValue(health.getValue()-HEALTH_BONUS);
-	}
-
 	public static int getHealthBonus() {
 		return HEALTH_BONUS;
+	}
+	
+	public void destroy() {
+		super.destroy();
+		AttributeInstance health = getOwner().getAttribute(Attribute.GENERIC_MAX_HEALTH);
+		health.setBaseValue(health.getValue()-HEALTH_BONUS);
 	}
 
 }
