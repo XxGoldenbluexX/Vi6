@@ -40,6 +40,7 @@ import fr.nekotine.vi6.objet.list.Tazer;
 import fr.nekotine.vi6.objet.list.PiegeCapteur;
 import fr.nekotine.vi6.objet.list.IEM;
 import fr.nekotine.vi6.objet.list.PiegeCollant;
+import fr.nekotine.vi6.objet.list.Hamecon;
 import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 
@@ -223,7 +224,14 @@ public enum ObjetsList {
 			0,
 			ChatColor.GOLD+"Piège collant",
 			Material.SLIME_BALL,
-			ChatColor.LIGHT_PURPLE+"Un piège invisible qui ralentit sa cible.");
+			ChatColor.LIGHT_PURPLE+"Un piège invisible qui ralentit sa cible."),
+	HAMECON(Hamecon.class,
+			Team.GARDE,
+			100,
+			0,
+			ChatColor.AQUA+"Hameçon",
+			Material.FISHING_ROD,
+			ChatColor.LIGHT_PURPLE+"Une canne à pêche qui ne sert qu'à attraper les voleurs");
 	private final Class<?> objetClass;
 
 	private final Team team;
