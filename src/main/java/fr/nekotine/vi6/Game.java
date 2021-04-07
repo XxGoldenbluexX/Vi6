@@ -82,6 +82,7 @@ import fr.nekotine.vi6.interfaces.items.OpenWaitingItem;
 import fr.nekotine.vi6.map.Artefact;
 import fr.nekotine.vi6.map.Carte;
 import fr.nekotine.vi6.map.SpawnVoleur;
+import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.list.DeadRinger;
 import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.sql.PlayerGame;
@@ -240,10 +241,33 @@ public class Game implements Listener {
 			PlayerWrapper w = getWrapper(p);
 			if (w != null) {
 				Objet o = getObjet(event.getItem().getItemStack());
-				if (o != null)
-					o.setNewOwner(p, w);
+				if (o != null) {
+					if(o.getObjetType().getLimit()>0 && getPlayerObjetCount(p, o.getObjetType())>=o.getObjetType().getLimit()) {
+						event.setCancelled(true);
+					}else {
+						o.setNewOwner(p, w);
+					}
+				}
 			}
 		}
+	}
+	
+	public ArrayList<Objet> getPlayerObjets(Player p){
+		ArrayList<Objet> obj = new ArrayList<>();
+		for(Objet objet : objetsList) {
+			if(objet.isTickable() && p.equals(objet.getOwner())) {
+				obj.add(objet);
+			}
+		}
+		return obj;
+	}
+	
+	public int getPlayerObjetCount(Player p, ObjetsList objet) {
+		int count=0;
+		for(Objet obj : getPlayerObjets(p)) {
+			if(obj.getObjetType()==objet) count++;
+		}
+		return count;
 	}
 
 	public ArrayList<Objet> getObjets() {
