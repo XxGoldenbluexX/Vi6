@@ -25,7 +25,7 @@ game_end: "[§bVi6§r] §6Fin de partie !\n§r[§bVi6§r] §6Total §3artéfacts
 game_shouldBeUnready: "[§bVi6§r] §6Vous devez être §c'En attente' §6pour çela !"
 game_death: "[§bVi6§r] §b§p §cest mort avec §b§n §cartéfacts !"
 game_fake_death: "[§bVi6§r] §b§p §ca feinté la mort !"
-effect_decouvert: "&cVous êtes à découvert!"
+effect_decouvert: "§cVous êtes à découvert!"
 
 ##OBJETS MESSAGES
 objet_globe_triggered: "[§bGlobe Voyant§r] §6L'artéfact §b§n§a§6 a été §cvolé !"
