@@ -52,8 +52,8 @@ public class Armure extends Objet{
 		return HEALTH_BONUS;
 	}
 	
-	public void destroy() {
-		super.destroy();
+	public void disable() {
+		super.disable();
 		AttributeInstance health = getOwner().getAttribute(Attribute.GENERIC_MAX_HEALTH);
 		health.setBaseValue(health.getValue()-HEALTH_BONUS);
 	}

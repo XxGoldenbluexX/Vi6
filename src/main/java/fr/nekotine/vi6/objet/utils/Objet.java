@@ -81,7 +81,6 @@ public abstract class Objet implements Listener {
 		if (e.getGame().equals(game)) {
 			disable();
 		}
-
 	}
 
 	@EventHandler
@@ -148,7 +147,6 @@ public abstract class Objet implements Listener {
 
 	public void destroy() {
 		consume();
-		disable();
 		game.removeObjet(this);
 	}
 

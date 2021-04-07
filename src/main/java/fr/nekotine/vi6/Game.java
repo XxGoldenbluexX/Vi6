@@ -649,8 +649,6 @@ public class Game implements Listener {
 			((PlayerWrapper) p.getValue()).setCanCapture(false);
 			((PlayerWrapper) p.getValue()).setCanEscape(false);
 			((PlayerWrapper) p.getValue()).setThiefSpawnPoint(null);
-			
-			((Player) p.getKey()).setWalkSpeed(0.2F);
 			((Player) p.getKey()).getInventory().clear();
 			if (((PlayerWrapper) p.getValue()).getTeam() == Team.GARDE) {
 				guardTeam.removeEntry(((Player) p.getKey()).getName());

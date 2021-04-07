@@ -49,9 +49,4 @@ public class Bottes7Lieues extends Objet {
 	public static float getSpeedMultiplier() {
 		return SPEED_MULT;
 	}
-	
-	public void destroy() {
-		super.destroy();
-		getOwner().setWalkSpeed(0.2f);
-	}
 }
