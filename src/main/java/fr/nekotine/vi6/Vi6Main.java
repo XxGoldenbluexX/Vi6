@@ -89,7 +89,7 @@ public class Vi6Main extends JavaPlugin {
 				PlayerWrapper receiverWrapper = getPlayerWrapper(receiver);
 				PlayerWrapper throwerWrapper = getPlayerWrapper(thrower);
 				if (throwerWrapper!=null && receiverWrapper!=null) {
-					if (receiverWrapper.getTeam()==throwerWrapper.getTeam()) {
+					if (!receiver.equals(thrower) && receiverWrapper.getTeam()==throwerWrapper.getTeam()) {
 						List<WrappedWatchableObject> watchableObjectList = packet.getWatchableCollectionModifier().read(0);
 						for (WrappedWatchableObject metadata : watchableObjectList) {
 							if (metadata.getIndex() == 0) {
