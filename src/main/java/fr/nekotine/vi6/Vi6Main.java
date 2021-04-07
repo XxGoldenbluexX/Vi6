@@ -11,7 +11,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
+import com.comphenix.protocol.events.PacketAdapter;
+import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.events.PacketEvent;
+import com.comphenix.protocol.wrappers.WrappedWatchableObject;
 
 import dev.jorel.commandapi.CommandAPI;
 import fr.nekotine.vi6.commands.Vi6commandMaker;
@@ -62,8 +68,50 @@ public class Vi6Main extends JavaPlugin {
 		ConfigurationSerialization.registerClass(DetectionZone.class, "DetectionZone");
 		ConfigurationSerialization.registerClass(SpawnVoleur.class, "SpawnVoleur");
 		pmanager=Bukkit.getPluginManager();//getting pmanager reference
-		new ItemHider(ProtocolLibrary.getProtocolManager(),this);
+		ProtocolManager promanager = ProtocolLibrary.getProtocolManager();
+		new ItemHider(promanager,this);
 		new ExplosionCanceler(pmanager,this);
+		//GLOW FOR TEAMS
+		promanager.addPacketListener(new PacketAdapter(main,PacketType.Play.Server.ENTITY_METADATA) {
+			@Override
+			public void onPacketSending(PacketEvent event) {
+				PacketContainer packet = event.getPacket();
+				Player receiver = event.getPlayer();
+				Player thrower=null;
+				int hideid = packet.getIntegers().read(0);
+				for (Player p : Bukkit.getOnlinePlayers()) {
+					if (p.getEntityId()==hideid) {
+						thrower = p;
+						break;
+					}
+				}
+				if (thrower==null) return;
+				PlayerWrapper receiverWrapper = getPlayerWrapper(receiver);
+				PlayerWrapper throwerWrapper = getPlayerWrapper(thrower);
+				if (throwerWrapper==null) return;
+				if (receiverWrapper!=null) {
+					if (receiverWrapper.getTeam()==throwerWrapper.getTeam()) {
+						List<WrappedWatchableObject> watchableObjectList = packet.getWatchableCollectionModifier().read(0);
+						for (WrappedWatchableObject metadata : watchableObjectList) {
+							if (metadata.getIndex() == 0) {
+								byte b = (byte) metadata.getValue();
+								b |= 0b01000000;
+								metadata.setValue(b);
+							}
+						}
+					}
+				}else {
+					List<WrappedWatchableObject> watchableObjectList = packet.getWatchableCollectionModifier().read(0);
+					for (WrappedWatchableObject metadata : watchableObjectList) {
+						if (metadata.getIndex() == 0) {
+							byte b = (byte) metadata.getValue();
+							b |= 0b01000000;
+							metadata.setValue(b);
+						}
+					}
+				}
+			}
+		});
 		//File creation
 		saveDefaultConfig();//making config.yml
 		if (getDataFolder().exists()) {//making dataFolder
