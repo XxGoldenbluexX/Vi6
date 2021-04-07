@@ -88,8 +88,7 @@ public class Vi6Main extends JavaPlugin {
 				if (thrower==null) return;
 				PlayerWrapper receiverWrapper = getPlayerWrapper(receiver);
 				PlayerWrapper throwerWrapper = getPlayerWrapper(thrower);
-				if (throwerWrapper==null) return;
-				if (receiverWrapper!=null) {
+				if (throwerWrapper!=null && receiverWrapper!=null) {
 					if (receiverWrapper.getTeam()==throwerWrapper.getTeam()) {
 						List<WrappedWatchableObject> watchableObjectList = packet.getWatchableCollectionModifier().read(0);
 						for (WrappedWatchableObject metadata : watchableObjectList) {
@@ -98,15 +97,6 @@ public class Vi6Main extends JavaPlugin {
 								b |= 0b01000000;
 								metadata.setValue(b);
 							}
-						}
-					}
-				}else {
-					List<WrappedWatchableObject> watchableObjectList = packet.getWatchableCollectionModifier().read(0);
-					for (WrappedWatchableObject metadata : watchableObjectList) {
-						if (metadata.getIndex() == 0) {
-							byte b = (byte) metadata.getValue();
-							b |= 0b01000000;
-							metadata.setValue(b);
 						}
 					}
 				}
