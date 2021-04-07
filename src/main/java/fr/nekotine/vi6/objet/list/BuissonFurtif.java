@@ -83,7 +83,7 @@ public class BuissonFurtif extends Objet {
 			this.invisibleAdded = false;
 		}
 		if (isGuardNear(getOwner())) {
-			if (!this.decouvertAdded) {
+			if (!this.decouvertAdded && invisibleAdded) {
 				getOwnerWrapper().addStatusEffect(DECOUVERT);
 				this.decouvertAdded = true;
 			}
