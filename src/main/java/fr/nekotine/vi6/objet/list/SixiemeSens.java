@@ -72,10 +72,4 @@ public class SixiemeSens extends Objet{
 			
 		}
 	}
-	public void setNewOwner(Player p, PlayerWrapper wrapper) {
-		super.setNewOwner(p, wrapper);
-	}
-	public void disable() {
-		super.disable();
-	}
 }

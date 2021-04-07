@@ -72,7 +72,7 @@ public class Vi6Main extends JavaPlugin {
 		new ItemHider(promanager,this);
 		new ExplosionCanceler(pmanager,this);
 		//GLOW FOR TEAMS
-		promanager.addPacketListener(new PacketAdapter(main,PacketType.Play.Server.ENTITY_METADATA) {
+		promanager.addPacketListener(new PacketAdapter(this,PacketType.Play.Server.ENTITY_METADATA) {
 			@Override
 			public void onPacketSending(PacketEvent event) {
 				PacketContainer packet = event.getPacket();
