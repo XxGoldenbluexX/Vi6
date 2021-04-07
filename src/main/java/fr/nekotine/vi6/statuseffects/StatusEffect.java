@@ -23,6 +23,10 @@ public class StatusEffect {
 			remove();
 		this.wrapper = w;
 	}
+	
+	public void forceSetWrapper(PlayerWrapper w) {
+		this.wrapper = w;
+	}
 
 	public void remove() {
 		if (this.wrapper != null) {
