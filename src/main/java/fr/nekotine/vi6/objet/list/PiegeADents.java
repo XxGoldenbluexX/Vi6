@@ -130,7 +130,9 @@ public class PiegeADents extends Objet {
 			}
 		}else {
 			if (triggered) {
-				if (event.getPlayer().equals(victim)) event.setCancelled(true);
+				if (event.getPlayer().equals(victim)) {
+					event.setTo(event.getFrom());
+				}
 			}
 		}
 	}
