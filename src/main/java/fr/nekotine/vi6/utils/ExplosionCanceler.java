@@ -5,6 +5,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.plugin.PluginManager;
 
 import fr.nekotine.vi6.Vi6Main;
@@ -26,6 +27,11 @@ public class ExplosionCanceler implements Listener {
 	
 	@EventHandler
 	public void onEntityExplode(EntityExplodeEvent event) {
+		event.setCancelled(true);
+	}
+	
+	@EventHandler
+	public void onExplosionPrime(ExplosionPrimeEvent event) {
 		event.setCancelled(true);
 	}
 	
