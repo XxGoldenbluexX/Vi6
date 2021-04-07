@@ -19,6 +19,7 @@ import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.statuseffects.Effects;
+import fr.nekotine.vi6.utils.Vi6Sound;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 
 public class PiegeCollant extends Objet {
@@ -88,6 +89,7 @@ public class PiegeCollant extends Objet {
 					if (e!=null) amplitude = e.getAmplifier()+1;
 					p.removePotionEffect(PotionEffectType.SLOW);
 					p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW,Integer.MAX_VALUE,amplitude,false,false,true));
+					Vi6Sound.PIEGE_COLLANT.playForPlayer(p);
 					placed=false;
 				}
 			}
