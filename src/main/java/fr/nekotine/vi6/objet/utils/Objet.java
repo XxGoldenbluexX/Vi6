@@ -2,6 +2,7 @@ package fr.nekotine.vi6.objet.utils;
 
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
@@ -80,7 +81,6 @@ public abstract class Objet implements Listener {
 		if (e.getGame().equals(game)) {
 			disable();
 		}
-
 	}
 
 	@EventHandler
@@ -134,7 +134,7 @@ public abstract class Objet implements Listener {
 	@EventHandler
 	public void inventoryClick(InventoryClickEvent e) {
 		if (e.getCurrentItem() != null && e.getCurrentItem().isSimilar(displayedItem)
-				&& (onCooldown || e.getWhoClicked().getOpenInventory().getType() != InventoryType.CRAFTING)) {
+				&& (onCooldown || e.getWhoClicked().getOpenInventory().getType() != InventoryType.CRAFTING || (e.isShiftClick() && isEquipable(displayedItem)))) {
 			e.setCancelled(true);
 		}
 
@@ -147,7 +147,6 @@ public abstract class Objet implements Listener {
 
 	public void destroy() {
 		consume();
-		disable();
 		game.removeObjet(this);
 	}
 
@@ -250,5 +249,15 @@ public abstract class Objet implements Listener {
 	
 	public void setDisplayedItem(ItemStack item) {
 		displayedItem=item;
+	}
+	
+	public boolean isEquipable(ItemStack is) {
+		ItemStack i = is.clone();
+		try {
+			i.addEnchantment(Enchantment.BINDING_CURSE, 1);
+		}catch(IllegalArgumentException e) {
+            return false;
+        }
+		return true;
 	}
 }

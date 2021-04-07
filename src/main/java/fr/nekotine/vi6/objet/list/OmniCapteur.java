@@ -100,7 +100,7 @@ public class OmniCapteur extends Objet{
 		return SQUARED_BLOCK_RANGE;
 	}
 	public void destroy() {
-		super.disable();
+		super.destroy();
 		if(omni!=null) omni.remove();
 	}
 	public void disable() {

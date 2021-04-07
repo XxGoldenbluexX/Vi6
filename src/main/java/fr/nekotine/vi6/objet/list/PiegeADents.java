@@ -87,7 +87,7 @@ public class PiegeADents extends Objet {
 		}else {
 			loc = getOwner().getLocation();
 			armed=true;
-			as=(ArmorStand)loc.getWorld().spawnEntity(loc.clone().subtract(0, 1.75, 0), EntityType.ARMOR_STAND);
+			as=(ArmorStand)loc.getWorld().spawnEntity(loc.clone().subtract(0, 1.85, 0), EntityType.ARMOR_STAND);
 			as.setInvisible(true);
 			as.setMarker(true);
 			as.setGravity(false);

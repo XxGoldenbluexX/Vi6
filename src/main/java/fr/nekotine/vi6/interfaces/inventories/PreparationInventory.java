@@ -149,6 +149,7 @@ public class PreparationInventory extends BasePersonalInventory {
 							if (item != null) {
 								Objet obj = this.game.getObjet(item);
 								if (obj != null) {
+									obj.disable();
 									obj.destroy();
 									this.game.getWrapper(this.player)
 											.setMoney(this.game.getWrapper(this.player).getMoney()
@@ -227,6 +228,7 @@ public class PreparationInventory extends BasePersonalInventory {
 			Objet obj = this.game.getObjet(e.getCurrentItem());
 			if (obj != null) {
 				e.setCancelled(true);
+				obj.disable();
 				obj.destroy();
 				this.game.getWrapper(this.player)
 						.setMoney(this.game.getWrapper(this.player).getMoney() + obj.getObjetType().getCost());
