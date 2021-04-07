@@ -37,6 +37,7 @@ public class PiegeADents extends Objet {
 	private boolean triggered = false;
 	private Location loc;
 	private Entity fang;
+	private Entity witherSkull;
 	
 	public PiegeADents(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Game game, Player player,PlayerWrapper wrapper) {
 		super(main, objet, skin, game, player, wrapper);
@@ -83,6 +84,7 @@ public class PiegeADents extends Objet {
 		}else {
 			loc = getOwner().getLocation();
 			armed=true;
+			witherSkull=loc.getWorld().spawnEntity(loc, EntityType.WITHER_SKULL, SpawnReason.TRAP);
 			consume();
 		}
 	}
@@ -107,6 +109,7 @@ public class PiegeADents extends Objet {
 					victim = event.getPlayer();
 					armed=false;
 					triggered=true;
+					witherSkull.remove();
 					fang = loc.getWorld().spawnEntity(loc, EntityType.EVOKER_FANGS, SpawnReason.TRAP);
 					new BukkitRunnable() {
 						@Override
