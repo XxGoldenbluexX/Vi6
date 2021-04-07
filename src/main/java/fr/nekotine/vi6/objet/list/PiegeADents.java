@@ -4,6 +4,8 @@ import java.util.Map.Entry;
 import java.util.function.Predicate;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -14,6 +16,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.nekotine.vi6.Game;
@@ -37,7 +40,7 @@ public class PiegeADents extends Objet {
 	private boolean triggered = false;
 	private Location loc;
 	private Entity fang;
-	private Entity witherSkull;
+	private ArmorStand as;
 	
 	public PiegeADents(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Game game, Player player,PlayerWrapper wrapper) {
 		super(main, objet, skin, game, player, wrapper);
@@ -84,7 +87,11 @@ public class PiegeADents extends Objet {
 		}else {
 			loc = getOwner().getLocation();
 			armed=true;
-			witherSkull=loc.getWorld().spawnEntity(loc, EntityType.WITHER_SKULL, SpawnReason.TRAP);
+			as=(ArmorStand)loc.getWorld().spawnEntity(loc.subtract(0, 1.625, 0), EntityType.ARMOR_STAND);
+			as.setInvisible(true);
+			as.setMarker(true);
+			as.setGravity(false);
+			as.getEquipment().setHelmet(new ItemStack(Material.NETHERITE_HELMET));
 			consume();
 		}
 	}
@@ -109,7 +116,8 @@ public class PiegeADents extends Objet {
 					victim = event.getPlayer();
 					armed=false;
 					triggered=true;
-					witherSkull.remove();
+					as.remove();
+					as=null;
 					fang = loc.getWorld().spawnEntity(loc, EntityType.EVOKER_FANGS, SpawnReason.TRAP);
 					new BukkitRunnable() {
 						@Override
@@ -141,5 +149,8 @@ public class PiegeADents extends Objet {
 			}
 		}
 	}
-
+	public void destroy() {
+		super.destroy();
+		if(as!=null) as.remove();
+	}
 }
