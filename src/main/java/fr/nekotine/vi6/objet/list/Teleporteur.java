@@ -13,6 +13,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import com.destroystokyo.paper.event.entity.EntityTeleportEndGatewayEvent;
+
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.objet.ObjetsList;
@@ -118,5 +120,13 @@ public class Teleporteur extends Objet {
 		if(dropBlock!=null && e.getAction()==Action.RIGHT_CLICK_BLOCK && e.getClickedBlock().equals(dropBlock.getBlock())) {
 			e.setCancelled(true);
 		}
+	}
+	
+	@EventHandler
+	public void endGateway(EntityTeleportEndGatewayEvent e) {
+		if(portalTp!=null && !(e.getEntity() instanceof Player) && portalTp.getBlock().equals(e.getGateway().getBlock())) {
+			e.setCancelled(true);
+		}
+			
 	}
 }
