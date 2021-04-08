@@ -36,6 +36,7 @@ import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -245,6 +246,7 @@ public class Game implements Listener {
 					if(o.getObjetType().getLimit()>0 && getPlayerObjetCount(p, o.getObjetType())>=o.getObjetType().getLimit()) {
 						event.setCancelled(true);
 					}else {
+						p.sendMessage("Count "+getPlayerObjetCount(p, o.getObjetType()));
 						o.setNewOwner(p, w);
 					}
 				}
@@ -265,7 +267,7 @@ public class Game implements Listener {
 	public int getPlayerObjetCount(Player p, ObjetsList objet) {
 		int count=0;
 		for(Objet obj : getPlayerObjets(p)) {
-			if(obj.getObjetType()==objet) count++;
+			if(obj.isTickable() && obj.getObjetType()==objet) count++;
 		}
 		return count;
 	}
@@ -847,5 +849,10 @@ public class Game implements Listener {
 	    } catch (InvocationTargetException e) {
 	        e.printStackTrace();
 	    }
+	}
+	
+	@EventHandler
+	public void dropGuardSword(PlayerDropItemEvent e) {
+		if(state!=GameState.Waiting && GUARD_SWORD.isSimilar(e.getItemDrop().getItemStack())) e.setCancelled(true);
 	}
 }
