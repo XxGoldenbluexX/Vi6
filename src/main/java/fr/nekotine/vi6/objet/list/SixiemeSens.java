@@ -1,12 +1,21 @@
 package fr.nekotine.vi6.objet.list;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map.Entry;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.events.PacketAdapter;
+import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.events.PacketEvent;
+import com.comphenix.protocol.wrappers.WrappedWatchableObject;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
@@ -21,6 +30,34 @@ public class SixiemeSens extends Objet{
 	private ArrayList<Player> glowed = new ArrayList<>();
 	public SixiemeSens(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Game game, Player player, PlayerWrapper wrapper) {
 		super(main, objet, skin, game, player, wrapper);
+		ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(main,PacketType.Play.Server.ENTITY_METADATA) {
+			@Override
+			public void onPacketSending(PacketEvent event) {
+				PacketContainer packet = event.getPacket();
+				Player receiver = event.getPlayer();
+				if(receiver.equals(getOwner())) {
+					Player thrower=null;
+					int hideid = packet.getIntegers().read(0);
+					for (Player p : Bukkit.getOnlinePlayers()) {
+						if (p.getEntityId()==hideid) {
+							thrower = p;
+							break;
+						}
+					}
+					if (thrower==null) return;
+					if (!getOwner().equals(thrower) && glowed.contains(thrower)) {
+						List<WrappedWatchableObject> watchableObjectList = packet.getWatchableCollectionModifier().read(0);
+						for (WrappedWatchableObject metadata : watchableObjectList) {
+							if (metadata.getIndex() == 0) {
+								byte b = (byte) metadata.getValue();
+								b |= 0b01000000;
+								metadata.setValue(b);
+							}
+						}
+					}
+				}
+			}
+		});
 	}
 
 	@Override
