@@ -125,7 +125,12 @@ public abstract class Objet implements Listener {
             e.setCancelled(true);
             break;
          default:
-            disable();
+        	 if(onCooldown) {
+        		 e.setCancelled(true);
+        	 }else {
+        		 disable();
+        	 }
+           
          }
       }
 
