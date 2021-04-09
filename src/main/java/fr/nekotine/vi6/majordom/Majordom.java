@@ -39,7 +39,7 @@ public class Majordom implements Listener{
 				&& event.getPlayer().getGameMode()!=GameMode.SPECTATOR && event.getAction()==Action.RIGHT_CLICK_BLOCK) {
 			BlockData data = b.getBlockData();
 			if (data instanceof Openable) {
-				event.setCancelled(true);
+				if (enabled) event.setCancelled(true);
 				Openable o = (Openable) data;
 				if (i!=null && i.getType()==Material.STRUCTURE_VOID) {
 					o.setOpen(!o.isOpen());
