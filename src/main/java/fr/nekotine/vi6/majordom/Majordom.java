@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Openable;
@@ -13,6 +14,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -31,6 +33,8 @@ public class Majordom implements Listener{
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		Block b = event.getClickedBlock();
+		ItemStack i = event.getItem();
+		if (i!=null && i.getType()==Material.STRUCTURE_VOID) return;
 		if (event.getHand()==EquipmentSlot.HAND && b!=null
 				&& event.getPlayer().getGameMode()!=GameMode.SPECTATOR && event.getAction()==Action.RIGHT_CLICK_BLOCK) {
 			BlockData data = b.getBlockData();
