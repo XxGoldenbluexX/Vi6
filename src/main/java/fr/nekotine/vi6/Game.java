@@ -80,6 +80,7 @@ import fr.nekotine.vi6.interfaces.inventories.MapSelectionInventory;
 import fr.nekotine.vi6.interfaces.items.OpenCheckListItem;
 import fr.nekotine.vi6.interfaces.items.OpenPreparationItem;
 import fr.nekotine.vi6.interfaces.items.OpenWaitingItem;
+import fr.nekotine.vi6.majordom.Majordom;
 import fr.nekotine.vi6.map.Artefact;
 import fr.nekotine.vi6.map.Carte;
 import fr.nekotine.vi6.map.SpawnVoleur;
@@ -414,6 +415,7 @@ public class Game implements Listener {
 		this.map.start();
 		this.state = GameState.Preparation;
 		waitingItem.destroy();
+		Majordom.instance.setEnabled(true);
 		for (Map.Entry<Player, PlayerWrapper> playerAndWrapper : this.playerList.entrySet()) {
 			Player player = playerAndWrapper.getKey();
 			PlayerWrapper wrapper = playerAndWrapper.getValue();
@@ -643,6 +645,7 @@ public class Game implements Listener {
 		if (this.bb.getPlayers().size() > 0)
 			this.bb.removeAll();
 		int totalVole = 0;
+		Majordom.instance.setEnabled(false);
 		for (Map.Entry<Player, PlayerWrapper> p : this.playerList.entrySet()) {
 			((Player) p.getKey()).setGameMode(GameMode.SPECTATOR);
 			((PlayerWrapper) p.getValue()).setReady(false);

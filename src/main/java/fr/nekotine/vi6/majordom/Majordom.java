@@ -24,6 +24,7 @@ public class Majordom implements Listener{
 	private static final List<Block> list = new ArrayList<>(10);
 	private static final int CLOSE_DELAY=40;
 	private Plugin mainRef;
+	private boolean enabled = false;
 	
 	public Majordom(Plugin plugin) {
 		mainRef = plugin;
@@ -45,6 +46,7 @@ public class Majordom implements Listener{
 					b.setBlockData(o);
 					return;
 				}
+				if (!enabled) return;
 				if (data instanceof Door) {
 					Block bminus = b.getLocation().subtract(0, 1, 0).getBlock();
 					BlockData dataminus = bminus.getBlockData();
@@ -76,5 +78,13 @@ public class Majordom implements Listener{
 			}.runTaskLater(mainRef, CLOSE_DELAY);
 		}
 		b.setBlockData(o);
+	}
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
 	}
 }
