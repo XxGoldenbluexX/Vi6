@@ -42,6 +42,8 @@ public class Majordom implements Listener{
 					BlockData dataminus = b.getBlockData();
 					if (dataminus instanceof Openable) {
 						onOpenableToggle(bminus,(Openable) dataminus);
+					}else {
+						onOpenableToggle(b,o);
 					}
 				}else {
 					onOpenableToggle(b, o);
@@ -52,9 +54,9 @@ public class Majordom implements Listener{
 	private void onOpenableToggle(Block b, Openable o) {
 		if (list.contains(b)) {
 			list.remove(b);
-			o.setOpen(false);
+			o.setOpen(!o.isOpen());
 		}else {
-			o.setOpen(true);
+			o.setOpen(!o.isOpen());
 			list.add(b);
 			new BukkitRunnable() {
 				@Override
