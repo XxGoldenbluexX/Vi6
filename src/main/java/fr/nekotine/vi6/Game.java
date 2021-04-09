@@ -34,6 +34,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerDropItemEvent;
@@ -857,5 +858,10 @@ public class Game implements Listener {
 	@EventHandler
 	public void dropGuardSword(PlayerDropItemEvent e) {
 		if(state!=GameState.Waiting && GUARD_SWORD.isSimilar(e.getItemDrop().getItemStack())) e.setCancelled(true);
+	}
+	
+	@EventHandler
+	public void itemFrameBreak(HangingBreakEvent e) {
+		if(state!=GameState.Waiting) e.setCancelled(true);
 	}
 }

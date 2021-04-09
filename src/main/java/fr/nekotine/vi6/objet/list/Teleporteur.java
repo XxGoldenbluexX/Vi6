@@ -99,7 +99,7 @@ public class Teleporteur extends Objet {
 				consume();
 				return;
 			}
-		} else if (!loc.getBlock().isSolid() && !loc.clone().add(0.0D, 1.0D, 0.0D).getBlock().isSolid()) {
+		} else if (loc.getBlock().isEmpty() && !loc.clone().add(0.0D, 1.0D, 0.0D).getBlock().isSolid()) {
 			if (this.shulker != null)
 				this.shulker.reset();
 			this.shulker = (new TempBlock(loc.getBlock(), Material.LIGHT_GRAY_SHULKER_BOX)).set();
