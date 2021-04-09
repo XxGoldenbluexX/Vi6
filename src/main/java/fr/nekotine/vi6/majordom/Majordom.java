@@ -61,7 +61,9 @@ public class Majordom implements Listener{
 			new BukkitRunnable() {
 				@Override
 				public void run() {
-					onOpenableToggle(b, o);
+					list.remove(b);
+					o.setOpen(!o.isOpen());
+					b.setBlockData(o);
 				}
 			}.runTaskLater(mainRef, CLOSE_DELAY);
 		}
