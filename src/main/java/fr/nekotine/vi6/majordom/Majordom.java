@@ -38,7 +38,7 @@ public class Majordom implements Listener{
 				event.setCancelled(true);
 				Openable o = (Openable) data;
 				if (data instanceof Door) {
-					Block bminus = b.getLocation().subtract(0, 1, 0).getBlock();
+					Block bminus = b.getLocation().clone().subtract(0, 1, 0).getBlock();
 					BlockData dataminus = b.getBlockData();
 					if (dataminus instanceof Openable) {
 						onOpenableToggle(bminus,(Openable) dataminus);
