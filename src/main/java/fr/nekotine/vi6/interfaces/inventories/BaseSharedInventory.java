@@ -31,8 +31,8 @@ public abstract class BaseSharedInventory implements Listener{
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent e) {
 		if(inventory.equals(e.getClickedInventory())) {
+			e.setCancelled(true);
 			if(e.getCurrentItem()!=null) {
-				e.setCancelled(true);
 				itemClicked((Player)e.getWhoClicked(),e.getCurrentItem(),e.getRawSlot());
 			}
 		}

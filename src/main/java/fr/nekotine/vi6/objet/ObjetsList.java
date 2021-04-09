@@ -194,7 +194,7 @@ public enum ObjetsList {
 			ChatColor.GREEN+"Globe Voyant",
 			Material.ENDER_EYE,
 			ChatColor.LIGHT_PURPLE+"S'attache au plus proche artéfacts.",ChatColor.LIGHT_PURPLE+"Indique quand celui-ci est volé.",
-			ChatColor.WHITE+"Délai du message: "+Math.round(GlobeVoyant.getMessageDelayTicks()/20)+"s"),
+			ChatColor.WHITE+"Délai du message: "+ChatColor.AQUA+Math.round(GlobeVoyant.getMessageDelayTicks()/20)+"s"),
 	OMNICAPTEUR(OmniCapteur.class,
 			Team.GARDE,
 			250,

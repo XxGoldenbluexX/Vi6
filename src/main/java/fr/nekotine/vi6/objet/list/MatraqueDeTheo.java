@@ -48,7 +48,6 @@ public class MatraqueDeTheo extends Objet {
 	public void setNewOwner(Player p, PlayerWrapper wrapper) {
 		super.setNewOwner(p, wrapper);
 		getOwner().getInventory().removeItem(Game.GUARD_SWORD);
-		setItem(MATRAQUE);
 	}
 
 	public void disable() {

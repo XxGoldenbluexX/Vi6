@@ -6,12 +6,15 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerFishEvent.State;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.objet.utils.Objet;
+import fr.nekotine.vi6.utils.IsCreator;
 import fr.nekotine.vi6.utils.Vi6Sound;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 
@@ -19,6 +22,11 @@ public class Hamecon extends Objet{
 
 	public Hamecon(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Game game, Player player, PlayerWrapper wrapper) {
 		super(main, objet, skin, game, player, wrapper);
+		ItemStack ham = IsCreator.createItemStack(Material.FISHING_ROD, 1, objet.getInShopName(), objet.getInShopLore());
+		ItemMeta meta = ham.getItemMeta();
+		meta.setUnbreakable(true);
+		ham.setItemMeta(meta);
+		setItem(ham);
 	}
 
 	@Override

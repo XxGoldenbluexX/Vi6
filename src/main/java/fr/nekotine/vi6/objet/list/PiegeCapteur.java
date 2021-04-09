@@ -13,9 +13,11 @@ import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.objet.utils.Objet;
+import fr.nekotine.vi6.utils.MessageFormater;
 import fr.nekotine.vi6.utils.TempBlock;
 import fr.nekotine.vi6.utils.Vi6Sound;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
+import fr.nekotine.vi6.yml.DisplayTexts;
 
 public class PiegeCapteur extends Objet{
 	private TempBlock pressure;
@@ -67,9 +69,14 @@ public class PiegeCapteur extends Objet{
 				e.setCancelled(true);
 				PlayerWrapper wrap = getGame().getWrapper(e.getPlayer());
 				if(wrap!=null && wrap.getTeam()==Team.VOLEUR && wrap.getState()==PlayerState.INSIDE) {
-					//message
+					getOwner().sendMessage(MessageFormater.formatWithColorCodes('§',
+					DisplayTexts.getMessage("objet_capteur_trigger_guard")));
+					e.getPlayer().sendMessage(MessageFormater.formatWithColorCodes('§',
+					DisplayTexts.getMessage("objet_capteur_trigger_thief")));
 					Vi6Sound.PIEGECAPTEUR_TRIGGER.playAtLocation(pressure.getBlock().getLocation());
-					destroy();
+					Vi6Sound.ERROR.playForPlayer(getOwner());
+					pressure.reset();
+					disable();
 				}
 			}
 		}

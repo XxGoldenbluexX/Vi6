@@ -43,8 +43,8 @@ public abstract class BasePersonalInventory implements Listener{
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent e) {
 		if(inventory.equals(e.getClickedInventory())) {
+			e.setCancelled(true);
 			if(e.getCurrentItem()!=null) {
-				e.setCancelled(true);
 				itemClicked(e.getCurrentItem(),e.getRawSlot());
 			}
 		}
