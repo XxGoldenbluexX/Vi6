@@ -34,13 +34,17 @@ public class Majordom implements Listener{
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		Block b = event.getClickedBlock();
 		ItemStack i = event.getItem();
-		if (i!=null && i.getType()==Material.STRUCTURE_VOID) return;
 		if (event.getHand()==EquipmentSlot.HAND && b!=null
 				&& event.getPlayer().getGameMode()!=GameMode.SPECTATOR && event.getAction()==Action.RIGHT_CLICK_BLOCK) {
 			BlockData data = b.getBlockData();
 			if (data instanceof Openable) {
 				event.setCancelled(true);
 				Openable o = (Openable) data;
+				if (i!=null && i.getType()==Material.STRUCTURE_VOID) {
+					o.setOpen(!o.isOpen());
+					b.setBlockData(o);
+					return;
+				}
 				if (data instanceof Door) {
 					Block bminus = b.getLocation().subtract(0, 1, 0).getBlock();
 					BlockData dataminus = bminus.getBlockData();
