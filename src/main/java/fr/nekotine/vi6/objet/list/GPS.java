@@ -90,10 +90,11 @@ public class GPS extends Objet{
 				setItem(IsCreator.createItemStack(Material.COMPASS, 1, ChatColor.RED+"Distance: "+
 				ChatColor.AQUA+Math.round(getOwner().getLocation().distance(hit.getLocation()))+
 				ChatColor.RED+"m", ObjetsList.GPS.getInShopLore()));
-				return;
+			}else {
+				Vi6Sound.ERROR.playForPlayer(getOwner());
+				consume();
+				disable();
 			}
-			Vi6Sound.ERROR.playForPlayer(getOwner());
-			destroy();
 		}
 	}
 }

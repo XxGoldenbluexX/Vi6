@@ -66,6 +66,7 @@ public class DeadRinger extends Objet{
 		if(getOwner().equals(e.getEntity()) && (getOwner().getInventory().contains(getDisplayedItem())) 
 		&& getOwner().getHealth()-e.getFinalDamage()<=0) {
 			consume();
+			disable();
 			e.setDamage(0.01);
 			getOwnerWrapper().addStatusEffect(Invisible);
 			getOwnerWrapper().addStatusEffect(NoDamage);

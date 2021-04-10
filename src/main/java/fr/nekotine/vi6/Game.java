@@ -3,9 +3,6 @@ package fr.nekotine.vi6;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Date;
 import java.sql.Time;
-import java.text.ParseException;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -113,7 +110,7 @@ public class Game implements Listener {
 	
 	private final Vi6Main main;
 	private int idPartie;
-	private String startTime;
+	private long startTime;
 	private final Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
 	private final Objective scoreboardSidebar;
 	private final org.bukkit.scoreboard.Team thiefTeam;
@@ -423,6 +420,8 @@ public class Game implements Listener {
 			for (PotionEffectType effect : PotionEffectType.values())
 				player.removePotionEffect(effect);
 			player.getInventory().clear();
+			player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20);
+			player.setWalkSpeed(0.2f);
 			player.setGameMode(GameMode.ADVENTURE);
 			player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
 			player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 2147483647, 0, false, false, false));
@@ -487,7 +486,7 @@ public class Game implements Listener {
 		checkListThief = new CheckListThiefInventory(this, main);
 		checkListItem.give();
 		this.bossBarTicker.cancel();
-		this.startTime = LocalTime.now().toString();
+		this.startTime = System.currentTimeMillis();
 		this.scoreboardSidebar.setDisplaySlot(null);
 		this.defaultScanTime = this.main.getConfig().getInt("scanDelay", 600);
 		this.scanTime = this.main.getConfig().getInt("reducedScanDelay", this.defaultScanTime);
@@ -633,15 +632,9 @@ public class Game implements Listener {
 		if (this.state == GameState.Waiting)
 			return false;
 		if (this.state == GameState.Ingame && !forced)
-			try {
-				this.idPartie = SQLInterface.addPartie(Date.valueOf(LocalDate.now()),
-						new Time(SQLInterface.getTimeFormat().parse(LocalTime.now().toString()).getTime()
-								- SQLInterface.getTimeFormat().parse(this.startTime).getTime()),
-						this.money, this.isRanked, this.mapName);
-			} catch (ParseException e) {
-				this.idPartie = -1;
-				e.printStackTrace();
-			}
+			this.idPartie = SQLInterface.addPartie(new Date(System.currentTimeMillis()),
+					new Time(System.currentTimeMillis()-startTime),
+					this.money, this.isRanked, this.mapName);
 		this.scoreboardSidebar.setDisplaySlot(DisplaySlot.SIDEBAR);
 		if (this.bb.getPlayers().size() > 0)
 			this.bb.removeAll();
@@ -863,5 +856,9 @@ public class Game implements Listener {
 	@EventHandler
 	public void itemFrameBreak(HangingBreakEvent e) {
 		if(state!=GameState.Waiting) e.setCancelled(true);
+	}
+	
+	public long getStartTime() {
+		return startTime;
 	}
 }

@@ -91,7 +91,8 @@ public class Ombre extends Objet {
 			getOwner().teleport((Entity) this.ombre);
 			this.ombre.remove();
 			this.ombre = null;
-			destroy();
+			consume();
+			disable();
 		}
 	}
 

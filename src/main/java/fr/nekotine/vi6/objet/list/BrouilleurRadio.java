@@ -82,6 +82,7 @@ public class BrouilleurRadio extends Objet{
 				repeatCount++;
 			}
 		}.runTaskTimer(getMain(), 8, 0);
-		destroy();
+		consume();
+		disable();
 	}
 }

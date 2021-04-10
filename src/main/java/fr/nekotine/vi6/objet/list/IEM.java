@@ -74,6 +74,7 @@ public class IEM extends Objet{
 				}
 			}
 		}.runTaskLater(getMain(), JAM_DURATION_TICKS);
-		destroy();
+		consume();
+		disable();
 	}
 }

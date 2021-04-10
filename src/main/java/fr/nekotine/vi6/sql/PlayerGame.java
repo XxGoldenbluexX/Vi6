@@ -1,23 +1,25 @@
 package fr.nekotine.vi6.sql;
 
 import java.sql.Time;
-import java.text.ParseException;
-import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.UUID;
 
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
 
+import fr.nekotine.vi6.Vi6Main;
+import fr.nekotine.vi6.enums.PlayerState;
 import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.events.GameEndEvent;
-import fr.nekotine.vi6.events.PlayerChangeRoomEvent;
 import fr.nekotine.vi6.events.PlayerEnterMapEvent;
 import fr.nekotine.vi6.events.PlayerEscapeEvent;
 import fr.nekotine.vi6.events.PlayerStealEvent;
 import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.utils.Objet;
+import fr.nekotine.vi6.wrappers.PlayerWrapper;
 
 /**
  * Made from Game, this class is used to move information to the SQLInterface
@@ -71,11 +73,7 @@ public class PlayerGame implements Listener{
 	@EventHandler
 	public void playerStealArtefact(PlayerStealEvent e) {
 		if(e.getPlayer().getUniqueId()==playerUUID) {
-			try {
-				artefactStolen.put(e.getArtefact().getName(), new Time(SQLInterface.getTimeFormat().parse(LocalTime.now().toString()).getTime()));
-			} catch (ParseException e1) {
-				e1.printStackTrace();
-			}
+			artefactStolen.put(e.getArtefact().getName(), new Time(System.currentTimeMillis()-e.getGame().getStartTime()));
 		}
 	}
 	@EventHandler
@@ -85,11 +83,17 @@ public class PlayerGame implements Listener{
 		}
 	}
 	@EventHandler
-	public void playerChangeRoom(PlayerChangeRoomEvent e) {
-		if(e.getGame().getName()==gameName && e.getPlayer().getUniqueId().equals(playerUUID)) salleMort=e.getRoom();
-	}
-	@EventHandler
 	public void playerLeaveMap(PlayerEscapeEvent e) {
 		if(e.getGame().getName()==gameName && e.getPlayer().getUniqueId().equals(playerUUID)) sortie=e.getSortie().getDisplayName();
+	}
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void playerDeath(PlayerDeathEvent e) {
+		PlayerWrapper wrap = Vi6Main.getGame(gameName).getWrapper(e.getEntity());
+		if(e.getEntity().getUniqueId()==playerUUID && wrap.getState()==PlayerState.INSIDE) {
+			salleMort=wrap.getCurrentSalle();
+			if(e.getEntity().getKiller()!=null) {
+				tueurUUID=e.getEntity().getKiller().getUniqueId();
+			}
+		}
 	}
 }
