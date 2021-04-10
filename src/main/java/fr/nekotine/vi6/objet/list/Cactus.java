@@ -10,6 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
@@ -73,6 +74,8 @@ public class Cactus extends Objet {
 
 	public void disable() {
 		super.disable();
-		getOwner().getInventory().remove(CATCUS);
+		PlayerInventory inv = getOwner().getInventory();
+		if (CATCUS.isSimilar(inv.getBoots()))
+			inv.setBoots(null);
 	}
 }
