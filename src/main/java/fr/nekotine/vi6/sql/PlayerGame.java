@@ -16,7 +16,8 @@ import fr.nekotine.vi6.events.PlayerChangeRoomEvent;
 import fr.nekotine.vi6.events.PlayerEnterMapEvent;
 import fr.nekotine.vi6.events.PlayerEscapeEvent;
 import fr.nekotine.vi6.events.PlayerStealEvent;
-import fr.nekotine.vi6.events.PlayerUseObjetEvent;
+import fr.nekotine.vi6.objet.ObjetsList;
+import fr.nekotine.vi6.objet.utils.Objet;
 
 /**
  * Made from Game, this class is used to move information to the SQLInterface
@@ -35,9 +36,7 @@ public class PlayerGame implements Listener{
 	private String sortie;
 	private UUID tueurUUID;
 	private String salleMort;
-	
 	private HashMap<String, Time> artefactStolen = new HashMap<>();
-	private HashMap<String, Time> objectUsed = new HashMap<>();
 
 	public PlayerGame(String gameName, UUID playerUUID, Team team) {
 		this.gameName=gameName;
@@ -52,20 +51,20 @@ public class PlayerGame implements Listener{
 				for(String artefactName : artefactStolen.keySet()) {
 					SQLInterface.addStealEntry(artefactName, idPartieJoueur, artefactStolen.get(artefactName));
 				}
-				for(String objetName : objectUsed.keySet()) {
-					SQLInterface.addStealEntry(objetName, idPartieJoueur, objectUsed.get(objetName));
+				HashMap<ObjetsList, Integer> objectUsed = new HashMap<>();
+				for(Objet obj : e.getGame().getObjets()) {
+					if(obj.getOwner().getUniqueId()==playerUUID) {
+						if(objectUsed.containsKey(obj.getObjetType())){
+							objectUsed.replace(obj.getObjetType(), objectUsed.get(obj.getObjetType())+1);
+						}else {
+							objectUsed.put(obj.getObjetType(), 1);
+						}
+					}
+				}
+				for(ObjetsList objet : objectUsed.keySet()) {
+					SQLInterface.addUtiliseEntry(idPartieJoueur, objet.toString(), objectUsed.get(objet));
 				}
 			HandlerList.unregisterAll(this);
-			}
-		}
-	}
-	@EventHandler
-	public void playerUseObjet(PlayerUseObjetEvent e) {
-		if(e.getPlayer().getUniqueId()==playerUUID) {
-			try {
-				objectUsed.put(e.getObjet().name(), new Time(SQLInterface.getTimeFormat().parse(LocalTime.now().toString()).getTime()));
-			} catch (ParseException e1) {
-				e1.printStackTrace();
 			}
 		}
 	}

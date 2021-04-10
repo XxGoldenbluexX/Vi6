@@ -69,8 +69,8 @@ public class SQLInterface {
 				sql = "CREATE TABLE Utilise("
 						+ "Nom_Objet VARCHAR(50),"
 						+ "Id_PartieJoueur INT,"
-						+ "Temps TIME,"
-						+ "PRIMARY KEY(Nom_Objet, Id_PartieJoueur, Temps),"
+						+ "Nombre INT,"
+						+ "PRIMARY KEY(Nom_Objet, Id_PartieJoueur),"
 						+ "FOREIGN KEY(Id_PartieJoueur) REFERENCES PartieJoueur(Id_PartieJoueur));";
 				sttmt.executeUpdate(sql);
 				sttmt.close();
@@ -158,15 +158,15 @@ public class SQLInterface {
 			e.printStackTrace();
 		}
 	}
-	public static void addUtiliseEntry(int idPartieJoueur, String objetName, Time temps) {
+	public static void addUtiliseEntry(int idPartieJoueur, String objetName, int nombre) {
 		try {
 			Connection c = DriverManager.getConnection("jdbc:sqlite:"+dataFolderURL+"/Vi6Database.db");
-			String sql = "INSERT INTO Utilise (Id_PartieJoueur,Nom_Objet,Temps) "+ 
+			String sql = "INSERT INTO Utilise (Id_PartieJoueur,Nom_Objet,Nombre) "+ 
 							"VALUES (?,?,?);";
 			PreparedStatement prepa = c.prepareStatement(sql);
 			prepa.setInt(1, idPartieJoueur);
 			prepa.setString(2, objetName);
-			prepa.setTime(3, temps);
+			prepa.setInt(3, nombre);
 			prepa.executeUpdate();
 			prepa.close();
 			c.close();
