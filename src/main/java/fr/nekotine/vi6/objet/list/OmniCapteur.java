@@ -14,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
+import fr.nekotine.vi6.enums.PlayerState;
 import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
@@ -75,7 +76,7 @@ public class OmniCapteur extends Objet{
 	public void onPlayerMove(PlayerMoveEvent e) {
 		PlayerWrapper w = getGame().getWrapper(e.getPlayer());
 		if(omni!=null && w!=null) {
-			if(getGame().getPlayerTeam(e.getPlayer())==Team.VOLEUR) {
+			if(w.getTeam()==Team.VOLEUR && w.getState()==PlayerState.INSIDE) {
 				boolean glowable = omni.getLocation().distanceSquared(e.getTo())<=SQUARED_BLOCK_RANGE && !w.haveEffect(Effects.Fantomatique);
 				if(glowed.contains(e.getPlayer())) {
 					if(!glowable) {

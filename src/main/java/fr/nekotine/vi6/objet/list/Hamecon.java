@@ -55,8 +55,8 @@ public class Hamecon extends Objet{
 	@EventHandler
 	public void fishing(PlayerFishEvent e) {
 		if(e.getState()==State.BITE
-		&& super.getDisplayedItem().isSimilar(e.getPlayer().getInventory().getItemInMainHand()) 
-		|| (e.getPlayer().getInventory().getItemInMainHand().getType()!=Material.FISHING_ROD && super.getDisplayedItem().isSimilar(e.getPlayer().getInventory().getItemInOffHand()))) {
+		&& (super.getDisplayedItem().isSimilar(e.getPlayer().getInventory().getItemInMainHand()) 
+		|| (e.getPlayer().getInventory().getItemInMainHand().getType()!=Material.FISHING_ROD && super.getDisplayedItem().isSimilar(e.getPlayer().getInventory().getItemInOffHand())))) {
 			e.getHook().remove();
 			Vi6Sound.ERROR.playForPlayer(getOwner());
 		}

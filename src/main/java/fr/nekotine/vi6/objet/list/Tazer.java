@@ -16,6 +16,7 @@ import com.destroystokyo.paper.event.entity.ProjectileCollideEvent;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
+import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.objet.utils.Objet;
@@ -64,7 +65,9 @@ public class Tazer extends Objet{
 	@EventHandler
 	public void projectileCollide(ProjectileCollideEvent e) {
 		if(projectileList.contains(e.getEntity())) {
-			if(e.getCollidedWith() instanceof Player) {
+			;
+			if(e.getCollidedWith() instanceof Player 
+			&& getGame().getPlayerTeam((Player)e.getCollidedWith())==Team.VOLEUR) {
 				projectileList.remove(e.getEntity());
 				e.getEntity().remove();
 				Player hit = (Player)e.getCollidedWith();

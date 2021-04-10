@@ -14,6 +14,7 @@ import org.bukkit.inventory.meta.CrossbowMeta;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
+import fr.nekotine.vi6.enums.PlayerState;
 import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.objet.utils.Objet;
@@ -67,10 +68,12 @@ public class GPS extends Objet{
 	public void action(PlayerInteractEvent e) {
 		if(e.getAction()==Action.RIGHT_CLICK_AIR || e.getAction()==Action.RIGHT_CLICK_BLOCK) {
 			e.setCancelled(true);
-			arrow = getOwner().launchProjectile(Arrow.class, getOwner().getEyeLocation().getDirection());
-			arrow.setVelocity(arrow.getVelocity().multiply(3));
-			Vi6Sound.GPS_SHOOT.playForPlayer(getOwner());
-			consume();
+			if(getOwnerWrapper().getState()==PlayerState.INSIDE) {
+				arrow = getOwner().launchProjectile(Arrow.class, getOwner().getEyeLocation().getDirection());
+				arrow.setVelocity(arrow.getVelocity().multiply(3));
+				Vi6Sound.GPS_SHOOT.playForPlayer(getOwner());
+				consume();
+			}
 		}
 	}
 
