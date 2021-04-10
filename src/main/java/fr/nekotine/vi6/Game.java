@@ -245,7 +245,6 @@ public class Game implements Listener {
 					if(o.getObjetType().getLimit()>0 && getPlayerObjetCount(p, o.getObjetType())>=o.getObjetType().getLimit()) {
 						event.setCancelled(true);
 					}else {
-						p.sendMessage("Count "+getPlayerObjetCount(p, o.getObjetType()));
 						o.setNewOwner(p, w);
 					}
 				}

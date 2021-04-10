@@ -66,13 +66,15 @@ public class GPS extends Objet{
 
 	@Override
 	public void action(PlayerInteractEvent e) {
-		if(e.getAction()==Action.RIGHT_CLICK_AIR || e.getAction()==Action.RIGHT_CLICK_BLOCK) {
-			e.setCancelled(true);
-			if(getOwnerWrapper().getState()==PlayerState.INSIDE) {
-				arrow = getOwner().launchProjectile(Arrow.class, getOwner().getEyeLocation().getDirection());
-				arrow.setVelocity(arrow.getVelocity().multiply(3));
-				Vi6Sound.GPS_SHOOT.playForPlayer(getOwner());
-				consume();
+		if(arrow==null) {
+			if(e.getAction()==Action.RIGHT_CLICK_AIR || e.getAction()==Action.RIGHT_CLICK_BLOCK) {
+				e.setCancelled(true);
+				if(getOwnerWrapper().getState()==PlayerState.INSIDE) {
+					arrow = getOwner().launchProjectile(Arrow.class, getOwner().getEyeLocation().getDirection());
+					arrow.setVelocity(arrow.getVelocity().multiply(3));
+					Vi6Sound.GPS_SHOOT.playForPlayer(getOwner());
+					consume();
+				}
 			}
 		}
 	}
