@@ -186,7 +186,7 @@ public enum ObjetsList {
 	PIEGE_A_DENTS(PiegeADents.class,Team.GARDE,200,0,
 			ChatColor.DARK_GRAY+"Piège à dents",Material.DRAGON_HEAD,
 			ChatColor.LIGHT_PURPLE+"Vous pouvez placer un piège a dents",
-			ChatColor.LIGHT_PURPLE+"Il inflige "+ChatColor.RED+"3❤"+ChatColor.LIGHT_PURPLE+" de dégats."),
+			ChatColor.LIGHT_PURPLE+"Il inflige "+ChatColor.RED+PiegeADents.getBiteDamage()/2+"❤"+ChatColor.LIGHT_PURPLE+" de dégats."),
 	GLOBE_VOYANT(GlobeVoyant.class,
 			Team.GARDE,
 			200,
