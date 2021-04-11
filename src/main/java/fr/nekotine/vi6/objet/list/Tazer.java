@@ -24,7 +24,7 @@ import fr.nekotine.vi6.utils.Vi6Sound;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 
 public class Tazer extends Objet{
-	private static final int COOLDOWN=100;
+	private static final int COOLDOWN=200;
 	private ArrayList<Snowball> projectileList = new ArrayList<>();
 	public Tazer(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Game game, Player player, PlayerWrapper wrapper) {
 		super(main, objet, skin, game, player, wrapper);
