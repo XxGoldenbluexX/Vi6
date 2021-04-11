@@ -23,17 +23,20 @@ import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemFlag;
@@ -789,7 +792,7 @@ public class Game implements Listener {
 
 	@EventHandler
 	public void inventoryClick(InventoryClickEvent e) {
-		if (this.playerList.keySet().contains(e.getWhoClicked()) && e.getSlotType() == InventoryType.SlotType.ARMOR)
+		if (this.playerList.keySet().contains(e.getWhoClicked()) && e.getSlotType() == SlotType.ARMOR)
 			e.setCancelled(true);
 	}
 
@@ -859,5 +862,10 @@ public class Game implements Listener {
 	
 	public long getStartTime() {
 		return startTime;
+	}
+	
+	@EventHandler
+	public void entityDamageEvent(EntityDamageEvent e) {
+		if(state!=GameState.Waiting && (e.getEntity() instanceof ArmorStand || e.getEntity() instanceof Minecart)) e.setCancelled(true);
 	}
 }

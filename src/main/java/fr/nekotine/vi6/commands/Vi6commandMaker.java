@@ -1,5 +1,7 @@
 package fr.nekotine.vi6.commands;
 
+import java.util.Collection;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -117,9 +119,13 @@ public class Vi6commandMaker {
 	
 	private static CommandAPICommand gameJoinPlayer(Vi6Main mainref,Argument gameArgument) {
 		return new CommandAPICommand("join")
-				.withArguments(gameArgument,new EntitySelectorArgument("players", EntitySelector.MANY_ENTITIES).overrideSuggestions((sender)->{return Bukkit.getServer().getOnlinePlayers().stream().filter(e->mainref.getPlayerWrapper(e)==null).map((p)->{return p.getName();}).toArray(String[]::new);}))
+				.withArguments(gameArgument,new EntitySelectorArgument("players", EntitySelector.MANY_PLAYERS).overrideSuggestions((sender)->{return Bukkit.getServer().getOnlinePlayers().stream().filter(e->mainref.getPlayerWrapper(e)==null).map((p)->{return p.getName();}).toArray(String[]::new);}))
 				.executes((sender,args)->{
-					((Game)args[0]).addPlayer((Player)args[1]);
+					@SuppressWarnings("unchecked")
+					Collection<Player> players = (Collection<Player>) args[1];
+					for(Player player : players) {
+						((Game)args[0]).addPlayer(player);
+					}
 				});
 	}
 	
