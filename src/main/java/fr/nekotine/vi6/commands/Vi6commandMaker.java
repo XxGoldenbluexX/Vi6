@@ -10,10 +10,11 @@ import dev.jorel.commandapi.arguments.Argument;
 import dev.jorel.commandapi.arguments.CustomArgument;
 import dev.jorel.commandapi.arguments.CustomArgument.CustomArgumentException;
 import dev.jorel.commandapi.arguments.CustomArgument.MessageBuilder;
+import dev.jorel.commandapi.arguments.EntitySelectorArgument;
+import dev.jorel.commandapi.arguments.EntitySelectorArgument.EntitySelector;
 import dev.jorel.commandapi.arguments.GreedyStringArgument;
 import dev.jorel.commandapi.arguments.LocationArgument;
 import dev.jorel.commandapi.arguments.LocationType;
-import dev.jorel.commandapi.arguments.PlayerArgument;
 import dev.jorel.commandapi.arguments.StringArgument;
 import dev.jorel.commandapi.executors.CommandExecutor;
 import fr.nekotine.vi6.Game;
@@ -116,7 +117,7 @@ public class Vi6commandMaker {
 	
 	private static CommandAPICommand gameJoinPlayer(Vi6Main mainref,Argument gameArgument) {
 		return new CommandAPICommand("join")
-				.withArguments(gameArgument,new PlayerArgument("player").safeOverrideSuggestions((sender)->{return Bukkit.getServer().getOnlinePlayers().stream().filter(e->mainref.getPlayerWrapper(e)==null).toArray(Player[]::new);}))
+				.withArguments(gameArgument,new EntitySelectorArgument("players", EntitySelector.MANY_ENTITIES).overrideSuggestions((sender)->{return Bukkit.getServer().getOnlinePlayers().stream().filter(e->mainref.getPlayerWrapper(e)==null).map((p)->{return p.getName();}).toArray(String[]::new);}))
 				.executes((sender,args)->{
 					((Game)args[0]).addPlayer((Player)args[1]);
 				});
@@ -133,7 +134,7 @@ public class Vi6commandMaker {
 	private static CommandAPICommand gameLeavePlayer(Argument gameArgument) {
 		return new CommandAPICommand("leave")
 				.withArguments(gameArgument,
-				new PlayerArgument("player").safeOverrideSuggestions((sender,args)->{return ((Game)args[0]).getPlayerMap().keySet().toArray(Player[]::new);}))
+				new EntitySelectorArgument("players", EntitySelector.MANY_ENTITIES).overrideSuggestions((sender,args)->{return ((Game)args[0]).getPlayerMap().keySet().stream().map((Player p)->{return p.getName();}).toArray(String[]::new);}))
 				.executesPlayer((sender,args)->{
 					((Game)args[0]).removePlayer((Player)args[1]);
 				});
