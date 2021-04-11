@@ -123,7 +123,7 @@ public class GlobeVoyant extends Objet{
 		if(eye!=null) eye.remove();
 	}
 	private void use() {
-		ArrayList<Artefact> artefactList = getGame().getMap().getArtefactList();
+		ArrayList<Artefact> artefactList = new ArrayList<>(getGame().getMap().getArtefactList());
 		for(Objet obj : super.getGame().getObjets()) {
 			if(obj instanceof GlobeVoyant) {
 				GlobeVoyant gv = (GlobeVoyant)obj;
