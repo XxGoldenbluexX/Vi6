@@ -209,7 +209,11 @@ public abstract class Objet implements Listener {
 		if (slot >= 0) {
 			pinv.setItem(slot, displayedItem);
 		} else {
-			pinv.addItem(displayedItem);
+			if (current.isSimilar(pinv.getItemInOffHand())) {
+				pinv.setItemInOffHand(displayedItem);
+			}else {
+				pinv.addItem(displayedItem);
+			}
 		}
 
 	}
