@@ -140,9 +140,13 @@ public class Vi6commandMaker {
 	private static CommandAPICommand gameLeavePlayer(Argument gameArgument) {
 		return new CommandAPICommand("leave")
 				.withArguments(gameArgument,
-				new EntitySelectorArgument("players", EntitySelector.MANY_ENTITIES).overrideSuggestions((sender,args)->{return ((Game)args[0]).getPlayerMap().keySet().stream().map((Player p)->{return p.getName();}).toArray(String[]::new);}))
+				new EntitySelectorArgument("players", EntitySelector.MANY_PLAYERS).overrideSuggestions((sender,args)->{return ((Game)args[0]).getPlayerMap().keySet().stream().map((Player p)->{return p.getName();}).toArray(String[]::new);}))
 				.executesPlayer((sender,args)->{
-					((Game)args[0]).removePlayer((Player)args[1]);
+					@SuppressWarnings("unchecked")
+					Collection<Player> players = (Collection<Player>) args[1];
+					for(Player player : players) {
+						((Game)args[0]).addPlayer(player);
+					}
 				});
 	}
 	
