@@ -259,7 +259,7 @@ public class Vi6commandMaker {
 						String dname = (String)args[2];
 						Location minmap = (Location)args[3];
 						Location spwn = (Location)args[4];
-						map.getThiefSpawnsList().add(new SpawnVoleur(name,dname,spwn,minmap));
+						map.getThiefSpawnsList().add(new SpawnVoleur(name,dname,spwn.add(0.5, 0, 0.5),minmap.add(0.5, 0, 0.5)));
 						Carte.save(map);
 						player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_addThiefSpawn_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", name)));
 					}
