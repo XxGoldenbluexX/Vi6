@@ -434,7 +434,7 @@ public class Game implements Listener {
 			player.setGameMode(GameMode.ADVENTURE);
 			player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
 			player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 2147483647, 0, false, false, false));
-			
+			wrapper.setEscaped(false);
 			wrapper.setReady(false);
 			wrapper.setMoney(this.money);
 			wrapper.setState(PlayerState.PREPARATION);
