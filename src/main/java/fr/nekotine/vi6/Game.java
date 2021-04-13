@@ -187,6 +187,10 @@ public class Game implements Listener {
 		this.guardTeam.setCanSeeFriendlyInvisibles(true);
 		this.thiefTeam.setOption(org.bukkit.scoreboard.Team.Option.NAME_TAG_VISIBILITY,org.bukkit.scoreboard.Team.OptionStatus.NEVER);
 		this.guardTeam.setOption(org.bukkit.scoreboard.Team.Option.NAME_TAG_VISIBILITY,org.bukkit.scoreboard.Team.OptionStatus.NEVER);
+		this.thiefTeam.setOption(org.bukkit.scoreboard.Team.Option.COLLISION_RULE,org.bukkit.scoreboard.Team.OptionStatus.NEVER);
+		this.guardTeam.setOption(org.bukkit.scoreboard.Team.Option.COLLISION_RULE,org.bukkit.scoreboard.Team.OptionStatus.NEVER);
+		
+		
 		thiefTeam.color(NamedTextColor.RED);
 		guardTeam.color(NamedTextColor.BLUE);
 		
