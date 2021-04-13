@@ -7,6 +7,7 @@ import java.util.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
@@ -128,6 +129,11 @@ public class Artefact implements ConfigurationSerializable,ZoneDetectionListener
 	
 	public void tick(Game g) {
 		if (status!=CaptureState.STEALABLE || !g.isCanCapture()) return;
+		if(status==CaptureState.STEALABLE) {
+			blockLoc.getWorld().spawnParticle(Particle.COMPOSTER, blockLoc, 1, 1, 1, 1);
+		}else {
+			blockLoc.getWorld().spawnParticle(Particle.SPELL_WITCH, blockLoc, 1, 1, 1, 1);
+		}
 		ArrayList<Player> voleurInside = voleurInsideList();
 		if (voleurInside.size()>0) {
 			if (nbGuardInside<=0) {
