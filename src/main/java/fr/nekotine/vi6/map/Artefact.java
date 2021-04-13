@@ -130,9 +130,9 @@ public class Artefact implements ConfigurationSerializable,ZoneDetectionListener
 	public void tick(Game g) {
 		if (status!=CaptureState.STEALABLE || !g.isCanCapture()) return;
 		if(status==CaptureState.STEALABLE) {
-			blockLoc.getWorld().spawnParticle(Particle.COMPOSTER, blockLoc, 1, 1, 1, 1);
+			blockLoc.getWorld().spawnParticle(Particle.COMPOSTER, blockLoc, 2, 0.5, 0.5, 0.5);
 		}else {
-			blockLoc.getWorld().spawnParticle(Particle.SPELL_WITCH, blockLoc, 1, 1, 1, 1);
+			blockLoc.getWorld().spawnParticle(Particle.SPELL_WITCH, blockLoc.clone().subtract(0, 0.5, 0), 1, 0.5, 0.5, 0.5);
 		}
 		ArrayList<Player> voleurInside = voleurInsideList();
 		if (voleurInside.size()>0) {
