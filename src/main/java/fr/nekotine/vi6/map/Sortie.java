@@ -84,6 +84,7 @@ public class Sortie implements ConfigurationSerializable, ZoneDetectionListener 
 			if (wrap.getTeam() == Team.VOLEUR) {
 				if (wrap.getState() == PlayerState.INSIDE && wrap.isCanEscape()) {
 					wrap.setState(PlayerState.LEAVED);
+					wrap.setEscaped(true);
 					player.setGameMode(GameMode.SPECTATOR);
 					Bukkit.getPluginManager().callEvent(new PlayerEscapeEvent(this, player, wrap.getGame()));
 					for (ItemStack itm : player.getInventory().getContents()) {

@@ -648,6 +648,7 @@ public class Game implements Listener {
 		if (this.bb.getPlayers().size() > 0)
 			this.bb.removeAll();
 		int totalVole = 0;
+		int totalSecurise = 0;
 		Majordom.instance.setEnabled(false);
 		for (Map.Entry<Player, PlayerWrapper> p : this.playerList.entrySet()) {
 			((Player) p.getKey()).setGameMode(GameMode.SPECTATOR);
@@ -666,15 +667,18 @@ public class Game implements Listener {
 			}else {
 				thiefTeam.removeEntry(((Player) p.getKey()).getName());
 				sendPacketToTeam(Team.VOLEUR, getUnglowPacket(p.getKey()));
+				totalVole += ((PlayerWrapper) p.getValue()).getStealedArtefactList().size();
+				if(p.getValue().isEscaped()) totalSecurise+=p.getValue().getStealedArtefactList().size();
 			}
 			((Player) p.getKey()).removePotionEffect(PotionEffectType.NIGHT_VISION);
 			for (Player player : this.playerList.keySet())
 				player.showPlayer((Plugin) this.main, p.getKey());
-			totalVole += ((PlayerWrapper) p.getValue()).getStealedArtefactList().size();
+			
 		}
 		for (Player p : this.playerList.keySet()) {
 			p.sendMessage((Component) MessageFormater.formatWithColorCodes('§', DisplayTexts.getMessage("game_end"),
-					new MessageFormater[]{new MessageFormater("§n", String.valueOf(totalVole))}));
+					new MessageFormater[]{new MessageFormater("§n", String.valueOf(totalVole)), 
+							new MessageFormater("§s",  String.valueOf(totalSecurise))}));
 		}
 		this.gameTicker.cancel();
 		this.bossBarTicker.cancel();

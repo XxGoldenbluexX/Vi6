@@ -35,6 +35,7 @@ public class PlayerWrapper {
 	private boolean canCapture = false;
 	private boolean canEscape = false;
 	private ArrayList<ObjetsSkins> selectedSkins = new ArrayList<>();
+	private boolean escaped=false;
 
 	public PlayerWrapper(Game game, Player player) {
 		this.game = game;
@@ -220,5 +221,13 @@ public class PlayerWrapper {
 			if (haveEffect(countered))
 				countered.disable(this.player, this);
 		}
+	}
+
+	public boolean isEscaped() {
+		return escaped;
+	}
+
+	public void setEscaped(boolean escaped) {
+		this.escaped = escaped;
 	}
 }
