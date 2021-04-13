@@ -30,6 +30,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
@@ -38,6 +39,7 @@ import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -62,6 +64,7 @@ import com.comphenix.protocol.wrappers.Pair;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher.Registry;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher.Serializer;
+import com.destroystokyo.paper.event.entity.EntityTeleportEndGatewayEvent;
 
 import fr.nekotine.vi6.enums.GameState;
 import fr.nekotine.vi6.enums.PlayerState;
@@ -871,5 +874,15 @@ public class Game implements Listener {
 	@EventHandler
 	public void entityDamageEvent(EntityDamageEvent e) {
 		if(state!=GameState.Waiting && (e.getEntity() instanceof ArmorStand || e.getEntity() instanceof Minecart)) e.setCancelled(true);
+	}
+	
+	@EventHandler
+	public void interactEvent(PlayerInteractEvent e) {
+		if(e.getAction()==Action.RIGHT_CLICK_BLOCK && e.getClickedBlock().getType()==Material.RESPAWN_ANCHOR) e.setCancelled(true);
+		
+	}
+	@EventHandler
+	public void endGateway(EntityTeleportEndGatewayEvent e) {
+		if(!(e.getEntity() instanceof Player)) e.setCancelled(true);	
 	}
 }
