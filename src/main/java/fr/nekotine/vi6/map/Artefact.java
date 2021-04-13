@@ -26,6 +26,8 @@ import fr.nekotine.vi6.utils.MessageFormater;
 import fr.nekotine.vi6.utils.ZoneDetectionListener;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 import fr.nekotine.vi6.yml.DisplayTexts;
+import net.kyori.adventure.text.Component;
+import net.md_5.bungee.api.ChatColor;
 
 @SerializableAs("Artefact")
 public class Artefact implements ConfigurationSerializable,ZoneDetectionListener{
@@ -98,6 +100,13 @@ public class Artefact implements ConfigurationSerializable,ZoneDetectionListener
 		if (zone.equals(zone)) {
 			PlayerWrapper w = mainref.getPlayerWrapper(player);
 			if (w!=null && (w.getState()==PlayerState.INSIDE || w.getState()==PlayerState.PREPARATION)) {
+				if(status==CaptureState.STEALABLE) {
+					player.sendActionBar(Component.text("Artéfact: "+ChatColor.AQUA+displayName+
+					ChatColor.WHITE+" Status: "+ChatColor.GREEN+"Sécurisé"));
+				}else {
+					player.sendActionBar(Component.text("Artéfact: "+ChatColor.AQUA+displayName+
+					ChatColor.WHITE+" Status: "+ChatColor.RED+"Volé"));
+				}
 				switch (w.getTeam()) {
 				case GARDE:
 					nbGuardInside++;
@@ -128,12 +137,13 @@ public class Artefact implements ConfigurationSerializable,ZoneDetectionListener
 	}
 	
 	public void tick(Game g) {
-		if (status!=CaptureState.STEALABLE || !g.isCanCapture()) return;
+		Location particleLoc = blockLoc.clone().add(0.5, 0, 0.5);
 		if(status==CaptureState.STEALABLE) {
-			blockLoc.getWorld().spawnParticle(Particle.COMPOSTER, blockLoc, 2, 0.5, 0.5, 0.5);
+			particleLoc.getWorld().spawnParticle(Particle.COMPOSTER, particleLoc, 2, 0.5, 0.5, 0.5);
 		}else {
-			blockLoc.getWorld().spawnParticle(Particle.SPELL_WITCH, blockLoc.clone().subtract(0, 0.5, 0), 1, 0.5, 0.5, 0.5);
+			particleLoc.getWorld().spawnParticle(Particle.SPELL_WITCH, particleLoc.subtract(0, 0.5, 0), 1, 0.5, 0.5, 0.5, 0);
 		}
+		if (status!=CaptureState.STEALABLE || !g.isCanCapture()) return;
 		ArrayList<Player> voleurInside = voleurInsideList();
 		if (voleurInside.size()>0) {
 			if (nbGuardInside<=0) {
