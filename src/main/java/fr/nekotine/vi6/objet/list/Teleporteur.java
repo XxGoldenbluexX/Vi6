@@ -7,13 +7,9 @@ import org.bukkit.block.BlockState;
 import org.bukkit.block.EndGateway;
 import org.bukkit.block.ShulkerBox;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
-
-import com.destroystokyo.paper.event.entity.EntityTeleportEndGatewayEvent;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
@@ -113,20 +109,5 @@ public class Teleporteur extends Objet {
 	private boolean onGround() {
 		return (!getOwner().isFlying()
 				&& getOwner().getLocation().subtract(0.0D, 0.1D, 0.0D).getBlock().getType().isSolid());
-	}
-	
-	@EventHandler
-	public void interactEvent(PlayerInteractEvent e) {
-		if(dropBlock!=null && e.getAction()==Action.RIGHT_CLICK_BLOCK && e.getClickedBlock().equals(dropBlock.getBlock())) {
-			e.setCancelled(true);
-		}
-	}
-	
-	@EventHandler
-	public void endGateway(EntityTeleportEndGatewayEvent e) {
-		if(portalTp!=null && !(e.getEntity() instanceof Player) && portalTp.getBlock().equals(e.getGateway().getBlock())) {
-			e.setCancelled(true);
-		}
-			
 	}
 }

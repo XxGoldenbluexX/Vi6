@@ -40,8 +40,10 @@ public class BuissonFurtif extends Objet {
 	private final StatusEffect INVISIBLE = new StatusEffect(Effects.Invisible);
 	private final StatusEffect DECOUVERT = new StatusEffect(Effects.Decouvert);
 	
+	private TempBlock bush1_grass;
 	private TempBlock bush1_bot;
 	private TempBlock bush1_top;
+	private TempBlock bush2_grass;
 	private TempBlock bush2_bot;
 	private TempBlock bush2_top;
 	private byte nbBush = 0;
@@ -56,10 +58,14 @@ public class BuissonFurtif extends Objet {
 
 	public void destroy() {
 		super.destroy();
+		if (this.bush1_grass != null) 
+			this.bush1_grass.reset();
 		if (this.bush1_bot != null)
 			this.bush1_bot.reset();
 		if (this.bush1_top != null)
 			this.bush1_top.reset();
+		if (this.bush2_grass != null) 
+			this.bush2_grass.reset();
 		if (this.bush2_bot != null)
 			this.bush2_bot.reset();
 		if (this.bush2_top != null)
@@ -94,15 +100,20 @@ public class BuissonFurtif extends Objet {
 	}
 
 	private boolean placeBush(Location loc) {
+		Block blockUnder = loc.clone().subtract(0, 1, 0).getBlock();
 		Block blockBot = loc.getBlock();
 		Block blockTop = loc.clone().add(0.0D, 1.0D, 0.0D).getBlock();
 		if (this.nbBush < 2 && onGround() && blockBot.getType() == Material.AIR && blockTop.getType() == Material.AIR) {
 			if (this.nbBush == 0) {
+				this.bush1_grass = (new TempBlock(blockUnder, Bukkit.createBlockData(Material.GRASS_BLOCK)))
+						.set();
 				this.bush1_top = (new TempBlock(blockTop, Bukkit.createBlockData(Material.TALL_GRASS, "[half=upper]")))
 						.set();
 				this.bush1_bot = (new TempBlock(blockBot, Bukkit.createBlockData(Material.TALL_GRASS, "[half=lower]")))
 						.set();
 			} else {
+				this.bush2_grass = (new TempBlock(blockUnder, Bukkit.createBlockData(Material.GRASS_BLOCK)))
+						.set();
 				this.bush2_top = (new TempBlock(blockTop, Bukkit.createBlockData(Material.TALL_GRASS, "[half=upper]")))
 						.set();
 				this.bush2_bot = (new TempBlock(blockBot, Bukkit.createBlockData(Material.TALL_GRASS, "[half=lower]")))

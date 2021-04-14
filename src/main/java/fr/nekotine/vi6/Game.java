@@ -30,6 +30,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
@@ -38,6 +39,7 @@ import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -62,6 +64,7 @@ import com.comphenix.protocol.wrappers.Pair;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher.Registry;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher.Serializer;
+import com.destroystokyo.paper.event.entity.EntityTeleportEndGatewayEvent;
 
 import fr.nekotine.vi6.enums.GameState;
 import fr.nekotine.vi6.enums.PlayerState;
@@ -187,6 +190,10 @@ public class Game implements Listener {
 		this.guardTeam.setCanSeeFriendlyInvisibles(true);
 		this.thiefTeam.setOption(org.bukkit.scoreboard.Team.Option.NAME_TAG_VISIBILITY,org.bukkit.scoreboard.Team.OptionStatus.NEVER);
 		this.guardTeam.setOption(org.bukkit.scoreboard.Team.Option.NAME_TAG_VISIBILITY,org.bukkit.scoreboard.Team.OptionStatus.NEVER);
+		this.thiefTeam.setOption(org.bukkit.scoreboard.Team.Option.COLLISION_RULE,org.bukkit.scoreboard.Team.OptionStatus.NEVER);
+		this.guardTeam.setOption(org.bukkit.scoreboard.Team.Option.COLLISION_RULE,org.bukkit.scoreboard.Team.OptionStatus.NEVER);
+		
+		
 		thiefTeam.color(NamedTextColor.RED);
 		guardTeam.color(NamedTextColor.BLUE);
 		
@@ -427,7 +434,7 @@ public class Game implements Listener {
 			player.setGameMode(GameMode.ADVENTURE);
 			player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
 			player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 2147483647, 0, false, false, false));
-			
+			wrapper.setEscaped(false);
 			wrapper.setReady(false);
 			wrapper.setMoney(this.money);
 			wrapper.setState(PlayerState.PREPARATION);
@@ -641,6 +648,7 @@ public class Game implements Listener {
 		if (this.bb.getPlayers().size() > 0)
 			this.bb.removeAll();
 		int totalVole = 0;
+		int totalSecurise = 0;
 		Majordom.instance.setEnabled(false);
 		for (Map.Entry<Player, PlayerWrapper> p : this.playerList.entrySet()) {
 			((Player) p.getKey()).setGameMode(GameMode.SPECTATOR);
@@ -659,15 +667,18 @@ public class Game implements Listener {
 			}else {
 				thiefTeam.removeEntry(((Player) p.getKey()).getName());
 				sendPacketToTeam(Team.VOLEUR, getUnglowPacket(p.getKey()));
+				totalVole += ((PlayerWrapper) p.getValue()).getStealedArtefactList().size();
+				if(p.getValue().isEscaped()) totalSecurise+=p.getValue().getStealedArtefactList().size();
 			}
 			((Player) p.getKey()).removePotionEffect(PotionEffectType.NIGHT_VISION);
 			for (Player player : this.playerList.keySet())
 				player.showPlayer((Plugin) this.main, p.getKey());
-			totalVole += ((PlayerWrapper) p.getValue()).getStealedArtefactList().size();
+			
 		}
 		for (Player p : this.playerList.keySet()) {
 			p.sendMessage((Component) MessageFormater.formatWithColorCodes('§', DisplayTexts.getMessage("game_end"),
-					new MessageFormater[]{new MessageFormater("§n", String.valueOf(totalVole))}));
+					new MessageFormater[]{new MessageFormater("§n", String.valueOf(totalVole)), 
+							new MessageFormater("§s",  String.valueOf(totalSecurise))}));
 		}
 		this.gameTicker.cancel();
 		this.bossBarTicker.cancel();
@@ -867,5 +878,15 @@ public class Game implements Listener {
 	@EventHandler
 	public void entityDamageEvent(EntityDamageEvent e) {
 		if(state!=GameState.Waiting && (e.getEntity() instanceof ArmorStand || e.getEntity() instanceof Minecart)) e.setCancelled(true);
+	}
+	
+	@EventHandler
+	public void interactEvent(PlayerInteractEvent e) {
+		if(e.getAction()==Action.RIGHT_CLICK_BLOCK && e.getClickedBlock().getType()==Material.RESPAWN_ANCHOR) e.setCancelled(true);
+		
+	}
+	@EventHandler
+	public void endGateway(EntityTeleportEndGatewayEvent e) {
+		if(!(e.getEntity() instanceof Player)) e.setCancelled(true);	
 	}
 }

@@ -7,6 +7,7 @@ import java.util.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
@@ -25,6 +26,8 @@ import fr.nekotine.vi6.utils.MessageFormater;
 import fr.nekotine.vi6.utils.ZoneDetectionListener;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 import fr.nekotine.vi6.yml.DisplayTexts;
+import net.kyori.adventure.text.Component;
+import net.md_5.bungee.api.ChatColor;
 
 @SerializableAs("Artefact")
 public class Artefact implements ConfigurationSerializable,ZoneDetectionListener{
@@ -97,6 +100,13 @@ public class Artefact implements ConfigurationSerializable,ZoneDetectionListener
 		if (zone.equals(zone)) {
 			PlayerWrapper w = mainref.getPlayerWrapper(player);
 			if (w!=null && (w.getState()==PlayerState.INSIDE || w.getState()==PlayerState.PREPARATION)) {
+				if(status==CaptureState.STEALABLE) {
+					player.sendActionBar(Component.text("Artéfact: "+ChatColor.AQUA+displayName+
+					ChatColor.WHITE+" Status: "+ChatColor.GREEN+"Sécurisé"));
+				}else {
+					player.sendActionBar(Component.text("Artéfact: "+ChatColor.AQUA+displayName+
+					ChatColor.WHITE+" Status: "+ChatColor.RED+"Volé"));
+				}
 				switch (w.getTeam()) {
 				case GARDE:
 					nbGuardInside++;
@@ -127,6 +137,12 @@ public class Artefact implements ConfigurationSerializable,ZoneDetectionListener
 	}
 	
 	public void tick(Game g) {
+		Location particleLoc = blockLoc.clone().add(0.5, 0, 0.5);
+		if(status==CaptureState.STEALABLE) {
+			particleLoc.getWorld().spawnParticle(Particle.COMPOSTER, particleLoc, 2, 0.5, 0.5, 0.5);
+		}else {
+			particleLoc.getWorld().spawnParticle(Particle.SPELL_WITCH, particleLoc.subtract(0, 0.5, 0), 1, 0.5, 0.5, 0.5, 0);
+		}
 		if (status!=CaptureState.STEALABLE || !g.isCanCapture()) return;
 		ArrayList<Player> voleurInside = voleurInsideList();
 		if (voleurInside.size()>0) {

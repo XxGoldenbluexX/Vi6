@@ -57,6 +57,7 @@ public class Carte implements ConfigurationSerializable {
 		for (Sortie s : sorties) {s.destroy();}
 		for (Passage p : passages) {p.destroy();}
 		for (Artefact a : artefacts) {a.destroy();}
+		for (Gateway g : gateways) {g.forceOpen();}
 		for (SpawnVoleur sv : thiefSpawns) {sv.destroy();}
 	}
 	
