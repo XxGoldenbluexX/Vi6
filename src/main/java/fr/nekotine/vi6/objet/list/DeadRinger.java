@@ -69,13 +69,10 @@ public class DeadRinger extends Objet{
 			disable();
 			e.setDamage(0.01);
 			getOwnerWrapper().addStatusEffect(Invisible);
-			getOwnerWrapper().addStatusEffect(NoDamage);
 			new BukkitRunnable() {
 				@Override
 				public void run() {
 					getOwnerWrapper().addStatusEffect(NoDamage);
-					Location loc = getOwner().getLocation();
-					Vi6Sound.DEAD_RINGER.playAtLocation(loc);
 				}
 			}.runTaskLater(getMain(), 1);
 			for (Map.Entry<Player, PlayerWrapper> p : getGame().getPlayerMap().entrySet()) {
