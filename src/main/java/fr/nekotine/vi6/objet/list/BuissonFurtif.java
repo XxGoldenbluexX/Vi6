@@ -104,19 +104,20 @@ public class BuissonFurtif extends Objet {
 		Block blockBot = loc.getBlock();
 		Block blockTop = loc.clone().add(0.0D, 1.0D, 0.0D).getBlock();
 		if (this.nbBush < 2 && onGround() && blockBot.getType() == Material.AIR && blockTop.getType() == Material.AIR) {
+			Material bush = BUSHTYPE[(int) Math.floor(Math.random()*BUSHTYPE.length)];
 			if (this.nbBush == 0) {
 				this.bush1_grass = (new TempBlock(blockUnder, Bukkit.createBlockData(Material.GRASS_BLOCK)))
 						.set();
-				this.bush1_top = (new TempBlock(blockTop, Bukkit.createBlockData(Material.TALL_GRASS, "[half=upper]")))
+				this.bush1_top = (new TempBlock(blockTop, Bukkit.createBlockData(bush, "[half=upper]")))
 						.set();
-				this.bush1_bot = (new TempBlock(blockBot, Bukkit.createBlockData(Material.TALL_GRASS, "[half=lower]")))
+				this.bush1_bot = (new TempBlock(blockBot, Bukkit.createBlockData(bush, "[half=lower]")))
 						.set();
 			} else {
 				this.bush2_grass = (new TempBlock(blockUnder, Bukkit.createBlockData(Material.GRASS_BLOCK)))
 						.set();
-				this.bush2_top = (new TempBlock(blockTop, Bukkit.createBlockData(Material.TALL_GRASS, "[half=upper]")))
+				this.bush2_top = (new TempBlock(blockTop, Bukkit.createBlockData(bush, "[half=upper]")))
 						.set();
-				this.bush2_bot = (new TempBlock(blockBot, Bukkit.createBlockData(Material.TALL_GRASS, "[half=lower]")))
+				this.bush2_bot = (new TempBlock(blockBot, Bukkit.createBlockData(bush, "[half=lower]")))
 						.set();
 			}
 			this.nbBush = (byte) (this.nbBush + 1);
