@@ -760,6 +760,7 @@ public class Game implements Listener {
 			((PlayerWrapper) this.playerList.get(e.getEntity())).setState(PlayerState.LEAVED);
 			e.getEntity().setGameMode(GameMode.SPECTATOR);
 			for (Map.Entry<Player, PlayerWrapper> p : this.playerList.entrySet()) {
+				if(p.getValue().getTeam()==Team.GARDE) p.getKey().hidePlayer(main, e.getEntity());
 				p.getKey().sendMessage(MessageFormater.formatWithColorCodes('§', DisplayTexts.getMessage("game_death"),
 						new MessageFormater("§p", String.valueOf(e.getEntity().getName())),
 						new MessageFormater("§n", String.valueOf((this.playerList.get(e.getEntity())).getStealedArtefactList().size()))));
