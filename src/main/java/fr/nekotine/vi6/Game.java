@@ -26,9 +26,7 @@ import org.bukkit.boss.BossBar;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Minecart;
-import org.bukkit.entity.Painting;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Vehicle;
 import org.bukkit.event.EventHandler;
@@ -39,7 +37,6 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType.SlotType;
@@ -899,12 +896,14 @@ public class Game implements Listener {
 	
 	@EventHandler
 	public void vehicleDestroyEvent(VehicleDestroyEvent event) {
-		Vehicle v = event.getVehicle();
-		Entity ent = event.getAttacker();
-		if (ent instanceof Player) {
-			if (((Player)ent).getGameMode()==GameMode.ADVENTURE && v instanceof Minecart) {
-				event.setCancelled(true);
-				return;
+		if(state!=GameState.Waiting) {
+			Vehicle v = event.getVehicle();
+			Entity ent = event.getAttacker();
+			if (ent instanceof Player) {
+				if (((Player)ent).getGameMode()==GameMode.ADVENTURE && v instanceof Minecart) {
+					event.setCancelled(true);
+					return;
+				}
 			}
 		}
 	}
