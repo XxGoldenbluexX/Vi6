@@ -111,8 +111,8 @@ public class Lanterne extends Objet {
 	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent event) {
 		if (this.toShow.contains(event.getPlayer())) {
-			PlayerWrapper wrap = getMain().getPlayerWrapper(getOwner());
-			if (wrap != null && wrap.getState() == PlayerState.INSIDE && this.lantern1 != null
+			PlayerWrapper wrap = getMain().getPlayerWrapper(event.getPlayer());
+			if (wrap != null && wrap.getState() == PlayerState.INSIDE && this.lantern1 != null && getOwnerWrapper().getState()==PlayerState.INSIDE
 					&& event.getTo().distanceSquared(this.lantern1.getLoc()) <= LANTERN_CATCH_SQUARED_DISTANCE) {
 				Vi6Sound.LANTERNE_PRE_TELEPORT.playForPlayer(event.getPlayer());
 				event.getPlayer().teleport(getOwner().getLocation());
@@ -130,7 +130,7 @@ public class Lanterne extends Objet {
 				}
 				return;
 			}
-			if (wrap != null && wrap.getState() == PlayerState.INSIDE && this.lantern2 != null
+			if (wrap != null && wrap.getState() == PlayerState.INSIDE && this.lantern2 != null && getOwnerWrapper().getState()==PlayerState.INSIDE
 					&& event.getTo().distanceSquared(this.lantern2.getLoc()) <= LANTERN_CATCH_SQUARED_DISTANCE) {
 				event.getPlayer().teleport(getOwner().getLocation());
 				this.lantern2.destroy();
