@@ -24,9 +24,13 @@ import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Minecart;
+import org.bukkit.entity.Painting;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Vehicle;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
@@ -35,12 +39,14 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -889,5 +895,30 @@ public class Game implements Listener {
 	@EventHandler
 	public void endGateway(EntityTeleportEndGatewayEvent e) {
 		if(!(e.getEntity() instanceof Player)) e.setCancelled(true);	
+	}
+	
+	@EventHandler
+	public void HangingBreakEvent(HangingBreakByEntityEvent event) {
+		Entity ent = event.getEntity();
+		Entity destroyer = event.getRemover();
+		if ((ent instanceof Painting || ent instanceof ItemFrame)&&(destroyer instanceof Player)) {
+			if (((Player)event.getRemover()).getGameMode()==GameMode.ADVENTURE) {
+				event.setCancelled(true);
+				return;
+			}
+		}
+		return;
+	}
+	
+	@EventHandler
+	public void vehicleDestroyEvent(VehicleDestroyEvent event) {
+		Vehicle v = event.getVehicle();
+		Entity ent = event.getAttacker();
+		if (ent instanceof Player) {
+			if (((Player)ent).getGameMode()==GameMode.ADVENTURE && v instanceof Minecart) {
+				event.setCancelled(true);
+				return;
+			}
+		}
 	}
 }
