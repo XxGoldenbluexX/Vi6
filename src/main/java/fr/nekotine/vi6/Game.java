@@ -898,19 +898,6 @@ public class Game implements Listener {
 	}
 	
 	@EventHandler
-	public void HangingBreakEvent(HangingBreakByEntityEvent event) {
-		Entity ent = event.getEntity();
-		Entity destroyer = event.getRemover();
-		if ((ent instanceof Painting || ent instanceof ItemFrame)&&(destroyer instanceof Player)) {
-			if (((Player)event.getRemover()).getGameMode()==GameMode.ADVENTURE) {
-				event.setCancelled(true);
-				return;
-			}
-		}
-		return;
-	}
-	
-	@EventHandler
 	public void vehicleDestroyEvent(VehicleDestroyEvent event) {
 		Vehicle v = event.getVehicle();
 		Entity ent = event.getAttacker();
