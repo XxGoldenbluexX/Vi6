@@ -43,11 +43,10 @@ public class GPS extends Objet{
 			delay--;
 			if(delay==0) {
 				delay=UPDATE_DELAY_TICKS;
-				getOwner().setCompassTarget(tracked.getLocation());
 				setItem(IsCreator.createItemStack(Material.COMPASS, 1, ChatColor.RED+"Distance: "+
 				ChatColor.AQUA+Math.round(getOwner().getLocation().distance(tracked.getLocation()))+
 				ChatColor.RED+"m", ObjetsList.GPS.getInShopLore()));
-				
+				getOwner().setCompassTarget(tracked.getLocation());
 			}
 		}
 	}

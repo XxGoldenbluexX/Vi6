@@ -27,7 +27,7 @@ import fr.nekotine.vi6.wrappers.PlayerWrapper;
 import fr.nekotine.vi6.yml.DisplayTexts;
 
 public class OmniCapteur extends Objet{
-	private static final float SQUARED_BLOCK_RANGE=16;
+	private static final float SQUARED_BLOCK_RANGE=9;
 	private final ArrayList<Player> glowed = new ArrayList<>();
 	private final StatusEffect glowEffect = new StatusEffect(Effects.Glow);
 	private ArmorStand omni;
