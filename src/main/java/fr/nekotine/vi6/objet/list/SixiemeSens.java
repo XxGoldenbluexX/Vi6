@@ -15,6 +15,7 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
+import com.comphenix.protocol.events.PacketListener;
 import com.comphenix.protocol.wrappers.WrappedWatchableObject;
 
 import fr.nekotine.vi6.Game;
@@ -28,9 +29,10 @@ import fr.nekotine.vi6.wrappers.PlayerWrapper;
 public class SixiemeSens extends Objet{
 	private static int SQUARED_BLOCK_DISTANCE=36;
 	private ArrayList<Player> glowed = new ArrayList<>();
+	private final PacketListener plistener;
 	public SixiemeSens(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Game game, Player player, PlayerWrapper wrapper) {
 		super(main, objet, skin, game, player, wrapper);
-		ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(main,PacketType.Play.Server.ENTITY_METADATA) {
+		plistener = new PacketAdapter(main,PacketType.Play.Server.ENTITY_METADATA) {
 			@Override
 			public void onPacketSending(PacketEvent event) {
 				PacketContainer packet = event.getPacket();
@@ -57,7 +59,8 @@ public class SixiemeSens extends Objet{
 					}
 				}
 			}
-		});
+		};
+		ProtocolLibrary.getProtocolManager().addPacketListener(plistener);
 	}
 
 	@Override
@@ -97,6 +100,13 @@ public class SixiemeSens extends Objet{
 			updateGlow(e.getPlayer());
 		}
 	}
+	
+	@Override
+	public void disable() {
+		super.disable();
+		ProtocolLibrary.getProtocolManager().removePacketListener(plistener);
+	}
+	
 	private void updateGlow(Player guard) {
 		if(glowed.contains(guard)) {
 			if(getOwner().getLocation().distanceSquared(guard.getLocation())>SQUARED_BLOCK_DISTANCE) {
