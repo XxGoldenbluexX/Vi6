@@ -907,4 +907,15 @@ public class Game implements Listener {
 			}
 		}
 	}
+	
+	public Team getTeamInNeed(){
+		int nbGarde = 0;
+		int nbVoleur = 0;
+		for (PlayerWrapper p : playerList.values()) {
+			nbGarde+=p.getTeam()==Team.GARDE?1:0;
+			nbVoleur+=p.getTeam()==Team.VOLEUR?1:0;
+		}
+		
+		return nbVoleur<nbGarde?Team.VOLEUR:Team.GARDE;
+	}
 }

@@ -11,8 +11,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
+import com.comphenix.protocol.events.PacketAdapter;
+import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.events.PacketEvent;
+import com.comphenix.protocol.wrappers.WrappedWatchableObject;
 
 import dev.jorel.commandapi.CommandAPI;
 import fr.nekotine.vi6.commands.Vi6commandMaker;
@@ -30,6 +35,7 @@ import fr.nekotine.vi6.utils.DetectionZone;
 import fr.nekotine.vi6.utils.ExplosionCanceler;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 import fr.nekotine.vi6.yml.DisplayTexts;
+import net.kyori.adventure.text.Component;
 
 /**
  * Main class of the minecraft plugin
@@ -69,7 +75,7 @@ public class Vi6Main extends JavaPlugin {
 		new ItemHider(promanager,this);
 		new ExplosionCanceler(pmanager,this);
 		//GLOW FOR TEAMS
-		/*promanager.addPacketListener(new PacketAdapter(this,PacketType.Play.Server.ENTITY_METADATA) {
+		promanager.addPacketListener(new PacketAdapter(this,PacketType.Play.Server.ENTITY_METADATA) {
 			@Override
 			public void onPacketSending(PacketEvent event) {
 				PacketContainer packet = event.getPacket();
@@ -86,19 +92,19 @@ public class Vi6Main extends JavaPlugin {
 				PlayerWrapper receiverWrapper = getPlayerWrapper(receiver);
 				PlayerWrapper throwerWrapper = getPlayerWrapper(thrower);
 				if (throwerWrapper!=null && receiverWrapper!=null) {
-					if (!receiver.equals(thrower) && receiverWrapper.getTeam()==throwerWrapper.getTeam()) {
-						List<WrappedWatchableObject> watchableObjectList = packet.getWatchableCollectionModifier().read(0);
-						for (WrappedWatchableObject metadata : watchableObjectList) {
-							if (metadata.getIndex() == 0) {
-								byte b = (byte) metadata.getValue();
+					List<WrappedWatchableObject> watchableObjectList = packet.getWatchableCollectionModifier().read(0);
+					for (WrappedWatchableObject metadata : watchableObjectList) {
+						if (metadata.getIndex() == 0) {
+							byte b = (byte) metadata.getValue();
+							if (!receiver.equals(thrower) && receiverWrapper.getTeam()==throwerWrapper.getTeam()) {
 								b |= 0b01000000;
-								metadata.setValue(b);
 							}
+							metadata.setValue(b);
 						}
 					}
 				}
 			}
-		});*/
+		});
 		//File creation
 		saveDefaultConfig();//making config.yml
 		if (getDataFolder().exists()) {//making dataFolder

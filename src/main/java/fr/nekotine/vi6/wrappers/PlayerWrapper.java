@@ -22,7 +22,7 @@ public class PlayerWrapper {
 	private static final String READY_PREFIX = ChatColor.GREEN + "☑ ";
 	private static final String NOT_READY_PREFIX = ChatColor.RED + "☐ ";
 	private String currentScoreboardName = "";
-	private Team team = Team.GARDE;
+	private Team team;
 	private boolean isReady = false;
 	private PlayerState state = PlayerState.WAITING;
 	private String currentSalle;
@@ -40,7 +40,7 @@ public class PlayerWrapper {
 	public PlayerWrapper(Game game, Player player) {
 		this.game = game;
 		this.player = player;
-		updateScoreboard();
+		changeTeam(game.getTeamInNeed());//update scoreboard
 	}
 
 	public void destroy() {
@@ -90,6 +90,8 @@ public class PlayerWrapper {
 
 	public void changeTeam(Team team) {
 		this.team = team;
+		player.setSprinting(!player.isSprinting());
+		player.setSprinting(!player.isSprinting());
 		updateScoreboard();
 	}
 
