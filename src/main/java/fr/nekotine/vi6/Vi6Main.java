@@ -35,7 +35,6 @@ import fr.nekotine.vi6.utils.DetectionZone;
 import fr.nekotine.vi6.utils.ExplosionCanceler;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 import fr.nekotine.vi6.yml.DisplayTexts;
-import net.kyori.adventure.text.Component;
 
 /**
  * Main class of the minecraft plugin
