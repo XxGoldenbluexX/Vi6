@@ -15,6 +15,7 @@ import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.statuseffects.Effects;
 import fr.nekotine.vi6.statuseffects.StatusEffect;
+import fr.nekotine.vi6.utils.Vi6Sound;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 
 public class Invisneak extends Objet {
@@ -33,6 +34,7 @@ public class Invisneak extends Objet {
 
 	public void tick() {
 		if (isGuardNear()) {
+			Vi6Sound.INVISNEAK.playAtLocation(getOwner().getLocation());
 			if (!this.decouvertAdded && invisibleAdded) {
 				getOwnerWrapper().addStatusEffect(this.DECOUVERT);
 				this.decouvertAdded = true;
