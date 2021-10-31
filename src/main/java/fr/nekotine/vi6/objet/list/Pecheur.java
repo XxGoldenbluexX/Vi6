@@ -24,10 +24,8 @@ import fr.nekotine.vi6.utils.Vi6Sound;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 
 public class Pecheur extends Objet{
-	private static final int MIN_WAIT_TIME_TICKS = 100;
-	private static final int MAX_WAIT_TIME_TICKS = 600;
-	private static final int FAIL_PERCENTAGE=50;
-	private static final ObjetsList[] THIEF_FISHABLE = {ObjetsList.OMBRE, ObjetsList.GPS,ObjetsList.BROUILLEUR_RADIO,ObjetsList.IEM_,ObjetsList.DEADRINGER};
+	private static final int WAIT_TIME_TICKS = 600;
+	private static final ObjetsList[] THIEF_FISHABLE = {ObjetsList.OMBRE, ObjetsList.GPS,ObjetsList.BROUILLEUR_RADIO,ObjetsList.IEM,ObjetsList.DEADRINGER};
 	private static final ObjetsList[] GUARD_FISHABLE = {ObjetsList.CHAMP_DE_FORCE,ObjetsList.TELEPORTEUR,ObjetsList.OMNICAPTEUR,ObjetsList.PIEGE_A_DENTS,
 														ObjetsList.GLOBE_VOYANT,ObjetsList.PIEGE_CAPTEUR,ObjetsList.PIEGE_COLLANT};
 	
@@ -78,25 +76,21 @@ public class Pecheur extends Objet{
 					if(super.getOwnerWrapper().getTeam()==Team.VOLEUR) {
 						e.getHook().setSilent(true);
 					}
-					e.getHook().setMinWaitTime(MIN_WAIT_TIME_TICKS);
-					e.getHook().setMaxWaitTime(MAX_WAIT_TIME_TICKS);
+					e.getHook().setMinWaitTime(WAIT_TIME_TICKS);
+					e.getHook().setMaxWaitTime(WAIT_TIME_TICKS);
 				}
 				break;
 			case CAUGHT_FISH:
 				e.setCancelled(true);
 				e.getHook().remove();
-				if(Math.random()*100>FAIL_PERCENTAGE) {
-					Vi6Sound.SUCCESS.playForPlayer(getOwner());
-					ObjetsList objet;
-					if(super.getOwnerWrapper().getTeam()==Team.GARDE) {
-						objet = GUARD_FISHABLE[(int)Math.floor(Math.random()*GUARD_FISHABLE.length)];
-					}else {
-						objet = THIEF_FISHABLE[(int)Math.floor(Math.random()*THIEF_FISHABLE.length)];
-					}
-					ObjetsList.createObjet(super.getMain(), objet, super.getGame(), super.getOwner(), super.getOwnerWrapper());
+				Vi6Sound.SUCCESS.playForPlayer(getOwner());
+				ObjetsList objet;
+				if(super.getOwnerWrapper().getTeam()==Team.GARDE) {
+					objet = GUARD_FISHABLE[(int)Math.floor(Math.random()*GUARD_FISHABLE.length)];
 				}else {
-					Vi6Sound.ERROR.playForPlayer(getOwner());
+					objet = THIEF_FISHABLE[(int)Math.floor(Math.random()*THIEF_FISHABLE.length)];
 				}
+				ObjetsList.createObjet(super.getMain(), objet, super.getGame(), super.getOwner(), super.getOwnerWrapper());
 				break;
 			case CAUGHT_ENTITY:
 				if(!(e.getCaught() instanceof Player))	{

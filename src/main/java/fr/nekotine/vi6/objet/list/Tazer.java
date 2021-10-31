@@ -65,7 +65,6 @@ public class Tazer extends Objet{
 	@EventHandler
 	public void projectileCollide(ProjectileCollideEvent e) {
 		if(projectileList.contains(e.getEntity())) {
-			;
 			if(e.getCollidedWith() instanceof Player 
 			&& getGame().getPlayerTeam((Player)e.getCollidedWith())==Team.VOLEUR) {
 				projectileList.remove(e.getEntity());

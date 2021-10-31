@@ -1,6 +1,8 @@
 package fr.nekotine.vi6.wrappers;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -15,6 +17,7 @@ import fr.nekotine.vi6.map.Artefact;
 import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.statuseffects.Effects;
+import fr.nekotine.vi6.statuseffects.GlowToken;
 import fr.nekotine.vi6.statuseffects.StatusEffect;
 
 public class PlayerWrapper {
@@ -36,6 +39,7 @@ public class PlayerWrapper {
 	private boolean canEscape = false;
 	private ArrayList<ObjetsSkins> selectedSkins = new ArrayList<>();
 	private boolean escaped=false;
+	private final List<GlowToken> glowTo = new LinkedList<GlowToken>();
 
 	public PlayerWrapper(Game game, Player player) {
 		this.game = game;
@@ -90,8 +94,7 @@ public class PlayerWrapper {
 
 	public void changeTeam(Team team) {
 		this.team = team;
-		player.setSprinting(!player.isSprinting());
-		player.setSprinting(!player.isSprinting());
+		game.updateTeamGlow();
 		updateScoreboard();
 	}
 
@@ -231,5 +234,9 @@ public class PlayerWrapper {
 
 	public void setEscaped(boolean escaped) {
 		this.escaped = escaped;
+	}
+
+	public List<GlowToken> getGlowTokens() {
+		return glowTo;
 	}
 }

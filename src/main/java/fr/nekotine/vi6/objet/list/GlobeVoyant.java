@@ -33,7 +33,7 @@ import fr.nekotine.vi6.wrappers.PlayerWrapper;
 import fr.nekotine.vi6.yml.DisplayTexts;
 
 public class GlobeVoyant extends Objet{
-	private static final int MESSAGE_DELAY_TICKS=100;
+	private static final int MESSAGE_DELAY_TICKS=40;
 	private int delay=MESSAGE_DELAY_TICKS;
 	private Artefact attached;
 	private boolean stolen=false;

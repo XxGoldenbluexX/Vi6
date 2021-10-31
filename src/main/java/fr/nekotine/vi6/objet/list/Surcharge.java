@@ -17,7 +17,7 @@ import fr.nekotine.vi6.wrappers.PlayerWrapper;
 public class Surcharge extends Objet {
 	
 	private static final int COOLDOWN = 400;
-	private static int BUFF_DURATION = 30;
+	private static int BUFF_DURATION = 60;
 
 	public Surcharge(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Game game, Player player,PlayerWrapper wrapper) {
 		super(main, objet, skin, game, player, wrapper);
@@ -35,7 +35,7 @@ public class Surcharge extends Objet {
 	}
 
 	private void cast() {
-		getOwner().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, BUFF_DURATION, 9, false, false, true));
+		getOwner().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, BUFF_DURATION, 6, false, false, true));
 		getOwner().addPotionEffect(
 				new PotionEffect(PotionEffectType.INCREASE_DAMAGE, BUFF_DURATION, 1, false, false, true));
 		Vi6Sound.SURCHARGE.playAtLocation(getOwner().getLocation());

@@ -6,6 +6,7 @@ import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -96,6 +97,7 @@ import fr.nekotine.vi6.objet.list.DeadRinger;
 import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.sql.PlayerGame;
 import fr.nekotine.vi6.sql.SQLInterface;
+import fr.nekotine.vi6.statuseffects.GlowToken;
 import fr.nekotine.vi6.statuseffects.ItemHider;
 import fr.nekotine.vi6.utils.MessageFormater;
 import fr.nekotine.vi6.utils.Vi6Sound;
@@ -155,6 +157,7 @@ public class Game implements Listener {
 	private CheckListGuardInventory checkListGuard;
 	private CheckListThiefInventory checkListThief;
 	private final OpenCheckListItem checkListItem;
+	private final List<GlowToken> teamGlowTokens = new LinkedList<GlowToken>();
 	static {
 		ItemMeta meta = GUARD_SWORD.getItemMeta();
 		meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED,
@@ -444,7 +447,6 @@ public class Game implements Listener {
 			this.bb.addPlayer(playerAndWrapper.getKey());
 			if (wrapper.getTeam() == Team.GARDE) {
 				guardTeam.addEntry(player.getName());
-				sendPacketToTeam(Team.GARDE, getGlowPacket(player));
 				player.teleport(this.map.getGuardSpawn());
 				PlayerInventory inv = player.getInventory();
 				inv.setChestplate(new ItemStack(Material.DIAMOND_CHESTPLATE));
@@ -508,7 +510,6 @@ public class Game implements Listener {
 			wrapper.clearStatusEffects();
 			wrapper.getStealedArtefactList().clear();
 			if (wrapper.getTeam() == Team.VOLEUR) {
-				sendPacketToTeam(Team.VOLEUR, getGlowPacket(player));
 				player.setAllowFlight(false);
 				wrapper.setState(PlayerState.ENTERING);
 				if (wrapper.getThiefSpawnPoint() == null)
@@ -664,12 +665,10 @@ public class Game implements Listener {
 			((Player) p.getKey()).getInventory().clear();
 			if (((PlayerWrapper) p.getValue()).getTeam() == Team.GARDE) {
 				guardTeam.removeEntry(((Player) p.getKey()).getName());
-				sendPacketToTeam(Team.GARDE, getUnglowPacket(p.getKey()));
 				ItemHider.get().unHideFromPlayer(p.getKey());
 				continue;
 			}else {
 				thiefTeam.removeEntry(((Player) p.getKey()).getName());
-				sendPacketToTeam(Team.VOLEUR, getUnglowPacket(p.getKey()));
 				totalVole += ((PlayerWrapper) p.getValue()).getStealedArtefactList().size();
 				if(p.getValue().isEscaped()) totalSecurise+=p.getValue().getStealedArtefactList().size();
 			}
@@ -917,5 +916,22 @@ public class Game implements Listener {
 		}
 		
 		return nbVoleur<nbGarde?Team.VOLEUR:Team.GARDE;
+	}
+
+	public void updateTeamGlow() {
+		for (GlowToken t : teamGlowTokens) {
+			t.glowed.getGlowTokens().remove(t);
+		}
+		teamGlowTokens.clear();
+		for (PlayerWrapper glowed : playerList.values()) {
+			for (PlayerWrapper glowedfor : playerList.values()) {
+				if (glowed.getTeam()==glowedfor.getTeam()) {
+					GlowToken t = new GlowToken();
+					t.glowed = glowed;
+					t.glowTo = glowedfor;
+					glowed.getGlowTokens().add(t);
+				}
+			}
+		}
 	}
 }

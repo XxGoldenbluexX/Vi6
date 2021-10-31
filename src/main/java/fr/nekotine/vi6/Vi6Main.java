@@ -35,6 +35,8 @@ import fr.nekotine.vi6.utils.DetectionZone;
 import fr.nekotine.vi6.utils.ExplosionCanceler;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 import fr.nekotine.vi6.yml.DisplayTexts;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
 
 /**
  * Main class of the minecraft plugin
@@ -74,12 +76,13 @@ public class Vi6Main extends JavaPlugin {
 		new ItemHider(promanager,this);
 		new ExplosionCanceler(pmanager,this);
 		//GLOW FOR TEAMS
+		/*
 		promanager.addPacketListener(new PacketAdapter(this,PacketType.Play.Server.ENTITY_METADATA) {
 			@Override
 			public void onPacketSending(PacketEvent event) {
 				PacketContainer packet = event.getPacket();
 				Player receiver = event.getPlayer();
-				Player thrower=null;
+				Player thrower = null;
 				int hideid = packet.getIntegers().read(0);
 				for (Player p : Bukkit.getOnlinePlayers()) {
 					if (p.getEntityId()==hideid) {
@@ -90,20 +93,29 @@ public class Vi6Main extends JavaPlugin {
 				if (thrower==null) return;
 				PlayerWrapper receiverWrapper = getPlayerWrapper(receiver);
 				PlayerWrapper throwerWrapper = getPlayerWrapper(thrower);
+				boolean glow = false;
+				byte before = 0;
+				byte after = 0;
 				if (throwerWrapper!=null && receiverWrapper!=null) {
 					List<WrappedWatchableObject> watchableObjectList = packet.getWatchableCollectionModifier().read(0);
 					for (WrappedWatchableObject metadata : watchableObjectList) {
 						if (metadata.getIndex() == 0) {
 							byte b = (byte) metadata.getValue();
-							if (!receiver.equals(thrower) && receiverWrapper.getTeam()==throwerWrapper.getTeam()) {
+							before = b;
+							if (!receiver.equals(thrower) && throwerWrapper.getGlowTokens().stream().anyMatch((t)->{return t.glowTo==receiverWrapper;})) {
 								b |= 0b01000000;
+								glow = true;
+							}else {
+								b &= ~(0b01000000);
 							}
+							after = b;
 							metadata.setValue(b);
 						}
 					}
 				}
+				Bukkit.broadcast(Component.text(receiver.getName()+" received "+thrower.getName()+" before="+before+" after="+after, glow?TextColor.color(255, 50, 50):TextColor.color(50, 50, 255)));
 			}
-		});
+		});*/
 		//File creation
 		saveDefaultConfig();//making config.yml
 		if (getDataFolder().exists()) {//making dataFolder
