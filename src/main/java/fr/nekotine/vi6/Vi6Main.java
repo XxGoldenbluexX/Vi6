@@ -76,10 +76,11 @@ public class Vi6Main extends JavaPlugin {
 		new ItemHider(promanager,this);
 		new ExplosionCanceler(pmanager,this);
 		//GLOW FOR TEAMS
-		/*
+		
 		promanager.addPacketListener(new PacketAdapter(this,PacketType.Play.Server.ENTITY_METADATA) {
 			@Override
 			public void onPacketSending(PacketEvent event) {
+				Bukkit.broadcast(Component.text("Traitement packet:"));
 				PacketContainer packet = event.getPacket();
 				Player receiver = event.getPlayer();
 				Player thrower = null;
@@ -90,32 +91,26 @@ public class Vi6Main extends JavaPlugin {
 						break;
 					}
 				}
-				if (thrower==null) return;
+				if (thrower==null || thrower==receiver) return;
 				PlayerWrapper receiverWrapper = getPlayerWrapper(receiver);
 				PlayerWrapper throwerWrapper = getPlayerWrapper(thrower);
-				boolean glow = false;
-				byte before = 0;
-				byte after = 0;
 				if (throwerWrapper!=null && receiverWrapper!=null) {
 					List<WrappedWatchableObject> watchableObjectList = packet.getWatchableCollectionModifier().read(0);
 					for (WrappedWatchableObject metadata : watchableObjectList) {
 						if (metadata.getIndex() == 0) {
 							byte b = (byte) metadata.getValue();
-							before = b;
-							if (!receiver.equals(thrower) && throwerWrapper.getGlowTokens().stream().anyMatch((t)->{return t.glowTo==receiverWrapper;})) {
+							if (throwerWrapper.getGlowTokens().stream().anyMatch((t)->{return t.viewer==receiverWrapper;})) {
 								b |= 0b01000000;
-								glow = true;
 							}else {
 								b &= ~(0b01000000);
 							}
-							after = b;
 							metadata.setValue(b);
+							//Bukkit.broadcast(Component.text(receiver.getName()+" received "+thrower.getName()+" before="+before+" after="+after, glow?TextColor.color(255, 50, 50):TextColor.color(50, 50, 255)));
 						}
 					}
 				}
-				Bukkit.broadcast(Component.text(receiver.getName()+" received "+thrower.getName()+" before="+before+" after="+after, glow?TextColor.color(255, 50, 50):TextColor.color(50, 50, 255)));
 			}
-		});*/
+		});
 		//File creation
 		saveDefaultConfig();//making config.yml
 		if (getDataFolder().exists()) {//making dataFolder

@@ -924,12 +924,13 @@ public class Game implements Listener {
 		}
 		teamGlowTokens.clear();
 		for (PlayerWrapper glowed : playerList.values()) {
-			for (PlayerWrapper glowedfor : playerList.values()) {
-				if (glowed.getTeam()==glowedfor.getTeam()) {
+			for (PlayerWrapper viewer : playerList.values()) {
+				if (glowed.getTeam()==viewer.getTeam()) {
 					GlowToken t = new GlowToken();
 					t.glowed = glowed;
-					t.glowTo = glowedfor;
+					t.viewer = viewer;
 					glowed.getGlowTokens().add(t);
+					teamGlowTokens.add(t);
 				}
 			}
 		}
