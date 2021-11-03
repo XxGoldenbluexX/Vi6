@@ -5,6 +5,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
@@ -75,6 +77,7 @@ public class PiegeCapteur extends Objet{
 					DisplayTexts.getMessage("objet_capteur_trigger_thief")));
 					Vi6Sound.PIEGECAPTEUR_TRIGGER.playAtLocation(pressure.getBlock().getLocation());
 					Vi6Sound.ERROR.playForPlayer(getOwner());
+					wrap.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.GLOWING,60,0));
 					pressure.reset();
 					disable();
 				}
