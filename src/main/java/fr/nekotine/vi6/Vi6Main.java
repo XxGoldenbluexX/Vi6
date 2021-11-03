@@ -35,8 +35,6 @@ import fr.nekotine.vi6.utils.DetectionZone;
 import fr.nekotine.vi6.utils.ExplosionCanceler;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 import fr.nekotine.vi6.yml.DisplayTexts;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextColor;
 
 /**
  * Main class of the minecraft plugin
@@ -80,7 +78,6 @@ public class Vi6Main extends JavaPlugin {
 		promanager.addPacketListener(new PacketAdapter(this,PacketType.Play.Server.ENTITY_METADATA) {
 			@Override
 			public void onPacketSending(PacketEvent event) {
-				Bukkit.broadcast(Component.text("Traitement packet:"));
 				PacketContainer packet = event.getPacket();
 				Player receiver = event.getPlayer();
 				Player thrower = null;
