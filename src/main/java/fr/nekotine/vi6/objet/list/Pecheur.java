@@ -19,6 +19,7 @@ import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.objet.utils.Objet;
+import fr.nekotine.vi6.statuseffects.Effects;
 import fr.nekotine.vi6.utils.IsCreator;
 import fr.nekotine.vi6.utils.Vi6Sound;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
@@ -70,7 +71,7 @@ public class Pecheur extends Objet{
 		|| (e.getPlayer().getInventory().getItemInMainHand().getType()!=Material.FISHING_ROD && super.getDisplayedItem().isSimilar(e.getPlayer().getInventory().getItemInOffHand()))) {
 			switch(e.getState()) {
 			case FISHING:
-				if(super.getGame().getState()==GameState.Preparation || super.getOwnerWrapper().getState()==PlayerState.ENTERING) {
+				if(super.getGame().getState()==GameState.Preparation || super.getOwnerWrapper().getState()==PlayerState.ENTERING || getOwnerWrapper().haveEffect(Effects.Jammed)) {
 					e.setCancelled(true);
 				}else {
 					if(super.getOwnerWrapper().getTeam()==Team.VOLEUR) {

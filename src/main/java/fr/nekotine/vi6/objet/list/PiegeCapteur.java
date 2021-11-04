@@ -15,6 +15,7 @@ import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.objet.utils.Objet;
+import fr.nekotine.vi6.statuseffects.Effects;
 import fr.nekotine.vi6.utils.MessageFormater;
 import fr.nekotine.vi6.utils.TempBlock;
 import fr.nekotine.vi6.utils.Vi6Sound;
@@ -66,7 +67,7 @@ public class PiegeCapteur extends Objet{
 	}
 	@EventHandler
 	public void onPlayerInterract(PlayerInteractEvent e) {
-		if(pressure!=null) {
+		if(pressure!=null && !getOwnerWrapper().haveEffect(Effects.Jammed)) {
 			if(e.getAction()==Action.PHYSICAL && e.getClickedBlock().equals(pressure.getBlock())) {
 				e.setCancelled(true);
 				PlayerWrapper wrap = getGame().getWrapper(e.getPlayer());

@@ -73,7 +73,7 @@ public class PiegeCollant extends Objet {
 	
 	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent event) {
-		if (placed) {
+		if (placed && !getOwnerWrapper().haveEffect(Effects.Jammed)) {
 			if (getGame().getPlayerMap().entrySet().stream().anyMatch(new Predicate<Entry<Player,PlayerWrapper>>() {
 				@Override
 				public boolean test(Entry<Player, PlayerWrapper> t) {

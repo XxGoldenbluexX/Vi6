@@ -1,13 +1,17 @@
 package fr.nekotine.vi6.objet.list;
 
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
+import fr.nekotine.vi6.events.PlayerJamEvent;
+import fr.nekotine.vi6.events.PlayerUnjamEvent;
 import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.objet.utils.Objet;
+import fr.nekotine.vi6.statuseffects.Effects;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 
 public class Bottes7Lieues extends Objet {
@@ -17,7 +21,21 @@ public class Bottes7Lieues extends Objet {
 			PlayerWrapper wrapper) {
 		super(main, objet, skin, game, player, wrapper);
 	}
-
+	
+	@EventHandler
+	public void onJam(PlayerJamEvent e) {
+		if(getOwner().equals(e.getPlayer())) {
+			getOwner().setWalkSpeed(getOwner().getWalkSpeed() / SPEED_MULT);
+		}
+	}
+	
+	@EventHandler
+	public void onUnjam(PlayerUnjamEvent e) {
+		if(getOwner().equals(e.getPlayer())) {
+			getOwner().setWalkSpeed(getOwner().getWalkSpeed() * SPEED_MULT);
+		}
+	}
+	
 	public void tick() {
 	}
 
@@ -38,7 +56,9 @@ public class Bottes7Lieues extends Objet {
 
 	public void disable() {
 		super.disable();
-		getOwner().setWalkSpeed(getOwner().getWalkSpeed() / SPEED_MULT);
+		if(!getOwnerWrapper().haveEffect(Effects.Jammed)) {
+			getOwner().setWalkSpeed(getOwner().getWalkSpeed() / SPEED_MULT);
+		}
 	}
 
 	@Override

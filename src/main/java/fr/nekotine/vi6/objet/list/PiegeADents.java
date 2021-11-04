@@ -103,7 +103,7 @@ public class PiegeADents extends Objet {
 	
 	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent event) {
-		if (armed) {
+		if (armed && !getOwnerWrapper().haveEffect(Effects.Jammed)) {
 			if (getGame().getPlayerMap().entrySet().stream().anyMatch(new Predicate<Entry<Player,PlayerWrapper>>() {
 				@Override
 				public boolean test(Entry<Player, PlayerWrapper> t) {

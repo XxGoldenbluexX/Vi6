@@ -19,6 +19,7 @@ import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.objet.utils.Objet;
+import fr.nekotine.vi6.statuseffects.Effects;
 import fr.nekotine.vi6.utils.IsCreator;
 import fr.nekotine.vi6.utils.Vi6Sound;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
@@ -35,7 +36,7 @@ public class Cactus extends Objet {
 	public void onHit(EntityDamageByEntityEvent e) {
 		if (!getOwner().equals(e.getDamager()))return;
 		PlayerWrapper wrap = (e.getEntity() instanceof Player) ? getGame().getWrapper((Player) e.getEntity()) : null;
-		if (wrap != null && wrap.getTeam() == Team.VOLEUR)
+		if (wrap != null && wrap.getTeam() == Team.VOLEUR && !getOwnerWrapper().haveEffect(Effects.Jammed))
 			for (Map.Entry<Player, PlayerWrapper> player : getGame().getPlayerMap().entrySet()) {
 				if (((PlayerWrapper) player.getValue()).getTeam() == Team.VOLEUR
 						&& ((PlayerWrapper) player.getValue()).getState() == PlayerState.INSIDE) {

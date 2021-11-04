@@ -79,9 +79,11 @@ public class OmniCapteur extends Objet{
 	
 	@EventHandler
     public void onJam(PlayerJamEvent e) {
-        if(glowed.contains(e.getPlayer())) {
-            getGame().getWrapper(e.getPlayer()).removeStatusEffect(glowEffect);
-            glowed.remove(e.getPlayer());
+        if(e.getPlayer().equals(getOwner())) {
+            for(Player player : glowed) {
+                getGame().getWrapper(player).removeStatusEffect(glowEffect);
+            }
+            glowed.clear();
         }
     }
 	
