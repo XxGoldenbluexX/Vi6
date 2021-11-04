@@ -1,5 +1,6 @@
 package fr.nekotine.vi6.objet.list;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -8,6 +9,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.enums.Team;
+import fr.nekotine.vi6.events.PlayerJamEvent;
+import fr.nekotine.vi6.events.PlayerUnjamEvent;
 import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.objet.utils.Objet;
@@ -62,6 +65,7 @@ public class IEM extends Objet{
 				wrapper.getPlayer().sendMessage(MessageFormater.formatWithColorCodes('§',
 				DisplayTexts.getMessage("objet_iem_jammed")));
 				wrapper.addStatusEffect(jam);
+				Bukkit.getPluginManager().callEvent(new PlayerJamEvent(getGame(), wrapper.getPlayer()));
 			}
 		}
 		new BukkitRunnable() {
@@ -70,6 +74,7 @@ public class IEM extends Objet{
 				for(PlayerWrapper wrapper : getGame().getPlayerMap().values()) {
 					if(wrapper.getTeam()==Team.GARDE) {
 						getOwnerWrapper().removeStatusEffect(jam);
+						Bukkit.getPluginManager().callEvent(new PlayerUnjamEvent(getGame(), wrapper.getPlayer()));
 					}
 				}
 			}
