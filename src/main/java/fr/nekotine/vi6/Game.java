@@ -127,7 +127,7 @@ public class Game implements Listener {
 	private final org.bukkit.scoreboard.Team thiefTeam;
 	private final org.bukkit.scoreboard.Team guardTeam;
 	private final String name;
-	private boolean isRanked = true;
+	private boolean isRanked = false;
 	private boolean canCapture = true;
 	private int canCaptureRest = 0;
 	private GameState state = GameState.Waiting;
