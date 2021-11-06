@@ -34,8 +34,8 @@ public class Invisneak extends Objet {
 
 	public void tick() {
 		if (isGuardNear()) {
-			Vi6Sound.INVISNEAK.playAtLocation(getOwner().getLocation());
 			if (!this.decouvertAdded && invisibleAdded) {
+				Vi6Sound.INVISNEAK.playAtLocation(getOwner().getLocation());
 				getOwnerWrapper().addStatusEffect(this.DECOUVERT);
 				this.decouvertAdded = true;
 			}
