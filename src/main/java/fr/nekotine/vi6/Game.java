@@ -403,6 +403,8 @@ public class Game implements Listener {
 		wrap.setReady(isReady);
 		if (isReady && this.state == GameState.Preparation && isEveryoneReady())
 			enterInGamePhase();
+		if (isReady && this.state == GameState.Waiting && isEveryoneReady())
+			enterPreparationPhase();
 	}
 
 	public boolean enterPreparationPhase() {
