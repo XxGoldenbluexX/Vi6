@@ -57,9 +57,11 @@ public class Lanterne extends Objet {
 				case LANTERN_SOUL :
 					this.lanternType = Bukkit.createBlockData(Material.SOUL_LANTERN);
 					this.lanternParticleType = Particle.SOUL;
+					break;
 				default:
 					this.lanternType = Bukkit.createBlockData(Material.LANTERN);
 					this.lanternParticleType = Particle.FLAME;
+					break;
 			}
 		}
 	}

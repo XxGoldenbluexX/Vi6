@@ -57,7 +57,7 @@ public class IsCreator {
 		ItemStack item = new ItemStack(skin.getInShopMaterial(),quantity);
 		ItemMeta meta = item.getItemMeta();
 		meta.displayName(Component.text(skin.getInShopName()));
-		List<Component> loreList = new ArrayList<>(); 
+		List<Component> loreList = new ArrayList<>();
 		for(String line : skin.getInShopLore()) {
 			if(line!="") {
 				loreList.add(Component.text(line));

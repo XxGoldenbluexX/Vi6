@@ -8,7 +8,7 @@ import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.objet.ObjetsList;
 
 public class ObjetsListTagType implements PersistentDataType<String, ObjetsList>{
-	public static String namespacedKey = "ObjetSkin";
+	public static String namespacedKey = "ObjetTag";
 	public static NamespacedKey getNamespacedKey(Vi6Main main) {
 		return new NamespacedKey(main, namespacedKey);
 	}

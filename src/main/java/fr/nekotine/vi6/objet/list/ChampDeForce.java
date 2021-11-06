@@ -41,8 +41,10 @@ public class ChampDeForce extends Objet implements ZoneDetectionListener {
 			switch (skin) {
 				case CHAMP_DE_FORCE_SLIME :
 					this.mat = Material.SLIME_BLOCK;
+					break;
 				default:
 					this.mat = Material.LIGHT_GRAY_STAINED_GLASS;
+					break;
 			}
 		}
 	}
