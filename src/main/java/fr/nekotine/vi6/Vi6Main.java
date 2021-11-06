@@ -17,7 +17,7 @@ import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
-import com.comphenix.protocol.wrappers.WrappedWatchableObject;
+import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 
 import dev.jorel.commandapi.CommandAPI;
 import fr.nekotine.vi6.commands.Vi6commandMaker;
@@ -91,20 +91,31 @@ public class Vi6Main extends JavaPlugin {
 				if (thrower==null || thrower==receiver) return;
 				PlayerWrapper receiverWrapper = getPlayerWrapper(receiver);
 				PlayerWrapper throwerWrapper = getPlayerWrapper(thrower);
-				if (throwerWrapper!=null && receiverWrapper!=null) {
+				if (throwerWrapper!=null && receiverWrapper!=null && throwerWrapper.getTeam()==receiverWrapper.getTeam()) {
+					WrappedDataWatcher dataWatcher = WrappedDataWatcher.getEntityWatcher(thrower).deepClone();
+					WrappedDataWatcher.Serializer byteSerializer = WrappedDataWatcher.Registry.get(Byte.class);
+					byte bytemask = dataWatcher.getByte(0);
+					bytemask |= 0x40;
+					dataWatcher.setObject(0, byteSerializer, bytemask);
+					packet.getWatchableCollectionModifier().write(0, dataWatcher.getWatchableObjects());
+					/*TODO
 					List<WrappedWatchableObject> watchableObjectList = packet.getWatchableCollectionModifier().read(0);
 					for (WrappedWatchableObject metadata : watchableObjectList) {
 						if (metadata.getIndex() == 0) {
 							byte b = (byte) metadata.getValue();
+							byte before = b;
+							boolean glow = false;
 							if (throwerWrapper.getGlowTokens().stream().anyMatch((t)->{return t.viewer==receiverWrapper;})) {
 								b |= 0b01000000;
+								glow = true;
 							}else {
 								b &= ~(0b01000000);
 							}
+							byte after=b;
 							metadata.setValue(b);
-							//Bukkit.broadcast(Component.text(receiver.getName()+" received "+thrower.getName()+" before="+before+" after="+after, glow?TextColor.color(255, 50, 50):TextColor.color(50, 50, 255)));
+							Bukkit.broadcast(Component.text(receiver.getName()+" received "+thrower.getName()+" before="+before+" after="+after, glow?TextColor.color(255, 50, 50):TextColor.color(50, 50, 255)));
 						}
-					}
+					}*/
 				}
 			}
 		});
