@@ -92,13 +92,16 @@ public class Vi6Main extends JavaPlugin {
 				PlayerWrapper receiverWrapper = getPlayerWrapper(receiver);
 				PlayerWrapper throwerWrapper = getPlayerWrapper(thrower);
 				if (throwerWrapper!=null && receiverWrapper!=null && throwerWrapper.getTeam()==receiverWrapper.getTeam()) {
+					PacketContainer newPacket = promanager.createPacket(PacketType.Play.Server.ENTITY_METADATA);
 					WrappedDataWatcher dataWatcher = WrappedDataWatcher.getEntityWatcher(thrower).deepClone();
 					WrappedDataWatcher.Serializer byteSerializer = WrappedDataWatcher.Registry.get(Byte.class);
 					byte bytemask = dataWatcher.getByte(0);
 					bytemask |= 0x40;
 					dataWatcher.setObject(0, byteSerializer, bytemask);
-					packet.getWatchableCollectionModifier().write(0, dataWatcher.getWatchableObjects());
-					/*TODO
+					newPacket.getWatchableCollectionModifier().write(0, dataWatcher.getWatchableObjects());
+					newPacket.getIntegers().write(0, thrower.getEntityId());
+					event.setPacket(newPacket);
+					/*
 					List<WrappedWatchableObject> watchableObjectList = packet.getWatchableCollectionModifier().read(0);
 					for (WrappedWatchableObject metadata : watchableObjectList) {
 						if (metadata.getIndex() == 0) {
