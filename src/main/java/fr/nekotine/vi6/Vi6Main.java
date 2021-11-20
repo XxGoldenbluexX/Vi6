@@ -204,5 +204,4 @@ public class Vi6Main extends JavaPlugin {
 		}
 		return null;
 	}
-	
 }

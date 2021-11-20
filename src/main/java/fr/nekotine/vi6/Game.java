@@ -43,6 +43,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.inventory.ItemFlag;
@@ -213,6 +214,18 @@ public class Game implements Listener {
 		for(Player player : main.getServer().getOnlinePlayers()) {
 			player.sendMessage(message);
 		}
+	}
+	
+	@EventHandler
+	public void onPlayerJoin(PlayerJoinEvent evt) {
+		TextComponent message = 
+				(TextComponent)Component.text("["+ChatColor.AQUA+"Vi6"+ChatColor.WHITE+"] ")
+				.append((TextComponent)Component.text(ChatColor.GOLD+"La partie ")
+				.append((TextComponent)Component.text(ChatColor.AQUA+""+ChatColor.BOLD+name)
+				.hoverEvent(HoverEvent.showText(Component.text(ChatColor.GOLD+"Cliquez pour rejoindre")))
+				.clickEvent(ClickEvent.runCommand("/vi6 game join "+name)))
+				.append((TextComponent)Component.text(ChatColor.GOLD+" manque de monde! ("+playerList.size()+" joueurs en attente)")));
+		evt.getPlayer().sendMessage(message);
 	}
 
 	public boolean isRanked() {
