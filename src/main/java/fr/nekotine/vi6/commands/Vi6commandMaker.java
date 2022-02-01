@@ -65,14 +65,14 @@ public class Vi6commandMaker {
 	//----------------------GAME-------------------------\/
 	
 	private static CommandAPICommand game(Vi6Main main) {
-		Argument gameArgument = new CustomArgument<Game>("gameList",(input)-> {
-			Game g = Vi6Main.getGame(input);
+		Argument gameArgument = new CustomArgument<Game>("gameList",(info)-> {
+			Game g = Vi6Main.getGame(info.input());
 			if (g==null) {
 				throw new CustomArgumentException(new MessageBuilder("No game with this name: ").appendArgInput().appendHere());
 			}else {
 				return g;
 			}
-		}).overrideSuggestions((sender) -> {return Vi6Main.getGameList().stream().map(Game::getName).toArray(String[]::new);});
+		}).replaceSuggestions((info) -> {return Vi6Main.getGameList().stream().map(Game::getName).toArray(String[]::new);});
 		return new CommandAPICommand("game")
 				.withSubcommand(makeHelp(gameHelp))
 				.withSubcommand(gameCreate(main))
@@ -119,7 +119,7 @@ public class Vi6commandMaker {
 	
 	private static CommandAPICommand gameJoinPlayer(Vi6Main mainref,Argument gameArgument) {
 		return new CommandAPICommand("join")
-				.withArguments(gameArgument,new EntitySelectorArgument("players", EntitySelector.MANY_PLAYERS).overrideSuggestions((sender)->{return Bukkit.getServer().getOnlinePlayers().stream().filter(e->mainref.getPlayerWrapper(e)==null).map((p)->{return p.getName();}).toArray(String[]::new);}))
+				.withArguments(gameArgument,new EntitySelectorArgument("players", EntitySelector.MANY_PLAYERS).replaceSuggestions((info)->{return Bukkit.getServer().getOnlinePlayers().stream().filter(e->mainref.getPlayerWrapper(e)==null).map((p)->{return p.getName();}).toArray(String[]::new);}))
 				.executes((sender,args)->{
 					@SuppressWarnings("unchecked")
 					Collection<Player> players = (Collection<Player>) args[1];
@@ -140,7 +140,7 @@ public class Vi6commandMaker {
 	private static CommandAPICommand gameLeavePlayer(Argument gameArgument) {
 		return new CommandAPICommand("leave")
 				.withArguments(gameArgument,
-				new EntitySelectorArgument("players", EntitySelector.MANY_PLAYERS).overrideSuggestions((sender,args)->{return ((Game)args[0]).getPlayerMap().keySet().stream().map((Player p)->{return p.getName();}).toArray(String[]::new);}))
+				new EntitySelectorArgument("players", EntitySelector.MANY_PLAYERS).replaceSuggestions((info)->{return ((Game)info.previousArgs()[0]).getPlayerMap().keySet().stream().map((Player p)->{return p.getName();}).toArray(String[]::new);}))
 				.executesPlayer((sender,args)->{
 					@SuppressWarnings("unchecked")
 					Collection<Player> players = (Collection<Player>) args[1];
@@ -153,14 +153,14 @@ public class Vi6commandMaker {
 	//----------------------MAP-------------------------\/
 	
 	private static CommandAPICommand map(Vi6Main main) {
-		Argument mapArgument = new CustomArgument<Carte>("carteList",(input)-> {
-			Carte map = Carte.load(input);
+		Argument mapArgument = new CustomArgument<Carte>("carteList",(info)-> {
+			Carte map = Carte.load(info.input());
 			if (map==null) {
 				throw new CustomArgumentException(new MessageBuilder("No map with this name: ").appendArgInput().appendHere());
 			}else {
 				return map;
 			}
-		}).overrideSuggestions(sender -> {return Carte.getMapList().toArray(String[]::new);});
+		}).replaceSuggestions(info -> {return Carte.getMapList().toArray(String[]::new);});
 		return new CommandAPICommand("map")
 				.withSubcommand(makeHelp(mapHelp))
 				.withSubcommand(mapList())
@@ -270,8 +270,8 @@ public class Vi6commandMaker {
 	public static CommandAPICommand mapRemoveThiefSpawn(Argument mapArgument) {
 		return new CommandAPICommand("removeThiefSpawn")
 				.withPermission("vi6.map.edit")
-				.withArguments(mapArgument,new StringArgument("name").overrideSuggestions((sender, args) -> {
-					return ((Carte)args[0]).getThiefSpawnsList().stream().map(SpawnVoleur::getName).toArray(String[]::new);
+				.withArguments(mapArgument,new StringArgument("name").replaceSuggestions((info) -> {
+					return ((Carte)info.previousArgs()[0]).getThiefSpawnsList().stream().map(SpawnVoleur::getName).toArray(String[]::new);
 				}))
 				.executesPlayer((player,args)->{
 					Carte map = (Carte)args[0];
@@ -290,8 +290,8 @@ public class Vi6commandMaker {
 	//----ARTEFACT-----\/
 	
 	public static CommandAPICommand artefact(Argument mapArgument) {
-		Argument artefactList = new StringArgument("artefactList").overrideSuggestions((sender, args) -> {
-			return ((Carte)args[0]).getArtefactList().stream().map(Artefact::getName).toArray(String[]::new);
+		Argument artefactList = new StringArgument("artefactList").replaceSuggestions((info) -> {
+			return ((Carte)info.previousArgs()[0]).getArtefactList().stream().map(Artefact::getName).toArray(String[]::new);
 		});
 		return new CommandAPICommand("artefact")
 				.withPermission("vi6.map.edit")
@@ -412,8 +412,8 @@ public class Vi6commandMaker {
 	//----ENTREE-----\/
 	
 	public static CommandAPICommand entree(Argument mapArgument) {
-		Argument entranceList = new StringArgument("entranceList").overrideSuggestions((sender, args) -> {
-			return ((Carte)args[0]).getEntreeList().stream().map(Entree::getName).toArray(String[]::new);
+		Argument entranceList = new StringArgument("entranceList").replaceSuggestions((info) -> {
+			return ((Carte)info.previousArgs()[0]).getEntreeList().stream().map(Entree::getName).toArray(String[]::new);
 		});
 		return new CommandAPICommand("entrance")
 				.withPermission("vi6.map.edit")
@@ -514,8 +514,8 @@ public class Vi6commandMaker {
 	//----SORTIE-----\/
 	
 		public static CommandAPICommand sortie(Argument mapArgument) {
-			Argument exitList = new StringArgument("exitList").overrideSuggestions((sender, args) -> {
-				return ((Carte)args[0]).getSortieList().stream().map(Sortie::getName).toArray(String[]::new);
+			Argument exitList = new StringArgument("exitList").replaceSuggestions((info) -> {
+				return ((Carte)info.previousArgs()[0]).getSortieList().stream().map(Sortie::getName).toArray(String[]::new);
 			});
 			return new CommandAPICommand("exit")
 					.withPermission("vi6.map.edit")
@@ -616,8 +616,8 @@ public class Vi6commandMaker {
 		//----PASSAGE-----\/
 	
 		public static CommandAPICommand passage(Argument mapArgument) {
-			Argument passageList = new StringArgument("passageList").overrideSuggestions((sender, args) -> {
-				return ((Carte)args[0]).getPassageList().stream().map(Passage::getName).toArray(String[]::new);
+			Argument passageList = new StringArgument("passageList").replaceSuggestions((info) -> {
+				return ((Carte)info.previousArgs()[0]).getPassageList().stream().map(Passage::getName).toArray(String[]::new);
 			});
 			return new CommandAPICommand("passage")
 					.withPermission("vi6.map.edit")
@@ -780,8 +780,8 @@ public class Vi6commandMaker {
 		
 		public static CommandAPICommand gatewayToPassage(Argument mapArgument) {
 			return new CommandAPICommand("gatewayToPassage")
-					.withArguments(mapArgument,new StringArgument("gatewayList").overrideSuggestions((sender, args) -> {
-						return ((Carte)args[0]).getGatewayList().stream().map(Gateway::getName).toArray(String[]::new);
+					.withArguments(mapArgument,new StringArgument("gatewayList").replaceSuggestions((info) -> {
+						return ((Carte)info.previousArgs()[0]).getGatewayList().stream().map(Gateway::getName).toArray(String[]::new);
 					}))
 					.executes((sender,args)->{
 						Carte map = (Carte)args[0];

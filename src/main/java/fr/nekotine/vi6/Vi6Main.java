@@ -20,6 +20,7 @@ import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 
 import dev.jorel.commandapi.CommandAPI;
+import dev.jorel.commandapi.CommandAPIConfig;
 import fr.nekotine.vi6.commands.Vi6commandMaker;
 import fr.nekotine.vi6.majordom.Majordom;
 import fr.nekotine.vi6.map.Artefact;
@@ -53,7 +54,7 @@ public class Vi6Main extends JavaPlugin {
 	@Override
 	public void onLoad() {
 		super.onLoad();
-		CommandAPI.onLoad(false);
+		CommandAPI.onLoad(new CommandAPIConfig());
 	}
 	
 	@Override
