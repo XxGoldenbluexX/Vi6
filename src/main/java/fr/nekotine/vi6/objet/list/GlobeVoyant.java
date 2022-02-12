@@ -27,7 +27,6 @@ import fr.nekotine.vi6.map.Artefact.CaptureState;
 import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.objet.utils.Objet;
-import fr.nekotine.vi6.statuseffects.Effects;
 import fr.nekotine.vi6.utils.MessageFormater;
 import fr.nekotine.vi6.utils.Vi6Sound;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
@@ -49,14 +48,12 @@ public class GlobeVoyant extends Objet{
 		if(stolen) {
 			delay--;
 			if(delay==0) {
-				if(!getOwnerWrapper().haveEffect(Effects.Jammed)) {
-					for(Entry<Player, PlayerWrapper> player : getGame().getPlayerMap().entrySet()) {
-						if(player.getValue().getTeam()==Team.GARDE) {
-							Vi6Sound.GLOBE_VOYANT_TRIGGER.playForPlayer(player.getKey());
-							player.getKey().sendMessage(MessageFormater.formatWithColorCodes('§',
-							DisplayTexts.getMessage("objet_globe_triggered"), new MessageFormater("§a", attached.getDisplayName())));
-							getGame().getCheckListGuard().change(attached, false);
-						}
+				for(Entry<Player, PlayerWrapper> player : getGame().getPlayerMap().entrySet()) {
+					if(player.getValue().getTeam()==Team.GARDE) {
+						Vi6Sound.GLOBE_VOYANT_TRIGGER.playForPlayer(player.getKey());
+						player.getKey().sendMessage(MessageFormater.formatWithColorCodes('§',
+						DisplayTexts.getMessage("objet_globe_triggered"), new MessageFormater("§a", attached.getDisplayName())));
+						getGame().getCheckListGuard().change(attached, false);
 					}
 				}
 				eye.remove();

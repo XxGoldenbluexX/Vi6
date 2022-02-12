@@ -9,6 +9,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -17,6 +18,7 @@ import org.bukkit.inventory.PlayerInventory;
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.enums.Team;
+import fr.nekotine.vi6.events.PlayerJamEvent;
 import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.objet.utils.Objet;
@@ -184,6 +186,17 @@ public class BuissonFurtif extends Objet {
 					new MessageFormater[]{new MessageFormater("§v", getOwnerWrapper().getCurrentSalle())}));
 		} else {
 			Vi6Sound.NO.playForPlayer(getOwner());
+		}
+	}
+	
+	
+	@EventHandler
+	public void onJam(PlayerJamEvent event) {
+		if(event.getPlayer().equals(getOwner()) && invisibleAdded) {
+			getOwnerWrapper().removeStatusEffect(INSONDABLE);
+			getOwnerWrapper().removeStatusEffect(INVISIBLE);
+			insondableAdded = false;
+			invisibleAdded = false;
 		}
 	}
 }

@@ -16,7 +16,7 @@ import fr.nekotine.vi6.wrappers.PlayerWrapper;
 
 public class Bottes7Lieues extends Objet {
 	private static final float SPEED_MULT = 1.2F;
-
+	private boolean jammed = false;
 	public Bottes7Lieues(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Game game, Player player,
 			PlayerWrapper wrapper) {
 		super(main, objet, skin, game, player, wrapper);
@@ -24,15 +24,17 @@ public class Bottes7Lieues extends Objet {
 	
 	@EventHandler
 	public void onJam(PlayerJamEvent e) {
-		if(getOwner().equals(e.getPlayer())) {
+		if(getOwner().equals(e.getPlayer()) && !jammed) {
+			jammed = true;
 			getOwner().setWalkSpeed(getOwner().getWalkSpeed() / SPEED_MULT);
 		}
 	}
 	
 	@EventHandler
 	public void onUnjam(PlayerUnjamEvent e) {
-		if(getOwner().equals(e.getPlayer())) {
+		if(getOwner().equals(e.getPlayer()) && !getOwnerWrapper().haveEffect(Effects.Jammed)) {
 			getOwner().setWalkSpeed(getOwner().getWalkSpeed() * SPEED_MULT);
+			jammed = false;
 		}
 	}
 	

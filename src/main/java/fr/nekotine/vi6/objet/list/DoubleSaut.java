@@ -17,6 +17,7 @@ import fr.nekotine.vi6.enums.GameState;
 import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.objet.utils.Objet;
+import fr.nekotine.vi6.statuseffects.Effects;
 import fr.nekotine.vi6.utils.IsCreator;
 import fr.nekotine.vi6.utils.Vi6Sound;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
@@ -75,7 +76,7 @@ public class DoubleSaut extends Objet {
 	@EventHandler
 	public void onPlayerJump(PlayerJumpEvent event) {
 		if(getGame().getState()!=GameState.Preparation) {
-			if (event.getPlayer().equals(getOwner()))
+			if (event.getPlayer().equals(getOwner()) && !getOwnerWrapper().haveEffect(Effects.Jammed))
 				getOwner().setAllowFlight(true);
 			}
 	}

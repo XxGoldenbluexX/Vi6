@@ -17,6 +17,7 @@ import fr.nekotine.vi6.map.Gateway;
 import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.objet.utils.Objet;
+import fr.nekotine.vi6.statuseffects.Effects;
 import fr.nekotine.vi6.utils.DetectionZone;
 import fr.nekotine.vi6.utils.Vi6Sound;
 import fr.nekotine.vi6.utils.ZoneDetectionListener;
@@ -84,7 +85,7 @@ public class ChampDeForce extends Objet implements ZoneDetectionListener {
 	public boolean playerEnterZone(Player player, DetectionZone zone, Vi6Main mainref) {
 		if (!this.guardList.contains(player))
 			return false;
-		if (this.nbGardeTriggering <= 0) {
+		if (this.nbGardeTriggering <= 0 && !getGame().getWrapper(player).haveEffect(Effects.Jammed)) {
 			this.nbGardeTriggering = 1;
 			this.gateway.open();
 		} else {

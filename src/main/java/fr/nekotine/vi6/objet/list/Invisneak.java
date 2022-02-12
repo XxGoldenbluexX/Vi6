@@ -10,6 +10,7 @@ import org.bukkit.event.player.PlayerToggleSneakEvent;
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.enums.Team;
+import fr.nekotine.vi6.events.PlayerJamEvent;
 import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.objet.utils.Objet;
@@ -61,14 +62,19 @@ public class Invisneak extends Objet {
 
 	@EventHandler
 	public void onSneakToggle(PlayerToggleSneakEvent e) {
-		if (e.getPlayer().equals(getOwner()))
+		if (e.getPlayer().equals(getOwner())) {
 			if (e.isSneaking()) {
-				getOwnerWrapper().addStatusEffect(INVISIBLE);
-				invisibleAdded=true;
+				if(!getOwnerWrapper().haveEffect(Effects.Jammed)) {
+					getOwnerWrapper().addStatusEffect(INVISIBLE);
+					invisibleAdded=true;
+				}
 			}else {
-				getOwnerWrapper().removeStatusEffect(INVISIBLE);
-				invisibleAdded = false;
+				if(invisibleAdded) {
+					getOwnerWrapper().removeStatusEffect(INVISIBLE);
+					invisibleAdded = false;getOwnerWrapper().removeStatusEffect(INVISIBLE);
+				}
 			}
+		}
 	}
 
 	private boolean isGuardNear() {
@@ -87,5 +93,14 @@ public class Invisneak extends Objet {
 	}
 
 	public void cooldownEnded() {
+	}
+	
+	@EventHandler
+	public void onJam(PlayerJamEvent event) {
+		if(event.getPlayer().equals(getOwner()) && invisibleAdded) {
+			invisibleAdded = false;
+			getOwnerWrapper().removeStatusEffect(INVISIBLE);
+		}
+
 	}
 }
