@@ -27,27 +27,25 @@ public class Sonar extends Objet{
 
 	@Override
 	public void tick() {
-		if(!getOwnerWrapper().haveEffect(Effects.Jammed)){
-			delay--;
-			if(delay<=0) {
-				delay=DELAY_IN_TICKS;
-				ArrayList<Player> thievesNear = new ArrayList<Player>();
-				for(Entry<Player, PlayerWrapper> player : super.getGame().getPlayerMap().entrySet()) {
-					if(player.getValue().getTeam()==Team.VOLEUR 
-						&& !player.getValue().haveEffect(Effects.Insondable)
-						&& player.getValue().getState()==PlayerState.INSIDE
-						&& super.getOwner().getLocation().distanceSquared(player.getKey().getLocation())<=SQUARED_BLOCK_RANGE){
-						thievesNear.add(player.getKey());
-					}
+		delay--;
+		if(delay<=0) {
+			delay=DELAY_IN_TICKS;
+			ArrayList<Player> thievesNear = new ArrayList<Player>();
+			for(Entry<Player, PlayerWrapper> player : super.getGame().getPlayerMap().entrySet()) {
+				if(player.getValue().getTeam()==Team.VOLEUR 
+					&& !player.getValue().haveEffect(Effects.Insondable)
+					&& player.getValue().getState()==PlayerState.INSIDE
+					&& super.getOwner().getLocation().distanceSquared(player.getKey().getLocation())<=SQUARED_BLOCK_RANGE){
+					thievesNear.add(player.getKey());
 				}
-				if(thievesNear.size()>0) {
-					Vi6Sound.SONAR_DETECT.playForPlayer(getOwner());
-					for(Player thief : thievesNear) {
-						Vi6Sound.SONAR_DETECT.playForPlayer(thief);
-					}
-				}else {
-					Vi6Sound.SONAR_NOBODY.playForPlayer(getOwner());
+			}
+			if(thievesNear.size()>0) {
+				Vi6Sound.SONAR_DETECT.playForPlayer(getOwner());
+				for(Player thief : thievesNear) {
+					Vi6Sound.SONAR_DETECT.playForPlayer(thief);
 				}
+			}else {
+				Vi6Sound.SONAR_NOBODY.playForPlayer(getOwner());
 			}
 		}
 	}

@@ -91,7 +91,7 @@ public class OmniCapteur extends Objet{
 	public void onPlayerMove(PlayerMoveEvent e) {
 		PlayerWrapper w = getGame().getWrapper(e.getPlayer());
 		if(omni!=null) {
-			if (w!=null && !w.haveStatusEffect(new StatusEffect(Effects.Jammed))) {
+			if (w!=null && !w.haveEffect(Effects.Jammed)) {
 				if(w.getTeam()==Team.VOLEUR && w.getState()==PlayerState.INSIDE) {
 					boolean glowable = omni.getLocation().distanceSquared(e.getTo())<=SQUARED_RANGE && !w.haveEffect(Effects.Fantomatique);
 					if(glowed.contains(e.getPlayer())) {

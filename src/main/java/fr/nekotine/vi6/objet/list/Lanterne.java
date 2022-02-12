@@ -33,6 +33,7 @@ import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.objet.utils.Objet;
+import fr.nekotine.vi6.statuseffects.Effects;
 import fr.nekotine.vi6.utils.Vi6Sound;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 
@@ -114,7 +115,7 @@ public class Lanterne extends Objet {
 	public void onPlayerMove(PlayerMoveEvent event) {
 		if (this.toShow.contains(event.getPlayer())) {
 			PlayerWrapper wrap = getMain().getPlayerWrapper(event.getPlayer());
-			if (wrap != null && wrap.getState() == PlayerState.INSIDE && this.lantern1 != null && getOwnerWrapper().getState()==PlayerState.INSIDE
+			if (wrap != null && !wrap.haveEffect(Effects.Jammed) && wrap.getState() == PlayerState.INSIDE && this.lantern1 != null && getOwnerWrapper().getState()==PlayerState.INSIDE
 					&& event.getTo().distanceSquared(this.lantern1.getLoc()) <= LANTERN_CATCH_SQUARED_DISTANCE) {
 				Vi6Sound.LANTERNE_PRE_TELEPORT.playForPlayer(event.getPlayer());
 				event.getPlayer().teleport(getOwner().getLocation());

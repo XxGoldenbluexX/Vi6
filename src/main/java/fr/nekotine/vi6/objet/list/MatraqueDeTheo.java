@@ -4,6 +4,8 @@ import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -15,6 +17,7 @@ import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.objet.utils.Objet;
+import fr.nekotine.vi6.statuseffects.Effects;
 import fr.nekotine.vi6.utils.Vi6Sound;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 import net.kyori.adventure.text.Component;
@@ -78,5 +81,14 @@ public class MatraqueDeTheo extends Objet {
 	}
 
 	public void action(PlayerInteractEvent e) {
+	}
+	
+	@EventHandler
+	public void onAttack(EntityDamageByEntityEvent event) {
+		if(getOwnerWrapper().haveEffect(Effects.Jammed) && event.getDamager().equals(getOwner()) &&
+		getOwner().getInventory().getItemInMainHand().equals(MATRAQUE) || 
+		getOwner().getInventory().getItemInOffHand().equals(MATRAQUE)) {
+			event.setCancelled(true);
+		}
 	}
 }

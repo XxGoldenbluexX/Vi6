@@ -7,15 +7,19 @@ import org.bukkit.block.BlockState;
 import org.bukkit.block.EndGateway;
 import org.bukkit.block.ShulkerBox;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import com.destroystokyo.paper.event.player.PlayerTeleportEndGatewayEvent;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.objet.utils.Objet;
+import fr.nekotine.vi6.statuseffects.Effects;
 import fr.nekotine.vi6.utils.TempBlock;
 import fr.nekotine.vi6.utils.Vi6Sound;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
@@ -109,5 +113,15 @@ public class Teleporteur extends Objet {
 	private boolean onGround() {
 		return (!getOwner().isFlying()
 				&& getOwner().getLocation().subtract(0.0D, 0.1D, 0.0D).getBlock().getType().isSolid());
+	}
+	
+	@EventHandler
+	public void onTeleport(PlayerTeleportEndGatewayEvent event) {
+		PlayerWrapper wrapper = getGame().getPlayerMap().get(event.getPlayer());
+		if(wrapper!=null && wrapper.haveEffect(Effects.Jammed) 
+			&& event.getFrom().distanceSquared(event.getPlayer().getLocation()) <= 1) {
+			event.setCancelled(true);
+		}
+		
 	}
 }
