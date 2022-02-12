@@ -73,6 +73,7 @@ public class IEM extends Objet{
 			public void run() {
 				for(PlayerWrapper wrapper : getGame().getPlayerMap().values()) {
 					if(wrapper.getTeam()==Team.GARDE) {
+						System.out.println("Remove");
 						getOwnerWrapper().removeStatusEffect(jam);
 						Bukkit.getPluginManager().callEvent(new PlayerUnjamEvent(getGame(), wrapper.getPlayer()));
 					}
