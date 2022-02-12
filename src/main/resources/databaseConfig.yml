@@ -1,0 +1,5 @@
+host: 192.168.1.3
+port: 3306
+database: Vi6_2
+username: MinecraftPlugin
+password: pluginAccess

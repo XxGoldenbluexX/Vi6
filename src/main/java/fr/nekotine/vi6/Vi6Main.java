@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
@@ -22,6 +23,7 @@ import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIConfig;
 import fr.nekotine.vi6.commands.Vi6commandMaker;
+import fr.nekotine.vi6.database.DatabaseManager;
 import fr.nekotine.vi6.majordom.Majordom;
 import fr.nekotine.vi6.map.Artefact;
 import fr.nekotine.vi6.map.Carte;
@@ -30,7 +32,6 @@ import fr.nekotine.vi6.map.Gateway;
 import fr.nekotine.vi6.map.Passage;
 import fr.nekotine.vi6.map.Sortie;
 import fr.nekotine.vi6.map.SpawnVoleur;
-import fr.nekotine.vi6.sql.SQLInterface;
 import fr.nekotine.vi6.statuseffects.ItemHider;
 import fr.nekotine.vi6.utils.DetectionZone;
 import fr.nekotine.vi6.utils.ExplosionCanceler;
@@ -49,6 +50,7 @@ import fr.nekotine.vi6.yml.DisplayTexts;
 public class Vi6Main extends JavaPlugin {
 	
 	private PluginManager pmanager;
+	public static Logger log;
 	private static List<Game> gameList = new ArrayList<Game>(1);
 	public static Vi6Main main;
 	@Override
@@ -60,6 +62,8 @@ public class Vi6Main extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		super.onEnable();
+		main=this;
+		log = getLogger();
 		//Register Serializables
 		ConfigurationSerialization.registerClass(Entree.class, "Entree");
 		ConfigurationSerialization.registerClass(Sortie.class, "Sortie");
@@ -132,13 +136,16 @@ public class Vi6Main extends JavaPlugin {
 		if (!mapf.exists()){
 				mapf.mkdir();
 		}
+		File dbfile = new File(main.getDataFolder(),"databaseConfig.yml");
+		if (!dbfile.exists()) {
+			main.saveResource("databaseConfig.yml", false);
+		}
+		DatabaseManager.loadConfig(dbfile);
 		Carte.setMapFolder(mapf);
-		SQLInterface.load(this);
 		DisplayTexts.instance.load(this);
-		createGame("test");
+		createGame("test",true);
 		CommandAPI.onEnable(this);//enable CommandAPI
 		Vi6commandMaker.makevi6(this).register();//registering commands
-		main=this;
 	}
 	
 	@Override
@@ -160,9 +167,11 @@ public class Vi6Main extends JavaPlugin {
 		return null;
 	}
 	
-	public boolean createGame(String name) {
+	public boolean createGame(String name,boolean isTest) {
 		if (gameExist(name)) return false;
-		gameList.add(new Game(this,name));
+		Game g = new Game(this,name);
+		g.setTest(isTest);
+		gameList.add(g);
 		return true;
 	}
 	

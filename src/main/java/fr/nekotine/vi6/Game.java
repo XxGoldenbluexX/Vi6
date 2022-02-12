@@ -1,8 +1,6 @@
 package fr.nekotine.vi6;
 
 import java.lang.reflect.InvocationTargetException;
-import java.sql.Date;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -71,6 +69,7 @@ import com.comphenix.protocol.wrappers.WrappedDataWatcher.Registry;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher.Serializer;
 import com.destroystokyo.paper.event.entity.EntityTeleportEndGatewayEvent;
 
+import fr.nekotine.vi6.database.DatabaseManager;
 import fr.nekotine.vi6.enums.GameState;
 import fr.nekotine.vi6.enums.PlayerState;
 import fr.nekotine.vi6.enums.Team;
@@ -96,8 +95,6 @@ import fr.nekotine.vi6.map.SpawnVoleur;
 import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.list.DeadRinger;
 import fr.nekotine.vi6.objet.utils.Objet;
-import fr.nekotine.vi6.sql.PlayerGame;
-import fr.nekotine.vi6.sql.SQLInterface;
 import fr.nekotine.vi6.statuseffects.GlowToken;
 import fr.nekotine.vi6.statuseffects.ItemHider;
 import fr.nekotine.vi6.utils.MessageFormater;
@@ -121,7 +118,7 @@ public class Game implements Listener {
 	public static final ItemStack GUARD_SWORD = new ItemStack(Material.DIAMOND_SWORD);
 	
 	private final Vi6Main main;
-	private int idPartie;
+	private int idPartie = -1;
 	private long startTime;
 	private final Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
 	private final Objective scoreboardSidebar;
@@ -136,6 +133,7 @@ public class Game implements Listener {
 	private final ArrayList<Objet> objToRemove = new ArrayList<>();
 	private String mapName;
 	private Carte map;
+	private boolean isTest = false;
 	private int money;
 	private MapSelectionInventory mapInterface;
 	private GameSettingsInventory settingsInterface;
@@ -538,10 +536,8 @@ public class Game implements Listener {
 				((Player) playerAndWrapper.getKey()).sendMessage((Component) MessageFormater.formatWithColorCodes('§',
 						DisplayTexts.getMessage("game_ingame_start_garde"), new MessageFormater[0]));
 			}
-			Bukkit.getPluginManager()
-					.registerEvents(new PlayerGame(this.name, ((Player) playerAndWrapper.getKey()).getUniqueId(),
-							((PlayerWrapper) playerAndWrapper.getValue()).getTeam()), (Plugin) this.main);
 		}
+		DatabaseManager.sendPreparationEndData(this);
 		this.state = GameState.Ingame;
 		Bukkit.getPluginManager().callEvent(new GameEnterInGamePhaseEvent(this));
 	}
@@ -657,12 +653,8 @@ public class Game implements Listener {
 	}
 
 	public boolean endGame(boolean forced) {
-		if (this.state == GameState.Waiting)
-			return false;
-		if (this.state == GameState.Ingame && !forced)
-			this.idPartie = SQLInterface.addPartie(new Date(System.currentTimeMillis()),
-					new Time(System.currentTimeMillis()-startTime),
-					this.money, this.isRanked, this.mapName);
+		if (this.state == GameState.Waiting){return false;}
+		DatabaseManager.sendRoundEndData(this,forced);
 		this.scoreboardSidebar.setDisplaySlot(DisplaySlot.SIDEBAR);
 		if (this.bb.getPlayers().size() > 0)
 			this.bb.removeAll();
@@ -706,7 +698,7 @@ public class Game implements Listener {
 		if (this.main.isEnabled()) {
 			waitingItem.give();
 		}
-		Bukkit.getPluginManager().callEvent(new GameEndEvent(this, this.idPartie, forced));
+		Bukkit.getPluginManager().callEvent(new GameEndEvent(this,this.idPartie, forced));
 		return true;
 	}
 
@@ -959,5 +951,21 @@ public class Game implements Listener {
 			pkt.getWatchableCollectionModifier().write(0, watcher.getWatchableObjects());
 			pm.broadcastServerPacket(pkt);
 		}
+	}
+
+	public boolean isTest() {
+		return isTest;
+	}
+
+	public void setTest(boolean isTest) {
+		this.isTest = isTest;
+	}
+
+	public int getIdPartie() {
+		return idPartie;
+	}
+
+	public void setIdPartie(int idPartie) {
+		this.idPartie = idPartie;
 	}
 }

@@ -21,6 +21,7 @@ import dev.jorel.commandapi.arguments.StringArgument;
 import dev.jorel.commandapi.executors.CommandExecutor;
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
+import fr.nekotine.vi6.database.DatabaseManager;
 import fr.nekotine.vi6.map.Artefact;
 import fr.nekotine.vi6.map.Carte;
 import fr.nekotine.vi6.map.Entree;
@@ -52,7 +53,17 @@ public class Vi6commandMaker {
 				.withSubcommand(makeHelp(mainHelp))
 				.withSubcommand(game(main))
 				.withSubcommand(map(main))
+				.withSubcommand(makeTest(main))
 				.executes(mainHelp);
+	}
+	
+	//----------------------TEST-------------------------\/
+	//TODO Prone for removal
+	private static CommandAPICommand makeTest(Vi6Main main) {
+		return new CommandAPICommand("test")
+				.executes((sender,args)->{
+					DatabaseManager.addTestItem();
+				});
 	}
 
 	//----------------------HELP-------------------------\/
@@ -89,7 +100,7 @@ public class Vi6commandMaker {
 		return new CommandAPICommand("create")
 				.withArguments(new StringArgument("gameName"))
 				.executes((sender,args)->{
-					main.createGame((String)args[0]);
+					main.createGame((String)args[0],false);
 				});
 	}
 	
