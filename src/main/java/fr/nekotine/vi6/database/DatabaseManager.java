@@ -119,11 +119,74 @@ public class DatabaseManager {
 					Vi6Main.log.warning("Synchronous database exception when sending preparation phase data:"+e.getMessage());
 				}
 			}
-		}.runTaskAsynchronously(Vi6Main.main);	
+		}.runTaskAsynchronously(Vi6Main.main);
 	}
 	
 	public static void sendRoundEndData(Game g,boolean forced) {
-		
+		//Retrieve data here to avoid sync issues
+		Timestamp datetime = new Timestamp(System.currentTimeMillis());
+		int gameId = g.getIdPartie();
+		@SuppressWarnings("unchecked")
+		Set<Entry<Player,PlayerWrapper>> playerSet = ((HashMap<Player,PlayerWrapper>)g.getPlayerMap().clone()).entrySet();
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				try (
+						MariaDbPoolDataSource source = new MariaDbPoolDataSource();
+						){
+					source.setUser(username);
+					source.setPassword(password);
+					source.setUrl(connectionURL);
+				try (
+						Connection connection = source.getConnection();
+						PreparedStatement st_updtRound = connection.prepareStatement(
+								"UPDATE round SET isFinished=?, isAborted=?, stopAt=?, nbStolenArtefact=?, nbSecuredArtefact=? WHERE ID = ?"
+								);
+						PreparedStatement st_updtParticipation = connection.prepareStatement(
+								"UPDATE participation SET nbStolenArtefact=?, nbSecuredArtefact=? WHERE UUID_player = ? and ID_round = ?"
+								);
+						){
+					//UPDATE PARTICIPATION
+					int totalVole = 0;
+					int totalSecu = 0;
+					for (Entry<Player, PlayerWrapper> entry : playerSet) {
+						Player p = entry.getKey();
+						PlayerWrapper w = entry.getValue();
+						int vole = w.getStealedArtefactList().size();
+						int secu = w.isEscaped()?vole:0;
+						totalVole += vole;
+						totalSecu += secu;
+						UUID playerUUID = p.getUniqueId();
+						ByteBuffer uuidbuffer = ByteBuffer.allocate(16);
+						uuidbuffer.putLong(playerUUID.getMostSignificantBits());
+						uuidbuffer.putLong(playerUUID.getLeastSignificantBits());
+						st_updtParticipation.setInt(1, vole);
+						st_updtParticipation.setInt(2, secu);
+						st_updtParticipation.setBytes(3,uuidbuffer.array());
+						st_updtParticipation.setInt(4, gameId);
+						st_updtParticipation.execute();
+					}
+					//UPDATE ROUND
+					st_updtRound.setBoolean(1, true);
+					st_updtRound.setBoolean(2, forced);
+					st_updtRound.setTimestamp(3, datetime);
+					st_updtRound.setInt(4, totalVole);
+					st_updtRound.setInt(5, totalSecu);
+					st_updtRound.setInt(6, gameId);
+					st_updtRound.execute();
+			    }catch (SQLException e) {
+			    	new BukkitRunnable() {
+						@Override
+						public void run() {
+							Vi6Main.log.warning("Asynchronous database exception when sending preparation phase data:"+e.getMessage());
+						}
+			    	}.runTask(Vi6Main.main);
+			    }
+			}catch(SQLException e) {
+				Vi6Main.log.warning("Synchronous database exception when sending preparation phase data:"+e.getMessage());
+			}
+		}
+	}.runTaskAsynchronously(Vi6Main.main);
 	}
 	
 	public static void addTestItem() {
