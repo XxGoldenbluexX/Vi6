@@ -625,7 +625,9 @@ public class Game implements Listener {
 		(new BukkitRunnable() {
 			public void run() {
 				PacketContainer packet = pmanager.createPacket(PacketType.Play.Server.ENTITY_DESTROY);
-				packet.getIntegerArrays().write(0, idList.stream().mapToInt(Integer::intValue).toArray());
+				
+				packet.getIntLists().write(0, idList);
+				
 				for (Player p : Game.this.playerList.keySet()) {
 					if (((PlayerWrapper) Game.this.playerList.get(p)).getTeam() == Team.VOLEUR)
 						try {
