@@ -109,7 +109,9 @@ public class GlobeVoyant extends Objet{
 		for(Entry<Player, PlayerWrapper> player : getGame().getPlayerMap().entrySet()) {
 			if(player.getValue().getTeam()==Team.VOLEUR) {
 				PacketContainer packet = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.ENTITY_DESTROY);
-				packet.getIntegerArrays().write(0, new int[] {eye.getEntityId()});
+				ArrayList<Integer> list = new ArrayList<>();
+				list.add(eye.getEntityId());
+				packet.getIntLists().write(0, list);
 			    try {
 			    	ProtocolLibrary.getProtocolManager().sendServerPacket(player.getKey(), packet);
 			    } catch (InvocationTargetException e) {

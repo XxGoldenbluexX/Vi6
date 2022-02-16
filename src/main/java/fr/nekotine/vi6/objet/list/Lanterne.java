@@ -159,7 +159,7 @@ public class Lanterne extends Objet {
 		if (this.lantern2 != null)
 			idList.add(Integer.valueOf(this.lantern2.guardianID));
 		PacketContainer packet = this.pmanager.createPacket(PacketType.Play.Server.ENTITY_DESTROY);
-		packet.getIntegerArrays().write(0, idList.stream().mapToInt(Integer::intValue).toArray());
+		packet.getIntLists().write(0, idList);
 		for (Player p : this.toShow) {
 			try {
 				this.pmanager.sendServerPacket(p, packet);
