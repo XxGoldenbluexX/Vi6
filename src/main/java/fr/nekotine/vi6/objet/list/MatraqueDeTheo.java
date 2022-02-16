@@ -88,7 +88,7 @@ public class MatraqueDeTheo extends Objet {
 		if(getOwnerWrapper().haveEffect(Effects.Jammed) && event.getDamager().equals(getOwner()) &&
 		getOwner().getInventory().getItemInMainHand().equals(MATRAQUE) || 
 		getOwner().getInventory().getItemInOffHand().equals(MATRAQUE)) {
-			event.setCancelled(true);
+			event.setDamage(0.01);
 		}
 	}
 }
