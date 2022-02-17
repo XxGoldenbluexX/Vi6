@@ -100,7 +100,7 @@ public class Vi6commandMaker {
 		return new CommandAPICommand("create")
 				.withArguments(new StringArgument("gameName"))
 				.executes((sender,args)->{
-					main.createGame((String)args[0],false);
+					main.createGame((String)args[0]);
 				});
 	}
 	

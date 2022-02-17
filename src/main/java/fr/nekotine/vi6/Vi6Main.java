@@ -143,7 +143,6 @@ public class Vi6Main extends JavaPlugin {
 		DatabaseManager.loadConfig(dbfile);
 		Carte.setMapFolder(mapf);
 		DisplayTexts.instance.load(this);
-		createGame("test",true);
 		CommandAPI.onEnable(this);//enable CommandAPI
 		Vi6commandMaker.makevi6(this).register();//registering commands
 	}
@@ -167,10 +166,10 @@ public class Vi6Main extends JavaPlugin {
 		return null;
 	}
 	
-	public boolean createGame(String name,boolean isTest) {
+	public boolean createGame(String name) {
 		if (gameExist(name)) return false;
 		Game g = new Game(this,name);
-		g.setTest(isTest);
+		g.setTest(name.contentEquals("test"));
 		gameList.add(g);
 		return true;
 	}
