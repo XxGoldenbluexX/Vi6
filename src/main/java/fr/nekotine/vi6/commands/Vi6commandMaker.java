@@ -21,7 +21,6 @@ import dev.jorel.commandapi.arguments.StringArgument;
 import dev.jorel.commandapi.executors.CommandExecutor;
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
-import fr.nekotine.vi6.database.DatabaseManager;
 import fr.nekotine.vi6.map.Artefact;
 import fr.nekotine.vi6.map.Carte;
 import fr.nekotine.vi6.map.Entree;
@@ -33,6 +32,8 @@ import fr.nekotine.vi6.utils.DetectionZone;
 import fr.nekotine.vi6.utils.MessageFormater;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 import fr.nekotine.vi6.yml.DisplayTexts;
+import net.kyori.adventure.key.Key;
+import net.kyori.adventure.sound.Sound;
 
 public class Vi6commandMaker {
 		
@@ -62,7 +63,10 @@ public class Vi6commandMaker {
 	private static CommandAPICommand makeTest(Vi6Main main) {
 		return new CommandAPICommand("test")
 				.executes((sender,args)->{
-					DatabaseManager.addTestItem();
+					if (sender instanceof Player) {
+						Player p = (Player) sender;
+						p.playSound(Sound.sound(Key.key(Key.MINECRAFT_NAMESPACE, "entity.cow.step"), Sound.Source.MASTER, 1f, 1f), Sound.Emitter.self());
+					}
 				});
 	}
 
