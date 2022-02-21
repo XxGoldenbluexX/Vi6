@@ -22,6 +22,7 @@ import fr.nekotine.vi6.yml.DisplayTexts;
 
 public class DeadRinger extends Objet{
 	public static final int INVISIBILITY_DURATION_TICK=60;
+	public static final int CANNOT_ESPACE_DELAY_TICK = 20*10;
 	public DeadRinger(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Game game, Player player,PlayerWrapper wrapper) {
 		super(main, objet, skin, game, player, wrapper);
 	}
@@ -80,6 +81,15 @@ public class DeadRinger extends Objet{
 					Vi6Sound.DEAD_RINGER.playAtLocation(loc);
 				}
 			}.runTaskLater(getMain(), INVISIBILITY_DURATION_TICK);
+			
+			getOwnerWrapper().setCanEscape(false);
+			
+			new BukkitRunnable() {
+				@Override
+				public void run() {
+					getOwnerWrapper().setCanEscape(true);
+				}
+			}.runTaskLater(getMain(), CANNOT_ESPACE_DELAY_TICK);
 		}
 	}
 }
