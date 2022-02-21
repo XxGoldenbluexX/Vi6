@@ -123,7 +123,9 @@ public class Lanterne extends Objet {
 				Vi6Sound.LANTERNE_POST_TELEPORT.playForPlayer(getOwner());
 				this.lantern1.destroy();
 				PacketContainer packet = this.pmanager.createPacket(PacketType.Play.Server.ENTITY_DESTROY);
-				packet.getIntegerArrays().write(0, new int[]{this.lantern1.guardianID});
+				ArrayList<Integer> idList = new ArrayList<>();
+				idList.add(this.lantern1.guardianID);
+				packet.getIntLists().write(0,  idList);
 				this.lantern1 = null;
 				for (Player p : this.toShow) {
 					try {
