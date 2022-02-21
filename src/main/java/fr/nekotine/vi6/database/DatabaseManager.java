@@ -140,22 +140,18 @@ public class DatabaseManager {
 				try (
 						Connection connection = source.getConnection();
 						PreparedStatement st_updtRound = connection.prepareStatement(
-								"UPDATE round SET isFinished=?, isAborted=?, stopAt=?, nbStolenArtefact=?, nbSecuredArtefact=? WHERE ID = ?"
+								"UPDATE round SET isFinished=?, isAborted=?, stopAt=? WHERE ID = ?"
 								);
 						PreparedStatement st_updtParticipation = connection.prepareStatement(
 								"UPDATE participation SET nbStolenArtefact=?, nbSecuredArtefact=? WHERE UUID_player = ? and ID_round = ?"
 								);
 						){
 					//UPDATE PARTICIPATION
-					int totalVole = 0;
-					int totalSecu = 0;
 					for (Entry<Player, PlayerWrapper> entry : playerSet) {
 						Player p = entry.getKey();
 						PlayerWrapper w = entry.getValue();
 						int vole = w.getStealedArtefactList().size();
 						int secu = w.isEscaped()?vole:0;
-						totalVole += vole;
-						totalSecu += secu;
 						UUID playerUUID = p.getUniqueId();
 						ByteBuffer uuidbuffer = ByteBuffer.allocate(16);
 						uuidbuffer.putLong(playerUUID.getMostSignificantBits());
@@ -170,9 +166,7 @@ public class DatabaseManager {
 					st_updtRound.setBoolean(1, true);
 					st_updtRound.setBoolean(2, forced);
 					st_updtRound.setTimestamp(3, datetime);
-					st_updtRound.setInt(4, totalVole);
-					st_updtRound.setInt(5, totalSecu);
-					st_updtRound.setInt(6, gameId);
+					st_updtRound.setInt(4, gameId);
 					st_updtRound.execute();
 			    }catch (SQLException e) {
 			    	new BukkitRunnable() {

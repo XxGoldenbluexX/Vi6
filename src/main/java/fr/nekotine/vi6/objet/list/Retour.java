@@ -16,8 +16,8 @@ import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 
 public class Retour extends Objet{
-	private static final int TELEPORT_DELAY_TICKS = 20*5;
-	private static final int COOLDOWN_DELAY_TICKS = 20*5;
+	private static final int TELEPORT_DELAY_TICKS = 20*4;
+	private static final int COOLDOWN_DELAY_TICKS = 20*4;
 	private static final int PARTICLE_NUMBER = 5;
 	
 	private BukkitTask runnable;
@@ -36,13 +36,7 @@ public class Retour extends Objet{
 	@Override
 	public void tick() {
 		if(isRunning) {
-			for(int k=0; k<5; k++) {
-				Location pLoc = playerLoc.clone();
-				double offset = (2*k*Math.PI) / PARTICLE_NUMBER;
-				pLoc.add(Math.cos(offset), 0, Math.sin(offset));
-				
-				getOwner().getWorld().spawnParticle(Particle.GLOW, pLoc, 1);
-			}
+			getOwner().getWorld().spawnParticle(Particle.GLOW, playerLoc, PARTICLE_NUMBER, 0.2, 0, 0.2, 0);
 		}
 	}
 	
