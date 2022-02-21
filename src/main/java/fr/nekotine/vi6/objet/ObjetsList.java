@@ -39,6 +39,7 @@ import fr.nekotine.vi6.objet.list.OmniCapteur;
 import fr.nekotine.vi6.objet.list.Tazer;
 import fr.nekotine.vi6.objet.list.PiegeCapteur;
 import fr.nekotine.vi6.objet.list.IEM;
+import fr.nekotine.vi6.objet.list.Retour;
 import fr.nekotine.vi6.objet.list.PiegeCollant;
 import fr.nekotine.vi6.objet.list.Hamecon;
 import fr.nekotine.vi6.objet.utils.Objet;
@@ -137,6 +138,15 @@ public enum ObjetsList {
 		Material.BEACON,
 		ChatColor.LIGHT_PURPLE+"Désactive temporairement les objets des gardes",
 		ChatColor.LIGHT_PURPLE+"Durée: "+ChatColor.AQUA+Math.round(fr.nekotine.vi6.objet.list.IEM.getJamDurationTicks()/20)+ChatColor.LIGHT_PURPLE+" secondes"),
+	RETOUR(Retour.class,
+		Team.VOLEUR,
+		150,
+		0,
+		ChatColor.RED+"Retour",
+		Material.POPPED_CHORUS_FRUIT,
+		ChatColor.LIGHT_PURPLE+"Vous téléporte au même endroit après "+ChatColor.AQUA+Math.round(fr.nekotine.vi6.objet.list.Retour.getTeleportDelay()/20)+" secondes"),
+	
+	
 	//----------------------------------------------------------------------------------------------------------------------------------------
 	MATRAQUE_DE_THEO(MatraqueDeTheo.class,Team.GARDE,500,1,
 			ChatColor.DARK_RED+"Matraque de théo",Material.NETHERITE_SWORD,ChatColor.LIGHT_PURPLE+"Tuez en un coup.",ChatColor.GRAY+"Faites rager les amateurs du bain de fumée."),
