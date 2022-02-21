@@ -6,6 +6,7 @@ import java.util.Map;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -13,6 +14,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.enums.Team;
+import fr.nekotine.vi6.events.PlayerJamEvent;
+import fr.nekotine.vi6.events.PlayerUnjamEvent;
 import fr.nekotine.vi6.map.Gateway;
 import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
@@ -85,7 +88,7 @@ public class ChampDeForce extends Objet implements ZoneDetectionListener {
 	public boolean playerEnterZone(Player player, DetectionZone zone, Vi6Main mainref) {
 		if (!this.guardList.contains(player))
 			return false;
-		if (this.nbGardeTriggering <= 0 && !getGame().getWrapper(player).haveEffect(Effects.Jammed)) {
+		if (this.nbGardeTriggering <= 0 && !getOwnerWrapper().haveEffect(Effects.Jammed)) {
 			this.nbGardeTriggering = 1;
 			this.gateway.open();
 		} else {
@@ -101,7 +104,7 @@ public class ChampDeForce extends Objet implements ZoneDetectionListener {
 			public void run() {
 				if (ChampDeForce.this.nbGardeTriggering > 0) {
 					ChampDeForce.this.nbGardeTriggering = (byte) (ChampDeForce.this.nbGardeTriggering - 1);
-					if (ChampDeForce.this.nbGardeTriggering <= 0)
+					if (ChampDeForce.this.nbGardeTriggering <= 0 && !getOwnerWrapper().haveEffect(Effects.Jammed))
 						ChampDeForce.this.gateway.close(ChampDeForce.this.mat);
 				}
 			}
@@ -119,5 +122,21 @@ public class ChampDeForce extends Objet implements ZoneDetectionListener {
 	}
 
 	public void leaveMap() {
+	}
+	
+	@EventHandler
+	public void onJam(PlayerJamEvent event) {
+		if(event.getPlayer().equals(getOwner()) && gateway != null) {
+			if(gateway.isClosed()) {
+				gateway.forceOpen();
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onUnJam(PlayerUnjamEvent event) {
+		if(event.getPlayer().equals(getOwner()) && !getOwnerWrapper().haveEffect(Effects.Jammed)) {
+			if(nbGardeTriggering <=0) gateway.close(mat);
+		}
 	}
 }
