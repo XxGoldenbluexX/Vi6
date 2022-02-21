@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
@@ -19,19 +20,13 @@ public class Retour extends Objet{
 	private static final int COOLDOWN_DELAY_TICKS = 20*5;
 	private static final int PARTICLE_NUMBER = 5;
 	
-	private final BukkitRunnable runnable;
+	private BukkitTask runnable;
 	private Location playerLoc;
 	private boolean isRunning = false;
 	
 	public Retour(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Game game, Player player, PlayerWrapper wrapper) {
 		super(main, objet, skin, game, player, wrapper);
-		runnable = new BukkitRunnable() {
-			@Override
-			public void run() {
-				getOwner().teleport(playerLoc);
-				isRunning = false;
-			}
-		};
+		
 	}
 	
 	public static int getTeleportDelay(){
@@ -85,7 +80,13 @@ public class Retour extends Objet{
 	private void use() {
 		if(!isRunning) {
 			playerLoc = getOwner().getLocation();
-			runnable.runTaskLater(getMain(), COOLDOWN_DELAY_TICKS);
+			runnable = new BukkitRunnable() {
+				@Override
+				public void run() {
+					getOwner().teleport(playerLoc);
+					isRunning = false;
+				}
+			}.runTaskLater(getMain(), COOLDOWN_DELAY_TICKS);
 			isRunning = true;
 			setCooldown(COOLDOWN_DELAY_TICKS);
 		}
