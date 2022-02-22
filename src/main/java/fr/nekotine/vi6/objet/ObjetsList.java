@@ -144,7 +144,7 @@ public enum ObjetsList {
 		1,
 		ChatColor.RED+"Retour",
 		Material.POPPED_CHORUS_FRUIT,
-		ChatColor.LIGHT_PURPLE+"Vous téléporte au même endroit après "+ChatColor.AQUA+Math.round(fr.nekotine.vi6.objet.list.Retour.getTeleportDelay()/20)+" secondes"),
+		ChatColor.LIGHT_PURPLE+"Vous téléporte au même endroit après "+ChatColor.AQUA+Math.round(fr.nekotine.vi6.objet.list.Retour.getTeleportDelay()/20)+ChatColor.LIGHT_PURPLE+" secondes"),
 	
 	
 	//----------------------------------------------------------------------------------------------------------------------------------------

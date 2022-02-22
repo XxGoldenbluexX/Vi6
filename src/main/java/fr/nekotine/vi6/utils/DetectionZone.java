@@ -13,6 +13,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
 import fr.nekotine.vi6.Vi6Main;
 
@@ -97,6 +98,32 @@ public class DetectionZone implements ConfigurationSerializable,Listener {
 				};
 			}
 			playersInside.remove(p);
+		}
+	}
+	
+	@EventHandler
+	public void onTeleport(PlayerTeleportEvent event) {
+		Player p = event.getPlayer();
+		if(playersInside.contains(p)){
+			if(!isLocInside(event.getTo())) {
+				for (ZoneDetectionListener l : listeners) {
+					if (l.playerLeaveZone(p,this,mainref)) {
+						event.setCancelled(true);
+						return;
+					};
+				}
+				playersInside.remove(p);
+			}
+		}else {
+			if(isLocInside(event.getTo())) {
+				for (ZoneDetectionListener l : listeners) {
+					if (l.playerEnterZone(p,this,mainref)) {
+						event.setCancelled(true);
+						return;
+					};
+				}
+				playersInside.add(p);
+			}
 		}
 	}
 	
