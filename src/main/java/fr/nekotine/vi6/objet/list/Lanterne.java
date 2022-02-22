@@ -48,6 +48,8 @@ public class Lanterne extends Objet {
 	private ArrayList<Player> full = new ArrayList<>();
 	private BlockData lanternType;
 	private Particle lanternParticleType;
+	
+	private PacketContainer glowPacket;
 
 	public Lanterne(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Game game, Player player, PlayerWrapper wrapper) {
 		super(main, objet, skin, game, player, wrapper);
@@ -115,6 +117,15 @@ public class Lanterne extends Objet {
 	public void onPlayerMove(PlayerMoveEvent event) {
 		if (this.toShow.contains(event.getPlayer())) {
 			PlayerWrapper wrap = getMain().getPlayerWrapper(event.getPlayer());
+			
+			//Update du glow si jamais le joueur re-rentre dans la range de glow apres l'avoir perdu
+			try {
+				pmanager.sendServerPacket(event.getPlayer(), glowPacket);
+			} catch (InvocationTargetException e) {
+				e.printStackTrace();
+			}
+			
+			
 			if (wrap != null && !wrap.haveEffect(Effects.Jammed) && wrap.getState() == PlayerState.INSIDE && this.lantern1 != null && getOwnerWrapper().getState()==PlayerState.INSIDE
 					&& event.getTo().distanceSquared(this.lantern1.getLoc()) <= LANTERN_CATCH_SQUARED_DISTANCE) {
 				Vi6Sound.LANTERNE_PRE_TELEPORT.playForPlayer(event.getPlayer());
@@ -231,7 +242,7 @@ public class Lanterne extends Objet {
 			this.block.setHurtEntities(false);
 			this.lanternMaintainer.runTaskTimer((Plugin) main, 0L, 20L);
 			WrappedDataWatcher.Serializer byteserializer = WrappedDataWatcher.Registry.get(Byte.class);
-			PacketContainer glowPacket = Lanterne.this.pmanager.createPacket(PacketType.Play.Server.ENTITY_METADATA);
+			glowPacket = Lanterne.this.pmanager.createPacket(PacketType.Play.Server.ENTITY_METADATA);
 			glowPacket.getIntegers().write(0, Integer.valueOf(this.block.getEntityId()));
 			WrappedDataWatcher watcher = new WrappedDataWatcher();
 			watcher.setObject(0, byteserializer, Byte.valueOf((byte) 64));
