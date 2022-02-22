@@ -143,7 +143,7 @@ public class DatabaseManager {
 								"UPDATE round SET isFinished=?, isAborted=?, stopAt=? WHERE ID = ?"
 								);
 						PreparedStatement st_updtParticipation = connection.prepareStatement(
-								"UPDATE participation SET nbStolenArtefact=?, nbSecuredArtefact=? WHERE UUID_player = ? and ID_round = ?"
+								"UPDATE participation SET nbStolenArtefact=?, nbSecuredArtefact=?, nbKill=? WHERE UUID_player = ? and ID_round = ?"
 								);
 						){
 					//UPDATE PARTICIPATION
@@ -158,8 +158,9 @@ public class DatabaseManager {
 						uuidbuffer.putLong(playerUUID.getLeastSignificantBits());
 						st_updtParticipation.setInt(1, vole);
 						st_updtParticipation.setInt(2, secu);
-						st_updtParticipation.setBytes(3,uuidbuffer.array());
-						st_updtParticipation.setInt(4, gameId);
+						st_updtParticipation.setInt(3, 0);
+						st_updtParticipation.setBytes(4,uuidbuffer.array());
+						st_updtParticipation.setInt(5, gameId);
 						st_updtParticipation.execute();
 					}
 					//UPDATE ROUND
