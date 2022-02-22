@@ -48,8 +48,6 @@ public class Lanterne extends Objet {
 	private ArrayList<Player> full = new ArrayList<>();
 	private BlockData lanternType;
 	private Particle lanternParticleType;
-	
-	private PacketContainer glowPacket;
 
 	public Lanterne(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Game game, Player player, PlayerWrapper wrapper) {
 		super(main, objet, skin, game, player, wrapper);
@@ -119,11 +117,20 @@ public class Lanterne extends Objet {
 			PlayerWrapper wrap = getMain().getPlayerWrapper(event.getPlayer());
 			
 			//Update du glow si jamais le joueur re-rentre dans la range de glow apres l'avoir perdu
-			/*try {
-				pmanager.sendServerPacket(event.getPlayer(), glowPacket);
-			} catch (InvocationTargetException e) {
-				e.printStackTrace();
-			}*/
+			if(lantern1 != null) {
+				try {
+					pmanager.sendServerPacket(event.getPlayer(), lantern1.glowPacket);
+				} catch (InvocationTargetException e) {
+					e.printStackTrace();
+				}
+			}
+			if(lantern2 != null) {
+				try {
+					pmanager.sendServerPacket(event.getPlayer(), lantern2.glowPacket);
+				} catch (InvocationTargetException e) {
+					e.printStackTrace();
+				}
+			}
 			
 			
 			if (wrap != null && !wrap.haveEffect(Effects.Jammed) && wrap.getState() == PlayerState.INSIDE && this.lantern1 != null && getOwnerWrapper().getState()==PlayerState.INSIDE
@@ -219,6 +226,8 @@ public class Lanterne extends Objet {
 	}
 
 	private class Lant {
+		private PacketContainer glowPacket;
+		
 		private final int guardianID;
 
 		private final FallingBlock block;
