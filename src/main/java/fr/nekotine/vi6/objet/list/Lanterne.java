@@ -119,11 +119,11 @@ public class Lanterne extends Objet {
 			PlayerWrapper wrap = getMain().getPlayerWrapper(event.getPlayer());
 			
 			//Update du glow si jamais le joueur re-rentre dans la range de glow apres l'avoir perdu
-			try {
+			/*try {
 				pmanager.sendServerPacket(event.getPlayer(), glowPacket);
 			} catch (InvocationTargetException e) {
 				e.printStackTrace();
-			}
+			}*/
 			
 			
 			if (wrap != null && !wrap.haveEffect(Effects.Jammed) && wrap.getState() == PlayerState.INSIDE && this.lantern1 != null && getOwnerWrapper().getState()==PlayerState.INSIDE
