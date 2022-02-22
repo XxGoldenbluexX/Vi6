@@ -10,6 +10,10 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -24,6 +28,7 @@ import net.kyori.adventure.text.TextComponent;
 
 public class MapSelectionInventory extends BaseSharedInventory{
 	private static Enchantment enchant = Enchantment.DURABILITY;
+	private int nbMap;
 	public MapSelectionInventory(Vi6Main main,Game game) {
 		super(game, main);
 		inventory = Bukkit.createInventory(null, 9*3, Component.text("Carte"));
@@ -36,6 +41,7 @@ public class MapSelectionInventory extends BaseSharedInventory{
 		if(Carte.getMapList().size()>0) game.setMapName(Carte.getMapList().get(0));
 		for(String map : Carte.getMapList()) {
 			index++;
+			nbMap++;
 			if(index%9==0) {
 				index+=2;
 			}
@@ -52,6 +58,7 @@ public class MapSelectionInventory extends BaseSharedInventory{
 			}
 			inventory.setItem(index, IsCreator.createItemStack(Material.BLACK_STAINED_GLASS_PANE,1," ",""));
 		}
+		inventory.setItem(9, IsCreator.createItemStack(Material.DISPENSER,1,ChatColor.LIGHT_PURPLE+"Aléatoire",""));
 	}
 
 	@Override
@@ -59,6 +66,16 @@ public class MapSelectionInventory extends BaseSharedInventory{
 		switch(itm.getType()) {
 		case BARRIER:
 			game.openSettings(player);
+			break;
+		case DISPENSER:
+			
+			int nbMapChosen = (int)Math.round(Math.random()*nbMap);
+			int slotChosen = 2 + nbMapChosen;
+			if(slotChosen>8) slotChosen+=2;
+			if(slotChosen>17) slotChosen+=2;
+			
+			new InventoryClickEvent(player.getOpenInventory(), SlotType.CONTAINER, slotChosen, ClickType.LEFT, InventoryAction.COLLECT_TO_CURSOR);
+			
 			break;
 		case PAPER:
 			for(ItemStack item : inventory.getStorageContents()) {
