@@ -63,23 +63,21 @@ public class MapSelectionInventory extends BaseSharedInventory{
 
 	@Override
 	public void itemClicked(Player player, ItemStack itm, int slot) {
-		System.out.println("Item clicked");
 		switch(itm.getType()) {
 		case BARRIER:
 			game.openSettings(player);
 			break;
 		case DISPENSER:
-			System.out.println("Disp clicked");
 			int nbMapChosen = (int)Math.round(Math.random()*nbMap);
 			int slotChosen = 2 + nbMapChosen;
 			if(slotChosen>8) slotChosen+=2;
 			if(slotChosen>17) slotChosen+=2;
 			
-			new InventoryClickEvent(player.getOpenInventory(), SlotType.CONTAINER, slotChosen, ClickType.LEFT, InventoryAction.COLLECT_TO_CURSOR);
+			InventoryClickEvent event =  new InventoryClickEvent(player.getOpenInventory(), SlotType.CONTAINER, slotChosen, ClickType.UNKNOWN, InventoryAction.COLLECT_TO_CURSOR);
+			event.callEvent();
 			
 			break;
 		case PAPER:
-			System.out.println("Paper clicked");
 			for(ItemStack item : inventory.getStorageContents()) {
 				if(item.getType()==Material.PAPER&&((TextComponent)item.getItemMeta().displayName()).content().equals(game.getMapName())) {
 					item.removeEnchantment(enchant);
