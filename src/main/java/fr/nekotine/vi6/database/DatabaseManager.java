@@ -34,6 +34,8 @@ public class DatabaseManager {
 			Timestamp datetime = new Timestamp(System.currentTimeMillis());
 			boolean isTest = g.isTest();
 			boolean isRanked = g.isRanked();
+			String mapName = g.getMapName();
+			int mapNbArtefact = g.getMap().getArtefactList().size();
 			@SuppressWarnings("unchecked")
 			Set<Entry<Player,PlayerWrapper>> playerSet = ((HashMap<Player,PlayerWrapper>)g.getPlayerMap().clone()).entrySet();
 			new BukkitRunnable() {
@@ -47,6 +49,15 @@ public class DatabaseManager {
 						source.setUrl(connectionURL);
 					try (
 							Connection connection = source.getConnection();
+							PreparedStatement st_checkMap = connection.prepareStatement(
+									"SELECT ID, nbArtefact FROM map WHERE label = (?)"
+									);
+							PreparedStatement st_addMap = connection.prepareStatement(
+									"INSERT INTO map(label,nbArtefact) values (?,?)",Statement.RETURN_GENERATED_KEYS
+									);
+							PreparedStatement st_updateMap = connection.prepareStatement(
+									"UPDATE map SET nbArtefact=? WHERE ID=?"
+									);
 							PreparedStatement st_addRound = connection.prepareStatement(
 									"INSERT INTO round(StartAt,IsTest,IsRanked,ID_Map) values (?,?,?,?)",Statement.RETURN_GENERATED_KEYS
 									);
@@ -66,14 +77,39 @@ public class DatabaseManager {
 									"INSERT INTO purchase(ID_Participation,ID_Item,NumberPurchased) values (?,?,?)"
 									);
 							){
-						//ADD ROUND
+						///MAP ROUTINE
+						//Check existing
+						st_checkMap.setString(1, mapName);
+						ResultSet set = st_checkMap.executeQuery();
+						int id = -1;
+						int nbArtefact = 0;
+						while (set.next()) {
+							id = set.getInt(1);
+							nbArtefact = set.getInt(2);
+						}
+						if (id==-1) {
+							st_addMap.setString(1, mapName);
+							st_addMap.setInt(2, mapNbArtefact);
+							st_addMap.execute();
+							set = st_addMap.getGeneratedKeys();
+							while (set.next()) {
+								id = set.getInt(1);
+							}
+						}else {
+							if (mapNbArtefact!=nbArtefact) {
+								st_updateMap.setInt(1, mapNbArtefact);
+								st_updateMap.setInt(2, id);
+								st_updateMap.execute();
+							}
+						}
+						///ADD ROUND
 						st_addRound.setTimestamp(1, datetime);
 						st_addRound.setBoolean(2, isTest);
 						st_addRound.setBoolean(3, isRanked);
-						st_addRound.setInt(4, 1);
+						st_addRound.setInt(4, id);//attention à la variable id
 						st_addRound.execute();
-						ResultSet set = st_addRound.getGeneratedKeys();
-						int id = -1;
+						set = st_addRound.getGeneratedKeys();
+						id = -1;
 						while (set.next()) {
 							id = set.getInt(1);
 						}
