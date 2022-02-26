@@ -273,8 +273,8 @@ public class DatabaseManager {
 						st_updtParticipation.setInt(5, gameId);
 						st_updtParticipation.execute();
 					}
-					lpgarde/=nbgarde;
-					lpvoleur/=nbvoleur;
+					lpgarde/=nbgarde>0?nbgarde:1;
+					lpvoleur/=nbvoleur>0?nbgarde:1;
 					lpdiff = lpgarde-lpvoleur; //+garde -voleur
 					double ratioSecu = ((double)totalSecu)/((double)mapNbArtefact);
 					double temp = (lpdiff<0?-lpdiff:lpdiff)/250d;
