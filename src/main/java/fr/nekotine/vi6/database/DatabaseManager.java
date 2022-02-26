@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
@@ -28,6 +29,8 @@ public class DatabaseManager {
 	private static String connectionURL;
 	private static String username;
 	private static String password;
+	private static int MAXIMAL_LP_CHANGE = 100;
+	private static int MINIMAL_LP_CHANGE = 25;
 	
 	public static void sendPreparationEndData(Game g) {
 			//Retrieve data here to avoid sync issues
@@ -162,8 +165,12 @@ public class DatabaseManager {
 		//Retrieve data here to avoid sync issues
 		Timestamp datetime = new Timestamp(System.currentTimeMillis());
 		int gameId = g.getIdPartie();
+		String mapName = g.getMapName();
+		int mapNbArtefact = g.getMap().getArtefactList().size();
+		boolean isTest = g.isTest();
+		boolean isRanked = g.isRanked();
 		@SuppressWarnings("unchecked")
-		Set<Entry<Player,PlayerWrapper>> playerSet = ((HashMap<Player,PlayerWrapper>)g.getPlayerMap().clone()).entrySet();
+		Set<Entry<Player,PlayerWrapper>> playerSet = ((HashMap<Player, PlayerWrapper>) g.getPlayerMap().clone()).entrySet();
 		new BukkitRunnable() {
 			@Override
 			public void run() {
@@ -175,6 +182,25 @@ public class DatabaseManager {
 					source.setUrl(connectionURL);
 				try (
 						Connection connection = source.getConnection();
+						PreparedStatement st_getMapId = connection.prepareStatement(
+								"SELECT ID FROM map WHERE label = (?)"
+								);
+						PreparedStatement st_getLpgarde = connection.prepareStatement(
+								"SELECT lpGarde FROM player WHERE UUID = ?"
+								);
+						PreparedStatement st_setLpgarde = connection.prepareStatement(
+								"UPDATE player SET lpGarde = ? WHERE UUID = ?"
+								);
+						PreparedStatement st_getLpvoleur = connection.prepareStatement(
+								"SELECT lpVoleur FROM player WHERE UUID = ?"
+								);
+						PreparedStatement st_setLpvoleur = connection.prepareStatement(
+								"UPDATE player SET lpVoleur = ? WHERE UUID = ?"
+								);
+						PreparedStatement st_getMoySecuPerMap = connection.prepareStatement(
+								"SELECT SUM(nbSecuredArtefact)/(map.nbArtefact * COUNT(DISTINCT round.ID)) FROM participation,round,map WHERE ID_round = round.ID and"
+								+ " round.ID_map=map.ID and map.ID = ? and round.isFinished=true and round.isRanked=true and round.isAborted=false and round.isTest=false"
+								);
 						PreparedStatement st_updtRound = connection.prepareStatement(
 								"UPDATE round SET isFinished=?, isAborted=?, stopAt=? WHERE ID = ?"
 								);
@@ -182,22 +208,142 @@ public class DatabaseManager {
 								"UPDATE participation SET nbStolenArtefact=?, nbSecuredArtefact=?, nbKill=? WHERE UUID_player = ? and ID_round = ?"
 								);
 						){
-					//UPDATE PARTICIPATION
+					int mapid = -1;
+					double moySecu = -1d;
+					int totalSecu = 0;
+					st_getMapId.setString(1, mapName);
+					ResultSet set = st_getMapId.executeQuery();
+					while(set.next()) {
+						mapid = set.getInt(1);
+					}
+					Vi6Main.log.warning("mapid="+mapid);
+					if (mapid!=-1) {
+						st_getMoySecuPerMap.setInt(1, mapid);
+						set = st_getMoySecuPerMap.executeQuery();
+						while (set.next()) {
+							moySecu = set.getDouble(1);
+						}
+					}
+					Vi6Main.log.warning("mySecu="+moySecu);
+					int nbgarde = 0;
+					int nbvoleur = 0;
+					int lpgarde = 0;
+					int lpvoleur = 0;
+					int lpdiff = 0;
+					int lp = -1;
+					Map<Player,Integer> lpindex = new HashMap<>();
+					//UPDATE PARTICIPATION AND MODIFY LP
 					for (Entry<Player, PlayerWrapper> entry : playerSet) {
 						Player p = entry.getKey();
 						PlayerWrapper w = entry.getValue();
 						int vole = w.getStealedArtefactList().size();
-						int secu = w.isEscaped()?vole:0;
+						int secu = w.getSecuredArtefactList().size();
+						totalSecu += secu;
 						UUID playerUUID = p.getUniqueId();
 						ByteBuffer uuidbuffer = ByteBuffer.allocate(16);
 						uuidbuffer.putLong(playerUUID.getMostSignificantBits());
 						uuidbuffer.putLong(playerUUID.getLeastSignificantBits());
+						byte[] array = uuidbuffer.array();
+						if (w.getTeam()==Team.GARDE) {
+							nbgarde++;
+							st_getLpgarde.setBytes(1,array);
+							set = st_getLpgarde.executeQuery();
+							while (set.next()) {
+								Vi6Main.log.warning("getting lp garde");
+								lp = set.getInt(1);
+							}
+							lp = lp<0?0:lp;
+							lpindex.put(p, lp);
+							lpgarde += lp;
+						}else {
+							nbvoleur++;
+							st_getLpvoleur.setBytes(1,array);
+							set = st_getLpvoleur.executeQuery();
+							while (set.next()) {
+								lp = set.getInt(1);
+							}
+							lp = lp<0?0:lp;
+							lpindex.put(p, lp);
+							lpvoleur += lp;
+						}
 						st_updtParticipation.setInt(1, vole);
 						st_updtParticipation.setInt(2, secu);
 						st_updtParticipation.setInt(3, 0);
-						st_updtParticipation.setBytes(4,uuidbuffer.array());
+						st_updtParticipation.setBytes(4,array);
 						st_updtParticipation.setInt(5, gameId);
 						st_updtParticipation.execute();
+					}
+					lpgarde/=nbgarde;
+					lpvoleur/=nbvoleur;
+					lpdiff = lpgarde-lpvoleur; //+garde -voleur
+					double ratioSecu = ((double)totalSecu)/((double)mapNbArtefact);
+					double temp = (lpdiff<0?-lpdiff:lpdiff)/250d;
+					double ratioAntiSmurf = 1/(temp==0?1:temp);
+					ratioAntiSmurf = ratioAntiSmurf>1?1:ratioAntiSmurf;
+					int lpChange = 0;
+					Vi6Main.log.warning("ratioSecu="+ratioSecu);
+					Vi6Main.log.warning("ratioAntiSmurf="+ratioAntiSmurf);
+					if (moySecu>=0 && !isTest && !forced && isRanked) {
+						if (ratioSecu>moySecu) {
+							lpChange = lerp(MINIMAL_LP_CHANGE,(ratioSecu-moySecu)/(1-moySecu),MAXIMAL_LP_CHANGE);
+						}else if (ratioSecu<moySecu) {
+							lpChange = lerp(MINIMAL_LP_CHANGE,(moySecu-ratioSecu)/(moySecu),MAXIMAL_LP_CHANGE);
+						}
+						Vi6Main.log.warning("lpchange="+lpChange);
+						for (Entry<Player,PlayerWrapper> e : playerSet) {
+							Player p = e.getKey();
+							lp = lpindex.get(p);
+							UUID playerUUID = p.getUniqueId();
+							ByteBuffer uuidbuffer = ByteBuffer.allocate(16);
+							uuidbuffer.putLong(playerUUID.getMostSignificantBits());
+							uuidbuffer.putLong(playerUUID.getLeastSignificantBits());
+							Vi6Main.log.warning("routine for "+p.getName());
+							if (e.getValue().getTeam()==Team.GARDE) {
+								if (ratioSecu>moySecu) {
+									if (lpdiff<0){
+										lp -= lpChange*ratioAntiSmurf;
+									}else {
+										lp -= lpChange;
+									}
+									st_setLpgarde.setInt(1, lp<0?0:lp);
+									st_setLpgarde.setBytes(2, uuidbuffer.array());
+									st_setLpgarde.execute();
+									Vi6Main.log.warning("lp remove "+lp);
+								}else if (ratioSecu<moySecu) {
+									if (lpdiff>0){
+										lp += lpChange*ratioAntiSmurf;
+									}else {
+										lp += lpChange;
+									}
+									st_setLpgarde.setInt(1, lp<0?0:lp);
+									st_setLpgarde.setBytes(2, uuidbuffer.array());
+									st_setLpgarde.execute();
+									Vi6Main.log.warning("lp gain "+lp);
+								}
+							}else {
+								if (ratioSecu>moySecu) {
+									if (lpdiff<0){
+										lp += lpChange*ratioAntiSmurf;
+									}else {
+										lp += lpChange;
+									}
+									st_setLpvoleur.setInt(1, lp<0?0:lp);
+									st_setLpvoleur.setBytes(2, uuidbuffer.array());
+									st_setLpvoleur.execute();
+									Vi6Main.log.warning("lp gain "+lp);
+								}else if (ratioSecu<moySecu) {
+									if (lpdiff>0){
+										lp -= lpChange*ratioAntiSmurf;
+									}else {
+										lp -= lpChange;
+									}
+									st_setLpvoleur.setInt(1, lp<0?0:lp);
+									st_setLpvoleur.setBytes(2, uuidbuffer.array());
+									st_setLpvoleur.execute();
+									Vi6Main.log.warning("lp remove "+lp);
+								}
+							}
+						}
 					}
 					//UPDATE ROUND
 					st_updtRound.setBoolean(1, true);
@@ -220,7 +366,8 @@ public class DatabaseManager {
 	}.runTaskAsynchronously(Vi6Main.main);
 	}
 	
-	public static void addTestItem() {
+	private static int lerp(int min, double ratio, int max) {
+		return (int) (min + ((max-min)*ratio));
 	}
 
 	public static void loadConfig(File dbfile) {

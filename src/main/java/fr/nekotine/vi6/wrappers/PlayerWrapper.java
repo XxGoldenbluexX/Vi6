@@ -33,6 +33,7 @@ public class PlayerWrapper {
 	private final Player player;
 	private final ArrayList<StatusEffect> statusEffects = new ArrayList<>();
 	private final ArrayList<Artefact> stealedObjects = new ArrayList<>();
+	private final ArrayList<Artefact> securedObjects = new ArrayList<>();
 	private Location thiefSpawnPoint;
 	private final Game game;
 	private boolean canCapture = false;
@@ -238,5 +239,18 @@ public class PlayerWrapper {
 
 	public List<GlowToken> getGlowTokens() {
 		return glowTo;
+	}
+	
+	@Override
+	public PlayerWrapper clone() {
+		try {
+			return (PlayerWrapper)super.clone();
+		}catch(CloneNotSupportedException e) {
+			return null;
+		}
+	}
+
+	public ArrayList<Artefact> getSecuredArtefactList() {
+		return securedObjects;
 	}
 }

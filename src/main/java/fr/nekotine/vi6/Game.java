@@ -520,6 +520,7 @@ public class Game implements Listener {
 		for (Map.Entry<Player, PlayerWrapper> playerAndWrapper : this.playerList.entrySet()) {
 			Player player = playerAndWrapper.getKey();
 			PlayerWrapper wrapper = playerAndWrapper.getValue();
+			wrapper.getSecuredArtefactList().clear();
 			wrapper.clearStatusEffects();
 			wrapper.getStealedArtefactList().clear();
 			if (wrapper.getTeam() == Team.VOLEUR) {

@@ -21,6 +21,7 @@ import fr.nekotine.vi6.enums.PlayerState;
 import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.events.GameEndEvent;
 import fr.nekotine.vi6.events.PlayerStealEvent;
+import fr.nekotine.vi6.interfaces.inventories.CheckListGuardInventory;
 import fr.nekotine.vi6.utils.DetectionZone;
 import fr.nekotine.vi6.utils.MessageFormater;
 import fr.nekotine.vi6.utils.ZoneDetectionListener;
@@ -100,6 +101,10 @@ public class Artefact implements ConfigurationSerializable,ZoneDetectionListener
 		if (zone.equals(zone)) {
 			PlayerWrapper w = mainref.getPlayerWrapper(player);
 			if (w!=null && (w.getState()==PlayerState.INSIDE || w.getState()==PlayerState.PREPARATION)) {
+				CheckListGuardInventory chk = w.getGame().getCheckListGuard();
+				if (chk!=null) {
+					chk.change(this, status==CaptureState.STEALABLE);
+				}
 				if(status==CaptureState.STEALABLE) {
 					player.sendActionBar(Component.text("Artéfact: "+ChatColor.AQUA+displayName+
 					ChatColor.WHITE+" Status: "+ChatColor.GREEN+"Sécurisé"));

@@ -1,6 +1,7 @@
 package fr.nekotine.vi6.map;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
@@ -85,6 +86,9 @@ public class Sortie implements ConfigurationSerializable, ZoneDetectionListener 
 				if (wrap.getState() == PlayerState.INSIDE && wrap.isCanEscape()) {
 					wrap.setState(PlayerState.LEAVED);
 					wrap.setEscaped(true);
+					List<Artefact> l = wrap.getSecuredArtefactList();
+					l.clear();
+					l.addAll(wrap.getStealedArtefactList());
 					player.setGameMode(GameMode.SPECTATOR);
 					Bukkit.getPluginManager().callEvent(new PlayerEscapeEvent(this, player, wrap.getGame()));
 					for (ItemStack itm : player.getInventory().getContents()) {
