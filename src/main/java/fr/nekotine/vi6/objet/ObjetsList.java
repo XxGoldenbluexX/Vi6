@@ -23,7 +23,7 @@ import fr.nekotine.vi6.objet.list.DeadRinger;
 import fr.nekotine.vi6.objet.list.DoubleSaut;
 import fr.nekotine.vi6.objet.list.Invisneak;
 import fr.nekotine.vi6.objet.list.Lanterne;
-import fr.nekotine.vi6.objet.list.MatraqueDeTheo;
+//import fr.nekotine.vi6.objet.list.MatraqueDeTheo;
 import fr.nekotine.vi6.objet.list.Ombre;
 import fr.nekotine.vi6.objet.list.SixiemeSens;
 import fr.nekotine.vi6.objet.list.Sonar;
@@ -148,8 +148,10 @@ public enum ObjetsList {
 	
 	
 	//----------------------------------------------------------------------------------------------------------------------------------------
+	/*
 	MATRAQUE_DE_THEO(MatraqueDeTheo.class,Team.GARDE,500,1,
 			ChatColor.DARK_RED+"Matraque de théo",Material.NETHERITE_SWORD,ChatColor.LIGHT_PURPLE+"Tuez en un coup.",ChatColor.GRAY+"Faites rager les amateurs du bain de fumée."),
+	*/
 	CHAMP_DE_FORCE(ChampDeForce.class,Team.GARDE,200,0,
 			ChatColor.GRAY+"Champ de force",Material.LIGHT_GRAY_STAINED_GLASS,
 			ChatColor.LIGHT_PURPLE+"Vous pouvez placer une porte où",
