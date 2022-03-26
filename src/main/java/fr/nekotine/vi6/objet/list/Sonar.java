@@ -19,7 +19,7 @@ import fr.nekotine.vi6.wrappers.PlayerWrapper;
 
 public class Sonar extends Objet{
 	private static int DELAY_IN_TICKS = 80;
-	private static int SQUARED_BLOCK_RANGE = 36;
+	private static int SQUARED_BLOCK_RANGE = 16;
 	private int delay=DELAY_IN_TICKS;
 	public Sonar(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Game game, Player player, PlayerWrapper wrapper) {
 		super(main, objet, skin, game, player, wrapper);
