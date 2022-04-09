@@ -1,3 +1,31 @@
+# Outre les outils pour inserer des valeurs, voici quelques codes valide:
+# §4 = dark_red
+# §c = red
+# §6 = gold
+# §e = yellow
+# §2 = dark_green
+# §a = green
+# §b = aqua
+# §3 = dark_aqua
+# §1 = dark_blue
+# §9 = blue
+# §d = light_purple
+# §5 = dark_purple
+# §f = white
+# §7 = gray
+# §8 = dark_gray
+# §0 = black
+#
+# Effets
+#
+# §k = obfuscated (caché)
+# §l = bold (gras)
+# §m = strikethrough (barré)
+# §n = underline (souligné)
+# §o = italic (italique)
+# §r = default color (couleur par défault)
+#
+
 game_join: "[§bVi6§r] §b§p §6a §arejoint §6la partie §r[§b§g§r]"
 #§p = player name, §g = game Name
 game_leave: "[§bVi6§r] §b§p §6a §cquitté §6la partie §r[§b§g§r]"
@@ -29,7 +57,10 @@ game_shouldBeUnready: "[§bVi6§r] §6Vous devez être §c'En attente' §6pour �
 game_death: "[§bVi6§r] §b§p §cest mort avec §b§n §cartéfacts !"
 game_fake_death: "[§bVi6§r] §b§p §ca feinté la mort !"
 effect_decouvert: "§cVous êtes à découvert!"
-
+# §v = perte
+lp_loss: "[§bVi6§r] §b§c Vous avez perdu §v LP"
+# §v = gain
+lp_gain: "[§bVi6§r] §b§a Vous avez gagné §v LP"
 ##OBJETS MESSAGES
 objet_globe_triggered: "[§bGlobe Voyant§r] §6L'artéfact §b§n§a§6 a été §cvolé !"
 #§a = artefact name

@@ -8,8 +8,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
@@ -22,23 +23,22 @@ import org.mariadb.jdbc.MariaDbPoolDataSource;
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.enums.Team;
+import fr.nekotine.vi6.rank.RankCalculator;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 
 public class DatabaseManager {
 	
 	private static String connectionURL;
 	private static String username;
-	private static String password;
-	private static int MAXIMAL_LP_CHANGE = 100;
-	private static int MINIMAL_LP_CHANGE = 25;
+	private static String password;	
 	
 	public static void sendPreparationEndData(Game g) {
 			//Retrieve data here to avoid sync issues
-			Timestamp datetime = new Timestamp(System.currentTimeMillis());
-			boolean isTest = g.isTest();
-			boolean isRanked = g.isRanked();
-			String mapName = g.getMapName();
-			int mapNbArtefact = g.getMap().getArtefactList().size();
+			final Timestamp datetime = new Timestamp(System.currentTimeMillis());
+			final boolean isTest = g.isTest();
+			final boolean isRanked = g.isRanked();	
+			final String mapName = g.getMapName();
+			final int mapNbArtefact = g.getMap().getArtefactList().size();
 			@SuppressWarnings("unchecked")
 			Set<Entry<Player,PlayerWrapper>> playerSet = ((HashMap<Player,PlayerWrapper>)g.getPlayerMap().clone()).entrySet();
 			new BukkitRunnable() {
@@ -163,14 +163,27 @@ public class DatabaseManager {
 	
 	public static void sendRoundEndData(Game g,boolean forced) {
 		//Retrieve data here to avoid sync issues
-		Timestamp datetime = new Timestamp(System.currentTimeMillis());
-		int gameId = g.getIdPartie();
-		String mapName = g.getMapName();
-		int mapNbArtefact = g.getMap().getArtefactList().size();
-		boolean isTest = g.isTest();
-		boolean isRanked = g.isRanked();
-		@SuppressWarnings("unchecked")
-		Set<Entry<Player,PlayerWrapper>> playerSet = ((HashMap<Player, PlayerWrapper>) g.getPlayerMap().clone()).entrySet();
+		final Timestamp datetime = new Timestamp(System.currentTimeMillis());
+		final int gameId = g.getIdPartie();
+		final String mapName = g.getMapName();
+		final int mapNbArtefact = g.getMap().getArtefactList().size();
+		final boolean isTest = g.isTest();
+		final boolean isRanked = g.isRanked();
+		int totalStealed = 0;
+		int totalSecured = 0;
+		List<DBPlayer> players = new ArrayList<>();
+		for (Entry<Player,PlayerWrapper> entry : g.getPlayerMap().entrySet()) {
+			DBPlayer p = new DBPlayer(entry.getKey());
+			PlayerWrapper w = entry.getValue();
+			p.setTeam(w.getTeam());
+			p.setNbVole(w.getStealedArtefactList().size());
+			p.setNbSecu(w.getSecuredArtefactList().size());
+			totalStealed += p.getNbVole();
+			totalSecured += p.getNbSecu();
+			players.add(p);
+		}
+		final int fixedTotalStealed = totalStealed;
+		final int fixedTotalSecured = totalSecured;
 		new BukkitRunnable() {
 			@Override
 			public void run() {
@@ -188,35 +201,22 @@ public class DatabaseManager {
 						PreparedStatement st_getLpgarde = connection.prepareStatement(
 								"SELECT lpGarde FROM player WHERE UUID = ?"
 								);
-						PreparedStatement st_setLpgarde = connection.prepareStatement(
-								"UPDATE player SET lpGarde = ? WHERE UUID = ?"
-								);
 						PreparedStatement st_getLpvoleur = connection.prepareStatement(
 								"SELECT lpVoleur FROM player WHERE UUID = ?"
-								);
-						PreparedStatement st_setLpvoleur = connection.prepareStatement(
-								"UPDATE player SET lpVoleur = ? WHERE UUID = ?"
 								);
 						PreparedStatement st_getMoySecuPerMap = connection.prepareStatement(
 								"SELECT SUM(nbSecuredArtefact)/(map.nbArtefact * COUNT(DISTINCT round.ID)) FROM participation,round,map WHERE ID_round = round.ID and"
 								+ " round.ID_map=map.ID and map.ID = ? and round.isFinished=true and round.isRanked=true and round.isAborted=false and round.isTest=false"
 								);
-						PreparedStatement st_updtRound = connection.prepareStatement(
-								"UPDATE round SET isFinished=?, isAborted=?, stopAt=? WHERE ID = ?"
-								);
-						PreparedStatement st_updtParticipation = connection.prepareStatement(
-								"UPDATE participation SET nbStolenArtefact=?, nbSecuredArtefact=?, nbKill=? WHERE UUID_player = ? and ID_round = ?"
-								);
 						){
+					//GETTING MAP ID AND MOY SECU
 					int mapid = -1;
 					double moySecu = -1d;
-					int totalSecu = 0;
 					st_getMapId.setString(1, mapName);
 					ResultSet set = st_getMapId.executeQuery();
 					while(set.next()) {
 						mapid = set.getInt(1);
 					}
-					Vi6Main.log.warning("mapid="+mapid);
 					if (mapid!=-1) {
 						st_getMoySecuPerMap.setInt(1, mapid);
 						set = st_getMoySecuPerMap.executeQuery();
@@ -224,150 +224,121 @@ public class DatabaseManager {
 							moySecu = set.getDouble(1);
 						}
 					}
-					Vi6Main.log.warning("mySecu="+moySecu);
-					int nbgarde = 0;
-					int nbvoleur = 0;
-					int lpgarde = 0;
-					int lpvoleur = 0;
-					int lpdiff = 0;
-					int lp = -1;
-					Map<Player,Integer> lpindex = new HashMap<>();
-					//UPDATE PARTICIPATION AND MODIFY LP
-					for (Entry<Player, PlayerWrapper> entry : playerSet) {
-						Player p = entry.getKey();
-						PlayerWrapper w = entry.getValue();
-						int vole = w.getStealedArtefactList().size();
-						int secu = w.getSecuredArtefactList().size();
-						totalSecu += secu;
-						UUID playerUUID = p.getUniqueId();
-						ByteBuffer uuidbuffer = ByteBuffer.allocate(16);
-						uuidbuffer.putLong(playerUUID.getMostSignificantBits());
-						uuidbuffer.putLong(playerUUID.getLeastSignificantBits());
-						byte[] array = uuidbuffer.array();
-						if (w.getTeam()==Team.GARDE) {
-							nbgarde++;
-							st_getLpgarde.setBytes(1,array);
+					//GETTING PLAYER's LP
+					for (DBPlayer player : players) {
+						int lp = 0;
+						switch (player.getTeam()) {
+						case GARDE:
+							st_getLpgarde.setBytes(1,player.getUUIDBytes());
 							set = st_getLpgarde.executeQuery();
 							while (set.next()) {
-								Vi6Main.log.warning("getting lp garde");
 								lp = set.getInt(1);
 							}
-							lp = lp<0?0:lp;
-							lpindex.put(p, lp);
-							lpgarde += lp;
-						}else {
-							nbvoleur++;
-							st_getLpvoleur.setBytes(1,array);
+							player.setLpGarde(lp<0?0:lp);
+							break;
+						case VOLEUR:
+							st_getLpvoleur.setBytes(1,player.getUUIDBytes());
 							set = st_getLpvoleur.executeQuery();
 							while (set.next()) {
 								lp = set.getInt(1);
 							}
-							lp = lp<0?0:lp;
-							lpindex.put(p, lp);
-							lpvoleur += lp;
-						}
-						st_updtParticipation.setInt(1, vole);
-						st_updtParticipation.setInt(2, secu);
-						st_updtParticipation.setInt(3, 0);
-						st_updtParticipation.setBytes(4,array);
-						st_updtParticipation.setInt(5, gameId);
-						st_updtParticipation.execute();
-					}
-					lpgarde/=nbgarde>0?nbgarde:1;
-					lpvoleur/=nbvoleur>0?nbgarde:1;
-					lpdiff = lpgarde-lpvoleur; //+garde -voleur
-					double ratioSecu = ((double)totalSecu)/((double)mapNbArtefact);
-					double temp = (lpdiff<0?-lpdiff:lpdiff)/250d;
-					double ratioAntiSmurf = 1/(temp==0?1:temp);
-					ratioAntiSmurf = ratioAntiSmurf>1?1:ratioAntiSmurf;
-					int lpChange = 0;
-					Vi6Main.log.warning("ratioSecu="+ratioSecu);
-					Vi6Main.log.warning("ratioAntiSmurf="+ratioAntiSmurf);
-					if (moySecu>=0 && !isTest && !forced && isRanked) {
-						if (ratioSecu>moySecu) {
-							lpChange = lerp(MINIMAL_LP_CHANGE,(ratioSecu-moySecu)/(1-moySecu),MAXIMAL_LP_CHANGE);
-						}else if (ratioSecu<moySecu) {
-							lpChange = lerp(MINIMAL_LP_CHANGE,(moySecu-ratioSecu)/(moySecu),MAXIMAL_LP_CHANGE);
-						}
-						Vi6Main.log.warning("lpchange="+lpChange);
-						for (Entry<Player,PlayerWrapper> e : playerSet) {
-							Player p = e.getKey();
-							lp = lpindex.get(p);
-							UUID playerUUID = p.getUniqueId();
-							ByteBuffer uuidbuffer = ByteBuffer.allocate(16);
-							uuidbuffer.putLong(playerUUID.getMostSignificantBits());
-							uuidbuffer.putLong(playerUUID.getLeastSignificantBits());
-							Vi6Main.log.warning("routine for "+p.getName());
-							if (e.getValue().getTeam()==Team.GARDE) {
-								if (ratioSecu>moySecu) {
-									if (lpdiff<0){
-										lp -= lpChange*ratioAntiSmurf;
-									}else {
-										lp -= lpChange;
-									}
-									st_setLpgarde.setInt(1, lp<0?0:lp);
-									st_setLpgarde.setBytes(2, uuidbuffer.array());
-									st_setLpgarde.execute();
-									Vi6Main.log.warning("lp remove "+lp);
-								}else if (ratioSecu<moySecu) {
-									if (lpdiff>0){
-										lp += lpChange*ratioAntiSmurf;
-									}else {
-										lp += lpChange;
-									}
-									st_setLpgarde.setInt(1, lp<0?0:lp);
-									st_setLpgarde.setBytes(2, uuidbuffer.array());
-									st_setLpgarde.execute();
-									Vi6Main.log.warning("lp gain "+lp);
-								}
-							}else {
-								if (ratioSecu>moySecu) {
-									if (lpdiff<0){
-										lp += lpChange*ratioAntiSmurf;
-									}else {
-										lp += lpChange;
-									}
-									st_setLpvoleur.setInt(1, lp<0?0:lp);
-									st_setLpvoleur.setBytes(2, uuidbuffer.array());
-									st_setLpvoleur.execute();
-									Vi6Main.log.warning("lp gain "+lp);
-								}else if (ratioSecu<moySecu) {
-									if (lpdiff>0){
-										lp -= lpChange*ratioAntiSmurf;
-									}else {
-										lp -= lpChange;
-									}
-									st_setLpvoleur.setInt(1, lp<0?0:lp);
-									st_setLpvoleur.setBytes(2, uuidbuffer.array());
-									st_setLpvoleur.execute();
-									Vi6Main.log.warning("lp remove "+lp);
-								}
-							}
+							player.setLpVoleur(lp<0?0:lp);
+							break;
 						}
 					}
-					//UPDATE ROUND
-					st_updtRound.setBoolean(1, true);
-					st_updtRound.setBoolean(2, forced);
-					st_updtRound.setTimestamp(3, datetime);
-					st_updtRound.setInt(4, gameId);
-					st_updtRound.execute();
-			    }catch (SQLException e) {
-			    	new BukkitRunnable() {
+					final double fixedMoySecu = moySecu;
+					//GO BACK TO MAIN THREAD, CALCULATE LP CHANGE AND SHOW IT TO PLAYER
+					new BukkitRunnable() {
+
 						@Override
 						public void run() {
-							Vi6Main.log.warning("Asynchronous database exception when sending preparation phase data:"+e.getMessage());
-						}
-			    	}.runTask(Vi6Main.main);
-			    }
-			}catch(SQLException e) {
-				Vi6Main.log.warning("Synchronous database exception when sending preparation phase data:"+e.getMessage());
+							if (fixedMoySecu>=0 && !isTest && !forced && isRanked) {
+								for (DBPlayer p : players) {
+									RankCalculator.calculate(fixedTotalStealed,fixedTotalSecured,mapNbArtefact,fixedMoySecu,p);
+									p.notifyLpGain();
+								}
+							}
+							//GO BACK TO ASYNC THREAD AND SEND DATA TO DATABASE
+							new BukkitRunnable() {
+
+								@Override
+								public void run() {
+									try (
+											MariaDbPoolDataSource source = new MariaDbPoolDataSource();
+											){
+										source.setUser(username);
+										source.setPassword(password);
+										source.setUrl(connectionURL);
+									try (
+											Connection connection = source.getConnection();
+											PreparedStatement st_setLpgarde = connection.prepareStatement(
+													"UPDATE player SET lpGarde = ? WHERE UUID = ?"
+													);
+											PreparedStatement st_setLpvoleur = connection.prepareStatement(
+													"UPDATE player SET lpVoleur = ? WHERE UUID = ?"
+													);
+											PreparedStatement st_updtRound = connection.prepareStatement(
+													"UPDATE round SET isFinished=?, isAborted=?, stopAt=? WHERE ID = ?"
+													);
+											PreparedStatement st_updtParticipation = connection.prepareStatement(
+													"UPDATE participation SET nbStolenArtefact=?, nbSecuredArtefact=?, nbKill=? WHERE UUID_player = ? and ID_round = ?"
+													);
+											){
+									//UPDATE ROUND
+									st_updtRound.setBoolean(1, true);
+									st_updtRound.setBoolean(2, forced);
+									st_updtRound.setTimestamp(3, datetime);
+									st_updtRound.setInt(4, gameId);
+									st_updtRound.execute();
+									for (DBPlayer player : players) {
+										//UPDATE PARTICIPATION
+										st_updtParticipation.setInt(1, player.getNbVole());
+										st_updtParticipation.setInt(2, player.getNbSecu());
+										st_updtParticipation.setInt(3, 0);//NOMBRE DE KILL
+										st_updtParticipation.setBytes(4,player.getUUIDBytes());
+										st_updtParticipation.setInt(5, gameId);
+										st_updtParticipation.execute();
+										//UPDATE LP
+										if (fixedMoySecu>=0 && !isTest && !forced && isRanked) {
+											switch (player.getTeam()) {
+											case GARDE:
+												st_setLpgarde.setInt(1, player.getLpGarde());
+												st_setLpgarde.setBytes(2, player.getUUIDBytes());
+												st_setLpgarde.execute();
+												break;
+											case VOLEUR:
+												st_setLpvoleur.setInt(1, player.getLpVoleur());
+												st_setLpvoleur.setBytes(2, player.getUUIDBytes());
+												st_setLpvoleur.execute();
+												break;
+											}
+										}
+									}
+									} catch (SQLException e1) {
+										e1.printStackTrace();
+									}
+									} catch (SQLException e2) {
+										e2.printStackTrace();
+									}
+								}
+									
+								}.runTaskAsynchronously(Vi6Main.main);
+							}
+							
+						}.runTask(Vi6Main.main);
+				    }catch (SQLException e) {
+				    	new BukkitRunnable() {
+							@Override
+							public void run() {
+								Vi6Main.log.warning("Asynchronous database exception when sending preparation phase data:"+e.getMessage());
+							}
+				    	}.runTask(Vi6Main.main);
+				    }
+				}catch(SQLException e) {
+					Vi6Main.log.warning("Synchronous database exception when sending preparation phase data:"+e.getMessage());
+				}
 			}
-		}
-	}.runTaskAsynchronously(Vi6Main.main);
-	}
-	
-	private static int lerp(int min, double ratio, int max) {
-		return (int) (min + ((max-min)*ratio));
+		}.runTaskAsynchronously(Vi6Main.main);
 	}
 
 	public static void loadConfig(File dbfile) {
