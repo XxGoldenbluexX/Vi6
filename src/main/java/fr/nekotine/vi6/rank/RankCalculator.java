@@ -12,10 +12,12 @@ public class RankCalculator {
 		case GARDE:
 			p.setLpGain(-change);
 			p.setLpGarde(p.getLpGarde()-change);
+			if (p.getLpGarde()<0) p.setLpGarde(0); 
 			break;
 		case VOLEUR:
 			p.setLpGain(change);
 			p.setLpVoleur(p.getLpVoleur()+change);
+			if (p.getLpVoleur()<0) p.setLpVoleur(0);
 			break;
 		}
 	}

@@ -28,6 +28,8 @@ import fr.nekotine.vi6.wrappers.PlayerWrapper;
 
 public class DatabaseManager {
 	
+	public static final int DEFAULT_LP = 1200;
+	
 	private static String connectionURL;
 	private static String username;
 	private static String password;	
@@ -68,7 +70,7 @@ public class DatabaseManager {
 									"SELECT Username FROM player WHERE UUID = (?)"
 									);
 							PreparedStatement st_addPlayer = connection.prepareStatement(
-									"INSERT INTO player(UUID,Username) values (?,?)"
+									"INSERT INTO player(UUID,Username,lpGarde,lpVoleur) values (?,?,?,?)"
 									);
 							PreparedStatement st_modifPlayer = connection.prepareStatement(
 									"UPDATE player SET Username = (?) WHERE UUID = (?)"
@@ -138,6 +140,8 @@ public class DatabaseManager {
 							if (!iterated) {
 								st_addPlayer.setBytes(1,uuidbuffer.array());
 								st_addPlayer.setString(2, p.getName());
+								st_addPlayer.setInt(3, DEFAULT_LP);
+								st_addPlayer.setInt(4, DEFAULT_LP);
 								st_addPlayer.execute();
 							}
 							//ADD Participation
