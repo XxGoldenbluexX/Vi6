@@ -205,7 +205,7 @@ public class DatabaseManager {
 								"SELECT lpVoleur FROM player WHERE UUID = ?"
 								);
 						PreparedStatement st_getMoySecuPerMap = connection.prepareStatement(
-								"SELECT SUM(nbSecuredArtefact)/(map.nbArtefact * COUNT(DISTINCT round.ID)) FROM participation,round,map WHERE ID_round = round.ID and"
+								"SELECT SUM(nbSecuredArtefact)/COUNT(DISTINCT round.ID) FROM participation,round,map WHERE ID_round = round.ID and"
 								+ " round.ID_map=map.ID and map.ID = ? and round.isFinished=true and round.isRanked=true and round.isAborted=false and round.isTest=false"
 								);
 						){
