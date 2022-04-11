@@ -115,7 +115,7 @@ public class BainDeFumee extends Objet {
 		private void manageEffects() {
 			for (Entry<Player, PlayerWrapper> e : parent.getGame().getPlayerMap().entrySet()) {
 				PlayerWrapper w = e.getValue();
-				if (e.getKey().getLocation().distanceSquared(loc)<=25 && Math.abs(e.getKey().getLocation().getY()-loc.getY())<=1 && w.getTeam()==Team.VOLEUR) {
+				if (e.getKey().getLocation().distanceSquared(loc)<=25 && Math.abs(e.getKey().getLocation().getY()-loc.getY())<=2 && w.getTeam()==Team.VOLEUR) {
 					if (!inside.contains(w)) {
 						w.addStatusEffect(INVISIBLE);
 						w.addStatusEffect(NODAMAGE);
