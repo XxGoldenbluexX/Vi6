@@ -23,6 +23,8 @@ import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.events.GameEnterPreparationPhaseEvent;
 import fr.nekotine.vi6.map.Carte;
 import fr.nekotine.vi6.utils.IsCreator;
+import fr.nekotine.vi6.utils.MessageFormater;
+import fr.nekotine.vi6.yml.DisplayTexts;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 
@@ -76,6 +78,13 @@ public class MapSelectionInventory extends BaseSharedInventory{
 			InventoryClickEvent event =  new InventoryClickEvent(player.getOpenInventory(), SlotType.CONTAINER, slotChosen, ClickType.UNKNOWN, InventoryAction.COLLECT_TO_CURSOR);
 			event.callEvent();
 			
+			TextComponent message = MessageFormater.formatWithColorCodes('§',
+					DisplayTexts.getMessage("game_randomize_map"),
+					new MessageFormater[]{new MessageFormater("§p", player.getName()),
+							new MessageFormater("§m", game.getMapName())});
+			for (Player p : game.getPlayerMap().keySet()){
+				p.sendMessage((Component) message);
+			}
 			break;
 		case PAPER:
 			for(ItemStack item : inventory.getStorageContents()) {

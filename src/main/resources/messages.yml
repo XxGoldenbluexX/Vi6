@@ -56,6 +56,7 @@ game_end_secu: "[§bVi6§r] §6Total §3artéfacts §6sécurisés: §b§n"
 game_shouldBeUnready: "[§bVi6§r] §6Vous devez être §c'En attente' §6pour çela !"
 game_death: "[§bVi6§r] §b§p §cest mort avec §b§n §cartéfacts !"
 game_fake_death: "[§bVi6§r] §b§p §ca feinté la mort !"
+game_randomize_map: "[§bVi6§r] §aChangement de map aléatoire par §b§p \n§fCarte: §b§m"
 effect_decouvert: "§cVous êtes à découvert!"
 # §v = perte
 lp_loss: "[§bVi6§r] §b§c Vous avez perdu §v LP"
