@@ -145,6 +145,10 @@ public class Vi6Main extends JavaPlugin {
 		DisplayTexts.instance.load(this);
 		CommandAPI.onEnable(this);//enable CommandAPI
 		Vi6commandMaker.makevi6(this).register();//registering commands
+		
+		createGame("Vi6");
+		getGame("Vi6").setRanked(true);
+		
 	}
 	
 	@Override
