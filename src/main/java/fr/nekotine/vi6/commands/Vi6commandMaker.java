@@ -833,7 +833,6 @@ public class Vi6commandMaker {
 					.withSubcommand(renameCamera(mapArgument, camList))
 					.withSubcommand(displayRenameCamera(mapArgument, camList))
 					.withSubcommand(setMaterialCamera(mapArgument, camList))
-					.withSubcommand(setColorCamera(mapArgument, camList))
 					.withSubcommand(setPositionCamera(mapArgument, camList))
 					.withSubcommand(setLocationCamera(mapArgument, camList));
 			
@@ -844,8 +843,7 @@ public class Vi6commandMaker {
 					.withArguments(mapArgument,
 							new StringArgument("cameraName"), new StringArgument("displayName"), 
 							new LocationArgument("location", LocationType.PRECISE_POSITION),
-							new IntegerArgument("position"), new ItemStackArgument("item"),
-							new ChatColorArgument("color"))
+							new IntegerArgument("position"), new ItemStackArgument("item"))
 					.executes((sender,args)->{
 						Carte map = (Carte)args[0];
 						
@@ -855,13 +853,12 @@ public class Vi6commandMaker {
 						int position = (int)args[4];
 						
 						ItemStack item = (ItemStack)args[5];
+						System.out.println(item);
 						Material mat = item.getType();
-						
-						ChatColor color = (ChatColor)args[6];
 						if (map.getCamera(camName)!=null) {
 							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_camera_add_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", camName)));	
 						}else {
-							map.getCameraList().add(new Camera(camName, displayName, location, position, mat, color));
+							map.getCameraList().add(new Camera(camName, displayName, location, position, mat));
 							
 							Carte.save(map);
 							
@@ -946,27 +943,6 @@ public class Vi6commandMaker {
 							cam.setMaterial(mat);
 							Carte.save(map);
 							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_camera_material_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", camName)));	
-
-						}else {
-							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_camera_not_found"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", camName)));	
-
-						}
-						map.unload();
-					});
-		}
-		
-		public static CommandAPICommand setColorCamera(Argument mapArgument, Argument camList) {
-			return new CommandAPICommand("setColor")
-					.withArguments(mapArgument, camList, new ChatColorArgument("color"))
-					.executes((sender,args)->{
-						Carte map = (Carte)args[0];
-						String camName = (String)args[1];
-						Camera cam = map.getCamera(camName);
-						ChatColor color = (ChatColor)args[2];
-						if(cam!=null) {
-							cam.setColor(color);
-							Carte.save(map);
-							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_camera_color_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", camName)));	
 
 						}else {
 							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_camera_not_found"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", camName)));	

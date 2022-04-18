@@ -26,6 +26,7 @@ import fr.nekotine.vi6.commands.Vi6commandMaker;
 import fr.nekotine.vi6.database.DatabaseManager;
 import fr.nekotine.vi6.majordom.Majordom;
 import fr.nekotine.vi6.map.Artefact;
+import fr.nekotine.vi6.map.Camera;
 import fr.nekotine.vi6.map.Carte;
 import fr.nekotine.vi6.map.Entree;
 import fr.nekotine.vi6.map.Gateway;
@@ -73,6 +74,7 @@ public class Vi6Main extends JavaPlugin {
 		ConfigurationSerialization.registerClass(Carte.class, "Carte");
 		ConfigurationSerialization.registerClass(DetectionZone.class, "DetectionZone");
 		ConfigurationSerialization.registerClass(SpawnVoleur.class, "SpawnVoleur");
+		ConfigurationSerialization.registerClass(Camera.class, "Camera");
 		pmanager=Bukkit.getPluginManager();//getting pmanager reference
 		ProtocolManager promanager = ProtocolLibrary.getProtocolManager();
 		pmanager.registerEvents(new Majordom(this),this);

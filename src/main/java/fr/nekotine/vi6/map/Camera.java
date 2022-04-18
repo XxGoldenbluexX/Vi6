@@ -9,6 +9,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.EntityType;
@@ -25,6 +26,7 @@ import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.utils.CameraState;
 import fr.nekotine.vi6.utils.IsCreator;
 
+@SerializableAs("Camera")
 public class Camera implements ConfigurationSerializable, Listener{
 	private static final String yamlPrefix = "Camera_";
 	private static final String idleURL = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvY2MzNmVjNTMyM2Y3NjVmZjU5ZjkxNmQyZDFhMWVjNzQ5Njg1NGNmN2JkMjZkZDJmMmNiYWRjM2RkNDkyNzljOCJ9fX0=";
@@ -41,21 +43,18 @@ public class Camera implements ConfigurationSerializable, Listener{
 	private String camName;
 	private String camDisplayName;
 	private Material camMaterial;
-	private ChatColor camColor;
 	private int camPosition;
 	
-	private Vi6Main mainref;
 	private Creeper creeperCam;
 	
 	private final ItemStack idleHead;
 	private final ItemStack startingHead;
 	private final ItemStack activeHead;
-	public Camera(String camName, String camDisplayName, Location camLoc, int camPosition, Material camMaterial, ChatColor camColor) {
+	public Camera(String camName, String camDisplayName, Location camLoc, int camPosition, Material camMaterial) {
 		this.camLoc = camLoc;
 		this.camName =camName;
 		this.camDisplayName = camDisplayName;
 		this.camMaterial = camMaterial;
-		this.camColor = camColor;
 		this.camPosition = camPosition;
 		
 		idleHead = IsCreator.createSkull(idleURL);
@@ -121,9 +120,6 @@ public class Camera implements ConfigurationSerializable, Listener{
 	public int getPosition() {
 		return camPosition;
 	}
-	public ChatColor getColor() {
-		return camColor;
-	}
 	public void spectate(Player player) {
 		if(creeperCam!=null) {
 			player.setGameMode(GameMode.SPECTATOR);
@@ -161,9 +157,6 @@ public class Camera implements ConfigurationSerializable, Listener{
 	public void setMaterial(Material mat) {
 		camMaterial = mat;
 	}
-	public void setColor(ChatColor color) {
-		camColor = color;
-	}
 	public void setPosition(int position) {
 		camPosition = position;
 	}
@@ -177,7 +170,6 @@ public class Camera implements ConfigurationSerializable, Listener{
 	}
 	
 	public void enable(Vi6Main mainref) {
-		this.mainref = mainref;
 		
 		creeperCam = (Creeper)camLoc.getWorld().spawnEntity(camLoc, EntityType.CREEPER);
 		creeperCam.setAI(false);
@@ -189,7 +181,7 @@ public class Camera implements ConfigurationSerializable, Listener{
 		
 		setState(CameraState.IDLE);
 		
-		camLoc.getWorld().getBlockAt(camLoc).setType(Material.BARRIER);
+		camLoc.getWorld().getBlockAt(camLoc.add(0,0,0)).setType(Material.BARRIER);
 		
 		Bukkit.getPluginManager().registerEvents(this, mainref);
 	}
@@ -197,8 +189,8 @@ public class Camera implements ConfigurationSerializable, Listener{
 		if(creeperCam!=null) {
 			creeperCam.remove();
 		}
-		camLoc.getWorld().getBlockAt(camLoc).setType(Material.AIR);
-		HandlerList.unregisterAll();
+		camLoc.getWorld().getBlockAt(camLoc.add(0,1,0)).setType(Material.AIR);
+		HandlerList.unregisterAll(this);
 	}
 	@Override
 	public Map<String, Object> serialize() {
@@ -206,13 +198,12 @@ public class Camera implements ConfigurationSerializable, Listener{
 		map.put("name", camName);
 		map.put("displayName", camDisplayName);
 		map.put("location", camLoc);
-		map.put("material", camMaterial);
-		map.put("color", camColor);
+		map.put("material", camMaterial.toString());
 		map.put("position", camPosition);
 		return map;
 	}
 	public static Camera deserialize(Map<String, Object> map) {
 		return new Camera((String)map.get("name"), (String)map.get("displayName"), (Location)map.get("location"), (int)map.get("position"),
-				(Material)map.get("material"),(ChatColor)map.get("color"));
+				Material.valueOf((String)map.get("material")));
 	}
 }

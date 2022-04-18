@@ -12,6 +12,9 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.events.PacketContainer;
 import com.destroystokyo.paper.event.entity.ProjectileCollideEvent;
 
 import fr.nekotine.vi6.Game;
@@ -50,7 +53,7 @@ public class Tazer extends Objet{
 	public void action(PlayerInteractEvent e) {
 		if(e.getAction()==Action.RIGHT_CLICK_AIR || e.getAction()==Action.RIGHT_CLICK_BLOCK) {
 			Snowball projectile = getOwner().launchProjectile(Snowball.class, getOwner().getEyeLocation().getDirection());
-			projectile.setVelocity(projectile.getVelocity().multiply(5));
+			projectile.setVelocity(projectile.getVelocity().multiply(10));
 			projectileList.add(projectile);
 			setCooldown(COOLDOWN);
 		}
@@ -77,8 +80,13 @@ public class Tazer extends Objet{
 					@Override
 					public void run() {
 						nbHit++;
-						hit.setNoDamageTicks(0);
-						hit.damage(0.001);
+						//hit.setNoDamageTicks(0);
+						//hit.damage(0.001);
+						PacketContainer packet = new PacketContainer(PacketType.Play.Server.ANIMATION);
+						packet.getIntegers().write(0, hit.getEntityId());
+						//packet.getBytes().write(0, (byte) 1);//1 is the value for the damage animation.
+						packet.getIntegers().write(0,1);
+						ProtocolLibrary.getProtocolManager().broadcastServerPacket(packet);
 						if (nbHit<20) {
 							Vi6Sound.TAZER_SHOCKING.playAtLocation(hit.getLocation());
 						}
@@ -87,8 +95,6 @@ public class Tazer extends Objet{
 						}
 					}
 				}.runTaskTimer(getMain(), 1, 2);
-			}else {
-				e.setCancelled(true);
 			}
 		}
 	}
