@@ -56,6 +56,8 @@ game_end_secu: "[§bVi6§r] §6Total §3artéfacts §6sécurisés: §b§n"
 game_shouldBeUnready: "[§bVi6§r] §6Vous devez être §c'En attente' §6pour çela !"
 game_death: "[§bVi6§r] §b§p §cest mort avec §b§n §cartéfacts !"
 game_fake_death: "[§bVi6§r] §b§p §ca feinté la mort !"
+
+#§p = player §m = map name
 game_randomize_map: "[§bVi6§r] §aChangement de map aléatoire par §b§p \n§fCarte: §b§m"
 effect_decouvert: "§cVous êtes à découvert!"
 # §v = perte
@@ -170,7 +172,7 @@ map_passage_remove_exist: "§cAucun passage du nom de §p existe dans la carte �
 #§v = map's name §p = passage's name
 map_passage_remove_success: "§aLe passage §p a bien été retiré a la carte §v."
 #§v = map's name §p = passage's name
-map_passage_rename_success: "§aLe passage §p de la carte §v a bien été renomé."
+map_passage_rename_success: "§aLe passage §p de la carte §v a bien été renommé."
 #§v = map's name §p = passage's name
 map_passage_rename_exist: "§cAucun passage du nom de §p existe dans la carte §v."
 #§v = map's name §p = passage's name
@@ -197,6 +199,24 @@ map_passage_toGateway_exist: "§cAucun passage du nom de §p existe dans la cart
 map_passage_toPassage_success: "§aLe cadre de porte §p de la carte §v est devenue un passage."
 #§v = map's name §p = passage's name
 map_passage_toPassage_exist: "§cAucun passage du nom de §p existe dans la carte §v."
+
+#CAMERA
+#§v = map's name §p = camera name
+map_camera_not_found: "§cAucune camera du nom de §p existe dans la carte §v."
+#§v = map's name §p = camera name
+map_camera_add_exist: "§cUne camera du nom de §p existe déja dans la carte §v."
+#§v = map's name §p = camera name
+map_camera_add_success: "§aLa camera §p a bien été ajouté a la carte §v."
+#§v = map's name §p = camera name
+map_camera_remove_success: "§aLa camera §p a bien été retiré a la carte §v."
+#§v = map's name §p = camera name
+map_camera_rename_success: "§aLa camera §p de la carte §v a bien été renommée."
+
+map_camera_material_success: "§aLa camera §p de la carte §v a changée d'icone."
+map_camera_color_success: "§aLa camera §p de la carte §v a bien changée de couleur."
+map_camera_location_success: "§aLa camera §p de la carte §v a bien changé d'endroit."
+map_camera_position_success: "§aLa camera §p de la carte §v a bien été déplacée dans le coffre."
+
 #OBJET
 #§v = current room
 objet_BuissonFurtif_placeBush: "§2Vous avez placé un buisson §v."

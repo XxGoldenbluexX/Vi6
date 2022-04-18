@@ -32,6 +32,7 @@ public class Carte implements ConfigurationSerializable {
 	private final ArrayList<Gateway> gateways = new ArrayList<>();
 	private final ArrayList<Artefact> artefacts = new ArrayList<>();
 	private final ArrayList<SpawnVoleur> thiefSpawns = new ArrayList<>();
+	private final ArrayList<Camera> cameras = new ArrayList<>();
 
 	public Carte(String name,Location guardSpawn, Location minimapSpawn) {
 		this.name=name;
@@ -45,6 +46,7 @@ public class Carte implements ConfigurationSerializable {
 		for (Passage p : passages) {p.enable(main);}
 		for (Artefact a : artefacts) {a.enable(main);}
 		for (SpawnVoleur sv : thiefSpawns) {sv.enable(main);}
+		for (Camera cam : cameras) {cam.enable(main);}
 	}
 	
 	public void start() {
@@ -59,6 +61,7 @@ public class Carte implements ConfigurationSerializable {
 		for (Artefact a : artefacts) {a.destroy();}
 		for (Gateway g : gateways) {g.forceOpen();}
 		for (SpawnVoleur sv : thiefSpawns) {sv.destroy();}
+		for (Camera cam : cameras) {cam.destroy();}
 	}
 	
 	public ArrayList<Entree> getEntreeList() {
@@ -83,6 +86,10 @@ public class Carte implements ConfigurationSerializable {
 
 	public ArrayList<SpawnVoleur> getThiefSpawnsList() {
 		return thiefSpawns;
+	}
+	
+	public ArrayList<Camera> getCameraList() {
+		return cameras;
 	}
 
 	public Game getGame() {
@@ -135,6 +142,13 @@ public class Carte implements ConfigurationSerializable {
 		return null;
 	}
 	
+	public Camera getCamera(String name) {
+		for (Camera cam : cameras) {
+			if (cam.getName().equals(name)) return cam;
+		}
+		return null;
+	}
+	
 	public Gateway getNearestFreeGateway(Location loc) {
 		Gateway nearest = gateways.get(0);
 		if (nearest.isManaged()) nearest=null;
@@ -161,6 +175,7 @@ public class Carte implements ConfigurationSerializable {
 		map.put("nbPassages", passages.size());
 		map.put("nbArtefacts", artefacts.size());
 		map.put("nbSpawnsVoleurs", thiefSpawns.size());
+		map.put("nbCameras", cameras.size());
 		for (int i=0;i<entrees.size();i++) {
 			map.put(Entree.getYamlPrefix()+i, entrees.get(i));
 		}
@@ -175,6 +190,9 @@ public class Carte implements ConfigurationSerializable {
 		}
 		for (int i=0;i<thiefSpawns.size();i++) {
 			map.put(SpawnVoleur.getYamlPrefix()+i, thiefSpawns.get(i));
+		}
+		for (int i=0;i<cameras.size();i++) {
+			map.put(Camera.getYamlPrefix()+i, cameras.get(i));
 		}
 		return map;
 	}
@@ -222,6 +240,13 @@ public class Carte implements ConfigurationSerializable {
 		for (int i=0;i<nb;i++) {
 			SpawnVoleur e = (SpawnVoleur) args.get(SpawnVoleur.getYamlPrefix()+i);
 			if (e!=null) spawnsvoleursref.add(e);
+		}
+		//ADDING Cameras
+		nb=(int)args.get("nbCameras");
+		ArrayList<Camera> cameraref = map.getCameraList();
+		for (int i=0;i<nb;i++) {
+			Camera e = (Camera) args.get(Camera.getYamlPrefix()+i);
+			if (e!=null) cameraref.add(e);
 		}
 		return map;
 	}

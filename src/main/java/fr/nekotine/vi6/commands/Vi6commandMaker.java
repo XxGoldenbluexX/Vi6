@@ -3,18 +3,23 @@ package fr.nekotine.vi6.commands;
 import java.util.Collection;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.arguments.Argument;
+import dev.jorel.commandapi.arguments.ChatColorArgument;
 import dev.jorel.commandapi.arguments.CustomArgument;
 import dev.jorel.commandapi.arguments.CustomArgument.CustomArgumentException;
 import dev.jorel.commandapi.arguments.CustomArgument.MessageBuilder;
 import dev.jorel.commandapi.arguments.EntitySelectorArgument;
 import dev.jorel.commandapi.arguments.EntitySelectorArgument.EntitySelector;
 import dev.jorel.commandapi.arguments.GreedyStringArgument;
+import dev.jorel.commandapi.arguments.IntegerArgument;
+import dev.jorel.commandapi.arguments.ItemStackArgument;
 import dev.jorel.commandapi.arguments.LocationArgument;
 import dev.jorel.commandapi.arguments.LocationType;
 import dev.jorel.commandapi.arguments.StringArgument;
@@ -22,6 +27,7 @@ import dev.jorel.commandapi.executors.CommandExecutor;
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.map.Artefact;
+import fr.nekotine.vi6.map.Camera;
 import fr.nekotine.vi6.map.Carte;
 import fr.nekotine.vi6.map.Entree;
 import fr.nekotine.vi6.map.Gateway;
@@ -189,6 +195,7 @@ public class Vi6commandMaker {
 				.withSubcommand(passage(mapArgument))
 				.withSubcommand(mapAddThiefSpawn(mapArgument))
 				.withSubcommand(mapRemoveThiefSpawn(mapArgument))
+				.withSubcommand(camera(mapArgument))
 				.executes(mapHelp);
 	}
 	
@@ -809,6 +816,203 @@ public class Vi6commandMaker {
 							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_passage_toPassage_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", p.getName())));
 						}else {
 							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_passage_toPassage_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", (String)args[1])));
+						}
+						map.unload();
+					});
+		}
+		
+		//----CAMERAS-----\/
+		public static CommandAPICommand camera(Argument mapArgument) {
+			Argument camList = new StringArgument("cameraList").replaceSuggestions((info) -> {
+				return ((Carte)info.previousArgs()[0]).getCameraList().stream().map(Camera::getName).toArray(String[]::new);
+			});
+			return new CommandAPICommand("camera")
+					.withPermission("vi6.map.edit")
+					.withSubcommand(addCamera(mapArgument))
+					.withSubcommand(removeCamera(mapArgument, camList))
+					.withSubcommand(renameCamera(mapArgument, camList))
+					.withSubcommand(displayRenameCamera(mapArgument, camList))
+					.withSubcommand(setMaterialCamera(mapArgument, camList))
+					.withSubcommand(setColorCamera(mapArgument, camList))
+					.withSubcommand(setPositionCamera(mapArgument, camList))
+					.withSubcommand(setLocationCamera(mapArgument, camList));
+			
+		}
+		
+		public static CommandAPICommand addCamera(Argument mapArgument) {
+			return new CommandAPICommand("add")
+					.withArguments(mapArgument,
+							new StringArgument("cameraName"), new StringArgument("displayName"), 
+							new LocationArgument("location", LocationType.PRECISE_POSITION),
+							new IntegerArgument("position"), new ItemStackArgument("item"),
+							new ChatColorArgument("color"))
+					.executes((sender,args)->{
+						Carte map = (Carte)args[0];
+						
+						String camName = (String)args[1];
+						String displayName = (String)args[2];
+						Location location = (Location)args[3];
+						int position = (int)args[4];
+						
+						ItemStack item = (ItemStack)args[5];
+						Material mat = item.getType();
+						
+						ChatColor color = (ChatColor)args[6];
+						if (map.getCamera(camName)!=null) {
+							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_camera_add_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", camName)));	
+						}else {
+							map.getCameraList().add(new Camera(camName, displayName, location, position, mat, color));
+							
+							Carte.save(map);
+							
+							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_camera_add_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", camName)));	
+							
+							map.unload();
+						}	
+					});
+		}
+		
+		public static CommandAPICommand removeCamera(Argument mapArgument, Argument camList) {
+			return new CommandAPICommand("remove")
+					.withArguments(mapArgument, camList)
+					.executes((sender,args)->{
+						Carte map = (Carte)args[0];
+						String camName = (String)args[1];
+						Camera cam = map.getCamera(camName);
+						if(cam!=null) {
+							map.getCameraList().remove(cam);
+							Carte.save(map);
+							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_camera_remove_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", camName)));	
+						}else {
+							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_camera_not_found"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", camName)));	
+
+						}
+						map.unload();
+					});
+		}
+		
+		public static CommandAPICommand renameCamera(Argument mapArgument, Argument camList) {
+			return new CommandAPICommand("rename")
+					.withArguments(mapArgument, camList, new StringArgument("newName"))
+					.executes((sender,args)->{
+						Carte map = (Carte)args[0];
+						String camName = (String)args[1];
+						Camera cam = map.getCamera(camName);
+						String newName = (String)args[2];
+						if(cam!=null) {
+							cam.setName(newName);
+							Carte.save(map);
+							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_camera_rename_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", camName)));	
+
+						}else {
+							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_camera_not_found"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", camName)));	
+
+						}
+						map.unload();
+					});
+		}
+		
+		public static CommandAPICommand displayRenameCamera(Argument mapArgument, Argument camList) {
+			return new CommandAPICommand("displayRename")
+					.withArguments(mapArgument, camList, new StringArgument("newName"))
+					.executes((sender,args)->{
+						Carte map = (Carte)args[0];
+						String camName = (String)args[1];
+						Camera cam = map.getCamera(camName);
+						String newName = (String)args[2];
+						if(cam!=null) {
+							cam.setDisplayName(newName);
+							Carte.save(map);
+							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_camera_rename_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", camName)));	
+
+						}else {
+							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_camera_not_found"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", camName)));	
+
+						}
+						map.unload();
+					});
+		}
+		
+		public static CommandAPICommand setMaterialCamera(Argument mapArgument, Argument camList) {
+			return new CommandAPICommand("setMaterial")
+					.withArguments(mapArgument, camList, new ItemStackArgument("item"))
+					.executes((sender,args)->{
+						Carte map = (Carte)args[0];
+						String camName = (String)args[1];
+						Camera cam = map.getCamera(camName);
+						ItemStack item = (ItemStack)args[2];
+						Material mat = item.getType();
+						if(cam!=null) {
+							cam.setMaterial(mat);
+							Carte.save(map);
+							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_camera_material_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", camName)));	
+
+						}else {
+							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_camera_not_found"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", camName)));	
+
+						}
+						map.unload();
+					});
+		}
+		
+		public static CommandAPICommand setColorCamera(Argument mapArgument, Argument camList) {
+			return new CommandAPICommand("setColor")
+					.withArguments(mapArgument, camList, new ChatColorArgument("color"))
+					.executes((sender,args)->{
+						Carte map = (Carte)args[0];
+						String camName = (String)args[1];
+						Camera cam = map.getCamera(camName);
+						ChatColor color = (ChatColor)args[2];
+						if(cam!=null) {
+							cam.setColor(color);
+							Carte.save(map);
+							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_camera_color_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", camName)));	
+
+						}else {
+							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_camera_not_found"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", camName)));	
+
+						}
+						map.unload();
+					});
+		}
+		
+		public static CommandAPICommand setPositionCamera(Argument mapArgument, Argument camList) {
+			return new CommandAPICommand("setPosition")
+					.withArguments(mapArgument, camList, new IntegerArgument("position"))
+					.executes((sender,args)->{
+						Carte map = (Carte)args[0];
+						String camName = (String)args[1];
+						Camera cam = map.getCamera(camName);
+						int position = (int)args[2];
+						if(cam!=null) {
+							cam.setPosition(position);
+							Carte.save(map);
+							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_camera_position_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", camName)));	
+
+						}else {
+							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_camera_not_found"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", camName)));	
+
+						}
+						map.unload();
+					});
+		}
+		
+		public static CommandAPICommand setLocationCamera(Argument mapArgument, Argument camList) {
+			return new CommandAPICommand("setLocation")
+					.withArguments(mapArgument, camList, new LocationArgument("location", LocationType.PRECISE_POSITION))
+					.executes((sender,args)->{
+						Carte map = (Carte)args[0];
+						String camName = (String)args[1];
+						Camera cam = map.getCamera(camName);
+						Location location = (Location)args[2];
+						if(cam!=null) {
+							cam.setLocation(location);
+							Carte.save(map);
+							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_camera_location_successs"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", camName)));	
+
+						}else {
+							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_camera_not_found"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", camName)));	
+
 						}
 						map.unload();
 					});
