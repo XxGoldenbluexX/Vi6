@@ -79,6 +79,7 @@ public class SpawnVoleur implements ConfigurationSerializable,Listener{
 	public void destroy() {
 		if(armorStand!=null) {
 			armorStand.remove();
+			armorStand=null;
 		}
 		HandlerList.unregisterAll(this);
 	}

@@ -4,14 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Creeper;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
@@ -45,7 +43,7 @@ public class Camera implements ConfigurationSerializable, Listener{
 	private Material camMaterial;
 	private int camPosition;
 	
-	private Creeper creeperCam;
+	private ArmorStand asCam;
 	
 	private final ItemStack idleHead;
 	private final ItemStack startingHead;
@@ -121,9 +119,9 @@ public class Camera implements ConfigurationSerializable, Listener{
 		return camPosition;
 	}
 	public void spectate(Player player) {
-		if(creeperCam!=null) {
+		if(asCam!=null) {
 			player.setGameMode(GameMode.SPECTATOR);
-			player.setSpectatorTarget(creeperCam);
+			player.setSpectatorTarget(asCam);
 		}
 	}
 	public CameraState getState() {
@@ -133,16 +131,16 @@ public class Camera implements ConfigurationSerializable, Listener{
 		this.state = state;
 		switch(state) {
 		case IDLE:
-			creeperCam.getEquipment().setHelmet(idleHead);
+			asCam.getEquipment().setHelmet(idleHead);
 			break;
 		case STARTING:
 			for(Player player : viewers.keySet()) {
 				startingEffect.apply(player);
 			}
-			creeperCam.getEquipment().setHelmet(startingHead);
+			asCam.getEquipment().setHelmet(startingHead);
 			break;
 		case ACTIVE:
-			creeperCam.getEquipment().setHelmet(activeHead);
+			asCam.getEquipment().setHelmet(activeHead);
 			break;
 		}
 	}
@@ -171,23 +169,24 @@ public class Camera implements ConfigurationSerializable, Listener{
 	
 	public void enable(Vi6Main mainref) {
 		
-		creeperCam = (Creeper)camLoc.getWorld().spawnEntity(camLoc, EntityType.CREEPER);
-		creeperCam.setAI(false);
-		creeperCam.setCollidable(false);
-		creeperCam.setInvisible(true);
-		creeperCam.setSilent(true);
-		creeperCam.setInvulnerable(true);
-		creeperCam.setGravity(false);
+		asCam = (ArmorStand)camLoc.getWorld().spawnEntity(camLoc, EntityType.ARMOR_STAND);
+		asCam.setAI(false);
+		asCam.setCollidable(false);
+		asCam.setInvisible(true);
+		asCam.setSilent(true);
+		asCam.setInvulnerable(true);
+		asCam.setGravity(false);
 		
 		setState(CameraState.IDLE);
 		
-		camLoc.getWorld().getBlockAt(camLoc.add(0,0,0)).setType(Material.BARRIER);
+		camLoc.getWorld().getBlockAt(camLoc.add(0,1,0)).setType(Material.BARRIER);
 		
 		Bukkit.getPluginManager().registerEvents(this, mainref);
 	}
 	public void destroy() {
-		if(creeperCam!=null) {
-			creeperCam.remove();
+		if(asCam!=null) {
+			asCam.remove();
+			asCam=null;
 		}
 		camLoc.getWorld().getBlockAt(camLoc.add(0,1,0)).setType(Material.AIR);
 		HandlerList.unregisterAll(this);
