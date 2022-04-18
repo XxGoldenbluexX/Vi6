@@ -9,12 +9,17 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.util.EulerAngle;
 
 import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.utils.CameraState;
@@ -26,6 +31,10 @@ public class Camera implements ConfigurationSerializable, Listener{
 	private static final String startingURL = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzA2MTA3ZGVlN2Y4ZDI5OGE0NDg2ZmQ0ZDYwNDRiOTA5MjJlNjNiZDI5ZjA2OWZkZmJmMjZmNTRmZDRlYmVjNSJ9fX0=";
 	private static final String activeURL = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDE1ZTQ3MDgwNWQ1ZmM2MTFjNDRiODdjMzllN2U0ZGZkNDc0MDQ5YjI0ZjNmNmJiYTIzMGUyNTBmOWI0Yjg3YyJ9fX0=";
 	private static final int STARTING_TICK_DELAY = 20;
+	private int delay_left = STARTING_TICK_DELAY;
+	private static final PotionEffect startingEffect = new PotionEffect(PotionEffectType.BLINDNESS, STARTING_TICK_DELAY, 0, false, false, false);
+	
+	private HashMap<Player,ArmorStand> viewers = new HashMap<>();
 	
 	private CameraState state;
 	private Location camLoc;
@@ -52,6 +61,50 @@ public class Camera implements ConfigurationSerializable, Listener{
 		idleHead = IsCreator.createSkull(idleURL);
 		startingHead = IsCreator.createSkull(startingURL);
 		activeHead = IsCreator.createSkull(activeURL);
+	}
+	public void addViewer(Player player) {
+		if(!viewers.containsKey(player)) {
+			viewers.put(player, createArmorStand(player));
+			switch (state) {
+			case IDLE:
+				setState(CameraState.STARTING);
+				break;
+			case STARTING:
+				startingEffect.withDuration(delay_left).apply(player);
+				spectate(player);
+			case ACTIVE:
+				spectate(player);
+			}
+				
+		}
+	}
+	public ArmorStand createArmorStand(Player player) {
+		ArmorStand as = (ArmorStand)player.getWorld().spawnEntity(player.getLocation(), EntityType.ARMOR_STAND);
+		as.setInvulnerable(true);
+		as.setArms(true);
+		as.setBasePlate(false);
+		as.setCollidable(false);
+		as.setMarker(true);
+		
+		as.setHeadPose(new EulerAngle(30, 0, 0));
+		as.setLeftArmPose(new EulerAngle(300, 30, 0));
+		
+		as.setItem(EquipmentSlot.OFF_HAND, activeHead);
+		as.setItem(EquipmentSlot.CHEST, new ItemStack(Material.NETHERITE_CHESTPLATE));
+		as.addDisabledSlots(EquipmentSlot.CHEST,EquipmentSlot.FEET,EquipmentSlot.HAND,EquipmentSlot.LEGS,EquipmentSlot.FEET,EquipmentSlot.OFF_HAND);
+		
+		return as;
+	}
+	public void removeViewer(Player player) {
+		if(viewers.containsKey(player)) {
+			player.setGameMode(GameMode.ADVENTURE);
+			player.teleport(viewers.get(player));
+			viewers.get(player).remove();
+			viewers.remove(player);
+		}
+		if(viewers.size()==0) {
+			setState(CameraState.IDLE);
+		}
 	}
 	public String getName() {
 		return camName;
@@ -82,6 +135,20 @@ public class Camera implements ConfigurationSerializable, Listener{
 	}
 	public void setState(CameraState state) {
 		this.state = state;
+		switch(state) {
+		case IDLE:
+			creeperCam.getEquipment().setHelmet(idleHead);
+			break;
+		case STARTING:
+			for(Player player : viewers.keySet()) {
+				startingEffect.apply(player);
+			}
+			creeperCam.getEquipment().setHelmet(startingHead);
+			break;
+		case ACTIVE:
+			creeperCam.getEquipment().setHelmet(activeHead);
+			break;
+		}
 	}
 	
 	
@@ -114,12 +181,13 @@ public class Camera implements ConfigurationSerializable, Listener{
 		
 		creeperCam = (Creeper)camLoc.getWorld().spawnEntity(camLoc, EntityType.CREEPER);
 		creeperCam.setAI(false);
-		creeperCam.getEquipment().setHelmet(idleHead);
 		creeperCam.setCollidable(false);
 		creeperCam.setInvisible(true);
 		creeperCam.setSilent(true);
 		creeperCam.setInvulnerable(true);
 		creeperCam.setGravity(false);
+		
+		setState(CameraState.IDLE);
 		
 		camLoc.getWorld().getBlockAt(camLoc).setType(Material.BARRIER);
 		
