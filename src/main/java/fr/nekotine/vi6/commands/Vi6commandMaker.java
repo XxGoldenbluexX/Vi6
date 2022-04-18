@@ -3,7 +3,6 @@ package fr.nekotine.vi6.commands;
 import java.util.Collection;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -11,7 +10,6 @@ import org.bukkit.inventory.ItemStack;
 
 import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.arguments.Argument;
-import dev.jorel.commandapi.arguments.ChatColorArgument;
 import dev.jorel.commandapi.arguments.CustomArgument;
 import dev.jorel.commandapi.arguments.CustomArgument.CustomArgumentException;
 import dev.jorel.commandapi.arguments.CustomArgument.MessageBuilder;
@@ -842,30 +840,30 @@ public class Vi6commandMaker {
 			return new CommandAPICommand("add")
 					.withArguments(mapArgument,
 							new StringArgument("cameraName"), new StringArgument("displayName"), 
-							new LocationArgument("location", LocationType.PRECISE_POSITION),
 							new IntegerArgument("position"), new ItemStackArgument("item"))
-					.executes((sender,args)->{
+					.executesPlayer((player,args)->{
 						Carte map = (Carte)args[0];
 						
 						String camName = (String)args[1];
 						String displayName = (String)args[2];
-						Location location = (Location)args[3];
-						int position = (int)args[4];
 						
-						ItemStack item = (ItemStack)args[5];
-						System.out.println(item);
+						Location location = player.getLocation();
+						int position = (int)args[3];
+						
+						ItemStack item = (ItemStack)args[4];
 						Material mat = item.getType();
 						if (map.getCamera(camName)!=null) {
-							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_camera_add_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", camName)));	
+							player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_camera_add_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", camName)));	
 						}else {
 							map.getCameraList().add(new Camera(camName, displayName, location, position, mat));
 							
 							Carte.save(map);
 							
-							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_camera_add_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", camName)));	
+							player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_camera_add_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", camName)));	
 							
-							map.unload();
+							
 						}	
+						map.unload();
 					});
 		}
 		
@@ -975,19 +973,20 @@ public class Vi6commandMaker {
 		
 		public static CommandAPICommand setLocationCamera(Argument mapArgument, Argument camList) {
 			return new CommandAPICommand("setLocation")
-					.withArguments(mapArgument, camList, new LocationArgument("location", LocationType.PRECISE_POSITION))
-					.executes((sender,args)->{
+					.withArguments(mapArgument, camList)
+					.executesPlayer((player,args)->{
 						Carte map = (Carte)args[0];
 						String camName = (String)args[1];
 						Camera cam = map.getCamera(camName);
-						Location location = (Location)args[2];
+						
+						Location location = player.getLocation();
 						if(cam!=null) {
 							cam.setLocation(location);
 							Carte.save(map);
-							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_camera_location_successs"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", camName)));	
+							player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_camera_location_successs"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", camName)));	
 
 						}else {
-							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_camera_not_found"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", camName)));	
+							player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_camera_not_found"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", camName)));	
 
 						}
 						map.unload();
