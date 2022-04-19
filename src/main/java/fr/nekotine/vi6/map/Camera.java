@@ -232,6 +232,7 @@ public class Camera implements ConfigurationSerializable, Listener{
 		asCam.setSilent(true);
 		asCam.setInvulnerable(true);
 		asCam.setGravity(false);
+		asCam.addDisabledSlots(EquipmentSlot.CHEST,EquipmentSlot.FEET,EquipmentSlot.HAND,EquipmentSlot.LEGS,EquipmentSlot.FEET,EquipmentSlot.OFF_HAND);
 		
 		setState(CameraState.IDLE);
 		
