@@ -250,9 +250,9 @@ public enum ObjetsList {
 			Team.GARDE,
 			10,
 			0,
-			ChatColor.BLACK+"Caméra",
+			ChatColor.DARK_PURPLE+"Caméra",
 			Material.ENDER_CHEST,
-			ChatColor.LIGHT_PURPLE+"Permet d'accéder aux caméras de surveillance de la carte");
+			ChatColor.LIGHT_PURPLE+"Permet d'accéder aux caméras de surveillance");
 	private final Class<?> objetClass;
 
 	private final Team team;
