@@ -18,8 +18,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.EulerAngle;
 
 import fr.nekotine.vi6.Vi6Main;
@@ -35,7 +33,6 @@ public class Camera implements ConfigurationSerializable, Listener{
 	private static final String activeURL = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDE1ZTQ3MDgwNWQ1ZmM2MTFjNDRiODdjMzllN2U0ZGZkNDc0MDQ5YjI0ZjNmNmJiYTIzMGUyNTBmOWI0Yjg3YyJ9fX0=";
 	private static final int STARTING_TICK_DELAY = 20;
 	private int delay_left = STARTING_TICK_DELAY;
-	private static final PotionEffect startingEffect = new PotionEffect(PotionEffectType.BLINDNESS, STARTING_TICK_DELAY, 0, false, false, false);
 	
 	private HashMap<Player,ArmorStand> viewers = new HashMap<>();
 	
@@ -81,21 +78,18 @@ public class Camera implements ConfigurationSerializable, Listener{
 	
 	public void addViewer(Player player) {
 		if(!viewers.containsKey(player)) {
-			viewers.put(player, createArmorStand(player));
+			viewers.put(player, null);
 			switch (state) {
 			case IDLE:
 				setState(CameraState.STARTING);
 				break;
-			case STARTING:
-				startingEffect.withDuration(delay_left).apply(player);
 			default:
 				break;
 			}
-			spectate(player);
 		}
 	}
-	public ArmorStand createArmorStand(Player player) {
-		ArmorStand as = (ArmorStand)player.getWorld().spawnEntity(player.getLocation(), EntityType.ARMOR_STAND);
+	public ArmorStand createArmorStand(Location loc) {
+		ArmorStand as = (ArmorStand)loc.getWorld().spawnEntity(loc, EntityType.ARMOR_STAND);
 		as.setInvulnerable(true);
 		as.setArms(true);
 		as.setBasePlate(false);
@@ -116,7 +110,10 @@ public class Camera implements ConfigurationSerializable, Listener{
 		if(viewers.containsKey(player)) {
 			player.setGameMode(GameMode.ADVENTURE);
 			player.teleport(viewers.get(player));
-			viewers.get(player).remove();
+			ArmorStand as = viewers.get(player);
+			if (as!=null) {
+				as.remove();
+			}
 			viewers.remove(player);
 			Bukkit.getPluginManager().callEvent(new PlayerLeaveCamera(this, player));
 		}
@@ -124,6 +121,55 @@ public class Camera implements ConfigurationSerializable, Listener{
 			setState(CameraState.IDLE);
 		}
 	}
+	
+	public void setState(CameraState state) {
+		this.state = state;
+		switch(state) {
+		case IDLE:
+			asCam.getEquipment().setHelmet(idleHead);
+			break;
+		case STARTING:
+			asCam.getEquipment().setHelmet(startingHead);
+			break;
+		case ACTIVE:
+			asCam.getEquipment().setHelmet(activeHead);
+			break;
+		}
+		applyStateToPlayers();
+	}
+	
+	private void spectate(Player player) {
+		if(asCam!=null) {
+			ArmorStand as = viewers.get(player);
+			if (as!=null) {
+				as.remove();
+			}
+			viewers.put(player, createArmorStand(player.getLocation()));
+			player.setGameMode(GameMode.SPECTATOR);
+			player.setSpectatorTarget(asCam);
+		}
+	}
+	
+	private void applyStateToPlayer(Player p) {
+		switch (state) {
+		case ACTIVE:
+			spectate(p);
+			break;
+		case IDLE:
+			break;
+		case STARTING:
+			break;
+		default:
+			break;
+		}
+	}
+	
+	public void applyStateToPlayers() {
+		for (Player p : viewers.keySet()) {
+			applyStateToPlayer(p);
+		}
+	}
+	
 	public String getName() {
 		return camName;
 	}
@@ -139,33 +185,10 @@ public class Camera implements ConfigurationSerializable, Listener{
 	public int getPosition() {
 		return camPosition;
 	}
-	public void spectate(Player player) {
-		if(asCam!=null) {
-			player.setGameMode(GameMode.SPECTATOR);
-			player.setSpectatorTarget(asCam);
-		}
-	}
+	
 	public CameraState getState() {
 		return state;
 	}
-	public void setState(CameraState state) {
-		this.state = state;
-		switch(state) {
-		case IDLE:
-			asCam.getEquipment().setHelmet(idleHead);
-			break;
-		case STARTING:
-			for(Player player : viewers.keySet()) {
-				startingEffect.apply(player);
-			}
-			asCam.getEquipment().setHelmet(startingHead);
-			break;
-		case ACTIVE:
-			asCam.getEquipment().setHelmet(activeHead);
-			break;
-		}
-	}
-	
 	
 	public void setName(String name) {
 		camName = name;
