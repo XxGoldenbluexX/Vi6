@@ -53,7 +53,7 @@ public class Tazer extends Objet{
 	public void action(PlayerInteractEvent e) {
 		if(e.getAction()==Action.RIGHT_CLICK_AIR || e.getAction()==Action.RIGHT_CLICK_BLOCK) {
 			Snowball projectile = getOwner().launchProjectile(Snowball.class, getOwner().getEyeLocation().getDirection());
-			projectile.setVelocity(projectile.getVelocity().multiply(10));
+			projectile.setVelocity(projectile.getVelocity().multiply(5));
 			projectileList.add(projectile);
 			setCooldown(COOLDOWN);
 		}

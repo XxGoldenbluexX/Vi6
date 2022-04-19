@@ -248,7 +248,7 @@ public enum ObjetsList {
 			ChatColor.LIGHT_PURPLE+"Une canne à pêche qui ne sert qu'à attraper les voleurs"),
 	CAMERA(Camera.class,
 			Team.GARDE,
-			10,
+			150,
 			0,
 			ChatColor.DARK_PURPLE+"Caméra",
 			Material.ENDER_CHEST,
