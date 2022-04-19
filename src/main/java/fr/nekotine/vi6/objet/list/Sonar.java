@@ -28,7 +28,7 @@ public class Sonar extends Objet{
 
 	@Override
 	public void tick() {
-		if(getOwner().getGameMode()!=GameMode.ADVENTURE) {
+		if(getOwner().getGameMode()!=GameMode.SPECTATOR) {
 			delay--;
 			if(delay<=0) {
 				delay=DELAY_IN_TICKS;
