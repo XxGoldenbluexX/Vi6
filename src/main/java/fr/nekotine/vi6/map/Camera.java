@@ -88,11 +88,10 @@ public class Camera implements ConfigurationSerializable, Listener{
 				break;
 			case STARTING:
 				startingEffect.withDuration(delay_left).apply(player);
-				spectate(player);
-			case ACTIVE:
-				spectate(player);
+			default:
+				break;
 			}
-				
+			spectate(player);
 		}
 	}
 	public ArmorStand createArmorStand(Player player) {
