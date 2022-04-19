@@ -32,9 +32,7 @@ public class CameraInventory extends BaseSharedInventory{
 			if(cam.getPosition()==slot) {
 				player.closeInventory();
 				for(Camera cam2 : game.getMap().getCameraList()) {
-					if(cam2.getViewers().keySet.contains(player)) {
-						cam2.removeViewer(player);
-					}
+					cam2.removeViewer(player);
 				}
 				cam.addViewer(player);
 				return;
