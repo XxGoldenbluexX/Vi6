@@ -83,9 +83,7 @@ public class Camera implements ConfigurationSerializable, Listener{
 			case IDLE:
 				setState(CameraState.STARTING);
 				break;
-			case STARTING:
-				break;
-			case ACTIVE:
+			default:
 				applyStateToPlayer(player);
 				break;
 			}
