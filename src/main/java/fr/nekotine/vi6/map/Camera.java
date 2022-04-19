@@ -223,7 +223,7 @@ public class Camera implements ConfigurationSerializable, Listener{
 		
 		setState(CameraState.IDLE);
 		
-		camLoc.getWorld().getBlockAt(camLoc.add(0,1,0)).setType(Material.BARRIER);
+		camLoc.getWorld().getBlockAt(camLoc.clone().add(0,1,0)).setType(Material.BARRIER);
 		
 		Bukkit.getPluginManager().registerEvents(this, mainref);
 	}
@@ -232,7 +232,7 @@ public class Camera implements ConfigurationSerializable, Listener{
 			asCam.remove();
 			asCam=null;
 		}
-		camLoc.getWorld().getBlockAt(camLoc.add(0,1,0)).setType(Material.AIR);
+		camLoc.getWorld().getBlockAt(camLoc.clone().add(0,1,0)).setType(Material.AIR);
 		HandlerList.unregisterAll(this);
 	}
 	@Override
