@@ -112,11 +112,11 @@ public class SixiemeSens extends Objet{
 		if(glowed.contains(guard) && guard.getGameMode()!=GameMode.SPECTATOR) {
 			if(getOwner().getLocation().distanceSquared(guard.getLocation())>SQUARED_BLOCK_DISTANCE) {
 				glowed.remove(guard);
-				getGame().unglowPlayer(getOwner(), guard);
+				getGame().unglowEntity(getOwner(), guard);
 			}
 		}else if(getOwner().getLocation().distanceSquared(guard.getLocation())<=SQUARED_BLOCK_DISTANCE) {
 			glowed.add(guard);
-			getGame().glowPlayer(getOwner(), guard);
+			getGame().glowEntity(getOwner(), guard);
 			
 		}
 	}

@@ -47,7 +47,7 @@ public class Carte implements ConfigurationSerializable {
 		for (Artefact a : artefacts) {a.enable(main);}
 		for (SpawnVoleur sv : thiefSpawns) {sv.enable(main);}
 		System.out.println("CamSize="+cameras.size());
-		for (Camera cam : cameras) {cam.enable(main);}
+		for (Camera cam : cameras) {cam.setGame(game);cam.enable(main);}
 	}
 	
 	public void start() {

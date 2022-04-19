@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
@@ -324,7 +325,7 @@ public class Game implements Listener {
 				DisplayTexts.getMessage("game_artefact_steal_thief"),
 				new MessageFormater[]{new MessageFormater("§a", a.getDisplayName()),
 						new MessageFormater("§p", (p != null) ? p.getPlayer().getName() : "inconnu")});
-		Title.Times titleTimes = Title.Times.of(Ticks.duration(5L), Ticks.duration(20L), Ticks.duration(20L));
+		Title.Times titleTimes = Title.Times.times(Ticks.duration(5L), Ticks.duration(20L), Ticks.duration(20L));
 		Title titleGuard = Title.title((Component) msgGuard, (Component) Component.text(""), titleTimes);
 		Title titleVoleur = Title.title((Component) msgVoleur, (Component) Component.text(""), titleTimes);
 		for (PlayerWrapper w : this.playerList.values()) {
@@ -852,7 +853,7 @@ public class Game implements Listener {
 		return checkListThief;
 	}
 	
-	private PacketContainer getGlowPacket(Player holder) {
+	private PacketContainer getGlowPacket(Entity holder) {
 		PacketContainer packet = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.ENTITY_METADATA);
 	    packet.getIntegers().write(0, holder.getEntityId());
 	    WrappedDataWatcher watcher = new WrappedDataWatcher();
@@ -861,7 +862,7 @@ public class Game implements Listener {
 	    packet.getWatchableCollectionModifier().write(0, watcher.getWatchableObjects());
 	    return packet;
 	}
-	private PacketContainer getUnglowPacket(Player holder) {
+	private PacketContainer getUnglowPacket(Entity holder) {
 		PacketContainer packet =  ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.ENTITY_METADATA);
 	    packet.getIntegers().write(0, holder.getEntityId());
 	    WrappedDataWatcher watcher = new WrappedDataWatcher();
@@ -870,7 +871,7 @@ public class Game implements Listener {
 	    packet.getWatchableCollectionModifier().write(0, watcher.getWatchableObjects());
 	    return packet;
 	}
-	public void glowPlayer(Player viewer, Player holder) {
+	public void glowEntity(Player viewer, Entity holder) {
 		try {
 	    	ProtocolLibrary.getProtocolManager().sendServerPacket(viewer, getGlowPacket(holder));
 	    } catch (InvocationTargetException e) {
@@ -878,12 +879,28 @@ public class Game implements Listener {
 	    }
 	}
 	
-	public void unglowPlayer(Player viewer,Player holder) {
+	public void unglowEntity(Player viewer,Entity holder) {
 	    try {
 	    	ProtocolLibrary.getProtocolManager().sendServerPacket(viewer, getUnglowPacket(holder));
 	    } catch (InvocationTargetException e) {
 	        e.printStackTrace();
 	    }
+	}
+	
+	public void glowEntityForTeam(Team team,Entity entity) {
+		for (Entry<Player, PlayerWrapper> p : playerList.entrySet()) {
+			if (p.getValue().getTeam()==team) {
+				glowEntity(p.getKey(), entity);
+			}
+		}
+	}
+	
+	public void unglowEntityForTeam(Team team,Entity entity) {
+		for (Entry<Player, PlayerWrapper> p : playerList.entrySet()) {
+			if (p.getValue().getTeam()==team) {
+				unglowEntity(p.getKey(), entity);
+			}
+		}
 	}
 	
 	@EventHandler

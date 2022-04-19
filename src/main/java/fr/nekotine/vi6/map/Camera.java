@@ -20,7 +20,9 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.EulerAngle;
 
+import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
+import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.events.PlayerLeaveCamera;
 import fr.nekotine.vi6.utils.CameraState;
 import fr.nekotine.vi6.utils.IsCreator;
@@ -42,6 +44,7 @@ public class Camera implements ConfigurationSerializable, Listener{
 	private String camDisplayName;
 	private Material camMaterial;
 	private int camPosition;
+	private Game game;
 	
 	private ArmorStand asCam;
 	
@@ -118,25 +121,29 @@ public class Camera implements ConfigurationSerializable, Listener{
 			viewers.remove(player);
 			Bukkit.getPluginManager().callEvent(new PlayerLeaveCamera(this, player));
 		}
-		if(viewers.size()==0) {
+		if(viewers.size()<=0) {
 			setState(CameraState.IDLE);
 		}
 	}
 	
 	public void setState(CameraState state) {
-		this.state = state;
-		switch(state) {
-		case IDLE:
-			asCam.getEquipment().setHelmet(idleHead);
-			break;
-		case STARTING:
-			asCam.getEquipment().setHelmet(startingHead);
-			break;
-		case ACTIVE:
-			asCam.getEquipment().setHelmet(activeHead);
-			break;
+		if (this.state!= state) {
+			this.state = state;
+			switch(state) {
+			case IDLE:
+				asCam.getEquipment().setHelmet(idleHead);
+				if (game!=null && asCam!=null) game.unglowEntityForTeam(Team.GARDE, asCam);
+				break;
+			case STARTING:
+				asCam.getEquipment().setHelmet(startingHead);
+				break;
+			case ACTIVE:
+				asCam.getEquipment().setHelmet(activeHead);
+				if (game!=null && asCam!=null) game.glowEntityForTeam(Team.GARDE, asCam);
+				break;
+			}
+			applyStateToPlayers();
 		}
-		applyStateToPlayers();
 	}
 	
 	private void spectate(Player player) {
@@ -169,6 +176,10 @@ public class Camera implements ConfigurationSerializable, Listener{
 		for (Player p : viewers.keySet()) {
 			applyStateToPlayer(p);
 		}
+	}
+	
+	public void setGame(Game game) {
+		this.game = game;
 	}
 	
 	public String getName() {
