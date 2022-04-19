@@ -2,6 +2,7 @@ package fr.nekotine.vi6.interfaces.inventories;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
@@ -19,7 +20,10 @@ public class CameraInventory extends BaseSharedInventory{
 	public CameraInventory(Game game, Vi6Main main) {
 		super(game, main);
 		this.inventory = Bukkit.createInventory(null, 54,(Component) Component.text("Caméra"));
-		
+		for(int i=0; i<=5;i++) {
+			inventory.setItem(i*9, IsCreator.createItemStack(Material.BLACK_STAINED_GLASS_PANE, 1, " "));
+			inventory.setItem(i*9+8, IsCreator.createItemStack(Material.BLACK_STAINED_GLASS_PANE, 1, " "));
+		}
 		for(Camera cam : game.getMap().getCameraList()) {
 			ItemStack camItem = IsCreator.createItemStack(cam.getMaterial(), 1, ChatColor.GOLD+cam.getDisplayName(), "");
 			inventory.setItem(cam.getPosition(), camItem);

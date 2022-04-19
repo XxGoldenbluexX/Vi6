@@ -83,7 +83,10 @@ public class Camera implements ConfigurationSerializable, Listener{
 			case IDLE:
 				setState(CameraState.STARTING);
 				break;
-			default:
+			case STARTING:
+				break;
+			case ACTIVE:
+				applyStateToPlayer(player);
 				break;
 			}
 		}
@@ -96,8 +99,8 @@ public class Camera implements ConfigurationSerializable, Listener{
 		as.setCollidable(false);
 		as.setMarker(true);
 		
-		as.setHeadPose(new EulerAngle(330, 0, 0));
-		as.setLeftArmPose(new EulerAngle(60, 330, 0));
+		as.setHeadPose(new EulerAngle(Math.toRadians(30), 0, 0));
+		as.setLeftArmPose(new EulerAngle(Math.toRadians(320), Math.toRadians(30), 0));
 		
 		as.setItem(EquipmentSlot.HEAD, new ItemStack(Material.PLAYER_HEAD));
 		as.setItem(EquipmentSlot.OFF_HAND, activeHead);
