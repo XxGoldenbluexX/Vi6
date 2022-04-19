@@ -42,6 +42,7 @@ import fr.nekotine.vi6.objet.list.IEM;
 import fr.nekotine.vi6.objet.list.Retour;
 import fr.nekotine.vi6.objet.list.PiegeCollant;
 import fr.nekotine.vi6.objet.list.Hamecon;
+import fr.nekotine.vi6.objet.list.Camera;
 import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 
@@ -244,7 +245,14 @@ public enum ObjetsList {
 			0,
 			ChatColor.AQUA+"Hameçon",
 			Material.FISHING_ROD,
-			ChatColor.LIGHT_PURPLE+"Une canne à pêche qui ne sert qu'à attraper les voleurs");
+			ChatColor.LIGHT_PURPLE+"Une canne à pêche qui ne sert qu'à attraper les voleurs"),
+	CAMERA(Camera.class,
+			Team.GARDE,
+			10,
+			0,
+			ChatColor.BLACK+"Caméra",
+			Material.ENDER_CHEST,
+			ChatColor.LIGHT_PURPLE+"Permet d'accéder aux caméras de surveillance de la carte");
 	private final Class<?> objetClass;
 
 	private final Team team;
