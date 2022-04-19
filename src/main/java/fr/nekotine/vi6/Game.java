@@ -76,10 +76,10 @@ import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.events.GameEndEvent;
 import fr.nekotine.vi6.events.GameEnterInGamePhaseEvent;
 import fr.nekotine.vi6.events.GameEnterPreparationPhaseEvent;
-import fr.nekotine.vi6.events.IsRankedChangeEvent;
 import fr.nekotine.vi6.events.MapChangeEvent;
 import fr.nekotine.vi6.events.MoneyChangedEvent;
 import fr.nekotine.vi6.events.PlayerLeaveGameEvent;
+import fr.nekotine.vi6.events.RankedChangedEvent;
 import fr.nekotine.vi6.interfaces.inventories.CameraInventory;
 import fr.nekotine.vi6.interfaces.inventories.CheckListGuardInventory;
 import fr.nekotine.vi6.interfaces.inventories.CheckListThiefInventory;
@@ -346,7 +346,7 @@ public class Game implements Listener {
 		this.isRanked = isRanked;
 		if (isRanked)
 			setMoney(DEFAULT_RANKED_MONEY);
-		Bukkit.getPluginManager().callEvent(new IsRankedChangeEvent(this, isRanked));
+		Bukkit.getPluginManager().callEvent(new RankedChangedEvent(this, isRanked));
 	}
 
 	public String getName() {

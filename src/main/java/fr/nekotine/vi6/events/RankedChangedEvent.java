@@ -5,9 +5,9 @@ import org.bukkit.event.HandlerList;
 
 import fr.nekotine.vi6.Game;
 
-public class IsRankedChangeEvent extends Event{
+public class RankedChangedEvent extends Event{
 	private final Game game;
-	private final boolean isRanked;
+	private final boolean ranked;
 	private static final HandlerList handlers = new HandlerList();
 	public static HandlerList getHandlerList() {
 	    return handlers;
@@ -16,15 +16,15 @@ public class IsRankedChangeEvent extends Event{
 	public HandlerList getHandlers() {
 		return handlers;
 	}
-	public IsRankedChangeEvent(Game game, boolean isRanked) {
+	public RankedChangedEvent(Game game, boolean ranked) {
 		this.game = game;
-		this.isRanked = isRanked;
+		this.ranked = ranked;
 		
 	}
 	public Game getGame() {
 		return game;
 	}
 	public boolean isRanked() {
-		return isRanked;
+		return ranked;
 	}
 }

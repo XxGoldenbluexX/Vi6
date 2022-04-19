@@ -13,6 +13,7 @@ import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.events.GameEnterPreparationPhaseEvent;
 import fr.nekotine.vi6.events.MapChangeEvent;
 import fr.nekotine.vi6.events.MoneyChangedEvent;
+import fr.nekotine.vi6.events.RankedChangedEvent;
 import fr.nekotine.vi6.utils.IsCreator;
 import net.kyori.adventure.text.Component;
 
@@ -57,6 +58,16 @@ public class GameSettingsInventory extends BaseSharedInventory{
 			break;
 		default:
 			break;
+		}
+	}
+	@EventHandler
+	public void rankedChange(RankedChangedEvent e) {
+		if(e.isRanked()) {
+			inventory.setItem(11, IsCreator.createItemStack(Material.EMERALD,1,ChatColor.GREEN+"Classée",""));
+			inventory.setItem(13, IsCreator.createItemStack(Material.IRON_INGOT,1,ChatColor.RED+"Bloqué",ChatColor.LIGHT_PURPLE+""+ChatColor.UNDERLINE+game.getMoney()));
+		}else {
+			inventory.setItem(11, IsCreator.createItemStack(Material.REDSTONE,1,ChatColor.RED+"Non-Classée",""));
+			inventory.setItem(13, IsCreator.createItemStack(Material.GOLD_INGOT,1,ChatColor.GOLD+"Argent",ChatColor.LIGHT_PURPLE+""+ChatColor.UNDERLINE+game.getMoney()));
 		}
 	}
 	@EventHandler
