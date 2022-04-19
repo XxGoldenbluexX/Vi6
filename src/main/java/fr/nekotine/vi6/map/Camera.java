@@ -103,9 +103,10 @@ public class Camera implements ConfigurationSerializable, Listener{
 		as.setCollidable(false);
 		as.setMarker(true);
 		
-		as.setHeadPose(new EulerAngle(30, 0, 0));
-		as.setLeftArmPose(new EulerAngle(300, 30, 0));
+		as.setHeadPose(new EulerAngle(330, 0, 0));
+		as.setLeftArmPose(new EulerAngle(60, 330, 0));
 		
+		as.setItem(EquipmentSlot.HEAD, new ItemStack(Material.PLAYER_HEAD));
 		as.setItem(EquipmentSlot.OFF_HAND, activeHead);
 		as.setItem(EquipmentSlot.CHEST, new ItemStack(Material.DIAMOND_CHESTPLATE));
 		as.addDisabledSlots(EquipmentSlot.CHEST,EquipmentSlot.FEET,EquipmentSlot.HAND,EquipmentSlot.LEGS,EquipmentSlot.FEET,EquipmentSlot.OFF_HAND);
