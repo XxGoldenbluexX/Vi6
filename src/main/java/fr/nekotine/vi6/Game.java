@@ -80,6 +80,7 @@ import fr.nekotine.vi6.events.IsRankedChangeEvent;
 import fr.nekotine.vi6.events.MapChangeEvent;
 import fr.nekotine.vi6.events.MoneyChangedEvent;
 import fr.nekotine.vi6.events.PlayerLeaveGameEvent;
+import fr.nekotine.vi6.interfaces.inventories.CameraInventory;
 import fr.nekotine.vi6.interfaces.inventories.CheckListGuardInventory;
 import fr.nekotine.vi6.interfaces.inventories.CheckListThiefInventory;
 import fr.nekotine.vi6.interfaces.inventories.GameMoneyAnvil;
@@ -90,6 +91,7 @@ import fr.nekotine.vi6.interfaces.items.OpenPreparationItem;
 import fr.nekotine.vi6.interfaces.items.OpenWaitingItem;
 import fr.nekotine.vi6.majordom.Majordom;
 import fr.nekotine.vi6.map.Artefact;
+import fr.nekotine.vi6.map.Camera;
 import fr.nekotine.vi6.map.Carte;
 import fr.nekotine.vi6.map.SpawnVoleur;
 import fr.nekotine.vi6.objet.ObjetsList;
@@ -157,6 +159,8 @@ public class Game implements Listener {
 	private CheckListThiefInventory checkListThief;
 	private final OpenCheckListItem checkListItem;
 	private final List<GlowToken> teamGlowTokens = new LinkedList<GlowToken>();
+	
+	private CameraInventory camInv;
 	static {
 		ItemMeta meta = GUARD_SWORD.getItemMeta();
 		meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED,
@@ -441,6 +445,7 @@ public class Game implements Listener {
 		this.map.start();
 		this.state = GameState.Preparation;
 		waitingItem.destroy();
+		camInv = new CameraInventory(this, main);
 		Majordom.instance.setEnabled(true);
 		for (Map.Entry<Player, PlayerWrapper> playerAndWrapper : this.playerList.entrySet()) {
 			Player player = playerAndWrapper.getKey();
@@ -565,6 +570,8 @@ public class Game implements Listener {
 			}
 			for (Artefact art : this.map.getArtefactList())
 				art.tick(this);
+			for (Camera cam : this.map.getCameraList())
+				cam.tick();
 			this.scanTimer++;
 			if (this.scanTimer >= this.scanTime) {
 				scan();
@@ -695,6 +702,7 @@ public class Game implements Listener {
 		this.gameTicker.cancel();
 		this.bossBarTicker.cancel();
 		checkListItem.destroy();
+		camInv.destroy();
 		if(checkListGuard!=null) checkListGuard.destroy();
 		if(checkListThief!=null) checkListThief.destroy();
 		this.state = GameState.Waiting;
@@ -703,6 +711,10 @@ public class Game implements Listener {
 		}
 		Bukkit.getPluginManager().callEvent(new GameEndEvent(this,this.idPartie, forced));
 		return true;
+	}
+	
+	public CameraInventory getCameraInventory() {
+		return camInv;
 	}
 
 	public boolean addPlayer(Player p) {

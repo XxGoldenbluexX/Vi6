@@ -12,8 +12,10 @@ import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -21,6 +23,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.EulerAngle;
 
 import fr.nekotine.vi6.Vi6Main;
+import fr.nekotine.vi6.events.PlayerLeaveCamera;
 import fr.nekotine.vi6.utils.CameraState;
 import fr.nekotine.vi6.utils.IsCreator;
 
@@ -59,6 +62,23 @@ public class Camera implements ConfigurationSerializable, Listener{
 		startingHead = IsCreator.createSkull(startingURL);
 		activeHead = IsCreator.createSkull(activeURL);
 	}
+	@EventHandler
+	public void onCrouch(PlayerToggleSneakEvent e) {
+		Player p = e.getPlayer();
+		if(viewers.containsKey(e.getPlayer())) {
+			removeViewer(p);
+		}
+	}
+	public void tick() {
+		if (state==CameraState.STARTING) {
+			delay_left--;
+			if(delay_left<=0) {
+				setState(CameraState.ACTIVE);
+				delay_left = STARTING_TICK_DELAY;
+			}
+		}
+	}
+	
 	public void addViewer(Player player) {
 		if(!viewers.containsKey(player)) {
 			viewers.put(player, createArmorStand(player));
@@ -87,7 +107,7 @@ public class Camera implements ConfigurationSerializable, Listener{
 		as.setLeftArmPose(new EulerAngle(300, 30, 0));
 		
 		as.setItem(EquipmentSlot.OFF_HAND, activeHead);
-		as.setItem(EquipmentSlot.CHEST, new ItemStack(Material.NETHERITE_CHESTPLATE));
+		as.setItem(EquipmentSlot.CHEST, new ItemStack(Material.DIAMOND_CHESTPLATE));
 		as.addDisabledSlots(EquipmentSlot.CHEST,EquipmentSlot.FEET,EquipmentSlot.HAND,EquipmentSlot.LEGS,EquipmentSlot.FEET,EquipmentSlot.OFF_HAND);
 		
 		return as;
@@ -98,6 +118,7 @@ public class Camera implements ConfigurationSerializable, Listener{
 			player.teleport(viewers.get(player));
 			viewers.get(player).remove();
 			viewers.remove(player);
+			Bukkit.getPluginManager().callEvent(new PlayerLeaveCamera(this, player));
 		}
 		if(viewers.size()==0) {
 			setState(CameraState.IDLE);
