@@ -1,6 +1,7 @@
 package fr.nekotine.vi6.objet.list;
 
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
@@ -46,7 +47,9 @@ public class GPS extends Objet{
 				setItem(IsCreator.createItemStack(Material.COMPASS, 1, ChatColor.RED+"Distance: "+
 				ChatColor.AQUA+Math.round(getOwner().getLocation().distance(tracked.getLocation()))+
 				ChatColor.RED+"m", ObjetsList.GPS.getInShopLore()));
-				getOwner().setCompassTarget(tracked.getLocation());
+				if(tracked.getGameMode()!=GameMode.SPECTATOR) {
+					getOwner().setCompassTarget(tracked.getLocation());
+				}
 			}
 		}
 	}

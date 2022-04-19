@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -148,7 +149,7 @@ public class BuissonFurtif extends Objet {
 		if (holder != null)
 			for (Map.Entry<Player, PlayerWrapper> p : getGame().getPlayerMap().entrySet()) {
 				if (((PlayerWrapper) p.getValue()).getTeam() == Team.GARDE
-						&& holder.getLocation().distance(((Player) p.getKey()).getLocation()) <= DETECTION_RANGE_IN_BLOCKS)
+						&& holder.getLocation().distance(((Player) p.getKey()).getLocation()) <= DETECTION_RANGE_IN_BLOCKS && p.getKey().getGameMode()!=GameMode.SPECTATOR)
 					return true;
 			}
 		return false;

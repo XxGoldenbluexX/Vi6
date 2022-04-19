@@ -1,6 +1,7 @@
 package fr.nekotine.vi6.objet.list;
 
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
@@ -62,7 +63,7 @@ public class Ombre extends Objet {
 	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent e) {
 		if (this.ombre != null && getGame().getPlayerTeam(e.getPlayer()) == Team.GARDE
-				&& this.ombre.getLocation().distanceSquared(e.getPlayer().getLocation()) <= 1.0D) {
+				&& this.ombre.getLocation().distanceSquared(e.getPlayer().getLocation()) <= 1.0D && e.getPlayer().getGameMode()!=GameMode.SPECTATOR) {
 			getOwner().damage(getOwner().getHealth(), (Entity) e.getPlayer());
 			disable();
 			for (Player p : getGame().getPlayerMap().keySet()) {

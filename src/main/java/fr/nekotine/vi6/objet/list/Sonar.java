@@ -3,6 +3,7 @@ package fr.nekotine.vi6.objet.list;
 import java.util.ArrayList;
 import java.util.Map.Entry;
 
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 
@@ -27,25 +28,27 @@ public class Sonar extends Objet{
 
 	@Override
 	public void tick() {
-		delay--;
-		if(delay<=0) {
-			delay=DELAY_IN_TICKS;
-			ArrayList<Player> thievesNear = new ArrayList<Player>();
-			for(Entry<Player, PlayerWrapper> player : super.getGame().getPlayerMap().entrySet()) {
-				if(player.getValue().getTeam()==Team.VOLEUR 
-					&& !player.getValue().haveEffect(Effects.Insondable)
-					&& player.getValue().getState()==PlayerState.INSIDE
-					&& super.getOwner().getLocation().distanceSquared(player.getKey().getLocation())<=SQUARED_BLOCK_RANGE){
-					thievesNear.add(player.getKey());
+		if(getOwner().getGameMode()!=GameMode.ADVENTURE) {
+			delay--;
+			if(delay<=0) {
+				delay=DELAY_IN_TICKS;
+				ArrayList<Player> thievesNear = new ArrayList<Player>();
+				for(Entry<Player, PlayerWrapper> player : super.getGame().getPlayerMap().entrySet()) {
+					if(player.getValue().getTeam()==Team.VOLEUR 
+						&& !player.getValue().haveEffect(Effects.Insondable)
+						&& player.getValue().getState()==PlayerState.INSIDE
+						&& super.getOwner().getLocation().distanceSquared(player.getKey().getLocation())<=SQUARED_BLOCK_RANGE){
+						thievesNear.add(player.getKey());
+					}
 				}
-			}
-			if(thievesNear.size()>0) {
-				Vi6Sound.SONAR_DETECT.playForPlayer(getOwner());
-				for(Player thief : thievesNear) {
-					Vi6Sound.SONAR_DETECT.playForPlayer(thief);
+				if(thievesNear.size()>0) {
+					Vi6Sound.SONAR_DETECT.playForPlayer(getOwner());
+					for(Player thief : thievesNear) {
+						Vi6Sound.SONAR_DETECT.playForPlayer(thief);
+					}
+				}else {
+					Vi6Sound.SONAR_NOBODY.playForPlayer(getOwner());
 				}
-			}else {
-				Vi6Sound.SONAR_NOBODY.playForPlayer(getOwner());
 			}
 		}
 	}

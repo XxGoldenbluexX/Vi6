@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -108,7 +109,7 @@ public class SixiemeSens extends Objet{
 	}
 	
 	private void updateGlow(Player guard) {
-		if(glowed.contains(guard)) {
+		if(glowed.contains(guard) && guard.getGameMode()!=GameMode.SPECTATOR) {
 			if(getOwner().getLocation().distanceSquared(guard.getLocation())>SQUARED_BLOCK_DISTANCE) {
 				glowed.remove(guard);
 				getGame().unglowPlayer(getOwner(), guard);
