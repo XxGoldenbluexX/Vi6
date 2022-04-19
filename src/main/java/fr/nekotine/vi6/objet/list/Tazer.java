@@ -73,7 +73,7 @@ public class Tazer extends Objet{
 				projectileList.remove(e.getEntity());
 				e.getEntity().remove();
 				Player hit = (Player)e.getCollidedWith();
-				hit.addPotionEffect(new PotionEffect(PotionEffectType.SLOW,60,1,false,false,true));
+				hit.addPotionEffect(new PotionEffect(PotionEffectType.SLOW,60,200,false,false,true));
 				hit.addPotionEffect(new PotionEffect(PotionEffectType.JUMP,60,200,false,false,true));
 				new BukkitRunnable() {
 					private int nbHit=0;
@@ -82,10 +82,10 @@ public class Tazer extends Objet{
 						nbHit++;
 						//hit.setNoDamageTicks(0);
 						//hit.damage(0.001);
-						PacketContainer packet = new PacketContainer(PacketType.Play.Server.ANIMATION);
+						PacketContainer packet = new PacketContainer(PacketType.Play.Server.ENTITY_STATUS);
 						packet.getIntegers().write(0, hit.getEntityId());
 						//packet.getBytes().write(0, (byte) 1);//1 is the value for the damage animation.
-						packet.getIntegers().write(0,1);
+						packet.getBytes().write(0,(byte) 2);
 						ProtocolLibrary.getProtocolManager().broadcastServerPacket(packet);
 						if (nbHit<20) {
 							Vi6Sound.TAZER_SHOCKING.playAtLocation(hit.getLocation());

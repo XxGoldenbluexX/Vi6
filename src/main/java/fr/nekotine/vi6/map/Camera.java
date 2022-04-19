@@ -109,9 +109,9 @@ public class Camera implements ConfigurationSerializable, Listener{
 	public void removeViewer(Player player) {
 		if(viewers.containsKey(player)) {
 			player.setGameMode(GameMode.ADVENTURE);
-			player.teleport(viewers.get(player));
 			ArmorStand as = viewers.get(player);
 			if (as!=null) {
+				player.teleport(as);
 				as.remove();
 			}
 			viewers.remove(player);
