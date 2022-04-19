@@ -855,11 +855,17 @@ public class Vi6commandMaker {
 						if (map.getCamera(camName)!=null) {
 							player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_camera_add_exist"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", camName)));	
 						}else {
-							map.getCameraList().add(new Camera(camName, displayName, location, position, mat));
-							
-							Carte.save(map);
-							
-							player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_camera_add_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", camName)));	
+							if(position >53) {
+								player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_camera_position_tooHigh"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", camName)));	
+								
+							}else {
+								map.getCameraList().add(new Camera(camName, displayName, location, position, mat));
+								
+								Carte.save(map);
+								
+								player.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_camera_add_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", camName)));	
+								
+							}
 							
 							
 						}	
@@ -959,10 +965,15 @@ public class Vi6commandMaker {
 						Camera cam = map.getCamera(camName);
 						int position = (int)args[2];
 						if(cam!=null) {
-							cam.setPosition(position);
-							Carte.save(map);
-							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_camera_position_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", camName)));	
+							if(position >53) {
+								sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_camera_position_tooHigh"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", camName)));	
+							}else {
+								cam.setPosition(position);
+								Carte.save(map);
+								sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_camera_position_success"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", camName)));	
 
+							}
+							
 						}else {
 							sender.sendMessage(MessageFormater.formatWithColorCodes('§',DisplayTexts.getMessage("map_camera_not_found"),new MessageFormater("§v", map.getName()),new MessageFormater("§p", camName)));	
 

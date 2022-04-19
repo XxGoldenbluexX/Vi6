@@ -211,6 +211,8 @@ map_camera_add_success: "§aLa camera §p a bien été ajouté a la carte §v."
 map_camera_remove_success: "§aLa camera §p a bien été retiré a la carte §v."
 #§v = map's name §p = camera name
 map_camera_rename_success: "§aLa camera §p de la carte §v a bien été renommée."
+#§v = map's name §p = camera name
+map_camera_position_tooHigh: "§aLa position de la camera §p de la carte §v est trop grande (<=53)."
 
 map_camera_material_success: "§aLa camera §p de la carte §v a changée d'icone."
 map_camera_color_success: "§aLa camera §p de la carte §v a bien changée de couleur."
