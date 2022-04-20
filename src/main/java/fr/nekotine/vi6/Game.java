@@ -105,6 +105,7 @@ import fr.nekotine.vi6.utils.MessageFormater;
 import fr.nekotine.vi6.utils.Vi6Sound;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 import fr.nekotine.vi6.yml.DisplayTexts;
+import io.papermc.paper.event.player.PlayerItemFrameChangeEvent;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -915,6 +916,10 @@ public class Game implements Listener {
 	
 	@EventHandler
 	public void itemFrameBreak(HangingBreakEvent e) {
+		if(state!=GameState.Waiting) e.setCancelled(true);
+	}
+	@EventHandler
+	public void itemFrameChange(PlayerItemFrameChangeEvent e) {
 		if(state!=GameState.Waiting) e.setCancelled(true);
 	}
 	
