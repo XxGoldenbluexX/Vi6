@@ -25,6 +25,9 @@
 # §o = italic (italique)
 # §r = default color (couleur par défault)
 #
+update_success: "[§bVi6§r] §2Vi6 c'est mis à jour! Les changements seront appliqués au prochain redémarrage."
+
+update_failure: "[§bVi6§r] §4La mise à jour a échouée."
 
 game_join: "[§bVi6§r] §b§p §6a §arejoint §6la partie §r[§b§g§r]"
 #§p = player name, §g = game Name
