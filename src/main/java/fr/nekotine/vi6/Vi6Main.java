@@ -81,7 +81,7 @@ public class Vi6Main extends JavaPlugin {
 		new ItemHider(promanager,this);
 		new ExplosionCanceler(pmanager,this);
 		//GLOW FOR TEAMS
-		
+		log.severe("UPDATE TEST SIGNAL");
 		promanager.addPacketListener(new PacketAdapter(this,PacketType.Play.Server.ENTITY_METADATA) {
 			@Override
 			public void onPacketSending(PacketEvent event) {
@@ -151,6 +151,10 @@ public class Vi6Main extends JavaPlugin {
 		createGame("Vi6");
 		getGame("Vi6").setRanked(true);
 		
+	}
+	
+	public File getFolder() {
+		return getFile();
 	}
 	
 	@Override

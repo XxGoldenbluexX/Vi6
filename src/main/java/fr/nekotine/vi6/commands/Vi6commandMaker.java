@@ -7,6 +7,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.arguments.Argument;
@@ -33,11 +34,10 @@ import fr.nekotine.vi6.map.Passage;
 import fr.nekotine.vi6.map.Sortie;
 import fr.nekotine.vi6.map.SpawnVoleur;
 import fr.nekotine.vi6.utils.DetectionZone;
+import fr.nekotine.vi6.utils.GithubUpdater;
 import fr.nekotine.vi6.utils.MessageFormater;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 import fr.nekotine.vi6.yml.DisplayTexts;
-import net.kyori.adventure.key.Key;
-import net.kyori.adventure.sound.Sound;
 
 public class Vi6commandMaker {
 		
@@ -65,7 +65,16 @@ public class Vi6commandMaker {
 	private static CommandAPICommand update(Vi6Main main) {
 		return new CommandAPICommand("update")
 				.executes((sender,args)->{
-					
+					new BukkitRunnable() {
+						@Override
+						public void run() {
+							if (GithubUpdater.Update(main)) {
+								
+							}else {
+								
+							}
+						}
+					}.runTaskAsynchronously(main);
 				});
 	}
 
