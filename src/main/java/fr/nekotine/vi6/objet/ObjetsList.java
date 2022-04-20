@@ -30,7 +30,8 @@ import fr.nekotine.vi6.objet.list.Sonar;
 import fr.nekotine.vi6.objet.list.Surcharge;
 import fr.nekotine.vi6.objet.list.Teleporteur;
 import fr.nekotine.vi6.objet.list.Dephasage;
-import fr.nekotine.vi6.objet.list.Pecheur;
+//import fr.nekotine.vi6.objet.list.Pecheur;
+import fr.nekotine.vi6.objet.list.Pecheur2;
 import fr.nekotine.vi6.objet.list.GPS;
 import fr.nekotine.vi6.objet.list.GlobeVoyant;
 import fr.nekotine.vi6.objet.list.PiegeADents;
@@ -98,13 +99,13 @@ public enum ObjetsList {
 			ChatColor.GOLD+"Déphasage",
 			Material.IRON_NUGGET,
 			ChatColor.LIGHT_PURPLE+"Toutes les "+Math.round(Dephasage.getDelay()/20)+" secondes gagnez "+Math.round(Dephasage.getDuration()/20)+" secondes d'invisibilité"),
-	PECHEUR_VOLEUR(Pecheur.class,
+	PECHEUR_VOLEUR(Pecheur2.class,
 			Team.VOLEUR,
 			250,
 			0,
 			ChatColor.AQUA+"Pêcheur",
 			Material.FISHING_ROD,
-			ChatColor.LIGHT_PURPLE+"Pêchez des objets avec cette canne à pêche révolutionnaire!"),
+			ChatColor.LIGHT_PURPLE+"Pêchez des objets en vous tenant dans l'eau!"),
 	BUISSON_FURTIF(BuissonFurtif.class,Team.VOLEUR,400,1,
 			ChatColor.GREEN+"Buisson Furtif",Material.OAK_LEAVES,ChatColor.LIGHT_PURPLE+"Devenez invisible et insondable dans les buissons."),
 	DOUBLE_SAUT(DoubleSaut.class,Team.VOLEUR,300,1,
@@ -190,13 +191,13 @@ public enum ObjetsList {
 			ChatColor.RED+"Surcharge",
 			Material.FIREWORK_ROCKET,
 			ChatColor.LIGHT_PURPLE+"Grand bonus en vitesse et force sur utilisation"),
-	PECHEUR_GARDE(Pecheur.class,
+	PECHEUR_GARDE(Pecheur2.class,
 			Team.GARDE,
 			300,
 			0,
 			ChatColor.AQUA+"Pêcheur",
 			Material.FISHING_ROD,
-			ChatColor.LIGHT_PURPLE+"Pêchez des objets avec cette canne à pêche révolutionnaire!"),
+			ChatColor.LIGHT_PURPLE+"Pêchez des objets en vous tenant dans l'eau!"),
 	PIEGE_A_DENTS(PiegeADents.class,Team.GARDE,100,0,
 			ChatColor.DARK_GRAY+"Piège à dents",Material.DRAGON_HEAD,
 			ChatColor.LIGHT_PURPLE+"Vous pouvez placer un piège a dents",
