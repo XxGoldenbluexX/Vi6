@@ -69,9 +69,9 @@ public class Vi6commandMaker {
 						@Override
 						public void run() {
 							if (GithubUpdater.Update(main)) {
-								
+								sender.sendMessage(DisplayTexts.getMessage("update_success"));
 							}else {
-								
+								sender.sendMessage(DisplayTexts.getMessage("update_failure"));
 							}
 						}
 					}.runTaskAsynchronously(main);

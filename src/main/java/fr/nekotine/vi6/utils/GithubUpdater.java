@@ -17,9 +17,11 @@ public class GithubUpdater {
 				ReadableByteChannel bc = Channels.newChannel(new URL("https://github.com/XxGoldenbluexX/Vi6/raw/master/build/Vi6.jar").openStream());
 				FileChannel fc = new FileOutputStream(pluginFile).getChannel();
 				){
-			fc.transferFrom(fc, 0, Long.MAX_VALUE);
+			fc.transferFrom(bc, 0, Long.MAX_VALUE);
+			return true;
 		}catch(Exception e) {
 			plugin.getLogger().warning("Error while updating plugin: "+e.getMessage());
+			e.printStackTrace();
 		}
 		return false;
 	}
