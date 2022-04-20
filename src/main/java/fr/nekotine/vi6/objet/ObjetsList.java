@@ -264,7 +264,7 @@ public enum ObjetsList {
 			ChatColor.LIGHT_PURPLE+"Permet d'accéder aux caméras de surveillance"),
 	CAPTEURSISMIQUE(CapteurSismique.class,
 			Team.GARDE,
-			150,
+			200,
 			0,
 			ChatColor.GOLD+"Capteur Sismique",
 			Material.SCULK_SENSOR,

@@ -38,7 +38,8 @@ public class Pecheur2 extends Objet {
 			ObjetsList.GLOBE_VOYANT,
 			ObjetsList.PIEGE_CAPTEUR,
 			ObjetsList.PIEGE_COLLANT,
-			ObjetsList.BARRICADE};
+			ObjetsList.BARRICADE,
+			ObjetsList.CAPTEURSISMIQUE};
 	private static final Material[] FISHABLE = {
 			Material.WATER,
 			Material.WATER_CAULDRON
