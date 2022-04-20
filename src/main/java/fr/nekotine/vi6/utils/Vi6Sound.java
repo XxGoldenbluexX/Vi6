@@ -156,6 +156,9 @@ public enum Vi6Sound{
 		Sound.sound(Key.key("block.respawn_anchor.set_spawn"), Sound.Source.MASTER, 0.5f, 2),
 		Sound.sound(Key.key("entity.lightning_bolt.thunder"), Sound.Source.MASTER, 0.5f, 1.8f)
 		}),
+		SPLASH(new Sound[] {
+			Sound.sound(Key.key("entity.player.splash.high_speed"), Sound.Source.MASTER, 0.02f, 1),
+		}),
 		PIEGE_COLLANT(new Sound[] {
 		Sound.sound(Key.key("block.stone_button.click"), Sound.Source.MASTER, 1.5f, 1.4f),
 		Sound.sound(Key.key("entity.slime.jump"), Sound.Source.MASTER, 0.7f, 0),

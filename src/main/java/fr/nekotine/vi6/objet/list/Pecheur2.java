@@ -48,6 +48,7 @@ public class Pecheur2 extends Objet {
 	public void tick() {
 		if(fishing) {
 			delay_left--;
+			Vi6Sound.SPLASH.playForPlayer(getOwner());
 			if(delay_left<=0) {
 				delay_left = WAIT_TIME_TICKS;
 				Vi6Sound.SUCCESS.playForPlayer(getOwner());
