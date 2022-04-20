@@ -58,19 +58,14 @@ public class Vi6commandMaker {
 				.withSubcommand(makeHelp(mainHelp))
 				.withSubcommand(game(main))
 				.withSubcommand(map(main))
-				.withSubcommand(makeTest(main))
+				.withSubcommand(update(main))
 				.executes(mainHelp);
 	}
-	
-	//----------------------TEST-------------------------\/
-	//TODO Prone for removal
-	private static CommandAPICommand makeTest(Vi6Main main) {
-		return new CommandAPICommand("test")
+	//----------------------UPDATE-------------------------\/
+	private static CommandAPICommand update(Vi6Main main) {
+		return new CommandAPICommand("update")
 				.executes((sender,args)->{
-					if (sender instanceof Player) {
-						Player p = (Player) sender;
-						p.playSound(Sound.sound(Key.key(Key.MINECRAFT_NAMESPACE, "entity.cow.step"), Sound.Source.MASTER, 1f, 1f), Sound.Emitter.self());
-					}
+					
 				});
 	}
 
