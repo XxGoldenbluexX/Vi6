@@ -2,6 +2,8 @@ package fr.nekotine.vi6.objet.list;
 
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.Waterlogged;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -82,6 +84,13 @@ public class Pecheur2 extends Objet {
 	public boolean canFish() {
 		for(Material fishable : FISHABLE) {
 			if(getOwner().getLocation().getBlock().getType()==fishable) {
+				return true;
+			}
+		}
+		BlockData bd = getOwner().getLocation().getBlock().getBlockData();
+		if(bd instanceof Waterlogged) {
+			Waterlogged wl = (Waterlogged)bd;
+			if(wl.isWaterlogged()) {
 				return true;
 			}
 		}
