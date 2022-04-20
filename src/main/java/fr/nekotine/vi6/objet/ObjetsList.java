@@ -44,6 +44,7 @@ import fr.nekotine.vi6.objet.list.Retour;
 import fr.nekotine.vi6.objet.list.PiegeCollant;
 import fr.nekotine.vi6.objet.list.Hamecon;
 import fr.nekotine.vi6.objet.list.Camera;
+import fr.nekotine.vi6.objet.list.Scout;
 import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 
@@ -147,7 +148,13 @@ public enum ObjetsList {
 		ChatColor.RED+"Retour",
 		Material.POPPED_CHORUS_FRUIT,
 		ChatColor.LIGHT_PURPLE+"Vous téléporte au même endroit après "+ChatColor.AQUA+Math.round(fr.nekotine.vi6.objet.list.Retour.getTeleportDelay()/20)+ChatColor.LIGHT_PURPLE+" secondes"),
-	
+	SCOUT(Scout.class,
+			Team.VOLEUR,
+			200,
+			1,
+			ChatColor.GRAY+"Scout",
+			Material.GLASS,
+			ChatColor.LIGHT_PURPLE+"Ne pas bouger pendant "+ChatColor.AQUA+Math.round(fr.nekotine.vi6.objet.list.Scout.getDelayBeforeInvisibility()/20)+ChatColor.LIGHT_PURPLE+" secondes vous rend invisible"),
 	
 	//----------------------------------------------------------------------------------------------------------------------------------------
 	/*
@@ -176,7 +183,7 @@ public enum ObjetsList {
 			2,
 			ChatColor.GREEN+"Bottes de 7 lieues",
 			Material.LEATHER_BOOTS,
-			ChatColor.LIGHT_PURPLE+"Vitesse accrue de "+(Bottes7Lieues.getSpeedMultiplier()-1)*100+"%"),
+			ChatColor.LIGHT_PURPLE+"Vitesse accrue de "+(Math.round(Bottes7Lieues.getSpeedMultiplier()-1)*100)+"%"),
 	CACTUS(Cactus.class,
 			Team.GARDE,
 			50,
