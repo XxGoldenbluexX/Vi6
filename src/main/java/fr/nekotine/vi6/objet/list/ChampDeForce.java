@@ -135,7 +135,7 @@ public class ChampDeForce extends Objet implements ZoneDetectionListener {
 	
 	@EventHandler
 	public void onUnJam(PlayerUnjamEvent event) {
-		if(event.getPlayer().equals(getOwner()) && !getOwnerWrapper().haveEffect(Effects.Jammed)) {
+		if(gateway!=null && event.getPlayer().equals(getOwner()) && !getOwnerWrapper().haveEffect(Effects.Jammed)) {
 			if(nbGardeTriggering <=0) gateway.close(mat);
 		}
 	}
