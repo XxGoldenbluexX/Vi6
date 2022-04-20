@@ -24,6 +24,7 @@ import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
 import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.events.PlayerLeaveCamera;
+import fr.nekotine.vi6.events.PlayerScanEvent;
 import fr.nekotine.vi6.utils.CameraState;
 import fr.nekotine.vi6.utils.IsCreator;
 
@@ -61,6 +62,12 @@ public class Camera implements ConfigurationSerializable, Listener{
 		idleHead = IsCreator.createSkull(idleURL);
 		startingHead = IsCreator.createSkull(startingURL);
 		activeHead = IsCreator.createSkull(activeURL);
+	}
+	@EventHandler
+	public void onScan(PlayerScanEvent e) {
+		if(viewers.containsKey(e.getPlayer())) {
+			e.setLocation(viewers.get(e.getPlayer()).getLocation());
+		}
 	}
 	@EventHandler
 	public void onCrouch(PlayerToggleSneakEvent e) {

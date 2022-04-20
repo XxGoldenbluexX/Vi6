@@ -80,6 +80,7 @@ import fr.nekotine.vi6.events.GameEnterPreparationPhaseEvent;
 import fr.nekotine.vi6.events.MapChangeEvent;
 import fr.nekotine.vi6.events.MoneyChangedEvent;
 import fr.nekotine.vi6.events.PlayerLeaveGameEvent;
+import fr.nekotine.vi6.events.PlayerScanEvent;
 import fr.nekotine.vi6.events.RankedChangedEvent;
 import fr.nekotine.vi6.interfaces.inventories.CameraInventory;
 import fr.nekotine.vi6.interfaces.inventories.CheckListGuardInventory;
@@ -600,7 +601,11 @@ public class Game implements Listener {
 			if (((PlayerWrapper) this.playerList.get(p)).getTeam() == Team.GARDE) {
 				int entityID = (int) (Math.random() * 2.147483647E9D);
 				idList.add(Integer.valueOf(entityID));
-				Location pLoc = p.getLocation();
+				
+				PlayerScanEvent e = new PlayerScanEvent(p,  p.getLocation(), this);
+				Bukkit.getPluginManager().callEvent(e);
+				Location pLoc = e.getLocation();
+				
 				PacketContainer createPacket = pmanager.createPacket(PacketType.Play.Server.SPAWN_ENTITY);
 				createPacket.getIntegers().write(0, Integer.valueOf(entityID));
 				createPacket.getEntityTypeModifier().write(0, EntityType.ARMOR_STAND);
