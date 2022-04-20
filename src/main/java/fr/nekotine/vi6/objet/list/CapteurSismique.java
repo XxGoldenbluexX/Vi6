@@ -2,10 +2,7 @@ package fr.nekotine.vi6.objet.list;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.Vibration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import fr.nekotine.vi6.Game;
@@ -14,10 +11,10 @@ import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.utils.TempBlock;
+import fr.nekotine.vi6.utils.Vi6Sound;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 
 public class CapteurSismique extends Objet{
-	private static final int DELAY_BEFORE_RECEIVING = 0;
 	private TempBlock sensor;
 	public CapteurSismique(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Game game, Player player,
 			PlayerWrapper wrapper) {
@@ -53,17 +50,21 @@ public class CapteurSismique extends Objet{
 	public void drop() {
 		use();
 	}
-	@EventHandler
-	public void whenPowered(BlockRedstoneEvent e) {
-		if(e.getBlock().equals(sensor.getBlock())) {
-			new Vibration(sensor.getBlock().getLocation(), new Vibration.Destination.EntityDestination(getOwner()), DELAY_BEFORE_RECEIVING);
-		}
-	}
 	public void use() {
 		if(sensor==null) {
-			sensor = (new TempBlock(getOwner().getLocation().getBlock(), Bukkit.createBlockData(Material.SCULK_SENSOR)))
-					.set();
+			if (!onGround()) {
+				Vi6Sound.NO.playForPlayer(getOwner());
+			}else {
+				sensor = (new TempBlock(getOwner().getLocation().getBlock(), Bukkit.createBlockData(Material.SCULK_SENSOR)))
+						.set();
+				consume();
+			}
+			
 		}
+	}
+	private boolean onGround() {
+		return (!getOwner().isFlying()
+				&& getOwner().getLocation().subtract(0.0D, 0.1D, 0.0D).getBlock().getType().isSolid());
 	}
 
 }
