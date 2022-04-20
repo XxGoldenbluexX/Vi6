@@ -15,6 +15,8 @@ import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
 import fr.nekotine.vi6.objet.utils.Objet;
+import fr.nekotine.vi6.statuseffects.Effects;
+import fr.nekotine.vi6.statuseffects.StatusEffect;
 import fr.nekotine.vi6.utils.MessageFormater;
 import fr.nekotine.vi6.utils.Vi6Sound;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
@@ -23,6 +25,7 @@ import fr.nekotine.vi6.yml.DisplayTexts;
 public class DeadRinger extends Objet{
 	public static final int INVISIBILITY_DURATION_TICK=60;
 	public static final int CANNOT_ESPACE_DELAY_TICK = 20*10;
+	private final StatusEffect NODAMAGE = new StatusEffect(Effects.NoDamage);
 	public DeadRinger(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Game game, Player player,PlayerWrapper wrapper) {
 		super(main, objet, skin, game, player, wrapper);
 	}
@@ -58,6 +61,7 @@ public class DeadRinger extends Objet{
 			consume();
 			disable();
 			e.setDamage(0.01);
+			getOwnerWrapper().addStatusEffect(NODAMAGE);
 			for (Map.Entry<Player, PlayerWrapper> p : getGame().getPlayerMap().entrySet()) {
 				if(p.getValue().getTeam()==Team.GARDE) {
 					p.getKey().hidePlayer(getMain(), getOwner());
@@ -79,6 +83,7 @@ public class DeadRinger extends Objet{
 					}
 					Location loc = getOwner().getLocation();
 					Vi6Sound.DEAD_RINGER.playAtLocation(loc);
+					getOwnerWrapper().removeStatusEffect(NODAMAGE);
 				}
 			}.runTaskLater(getMain(), INVISIBILITY_DURATION_TICK);
 			
