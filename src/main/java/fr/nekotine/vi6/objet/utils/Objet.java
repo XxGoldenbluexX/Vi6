@@ -171,7 +171,7 @@ public abstract class Objet implements Listener {
 			dropE.setCancelled(false);
 		}
 		if (displayedItem != null) {
-			owner.getInventory().removeItem(displayedItem);
+			owner.getInventory().removeItemAnySlot(displayedItem);
 		}
 
 	}
