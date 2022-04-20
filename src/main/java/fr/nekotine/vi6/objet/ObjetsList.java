@@ -45,6 +45,7 @@ import fr.nekotine.vi6.objet.list.PiegeCollant;
 import fr.nekotine.vi6.objet.list.Hamecon;
 import fr.nekotine.vi6.objet.list.Camera;
 import fr.nekotine.vi6.objet.list.Scout;
+import fr.nekotine.vi6.objet.list.CapteurSismique;
 import fr.nekotine.vi6.objet.utils.Objet;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 
@@ -260,7 +261,14 @@ public enum ObjetsList {
 			1,
 			ChatColor.DARK_PURPLE+"Caméra",
 			Material.ENDER_CHEST,
-			ChatColor.LIGHT_PURPLE+"Permet d'accéder aux caméras de surveillance");
+			ChatColor.LIGHT_PURPLE+"Permet d'accéder aux caméras de surveillance"),
+	CAPTEURSISMIQUE(CapteurSismique.class,
+			Team.GARDE,
+			150,
+			0,
+			ChatColor.GOLD+"Capteur Sismique",
+			Material.SCULK_SENSOR,
+			ChatColor.LIGHT_PURPLE+"Pose un sculk sensor qui redirige les vibrations vers vous");
 	private final Class<?> objetClass;
 
 	private final Team team;
