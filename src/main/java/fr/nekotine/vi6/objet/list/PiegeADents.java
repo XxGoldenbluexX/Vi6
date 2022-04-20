@@ -145,9 +145,10 @@ public class PiegeADents extends Objet {
 			if (victime.equals(victim) && attacker.equals(fang)) {
 				if (event.getCause()==DamageCause.MAGIC) {
 					event.setCancelled(true);
+					int noDamageTick = victime.getNoDamageTicks();
 					victime.setNoDamageTicks(0);
 					victime.damage(BITE_DAMAGES, attacker);
-					victime.setNoDamageTicks(0);
+					victime.setNoDamageTicks(noDamageTick);
 					return;
 				}
 			}
