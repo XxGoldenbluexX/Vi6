@@ -145,11 +145,13 @@ public class PiegeADents extends Objet {
 			if (victime.equals(victim) && attacker.equals(fang)) {
 				if (event.getCause()==DamageCause.MAGIC) {
 					event.setCancelled(true);
-					int noDamageTick = victime.getNoDamageTicks();
-					victime.setNoDamageTicks(0);
-					victime.damage(BITE_DAMAGES, attacker);
-					victime.setNoDamageTicks(noDamageTick);
-					return;
+					PlayerWrapper victimWrapper = getGame().getWrapper(victim);
+					if(victimWrapper!=null && !victimWrapper.haveEffect(Effects.NoDamage)) {
+						int noDamageTick = victime.getNoDamageTicks();
+						victime.setNoDamageTicks(0);
+						victime.damage(BITE_DAMAGES, attacker);
+						victime.setNoDamageTicks(noDamageTick);
+					}
 				}
 			}
 		}
