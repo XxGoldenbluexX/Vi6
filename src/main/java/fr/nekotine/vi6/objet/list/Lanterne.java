@@ -157,8 +157,12 @@ public class Lanterne extends Objet {
 					&& event.getTo().distanceSquared(this.lantern2.getLoc()) <= LANTERN_CATCH_SQUARED_DISTANCE) {
 				event.getPlayer().teleport(getOwner().getLocation());
 				this.lantern2.destroy();
+				
 				PacketContainer packet = this.pmanager.createPacket(PacketType.Play.Server.ENTITY_DESTROY);
-				packet.getIntegerArrays().write(0, new int[]{this.lantern2.guardianID});
+				ArrayList<Integer> idList = new ArrayList<>();
+				idList.add(lantern2.guardianID);
+				packet.getIntLists().write(0, idList);
+				
 				this.lantern2 = null;
 				for (Player p : this.toShow) {
 					try {
