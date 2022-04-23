@@ -16,6 +16,9 @@ public class GithubUpdater {
 	public static boolean Update(Vi6Main plugin) {
 		File pluginFile = plugin.getFolder();
 		File downloadedFile = new File(plugin.getDataFolder(),"build/Vi6.jar");
+		if (!downloadedFile.exists()) {
+			downloadedFile.mkdir();
+		}
 		try (
 				ReadableByteChannel bc = Channels.newChannel(new URL("https://github.com/XxGoldenbluexX/Vi6/raw/master/build/Vi6.jar").openStream());
 				FileChannel fc = new FileOutputStream(downloadedFile).getChannel();
