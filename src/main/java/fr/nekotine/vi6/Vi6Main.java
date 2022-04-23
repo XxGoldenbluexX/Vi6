@@ -82,7 +82,7 @@ public class Vi6Main extends JavaPlugin {
 		new ExplosionCanceler(pmanager,this);
 		//GLOW FOR TEAMS
 		log.severe("UPDATE TEST SIGNAL");
-		log.severe("UPDATE TEST SIGNAL 2");
+		log.severe("UPDATE TEST SIGNAL 5");
 		promanager.addPacketListener(new PacketAdapter(this,PacketType.Play.Server.ENTITY_METADATA) {
 			@Override
 			public void onPacketSending(PacketEvent event) {
