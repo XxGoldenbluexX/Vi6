@@ -23,8 +23,9 @@ public class Pecheur2 extends Objet {
 	public Pecheur2(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Game game, Player player, PlayerWrapper wrapper) {
 		super(main, objet, skin, game, player, wrapper);
 	}
-	private static final int WAIT_TIME_TICKS = 600;
-	private int delay_left = WAIT_TIME_TICKS;
+	private static final int WAIT_TIME_TICKS_GUARD = 600;
+	private static final int WAIT_TIME_TICKS_THIEF = 500;
+	private int delay_left = getFishingTime();
 	private boolean fishing = false;
 	private static final ObjetsList[] THIEF_FISHABLE = {
 			ObjetsList.OMBRE, 
@@ -53,7 +54,7 @@ public class Pecheur2 extends Objet {
 			delay_left--;
 			if(delay_left % 20 == 0) Vi6Sound.SPLASH.playForPlayer(getOwner());
 			if(delay_left<=0) {
-				delay_left = WAIT_TIME_TICKS;
+				delay_left = getFishingTime();
 				Vi6Sound.SUCCESS.playForPlayer(getOwner());
 				ObjetsList objet;
 				if(getOwnerWrapper().getTeam()==Team.GARDE) {
@@ -104,11 +105,18 @@ public class Pecheur2 extends Objet {
 			if(fishing) {
 				if(!canFish()) {
 					fishing=false;
-					delay_left = WAIT_TIME_TICKS;
+					delay_left = getFishingTime();
 				}
 			}else if(canFish()) {
 				fishing=true;
 			}
+		}
+	}
+	public int getFishingTime() {
+		if(getOwnerWrapper().getTeam()==Team.GARDE) {
+			return WAIT_TIME_TICKS_GUARD;
+		}else {
+			return WAIT_TIME_TICKS_THIEF;
 		}
 	}
 }

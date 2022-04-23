@@ -33,7 +33,7 @@ import fr.nekotine.vi6.wrappers.PlayerWrapper;
 public class PiegeADents extends Objet {
 
 	private static final double SQUARED_TRIGGER_RANGE = 0.7;
-	private static final double BITE_DAMAGES = 8;
+	private static final double BITE_DAMAGES = 24;
 	
 	private Player victim;
 	private boolean armed = false;
@@ -147,10 +147,7 @@ public class PiegeADents extends Objet {
 					event.setCancelled(true);
 					PlayerWrapper victimWrapper = getGame().getWrapper(victim);
 					if(victimWrapper!=null && !victimWrapper.haveEffect(Effects.NoDamage)) {
-						int noDamageTick = victime.getNoDamageTicks();
-						victime.setNoDamageTicks(0);
 						victime.damage(BITE_DAMAGES, attacker);
-						victime.setNoDamageTicks(noDamageTick);
 					}
 				}
 			}

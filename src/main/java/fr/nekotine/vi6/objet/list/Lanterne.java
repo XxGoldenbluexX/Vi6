@@ -44,6 +44,7 @@ public class Lanterne extends Objet {
 	private final ProtocolManager pmanager = ProtocolLibrary.getProtocolManager();
 	private Lant lantern1;
 	private Lant lantern2;
+	private Lant lantern3;
 	private ArrayList<Player> toShow;
 	private ArrayList<Player> full = new ArrayList<>();
 	private BlockData lanternType;
@@ -131,6 +132,13 @@ public class Lanterne extends Objet {
 					e.printStackTrace();
 				}
 			}
+			if(lantern3 != null) {
+				try {
+					pmanager.sendServerPacket(event.getPlayer(), lantern3.glowPacket);
+				} catch (InvocationTargetException e) {
+					e.printStackTrace();
+				}
+			}
 			
 			
 			if (wrap != null && !wrap.haveEffect(Effects.Jammed) && wrap.getState() == PlayerState.INSIDE && this.lantern1 != null && getOwnerWrapper().getState()==PlayerState.INSIDE
@@ -172,6 +180,25 @@ public class Lanterne extends Objet {
 				}
 				return;
 			}
+			if (wrap != null && wrap.getState() == PlayerState.INSIDE && this.lantern3 != null && getOwnerWrapper().getState()==PlayerState.INSIDE
+					&& event.getTo().distanceSquared(this.lantern3.getLoc()) <= LANTERN_CATCH_SQUARED_DISTANCE) {
+				event.getPlayer().teleport(getOwner().getLocation());
+				this.lantern3.destroy();
+				
+				PacketContainer packet = this.pmanager.createPacket(PacketType.Play.Server.ENTITY_DESTROY);
+				ArrayList<Integer> idList = new ArrayList<>();
+				idList.add(lantern3.guardianID);
+				packet.getIntLists().write(0, idList);
+				
+				this.lantern3 = null;
+				for (Player p : this.toShow) {
+					try {
+						this.pmanager.sendServerPacket(p, packet);
+					} catch (InvocationTargetException invocationTargetException) {
+					}
+				}
+				return;
+			}
 		}
 	}
 
@@ -182,6 +209,8 @@ public class Lanterne extends Objet {
 			idList.add(Integer.valueOf(this.lantern1.guardianID));
 		if (this.lantern2 != null)
 			idList.add(Integer.valueOf(this.lantern2.guardianID));
+		if (this.lantern3 != null)
+			idList.add(Integer.valueOf(this.lantern3.guardianID));
 		PacketContainer packet = this.pmanager.createPacket(PacketType.Play.Server.ENTITY_DESTROY);
 		packet.getIntLists().write(0, idList);
 		for (Player p : this.toShow) {
@@ -198,6 +227,8 @@ public class Lanterne extends Objet {
 			this.lantern1.destroy();
 		if (this.lantern2 != null)
 			this.lantern2.destroy();
+		if (this.lantern3 != null)
+			this.lantern3.destroy();
 	}
 
 	private void tryPlace() {
@@ -211,6 +242,13 @@ public class Lanterne extends Objet {
 			}
 			if (this.lantern2 == null) {
 				this.lantern2 = new Lant(getOwner().getLocation(), getMain(), this.lanternType,
+						this.lanternParticleType);
+				Vi6Sound.LANTERNE_POSE.playForPlayer(getOwner());
+				setCooldown(10);
+				return;
+			}
+			if (this.lantern3 == null) {
+				this.lantern3 = new Lant(getOwner().getLocation(), getMain(), this.lanternType,
 						this.lanternParticleType);
 				Vi6Sound.LANTERNE_POSE.playForPlayer(getOwner());
 				setCooldown(10);

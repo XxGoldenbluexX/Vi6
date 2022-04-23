@@ -15,7 +15,7 @@ import fr.nekotine.vi6.statuseffects.Effects;
 import fr.nekotine.vi6.wrappers.PlayerWrapper;
 
 public class Bottes7Lieues extends Objet {
-	private static final float SPEED_MULT = 1.2F;
+	private static final float SPEED_MULT = 1.15F;
 	private boolean jammed = false;
 	public Bottes7Lieues(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Game game, Player player,
 			PlayerWrapper wrapper) {
