@@ -31,6 +31,11 @@ public class Scout extends Objet{
 	public Scout(Vi6Main main, ObjetsList objet, ObjetsSkins skin, Game game, Player player, PlayerWrapper wrapper) {
 		super(main, objet, skin, game, player, wrapper);
 	}
+	public void disable() {
+		super.disable();
+		getOwnerWrapper().removeStatusEffect(INVISIBLE);
+		getOwnerWrapper().removeStatusEffect(DECOUVERT);
+	}
 	@Override
 	public void cooldownEnded() {
 		getOwnerWrapper().addStatusEffect(INVISIBLE);
@@ -39,16 +44,12 @@ public class Scout extends Objet{
 
 	@Override
 	public void death() {
-		super.disable();
-		getOwnerWrapper().removeStatusEffect(INVISIBLE);
-		getOwnerWrapper().removeStatusEffect(DECOUVERT);
+		disable();
 	}
 
 	@Override
 	public void leaveMap() {
-		super.disable();
-		getOwnerWrapper().removeStatusEffect(INVISIBLE);
-		getOwnerWrapper().removeStatusEffect(DECOUVERT);
+		disable();
 	}
 
 	@Override
