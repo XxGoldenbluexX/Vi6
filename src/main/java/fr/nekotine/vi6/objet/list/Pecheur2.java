@@ -11,6 +11,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
+import fr.nekotine.vi6.enums.GameState;
 import fr.nekotine.vi6.enums.Team;
 import fr.nekotine.vi6.objet.ObjetsList;
 import fr.nekotine.vi6.objet.ObjetsSkins;
@@ -48,7 +49,7 @@ public class Pecheur2 extends Objet {
 	};
 	@Override
 	public void tick() {
-		if(fishing) {
+		if(fishing && getGame().getState()==GameState.Ingame) {
 			delay_left--;
 			if(delay_left % 20 == 0) Vi6Sound.SPLASH.playForPlayer(getOwner());
 			if(delay_left<=0) {
