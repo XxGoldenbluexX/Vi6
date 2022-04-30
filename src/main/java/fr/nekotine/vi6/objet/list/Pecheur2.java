@@ -8,6 +8,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import fr.nekotine.vi6.Game;
 import fr.nekotine.vi6.Vi6Main;
@@ -25,6 +27,8 @@ public class Pecheur2 extends Objet {
 	}
 	private static final int WAIT_TIME_TICKS_GUARD = 600;
 	private static final int WAIT_TIME_TICKS_THIEF = 500;
+	private static final PotionEffect waterBreathing = new PotionEffect(PotionEffectType.WATER_BREATHING, 
+			Integer.MAX_VALUE, 0, false, false, false);
 	private int delay_left = getFishingTime();
 	private boolean fishing = false;
 	private static final ObjetsList[] THIEF_FISHABLE = {
@@ -69,6 +73,11 @@ public class Pecheur2 extends Objet {
 	@Override
 	public void cooldownEnded() {
 	}
+	
+	public void disable() {
+		super.disable();
+		getOwner().removePotionEffect(PotionEffectType.WATER_BREATHING);
+	}
 	@Override
 	public void death() {
 		disable();
@@ -106,9 +115,11 @@ public class Pecheur2 extends Objet {
 				if(!canFish()) {
 					fishing=false;
 					delay_left = getFishingTime();
+					getOwner().removePotionEffect(PotionEffectType.WATER_BREATHING);
 				}
 			}else if(canFish()) {
 				fishing=true;
+				getOwner().addPotionEffect(waterBreathing);
 			}
 		}
 	}
