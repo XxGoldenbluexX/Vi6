@@ -37,7 +37,7 @@ public class BuissonFurtif extends Objet {
 	
 	private static final ItemStack HEADBUSH = IsCreator.createItemStack(Material.OAK_LEAVES, 1,ChatColor.GREEN + "Buisson");
 	private static final double DETECTION_RANGE_IN_BLOCKS = 2.0D;
-	private static final Material[] BUSHTYPE = {Material.PEONY, Material.TALL_GRASS, Material.LARGE_FERN,Material.LILAC, Material.ROSE_BUSH};
+	private static final Material[] BUSHTYPE = {Material.PEONY, Material.TALL_GRASS, Material.LARGE_FERN,Material.LILAC, Material.ROSE_BUSH, Material.SMALL_DRIPLEAF};
 	
 	private final StatusEffect INSONDABLE = new StatusEffect(Effects.Insondable);
 	private final StatusEffect INVISIBLE = new StatusEffect(Effects.Invisible);
