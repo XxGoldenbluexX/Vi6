@@ -15,8 +15,8 @@ import dev.jorel.commandapi.arguments.ArgumentSuggestions;
 import dev.jorel.commandapi.arguments.CustomArgument;
 import dev.jorel.commandapi.arguments.CustomArgument.CustomArgumentException;
 import dev.jorel.commandapi.arguments.CustomArgument.MessageBuilder;
+import dev.jorel.commandapi.arguments.EntitySelector;
 import dev.jorel.commandapi.arguments.EntitySelectorArgument;
-import dev.jorel.commandapi.arguments.EntitySelectorArgument.EntitySelector;
 import dev.jorel.commandapi.arguments.GreedyStringArgument;
 import dev.jorel.commandapi.arguments.IntegerArgument;
 import dev.jorel.commandapi.arguments.ItemStackArgument;
@@ -89,7 +89,7 @@ public class Vi6commandMaker {
 	//----------------------GAME-------------------------\/
 	
 	private static CommandAPICommand game(Vi6Main main) {
-		Argument gameArgument = new CustomArgument<Game>("gameList",(info)-> {
+		Argument<Game> gameArgument = new CustomArgument<Game, String>(new StringArgument("gameList"),(info)-> {
 			Game g = Vi6Main.getGame(info.input());
 			if (g==null) {
 				throw new CustomArgumentException(new MessageBuilder("No game with this name: ").appendArgInput().appendHere());
@@ -117,7 +117,7 @@ public class Vi6commandMaker {
 				});
 	}
 	
-	private static CommandAPICommand gameRemove(Vi6Main main,Argument gameArgument) {
+	private static CommandAPICommand gameRemove(Vi6Main main,Argument<Game> gameArgument) {
 		return new CommandAPICommand("remove")
 				.withArguments(gameArgument)
 				.executes((sender,args)->{
@@ -125,7 +125,7 @@ public class Vi6commandMaker {
 				});
 	}
 	
-	private static CommandAPICommand gameJoin(Argument gameArgument) {
+	private static CommandAPICommand gameJoin(Argument<Game> gameArgument) {
 		return new CommandAPICommand("join")
 				.withArguments(gameArgument)
 				.executesPlayer((sender,args)->{
@@ -133,7 +133,7 @@ public class Vi6commandMaker {
 				});
 	}
 	
-	private static CommandAPICommand gameStop(Argument gameArgument) {
+	private static CommandAPICommand gameStop(Argument<Game> gameArgument) {
 		return new CommandAPICommand("stop")
 				.withArguments(gameArgument)
 				.executes((sender,args)->{
@@ -141,9 +141,9 @@ public class Vi6commandMaker {
 				});
 	}
 	
-	private static CommandAPICommand gameJoinPlayer(Vi6Main mainref,Argument gameArgument) {
+	private static CommandAPICommand gameJoinPlayer(Vi6Main mainref,Argument<Game> gameArgument) {
 		return new CommandAPICommand("join")
-				.withArguments(gameArgument,new EntitySelectorArgument("players", EntitySelector.MANY_PLAYERS).replaceSuggestions(ArgumentSuggestions.strings((info)->{return Bukkit.getServer().getOnlinePlayers().stream().filter(e->mainref.getPlayerWrapper(e)==null).map((p)->{return p.getName();}).toArray(String[]::new);})))
+				.withArguments(gameArgument,new EntitySelectorArgument<Player>("players", EntitySelector.MANY_PLAYERS).replaceSuggestions(ArgumentSuggestions.strings((info)->{return Bukkit.getServer().getOnlinePlayers().stream().filter(e->mainref.getPlayerWrapper(e)==null).map((p)->{return p.getName();}).toArray(String[]::new);})))
 				.executes((sender,args)->{
 					@SuppressWarnings("unchecked")
 					Collection<Player> players = (Collection<Player>) args[1];
@@ -161,10 +161,10 @@ public class Vi6commandMaker {
 				});
 	}
 	
-	private static CommandAPICommand gameLeavePlayer(Argument gameArgument) {
+	private static CommandAPICommand gameLeavePlayer(Argument<Game> gameArgument) {
 		return new CommandAPICommand("leave")
 				.withArguments(gameArgument,
-				new EntitySelectorArgument("players", EntitySelector.MANY_PLAYERS).replaceSuggestions(ArgumentSuggestions.strings((info)->{return ((Game)info.previousArgs()[0]).getPlayerMap().keySet().stream().map((Player p)->{return p.getName();}).toArray(String[]::new);})))
+				new EntitySelectorArgument<Player>("players", EntitySelector.MANY_PLAYERS).replaceSuggestions(ArgumentSuggestions.strings((info)->{return ((Game)info.previousArgs()[0]).getPlayerMap().keySet().stream().map((Player p)->{return p.getName();}).toArray(String[]::new);})))
 				.executesPlayer((sender,args)->{
 					@SuppressWarnings("unchecked")
 					Collection<Player> players = (Collection<Player>) args[1];
@@ -177,7 +177,7 @@ public class Vi6commandMaker {
 	//----------------------MAP-------------------------\/
 	
 	private static CommandAPICommand map(Vi6Main main) {
-		Argument mapArgument = new CustomArgument<Carte>("carteList",(info)-> {
+		Argument<Carte> mapArgument = new CustomArgument<Carte, String>(new StringArgument("carteList"),(info)-> {
 			Carte map = Carte.load(info.input());
 			if (map==null) {
 				throw new CustomArgumentException(new MessageBuilder("No map with this name: ").appendArgInput().appendHere());
@@ -227,7 +227,7 @@ public class Vi6commandMaker {
 				});
 	}
 	
-	public static CommandAPICommand mapRemove(Argument mapArgument) {
+	public static CommandAPICommand mapRemove(Argument<Carte> mapArgument) {
 		return new CommandAPICommand("remove")
 				.withPermission("vi6.map.remove")
 				.withArguments(mapArgument)
@@ -243,7 +243,7 @@ public class Vi6commandMaker {
 	
 	//-------MAP_EDITION--------\/
 	
-	public static CommandAPICommand mapGuardSpawn(Argument mapArgument) {
+	public static CommandAPICommand mapGuardSpawn(Argument<Carte> mapArgument) {
 		return new CommandAPICommand("guardSpawn")
 				.withPermission("vi6.map.edit")
 				.withArguments(mapArgument)
@@ -256,7 +256,7 @@ public class Vi6commandMaker {
 				});
 	}
 	
-	public static CommandAPICommand mapMinimapSpawn(Argument mapArgument) {
+	public static CommandAPICommand mapMinimapSpawn(Argument<Carte> mapArgument) {
 		return new CommandAPICommand("minimapSpawn")
 				.withPermission("vi6.map.edit")
 				.withArguments(mapArgument)
@@ -271,7 +271,7 @@ public class Vi6commandMaker {
 	
 	//----THIEFSPAWN-----\/
 	
-	public static CommandAPICommand mapAddThiefSpawn(Argument mapArgument) {
+	public static CommandAPICommand mapAddThiefSpawn(Argument<Carte> mapArgument) {
 		return new CommandAPICommand("addThiefSpawn")
 				.withPermission("vi6.map.edit")
 				.withArguments(mapArgument,new StringArgument("name"),new StringArgument("name"),new LocationArgument("minimapLoc", LocationType.BLOCK_POSITION),new LocationArgument("spawnLoc", LocationType.BLOCK_POSITION))
@@ -292,7 +292,7 @@ public class Vi6commandMaker {
 				});
 	}
 	
-	public static CommandAPICommand mapRemoveThiefSpawn(Argument mapArgument) {
+	public static CommandAPICommand mapRemoveThiefSpawn(Argument<Carte> mapArgument) {
 		return new CommandAPICommand("removeThiefSpawn")
 				.withPermission("vi6.map.edit")
 				.withArguments(mapArgument,new StringArgument("name").replaceSuggestions(ArgumentSuggestions.strings((info) -> {
@@ -314,8 +314,8 @@ public class Vi6commandMaker {
 	
 	//----ARTEFACT-----\/
 	
-	public static CommandAPICommand artefact(Argument mapArgument) {
-		Argument artefactList = new StringArgument("artefactList").replaceSuggestions(ArgumentSuggestions.strings((info) -> {
+	public static CommandAPICommand artefact(Argument<Carte> mapArgument) {
+		Argument<String> artefactList = new StringArgument("artefactList").replaceSuggestions(ArgumentSuggestions.strings((info) -> {
 			return ((Carte)info.previousArgs()[0]).getArtefactList().stream().map(Artefact::getName).toArray(String[]::new);
 		}));
 		return new CommandAPICommand("artefact")
@@ -328,7 +328,7 @@ public class Vi6commandMaker {
 				.withSubcommand(artefactSetBlock(mapArgument,artefactList));
 	}
 	
-	public static CommandAPICommand artefactAdd(Argument mapArgument) {
+	public static CommandAPICommand artefactAdd(Argument<Carte> mapArgument) {
 		return new CommandAPICommand("add")
 				.withArguments(mapArgument,new StringArgument("name"))
 				.executesPlayer((player,args)->{
@@ -345,7 +345,7 @@ public class Vi6commandMaker {
 				});
 	}
 	
-	public static CommandAPICommand artefactRemove(Argument mapArgument, Argument artefactList) {
+	public static CommandAPICommand artefactRemove(Argument<Carte> mapArgument, Argument<String> artefactList) {
 		return new CommandAPICommand("remove")
 				.withArguments(mapArgument,artefactList)
 				.executes((sender,args)->{
@@ -362,7 +362,7 @@ public class Vi6commandMaker {
 				});
 	}
 	
-	public static CommandAPICommand artefactRename(Argument mapArgument, Argument artefactList) {
+	public static CommandAPICommand artefactRename(Argument<Carte> mapArgument, Argument<String> artefactList) {
 		return new CommandAPICommand("rename")
 				.withArguments(mapArgument,artefactList, new StringArgument("newName"))
 				.executes((sender,args)->{
@@ -379,7 +379,7 @@ public class Vi6commandMaker {
 				});
 	}
 	
-	public static CommandAPICommand artefactDisplayRename(Argument mapArgument, Argument artefactList) {
+	public static CommandAPICommand artefactDisplayRename(Argument<Carte> mapArgument, Argument<String> artefactList) {
 		return new CommandAPICommand("displayRename")
 				.withArguments(mapArgument,artefactList, new GreedyStringArgument("newDisplayName"))
 				.executes((sender,args)->{
@@ -396,7 +396,7 @@ public class Vi6commandMaker {
 				});
 	}
 	
-	public static CommandAPICommand artefactSetZone(Argument mapArgument, Argument artefactList) {
+	public static CommandAPICommand artefactSetZone(Argument<Carte> mapArgument, Argument<String> artefactList) {
 		return new CommandAPICommand("setZone")
 				.withArguments(mapArgument,artefactList,new LocationArgument("zone1Location",LocationType.BLOCK_POSITION),new LocationArgument("zone2Location",LocationType.BLOCK_POSITION))
 				.executes((sender,args)->{
@@ -415,7 +415,7 @@ public class Vi6commandMaker {
 				});
 	}
 	
-	public static CommandAPICommand artefactSetBlock(Argument mapArgument, Argument artefactList) {
+	public static CommandAPICommand artefactSetBlock(Argument<Carte> mapArgument, Argument<String> artefactList) {
 		return new CommandAPICommand("setBlock")
 				.withArguments(mapArgument,artefactList,new LocationArgument("zone1Location", LocationType.BLOCK_POSITION))
 				.executes((sender,args)->{
@@ -436,8 +436,8 @@ public class Vi6commandMaker {
 	
 	//----ENTREE-----\/
 	
-	public static CommandAPICommand entree(Argument mapArgument) {
-		Argument entranceList = new StringArgument("entranceList").replaceSuggestions(ArgumentSuggestions.strings((info) -> {
+	public static CommandAPICommand entree(Argument<Carte> mapArgument) {
+		Argument<String> entranceList = new StringArgument("entranceList").replaceSuggestions(ArgumentSuggestions.strings((info) -> {
 			return ((Carte)info.previousArgs()[0]).getEntreeList().stream().map(Entree::getName).toArray(String[]::new);
 		}));
 		return new CommandAPICommand("entrance")
@@ -449,7 +449,7 @@ public class Vi6commandMaker {
 				.withSubcommand(entranceRemove(mapArgument, entranceList));
 	}
 	
-	public static CommandAPICommand entranceAdd(Argument mapArgument) {
+	public static CommandAPICommand entranceAdd(Argument<Carte> mapArgument) {
 		return new CommandAPICommand("add")
 				.withArguments(mapArgument,new StringArgument("name"))
 				.executesPlayer((player,args)->{
@@ -466,7 +466,7 @@ public class Vi6commandMaker {
 				});
 	}
 	
-	public static CommandAPICommand entranceRemove(Argument mapArgument, Argument entranceList) {
+	public static CommandAPICommand entranceRemove(Argument<Carte> mapArgument, Argument<String> entranceList) {
 		return new CommandAPICommand("remove")
 				.withArguments(mapArgument,entranceList)
 				.executes((sender,args)->{
@@ -483,7 +483,7 @@ public class Vi6commandMaker {
 				});
 	}
 	
-	public static CommandAPICommand entranceRename(Argument mapArgument, Argument entranceList) {
+	public static CommandAPICommand entranceRename(Argument<Carte> mapArgument, Argument<String> entranceList) {
 		return new CommandAPICommand("rename")
 				.withArguments(mapArgument,entranceList, new StringArgument("newName"))
 				.executes((sender,args)->{
@@ -500,7 +500,7 @@ public class Vi6commandMaker {
 				});
 	}
 	
-	public static CommandAPICommand entranceDisplayRename(Argument mapArgument, Argument entranceList) {
+	public static CommandAPICommand entranceDisplayRename(Argument<Carte> mapArgument, Argument<String> entranceList) {
 		return new CommandAPICommand("displayname")
 				.withArguments(mapArgument,entranceList, new GreedyStringArgument("newDisplayName"))
 				.executes((sender,args)->{
@@ -517,7 +517,7 @@ public class Vi6commandMaker {
 				});
 	}
 	
-	public static CommandAPICommand entranceSetZone(Argument mapArgument, Argument entranceList) {
+	public static CommandAPICommand entranceSetZone(Argument<Carte> mapArgument, Argument<String> entranceList) {
 		return new CommandAPICommand("setZone")
 				.withArguments(mapArgument,entranceList, new LocationArgument("zone1Location",LocationType.BLOCK_POSITION), new LocationArgument("zone2Location",LocationType.BLOCK_POSITION))
 				.executes((sender,args)->{
@@ -538,8 +538,8 @@ public class Vi6commandMaker {
 	
 	//----SORTIE-----\/
 	
-		public static CommandAPICommand sortie(Argument mapArgument) {
-			Argument exitList = new StringArgument("exitList").replaceSuggestions(ArgumentSuggestions.strings((info) -> {
+		public static CommandAPICommand sortie(Argument<Carte> mapArgument) {
+			Argument<String> exitList = new StringArgument("exitList").replaceSuggestions(ArgumentSuggestions.strings((info) -> {
 				return ((Carte)info.previousArgs()[0]).getSortieList().stream().map(Sortie::getName).toArray(String[]::new);
 			}));
 			return new CommandAPICommand("exit")
@@ -551,7 +551,7 @@ public class Vi6commandMaker {
 					.withSubcommand(sortieSetZone(mapArgument, exitList));
 		}
 		
-		public static CommandAPICommand sortieAdd(Argument mapArgument) {
+		public static CommandAPICommand sortieAdd(Argument<Carte> mapArgument) {
 			return new CommandAPICommand("add")
 					.withArguments(mapArgument,new StringArgument("name"))
 					.executes((sender,args)->{
@@ -568,7 +568,7 @@ public class Vi6commandMaker {
 					});
 		}
 		
-		public static CommandAPICommand sortieRemove(Argument mapArgument, Argument exitList) {
+		public static CommandAPICommand sortieRemove(Argument<Carte> mapArgument, Argument<String> exitList) {
 			return new CommandAPICommand("remove")
 					.withArguments(mapArgument,exitList)
 					.executes((sender,args)->{
@@ -585,7 +585,7 @@ public class Vi6commandMaker {
 					});
 		}
 		
-		public static CommandAPICommand sortieRename(Argument mapArgument, Argument exitList) {
+		public static CommandAPICommand sortieRename(Argument<Carte> mapArgument, Argument<String> exitList) {
 			return new CommandAPICommand("rename")
 					.withArguments(mapArgument,exitList, new StringArgument("newName"))
 					.executes((sender,args)->{
@@ -602,7 +602,7 @@ public class Vi6commandMaker {
 					});
 		}
 		
-		public static CommandAPICommand sortieDisplayname(Argument mapArgument, Argument exitList) {
+		public static CommandAPICommand sortieDisplayname(Argument<Carte> mapArgument, Argument<String> exitList) {
 			return new CommandAPICommand("displayname")
 					.withArguments(mapArgument,exitList, new GreedyStringArgument("newDisplayName"))
 					.executes((sender,args)->{
@@ -619,7 +619,7 @@ public class Vi6commandMaker {
 					});
 		}
 		
-		public static CommandAPICommand sortieSetZone(Argument mapArgument, Argument exitList) {
+		public static CommandAPICommand sortieSetZone(Argument<Carte> mapArgument, Argument<String> exitList) {
 			return new CommandAPICommand("setZone")
 					.withArguments(mapArgument,exitList,new LocationArgument("corner1", LocationType.BLOCK_POSITION),new LocationArgument("corner2", LocationType.BLOCK_POSITION))
 					.executes((sender,args)->{
@@ -640,8 +640,8 @@ public class Vi6commandMaker {
 	
 		//----PASSAGE-----\/
 	
-		public static CommandAPICommand passage(Argument mapArgument) {
-			Argument passageList = new StringArgument("passageList").replaceSuggestions(ArgumentSuggestions.strings((info) -> {
+		public static CommandAPICommand passage(Argument<Carte> mapArgument) {
+			Argument<String> passageList = new StringArgument("passageList").replaceSuggestions(ArgumentSuggestions.strings((info) -> {
 				return ((Carte)info.previousArgs()[0]).getPassageList().stream().map(Passage::getName).toArray(String[]::new);
 			}));
 			return new CommandAPICommand("passage")
@@ -657,7 +657,7 @@ public class Vi6commandMaker {
 					.withSubcommand(gatewayToPassage(mapArgument));
 		}
 		
-		public static CommandAPICommand passageAdd(Argument mapArgument) {
+		public static CommandAPICommand passageAdd(Argument<Carte> mapArgument) {
 			return new CommandAPICommand("add")
 					.withArguments(mapArgument,new StringArgument("name"),new StringArgument("roomA"),new StringArgument("roomB"))
 					.executes((sender,args)->{
@@ -676,7 +676,7 @@ public class Vi6commandMaker {
 					});
 		}
 		
-		public static CommandAPICommand passageRemove(Argument mapArgument, Argument exitList) {
+		public static CommandAPICommand passageRemove(Argument<Carte> mapArgument, Argument<String> exitList) {
 			return new CommandAPICommand("remove")
 					.withArguments(mapArgument,exitList)
 					.executes((sender,args)->{
@@ -693,7 +693,7 @@ public class Vi6commandMaker {
 					});
 		}
 		
-		public static CommandAPICommand passageRename(Argument mapArgument, Argument exitList) {
+		public static CommandAPICommand passageRename(Argument<Carte> mapArgument, Argument<String> exitList) {
 			return new CommandAPICommand("rename")
 					.withArguments(mapArgument,exitList, new StringArgument("newName"))
 					.executes((sender,args)->{
@@ -710,7 +710,7 @@ public class Vi6commandMaker {
 					});
 		}
 		
-		public static CommandAPICommand passageSalleA(Argument mapArgument, Argument exitList) {
+		public static CommandAPICommand passageSalleA(Argument<Carte> mapArgument, Argument<String> exitList) {
 			return new CommandAPICommand("setRoomA")
 					.withArguments(mapArgument,exitList, new StringArgument("roomA"))
 					.executes((sender,args)->{
@@ -727,7 +727,7 @@ public class Vi6commandMaker {
 					});
 		}
 		
-		public static CommandAPICommand passageSalleB(Argument mapArgument, Argument exitList) {
+		public static CommandAPICommand passageSalleB(Argument<Carte> mapArgument, Argument<String> exitList) {
 			return new CommandAPICommand("setRoomB")
 					.withArguments(mapArgument,exitList, new StringArgument("roomB"))
 					.executes((sender,args)->{
@@ -744,7 +744,7 @@ public class Vi6commandMaker {
 					});
 		}
 		
-		public static CommandAPICommand passageSetZoneA(Argument mapArgument, Argument exitList) {
+		public static CommandAPICommand passageSetZoneA(Argument<Carte> mapArgument, Argument<String> exitList) {
 			return new CommandAPICommand("setZoneA")
 					.withArguments(mapArgument,exitList,new LocationArgument("corner1", LocationType.BLOCK_POSITION),new LocationArgument("corner2", LocationType.BLOCK_POSITION))
 					.executes((sender,args)->{
@@ -763,7 +763,7 @@ public class Vi6commandMaker {
 					});
 		}
 		
-		public static CommandAPICommand passageSetZoneB(Argument mapArgument, Argument exitList) {
+		public static CommandAPICommand passageSetZoneB(Argument<Carte> mapArgument, Argument<String> exitList) {
 			return new CommandAPICommand("setZoneB")
 					.withArguments(mapArgument,exitList,new LocationArgument("corner1", LocationType.BLOCK_POSITION),new LocationArgument("corner2", LocationType.BLOCK_POSITION))
 					.executes((sender,args)->{
@@ -782,7 +782,7 @@ public class Vi6commandMaker {
 					});
 		}
 		
-		public static CommandAPICommand passageToGateway(Argument mapArgument, Argument exitList) {
+		public static CommandAPICommand passageToGateway(Argument<Carte> mapArgument, Argument<String> exitList) {
 			return new CommandAPICommand("passageToGateway")
 					.withArguments(mapArgument,exitList,new LocationArgument("corner1", LocationType.BLOCK_POSITION),new LocationArgument("corner2", LocationType.BLOCK_POSITION))
 					.executes((sender,args)->{
@@ -803,7 +803,7 @@ public class Vi6commandMaker {
 					});
 		}
 		
-		public static CommandAPICommand gatewayToPassage(Argument mapArgument) {
+		public static CommandAPICommand gatewayToPassage(Argument<Carte> mapArgument) {
 			return new CommandAPICommand("gatewayToPassage")
 					.withArguments(mapArgument,new StringArgument("gatewayList").replaceSuggestions(ArgumentSuggestions.strings((info) -> {
 						return ((Carte)info.previousArgs()[0]).getGatewayList().stream().map(Gateway::getName).toArray(String[]::new);
@@ -825,8 +825,8 @@ public class Vi6commandMaker {
 		}
 		
 		//----CAMERAS-----\/
-		public static CommandAPICommand camera(Argument mapArgument) {
-			Argument camList = new StringArgument("cameraList").replaceSuggestions(ArgumentSuggestions.strings((info) -> {
+		public static CommandAPICommand camera(Argument<Carte> mapArgument) {
+			Argument<String> camList = new StringArgument("cameraList").replaceSuggestions(ArgumentSuggestions.strings((info) -> {
 				return ((Carte)info.previousArgs()[0]).getCameraList().stream().map(Camera::getName).toArray(String[]::new);
 			}));
 			return new CommandAPICommand("camera")
@@ -841,7 +841,7 @@ public class Vi6commandMaker {
 			
 		}
 		
-		public static CommandAPICommand addCamera(Argument mapArgument) {
+		public static CommandAPICommand addCamera(Argument<Carte> mapArgument) {
 			return new CommandAPICommand("add")
 					.withArguments(mapArgument,
 							new StringArgument("cameraName"), new StringArgument("displayName"), 
@@ -878,7 +878,7 @@ public class Vi6commandMaker {
 					});
 		}
 		
-		public static CommandAPICommand removeCamera(Argument mapArgument, Argument camList) {
+		public static CommandAPICommand removeCamera(Argument<Carte> mapArgument, Argument<String> camList) {
 			return new CommandAPICommand("remove")
 					.withArguments(mapArgument, camList)
 					.executes((sender,args)->{
@@ -897,7 +897,7 @@ public class Vi6commandMaker {
 					});
 		}
 		
-		public static CommandAPICommand renameCamera(Argument mapArgument, Argument camList) {
+		public static CommandAPICommand renameCamera(Argument<Carte> mapArgument, Argument<String> camList) {
 			return new CommandAPICommand("rename")
 					.withArguments(mapArgument, camList, new StringArgument("newName"))
 					.executes((sender,args)->{
@@ -918,7 +918,7 @@ public class Vi6commandMaker {
 					});
 		}
 		
-		public static CommandAPICommand displayRenameCamera(Argument mapArgument, Argument camList) {
+		public static CommandAPICommand displayRenameCamera(Argument<Carte> mapArgument, Argument<String> camList) {
 			return new CommandAPICommand("displayRename")
 					.withArguments(mapArgument, camList, new StringArgument("newName"))
 					.executes((sender,args)->{
@@ -939,7 +939,7 @@ public class Vi6commandMaker {
 					});
 		}
 		
-		public static CommandAPICommand setMaterialCamera(Argument mapArgument, Argument camList) {
+		public static CommandAPICommand setMaterialCamera(Argument<Carte> mapArgument, Argument<String> camList) {
 			return new CommandAPICommand("setMaterial")
 					.withArguments(mapArgument, camList, new ItemStackArgument("item"))
 					.executes((sender,args)->{
@@ -961,7 +961,7 @@ public class Vi6commandMaker {
 					});
 		}
 		
-		public static CommandAPICommand setPositionCamera(Argument mapArgument, Argument camList) {
+		public static CommandAPICommand setPositionCamera(Argument<Carte> mapArgument, Argument<String> camList) {
 			return new CommandAPICommand("setPosition")
 					.withArguments(mapArgument, camList, new IntegerArgument("position"))
 					.executes((sender,args)->{
@@ -987,7 +987,7 @@ public class Vi6commandMaker {
 					});
 		}
 		
-		public static CommandAPICommand setLocationCamera(Argument mapArgument, Argument camList) {
+		public static CommandAPICommand setLocationCamera(Argument<Carte> mapArgument, Argument<String> camList) {
 			return new CommandAPICommand("setLocation")
 					.withArguments(mapArgument, camList)
 					.executesPlayer((player,args)->{
