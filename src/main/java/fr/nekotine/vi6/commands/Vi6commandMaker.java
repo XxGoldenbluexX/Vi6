@@ -274,7 +274,7 @@ public class Vi6commandMaker {
 	public static CommandAPICommand mapAddThiefSpawn(Argument<Carte> mapArgument) {
 		return new CommandAPICommand("addThiefSpawn")
 				.withPermission("vi6.map.edit")
-				.withArguments(mapArgument,new StringArgument("name"),new StringArgument("name"),new LocationArgument("minimapLoc", LocationType.BLOCK_POSITION),new LocationArgument("spawnLoc", LocationType.BLOCK_POSITION))
+				.withArguments(mapArgument,new StringArgument("name"),new StringArgument("dname"),new LocationArgument("minimapLoc", LocationType.BLOCK_POSITION),new LocationArgument("spawnLoc", LocationType.BLOCK_POSITION))
 				.executesPlayer((player,args)->{
 					Carte map = (Carte)args[0];
 					String name = (String)args[1];

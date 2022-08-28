@@ -57,6 +57,11 @@
     	<id>papermc</id>
     	<url>https://papermc.io/repo/repository/maven-public/</url>
 	</repository>
+	<!-- Repository anvilgui -->
+	<repository>
+    	<id>codemc-snapshots</id>
+    	<url>https://repo.codemc.io/repository/maven-snapshots/</url>
+	</repository>
   </repositories>
   <dependencies>
 	<dependency>
