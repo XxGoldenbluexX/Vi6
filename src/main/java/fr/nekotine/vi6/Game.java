@@ -609,18 +609,18 @@ public class Game implements Listener {
 				
 				PacketContainer createPacket = pmanager.createPacket(PacketType.Play.Server.SPAWN_ENTITY);
 				createPacket.getIntegers().write(0, Integer.valueOf(entityID));
+				createPacket.getIntegers().write(1, Integer.valueOf((int) pLoc.getPitch()));
+				createPacket.getIntegers().write(2, Integer.valueOf((int) pLoc.getYaw()));
+				createPacket.getIntegers().write(3, Integer.valueOf(78));
+				
 				createPacket.getEntityTypeModifier().write(0, EntityType.ARMOR_STAND);
-				createPacket.getIntegers().write(6, Integer.valueOf(78));
-				createPacket.getIntegers().write(1, Integer.valueOf(0));
-				createPacket.getIntegers().write(2, Integer.valueOf(0));
-				createPacket.getIntegers().write(3, Integer.valueOf(0));
-				createPacket.getIntegers().write(4, Integer.valueOf((int) pLoc.getPitch()));
-				createPacket.getIntegers().write(5, Integer.valueOf((int) pLoc.getYaw()));
-				createPacket.getIntegers().write(6, Integer.valueOf(0));
+				
 				createPacket.getDoubles().write(0, Double.valueOf(pLoc.getX()));
 				createPacket.getDoubles().write(1, Double.valueOf(pLoc.getY()));
 				createPacket.getDoubles().write(2, Double.valueOf(pLoc.getZ()));
+				
 				createPacket.getUUIDs().write(0, UUID.randomUUID());
+				
 				PacketContainer metadataPacket = pmanager.createPacket(PacketType.Play.Server.ENTITY_METADATA);
 				metadataPacket.getIntegers().write(0, Integer.valueOf(entityID));
 				WrappedDataWatcher watcher = new WrappedDataWatcher();
