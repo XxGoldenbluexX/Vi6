@@ -23,6 +23,7 @@ import fr.nekotine.vi6.objet.list.DeadRinger;
 import fr.nekotine.vi6.objet.list.DoubleSaut;
 import fr.nekotine.vi6.objet.list.Invisneak;
 import fr.nekotine.vi6.objet.list.Lanterne;
+import fr.nekotine.vi6.objet.list.Observateur;
 //import fr.nekotine.vi6.objet.list.MatraqueDeTheo;
 import fr.nekotine.vi6.objet.list.Ombre;
 import fr.nekotine.vi6.objet.list.SixiemeSens;
@@ -156,7 +157,15 @@ public enum ObjetsList {
 			ChatColor.GRAY+"Scout",
 			Material.GLASS,
 			ChatColor.LIGHT_PURPLE+"Ne pas bouger pendant "+ChatColor.AQUA+Math.round(fr.nekotine.vi6.objet.list.Scout.getDelayBeforeInvisibility()/20)+ChatColor.LIGHT_PURPLE+" secondes vous rend invisible"),
-	
+	OBSERVATEUR(Observateur.class,
+			Team.VOLEUR,
+			200,
+			1,
+			ChatColor.DARK_GRAY + "Observateur",
+			Material.SILVERFISH_SPAWN_EGG,
+			ChatColor.LIGHT_PURPLE+"Pose une balise qui affiche en surbrillance les gardes à proximité.",
+			ChatColor.LIGHT_PURPLE+"Portée: "+ChatColor.AQUA+Observateur.RANGE+ChatColor.LIGHT_PURPLE+" blocks"
+			),
 	//----------------------------------------------------------------------------------------------------------------------------------------
 	/*
 	MATRAQUE_DE_THEO(MatraqueDeTheo.class,Team.GARDE,500,1,

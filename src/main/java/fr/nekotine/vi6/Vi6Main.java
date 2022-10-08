@@ -1,6 +1,7 @@
 package fr.nekotine.vi6;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,8 @@ import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
+import com.comphenix.protocol.wrappers.WrappedDataWatcher.Registry;
+import com.comphenix.protocol.wrappers.WrappedWatchableObject;
 
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIConfig;
@@ -97,16 +100,19 @@ public class Vi6Main extends JavaPlugin {
 				if (thrower==null || thrower==receiver) return;
 				PlayerWrapper receiverWrapper = getPlayerWrapper(receiver);
 				PlayerWrapper throwerWrapper = getPlayerWrapper(thrower);
-				if (throwerWrapper!=null && receiverWrapper!=null && throwerWrapper.getTeam()==receiverWrapper.getTeam()) {
-					PacketContainer newPacket = promanager.createPacket(PacketType.Play.Server.ENTITY_METADATA);
-					WrappedDataWatcher dataWatcher = WrappedDataWatcher.getEntityWatcher(thrower).deepClone();
-					WrappedDataWatcher.Serializer byteSerializer = WrappedDataWatcher.Registry.get(Byte.class);
-					byte bytemask = dataWatcher.getByte(0);
-					bytemask |= 0x40;
-					dataWatcher.setObject(0, byteSerializer, bytemask);
-					newPacket.getWatchableCollectionModifier().write(0, dataWatcher.getWatchableObjects());
-					newPacket.getIntegers().write(0, thrower.getEntityId());
-					event.setPacket(newPacket);
+				if (throwerWrapper!=null && receiverWrapper!=null) {
+					if (throwerWrapper.getGlowTokens().stream().anyMatch(t -> t.glowed==throwerWrapper && t.viewer==receiverWrapper)) {
+						PacketContainer newPacket = promanager.createPacket(PacketType.Play.Server.ENTITY_METADATA);
+						WrappedDataWatcher dataWatcher = WrappedDataWatcher.getEntityWatcher(thrower).deepClone();
+						WrappedDataWatcher.Serializer byteSerializer = WrappedDataWatcher.Registry.get(Byte.class);
+						byte bytemask = dataWatcher.getByte(0);
+						bytemask |= 0x40;
+						dataWatcher.setObject(0, byteSerializer, bytemask);
+						newPacket.getWatchableCollectionModifier().write(0, dataWatcher.getWatchableObjects());
+						newPacket.getIntegers().write(0, thrower.getEntityId());
+						event.setPacket(newPacket);
+					}
+					
 					/*
 					List<WrappedWatchableObject> watchableObjectList = packet.getWatchableCollectionModifier().read(0);
 					for (WrappedWatchableObject metadata : watchableObjectList) {
@@ -150,6 +156,33 @@ public class Vi6Main extends JavaPlugin {
 		createGame("Vi6");
 		getGame("Vi6").setRanked(true);
 		
+	}
+	
+	/**
+	 * 
+	 * @param target
+	 */
+	public void triggerGlowUpdate(Player glowed, Player receiver) {
+		ProtocolManager pm = ProtocolLibrary.getProtocolManager();
+		PacketContainer pkt = pm.createPacket(PacketType.Play.Server.ENTITY_METADATA);
+		WrappedDataWatcher watcher = new WrappedDataWatcher();
+		watcher.setEntity(glowed);
+		watcher.setObject(1, new WrappedWatchableObject(0));
+		pkt.getWatchableCollectionModifier().write(0, watcher.getWatchableObjects());
+		try {
+			pm.sendServerPacket(receiver, pkt);
+		} catch (InvocationTargetException e) {
+		}
+	}
+	
+	public void triggerGlowUpdate(Player glowed) {
+		ProtocolManager pm = ProtocolLibrary.getProtocolManager();
+		PacketContainer pkt = pm.createPacket(PacketType.Play.Server.ENTITY_METADATA);
+		WrappedDataWatcher watcher = new WrappedDataWatcher();
+		watcher.setEntity(glowed);
+		watcher.setObject(1, Registry.get(Integer.class), 0);
+		pkt.getWatchableCollectionModifier().write(0, watcher.getWatchableObjects());
+		pm.broadcastServerPacket(pkt);
 	}
 	
 	public File getFolder() {

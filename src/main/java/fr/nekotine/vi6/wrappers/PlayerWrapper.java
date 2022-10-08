@@ -237,6 +237,10 @@ public class PlayerWrapper {
 		this.escaped = escaped;
 	}
 
+	/**
+	 * Liste des glow token affectant le joueur.
+	 * @return la liste.
+	 */
 	public List<GlowToken> getGlowTokens() {
 		return glowTo;
 	}

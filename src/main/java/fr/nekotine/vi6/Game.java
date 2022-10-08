@@ -984,14 +984,8 @@ public class Game implements Listener {
 			}
 		}
 		//UPDATE PHASE
-		ProtocolManager pm = ProtocolLibrary.getProtocolManager();
 		for (Player p : playerList.keySet()) {
-			p.setSprinting(true);
-			p.setSprinting(false);
-			PacketContainer pkt = pm.createPacket(PacketType.Play.Server.ENTITY_METADATA);
-			WrappedDataWatcher watcher = new WrappedDataWatcher(p);
-			pkt.getWatchableCollectionModifier().write(0, watcher.getWatchableObjects());
-			pm.broadcastServerPacket(pkt);
+			main.triggerGlowUpdate(p);
 		}
 	}
 
