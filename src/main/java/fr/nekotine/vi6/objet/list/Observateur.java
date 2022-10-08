@@ -3,6 +3,7 @@ package fr.nekotine.vi6.objet.list;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Silverfish;
@@ -70,6 +71,8 @@ public class Observateur extends Objet{
 				var obs = (Silverfish)getOwner().getWorld().spawnEntity(getOwner().getLocation(), EntityType.SILVERFISH);
 				obs.setSilent(true);
 				obs.setAI(false);
+				obs.setPersistent(true);
+				obs.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(1);
 				observateurs.add(obs);
 				Vi6Sound.OMNICAPTEUR_POSE.playAtLocation(getOwner().getLocation());
 				if (observateurs.size() >= NB_OBSERVATEUR) {
