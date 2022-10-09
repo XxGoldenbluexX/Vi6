@@ -104,7 +104,7 @@ public class Observateur extends Objet{
 						var gt = new GlowToken();
 						gt.glowed = w;
 						gt.viewer = v;
-						w.getGlowTokens().add(new GlowToken());
+						w.getGlowTokens().add(gt);
 						glowTokens.add(gt);
 						main.triggerGlowUpdate(e.getPlayer());
 					});

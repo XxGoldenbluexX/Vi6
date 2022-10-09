@@ -163,26 +163,31 @@ public class Vi6Main extends JavaPlugin {
 	 * @param target
 	 */
 	public void triggerGlowUpdate(Player glowed, Player receiver) {
-		ProtocolManager pm = ProtocolLibrary.getProtocolManager();
-		PacketContainer pkt = pm.createPacket(PacketType.Play.Server.ENTITY_METADATA);
-		WrappedDataWatcher watcher = new WrappedDataWatcher();
-		watcher.setEntity(glowed);
-		watcher.setObject(1, new WrappedWatchableObject(0));
-		pkt.getWatchableCollectionModifier().write(0, watcher.getWatchableObjects());
-		try {
-			pm.sendServerPacket(receiver, pkt);
-		} catch (InvocationTargetException e) {
-		}
-	}
-	
-	public void triggerGlowUpdate(Player glowed) {
+		/*
 		ProtocolManager pm = ProtocolLibrary.getProtocolManager();
 		PacketContainer pkt = pm.createPacket(PacketType.Play.Server.ENTITY_METADATA);
 		WrappedDataWatcher watcher = new WrappedDataWatcher();
 		watcher.setEntity(glowed);
 		watcher.setObject(1, Registry.get(Integer.class), 0);
 		pkt.getWatchableCollectionModifier().write(0, watcher.getWatchableObjects());
-		pm.broadcastServerPacket(pkt);
+		try {
+			pm.sendServerPacket(receiver, pkt);
+		} catch (InvocationTargetException e) {
+		}*/
+		glowed.setSprinting(!glowed.isSprinting());
+		glowed.setSprinting(!glowed.isSprinting());
+	}
+	
+	public void triggerGlowUpdate(Player glowed) {/*
+		ProtocolManager pm = ProtocolLibrary.getProtocolManager();
+		PacketContainer pkt = pm.createPacket(PacketType.Play.Server.ENTITY_METADATA);
+		WrappedDataWatcher watcher = new WrappedDataWatcher();
+		watcher.setEntity(glowed);
+		watcher.setObject(1, Registry.get(Integer.class), 0);
+		pkt.getWatchableCollectionModifier().write(0, watcher.getWatchableObjects());
+		pm.broadcastServerPacket(pkt);*/
+		glowed.setSprinting(!glowed.isSprinting());
+		glowed.setSprinting(!glowed.isSprinting());
 	}
 	
 	public File getFolder() {
